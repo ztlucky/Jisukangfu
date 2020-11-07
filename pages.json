@@ -1,5 +1,32 @@
 {
 	"pages": [ 
+		{
+				"path" : "pages/work/setBack/setBack",
+				"style" : {
+					"navigationBarTitleText":"后台设置",
+					"navigationBarBackgroundColor":"#31D880",
+					"navigationBarTextStyle":"white"
+					
+				}
+		},
+		{
+				"path" : "pages/work/compare/compare",
+				"style" : {
+					"navigationBarTitleText":"一键比较",
+					"navigationBarBackgroundColor":"#31D880",
+					"navigationBarTextStyle":"white"
+					
+				}
+		},
+		{
+				"path" : "pages/work/history/history",
+				"style" : {
+					"navigationBarTitleText":"历史患者",
+					"navigationBarBackgroundColor":"#31D880",
+					"navigationBarTextStyle":"white"
+					
+				}
+		},
  		{
 			 "path" : "pages/Daxue/Daxue",
 				 
@@ -272,6 +299,33 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "关于我们",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/work/setBack/setBack",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/work/history/history",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/work/compare/compare",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
                 "enablePullDownRefresh": false
             }
             
