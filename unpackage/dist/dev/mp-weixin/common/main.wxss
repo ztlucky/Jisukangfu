@@ -1,0 +1,22 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/*每个页面公共css */
+/* 	//控制滚动条
+ */
+::-webkit-scrollbar{
+		  display: none;
+}
+

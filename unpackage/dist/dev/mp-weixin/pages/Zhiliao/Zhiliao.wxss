@@ -1,0 +1,44 @@
+
+.contentView{
+	width: 140px;
+	height: 300px;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+ 	-webkit-box-orient: horizontal;
+ 	-webkit-box-direction: normal;
+ 	-webkit-flex-flow: row wrap;
+ 	        flex-flow: row wrap;
+ 	background-color: #FF0000;
+	-webkit-align-content: inherit;
+	        align-content: inherit;
+}
+.testText1{
+	width: 50px;
+	height: 50px;
+ 	text-align: center;
+	line-height: 50px;
+	background-color: #007AFF;
+}
+.testText2{
+	width: 50px;
+	height: 50px;
+ 	text-align: center;
+	line-height: 50px;
+	background-color: #09BB07;
+}
+.testText3{
+	width: 50px;
+	height: 50px;
+ 	text-align: center;
+	line-height: 50px;
+	background-color: #333333;
+}
+.testText4{
+	width: 50px;
+	height: 50px;
+ 	text-align: center;
+	line-height: 50px;
+	background-color: #8A6DE9;
+}
+

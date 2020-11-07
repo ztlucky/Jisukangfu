@@ -1,0 +1,319 @@
+{
+	"pages": [ 
+ 		{
+			 "path" : "pages/Daxue/Daxue",
+				 
+			 "style":{
+				 "navigationStyle":"custom",
+					 
+				 "app-plus":{
+					 "titleNView":"false",
+					 "scrollIndicator":"none",
+					 "safearea": {  
+ 					     "bottom": {  
+					         "offset": "auto"  
+					     }  
+					 }
+				 }
+			 }
+		 }
+		,
+	    {
+            "path" : "pages/Gongzuotai/Gongzuotai",
+            "style" : {
+				"app-plus":{
+									 "titleNView":"false",
+									 "scrollIndicator":"none",
+									 "bounce":"none",
+									 "safearea": {  
+				 					     "bottom": {  
+									         "offset": "auto"  
+									     }  
+									 }
+				}
+				
+			}
+        }
+        ,{
+            "path" : "pages/WodeKangfu/WodeKangfu",
+            "style" : {
+				"navigationBarTitleText":"咨询"
+				
+			}
+        }
+        ,{
+            "path" : "pages/Wode/Wode",
+            "style" : {
+				"navigationBarTitleText":"我的"
+				
+			}
+        }
+        ,{
+            "path" : "pages/Search/Search",
+            "style" : {
+				"navigationBarTitleText":"搜索"
+			}
+        }
+        ,{
+            "path" : "pages/Message/Message",
+            "style" : {
+				"navigationBarTitleText":"信息"
+			}
+        }
+        ,{
+            "path" : "pages/Zhibo/Zhibo",
+            "style" : {
+				"navigationBarTitleText":"直播"
+			}
+        }
+        ,{
+            "path" : "pages/Daxue/Kaoshi/Kaoshi",
+            "style" : {
+				"navigationBarTitleText":"考试"
+			}
+        }
+        ,{
+            "path" : "pages/Daxue/Kecheng/Kecheng",
+            "style" : {
+				"navigationBarTitleText":"课程"
+			}
+        }
+        ,{
+            "path" : "pages/Daxue/XuexiBan/XuexiBan",
+            "style" : {
+				"navigationBarTitleText":"学习班"
+			}
+        }
+        ,{
+            "path" : "pages/Daxue/TeacherDetail/TeacherDetail",
+            "style" : {
+				"navigationBarTitleText":"老师详情"
+			}
+        }
+        ,{
+            "path" : "pages/Daxue/Zhibodetail/Zhibodetail",
+            "style" : {
+				"navigationBarTitleText":"直播详情"
+				
+			}
+        }
+        ,{
+            "path" : "pages/Daxue/KechengDetail/KechengDetail",
+            "style" : {
+				"navigationBarTitleText":"课程详情"
+			}
+        }
+        ,{
+            "path" : "pages/Daxue/BanjiDetail/BanjiDetail",
+            "style" : {
+				"navigationBarTitleText":"班级详情"
+				
+			}
+        }
+        ,{
+            "path" : "pages/Order/ConfirmOrder/ConfirmOrder",
+            "style" : {
+				"navigationBarTitleText":"确认订单" 
+			}
+        }
+         
+        ,{
+            "path" : "pages/Login/Login/Login",
+            "style" : {
+				"app-plus":{
+									 "titleNView":"false",
+									 "scrollIndicator":"none",
+									 "safearea": {  
+				 					     "bottom": {  
+									         "offset": "auto"  
+									     }  
+									 }
+				}
+			}
+        }
+        ,{
+            "path" : "pages/Login/PasswordLogin/PasswordLogin",
+            "style" : {
+				"app-plus":{
+									 "titleNView":"false",
+									 "scrollIndicator":"none",
+									 "safearea": {  
+				 					     "bottom": {  
+									         "offset": "auto"  
+									     }  
+									 }
+				}
+			}
+        }
+        ,{
+            "path" : "pages/Login/ForgotPassword/ForgotPassword",
+            "style" : {
+				"app-plus":{
+									 "titleNView":"false",
+									 "scrollIndicator":"none",
+									 "safearea": {  
+				 					     "bottom": {  
+									         "offset": "auto"  
+									     }  
+									 }
+				}
+			}
+        }
+        ,{
+            "path" : "pages/Login/PasswordLogin/ResetPassword/ResetPassword",
+            "style" : {
+				"app-plus":{
+									 "titleNView":"false",
+									 "scrollIndicator":"none",
+									 "safearea": {  
+				 					     "bottom": {  
+									         "offset": "auto"  
+									     }  
+									 }
+				}
+			}
+        }
+        ,{
+            "path" : "pages/Login/SetPassword/SetPassword",
+            "style" : {
+				"app-plus":{
+									 "titleNView":"false",
+									 "scrollIndicator":"none",
+									 "safearea": {  
+				 					     "bottom": {  
+									         "offset": "auto"  
+									     }  
+									 }
+				}
+			}
+        }
+        ,{
+            "path" : "pages/WodeHuanzhe/WodeHuanzhe",
+            "style" : {
+ 				"navigationBarTextStyle": "white",
+				"bounce":"none",
+				
+				             "navigationBarBackgroundColor": "rgba(0,0,0,0)",
+				            "app-plus": {
+				                "titleNView": {
+				                    "type": "float",
+ 				                    "titleText": "我的患者"
+				                }
+				            }
+			}
+        }
+        ,{
+            "path" : "pages/HuanzheDetail/HuanzheDetail",
+            "style" : {
+				"navigationBarTitleText":"患者详情"
+				
+			}
+        }
+        ,{
+            "path" : "pages/AddHuanzhe/AddHuanzhe",
+            "style" : {
+				"navigationBarTextStyle": "white",
+				"bounce":"none",
+			
+				            "navigationBarBackgroundColor": "rgba(0,0,0,0)",
+				            "app-plus": {
+				                "titleNView": {
+				                    "type": "float",
+				                    "titleText": "添加患者"
+				                }
+				            }
+				
+				
+			}
+        }
+        ,{
+            "path" : "pages/Daxue/RecommendCourse/RecommendCourse",
+            "style" : {
+				"navigationBarTitleText":"推荐课程"
+				
+			}
+        }
+        ,{
+            "path" : "pages/Daxue/BanjiTuijian/BanjiTuijian",
+            "style" : {
+				"navigationBarTitleText":"推荐班级",
+				"app-plus":{
+ 									 "scrollIndicator":"none",
+									 "bounce":"none",
+									 "safearea": {  
+				 					     "bottom": {  
+									         "offset": "auto"  
+									     }  
+									 }
+				}
+				
+			}
+        }
+         
+        ,{
+            "path" : "pages/KangfuPingdingListPage/KangfuPingdingListPage",
+            "style" : {
+				"navigationBarTitleText":"康复评定",
+				"navigationBarBackgroundColor":"#31D880",
+				"navigationBarTextStyle":"white"
+				
+			}
+        }
+        ,{
+            "path" : "pages/KangfuMubiao/KangfuMubiao",
+            "style" : {
+				"navigationBarTitleText":"康复目标",
+				"navigationBarBackgroundColor":"#31D880",
+				"navigationBarTextStyle":"white"
+			}
+        }
+        ,{
+            "path" : "pages/AboutUs/AboutUs",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "关于我们",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"backgroundColor": "#FFFFFF"
+ 
+		 
+	},
+	"tabBar":{
+		"color":"#333333",
+		"selectedColor":"#31D8B1",
+		"borderStyle":"black",
+		"backgroundColor":"#FFFFFF",
+		"list":[{
+			"pagePath":"pages/Daxue/Daxue",
+			"iconPath":"static/icon_xuexi_moren.png",
+			"selectedIconPath":"static/icon_xuexi_xuanzhong.png",
+			"text":"学习"
+		},
+		{
+		"iconPath":"static/icon_gongzuotai_morem.png",
+		"pagePath":"pages/Gongzuotai/Gongzuotai",
+		"selectedIconPath":"static/icon_gongzuotai_xuanzhong.png",
+		"text":"工作台"
+			},
+			{
+				"iconPath":"static/icon_zixun_moren.png",
+				"pagePath":"pages/WodeKangfu/WodeKangfu",
+				"selectedIconPath":"static/icon_zixun_xuanzhong.png",
+				"text":"咨询"
+			},{
+				"iconPath":"static/icon_wode_moren.png",
+				"pagePath":"pages/Wode/Wode",
+				"selectedIconPath":"./static/icon_wode_xuanzhong.png",
+				"text":"我的"
+			}
+			
+		]
+		
+	}
+}

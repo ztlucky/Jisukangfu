@@ -1,0 +1,13 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "scroller": "/components/scroller/scroller",
+    "uni-swiper-dot": "/components/uni-swiper-dot/uni-swiper-dot",
+    "uni-grid": "/components/uni-grid/uni-grid",
+    "uni-grid-item": "/components/uni-grid-item/uni-grid-item",
+    "article-list": "/components/article/list",
+    "page-loading": "/components/loading/pageLoading",
+    "iconfont": "/components/iconfont/iconfont",
+    "banji-list": "/components/article/banji"
+  }
+}

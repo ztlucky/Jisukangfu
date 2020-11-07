@@ -1,0 +1,50 @@
+{
+  "pages": [
+    "pages/Daxue/Daxue",
+    "pages/Zhiliao/Zhiliao",
+    "pages/WodeKangfu/WodeKangfu",
+    "pages/Wode/Wode",
+    "pages/Search/Search",
+    "pages/Message/Message",
+    "pages/Zhibo/Zhibo"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#333333",
+    "selectedColor": "#31D8B1",
+    "borderStyle": "black",
+    "backgroundColor": "#FFFFFF",
+    "list": [
+      {
+        "pagePath": "pages/Daxue/Daxue",
+        "iconPath": "static/icon_xuexi_moren.png",
+        "selectedIconPath": "static/icon_xuexi_xuanzhong.png",
+        "text": "学习"
+      },
+      {
+        "iconPath": "static/icon_gongzuotai_morem.png",
+        "pagePath": "pages/Zhiliao/Zhiliao",
+        "selectedIconPath": "static/icon_gongzuotai_xuanzhong.png",
+        "text": "工作台"
+      },
+      {
+        "iconPath": "static/icon_zixun_moren.png",
+        "pagePath": "pages/WodeKangfu/WodeKangfu",
+        "selectedIconPath": "static/icon_zixun_xuanzhong.png",
+        "text": "咨询"
+      },
+      {
+        "iconPath": "static/icon_wode_moren.png",
+        "pagePath": "pages/Wode/Wode",
+        "selectedIconPath": "./static/icon_wode_xuanzhong.png",
+        "text": "我的"
+      }
+    ]
+  },
+  "usingComponents": {}
+}
