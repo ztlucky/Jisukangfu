@@ -1,7 +1,7 @@
 <template>
 	<view class="view">
 		<view class="navList">
-			<view class="item" v-for="(i,k) in [1,2,3]" :key="i">
+			<view class="item" v-for="(i,k) in [1,2,3]" :key="k">
 				<view class="itemLeft">
 					<view class="title">评定量表</view>
 					<view class="text hidden">选择用肯定是会计师苦上加苦飞机上看</view>
@@ -26,18 +26,7 @@
 </script>
 
 <style scoped>
-	.hidden{
-	  overflow:hidden;
-	  text-overflow:ellipsis;
-	  white-space:nowrap;
-	}
-	.hidden2{
-	overflow: hidden;
-	text-overflow: ellipsis;
-	display:-webkit-box;
-	-webkit-box-orient:vertical;
-	-webkit-line-clamp:2;
-	}
+	
 	.view{
 		background-color: #f6f6f6;
 		min-height: 100vh;

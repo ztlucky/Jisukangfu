@@ -2,7 +2,7 @@
 	<view class="view">
 		<view class="header"></view>
 		<view class="list">
-			<view class="item" v-for="(i,k) in [1,2,3]" :key="i">
+			<view class="item" v-for="(i,k) in [1,2,3]" :key="k">
 				<view class="itemTop">
 						<image class="left" src=""></image>
 						<view class="right">
@@ -156,4 +156,5 @@
 	font-size:24rpx;
 	color: #333333;
 }
+
 </style>

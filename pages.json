@@ -1,6 +1,30 @@
 {
 	"pages": [ 
 		{
+				"path" : "pages/work/pingDingLiangBiao/pingDingLiangBiao",
+				"style" : {
+					"navigationStyle":"custom"
+				}
+		},
+		{
+				"path" : "pages/work/createProblemInfo/createProblemInfo",
+				"style" : {
+					"navigationBarTitleText":"评定量表",
+					"navigationBarBackgroundColor":"#31D880",
+					"navigationBarTextStyle":"white"
+					
+				}
+		},
+		{
+				"path" : "pages/work/createProblem/createProblem",
+				"style" : {
+					"navigationBarTitleText":"评定量表",
+					"navigationBarBackgroundColor":"#31D880",
+					"navigationBarTextStyle":"white"
+					
+				}
+		},
+		{
 				"path" : "pages/work/setBack/setBack",
 				"style" : {
 					"navigationBarTitleText":"后台设置",
@@ -303,34 +327,7 @@
             }
             
         }
-        ,{
-            "path" : "pages/work/setBack/setBack",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/work/history/history",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/work/compare/compare",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-    ],
+	    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarBackgroundColor": "#FFFFFF",

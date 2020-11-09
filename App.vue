@@ -31,4 +31,16 @@
  */	::-webkit-scrollbar{
 		  display: none;
 	}
+	.hidden{
+	  overflow:hidden;
+	  text-overflow:ellipsis;
+	  white-space:nowrap;
+	}
+	.hidden2{
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display:-webkit-box;
+	-webkit-box-orient:vertical;
+	-webkit-line-clamp:2;
+	}
 </style>
