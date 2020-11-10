@@ -1,26 +1,11 @@
 <template>
-	<view class="view">
-		<view class="content">
+	<view class="view" @click="resetAll">
+		<view class="content" @click="resetAll">
 			<view class="title">问题标题</view>
-			<silding></silding>
+			<silding :isRun="false" ref="sildTitle" @reset="resetAll" :data="title"></silding>
 			<view class="title">评定量表选择题</view>
-			<silding></silding>
-			<silding></silding>
-			<silding></silding>
-			<silding></silding>
-			<silding></silding>
-			<silding></silding>
-			<silding></silding>
-			<silding></silding>
-			<silding></silding>
-			<silding></silding>
-			<silding></silding>
-			<silding></silding>
-			<silding></silding>
-			<silding></silding>
-			<silding></silding>
-			<silding></silding>
-			<view class="addItem">添加新的选项</view>
+			<silding @deleteItem="deleteItem" ref="sild" @reset="resetAll" v-for="(v,i) in checkbox" :key="i" :data="v" :index="i"></silding>
+			<view class="addItem" @click="addItem">添加新的选项</view>
 		</view>
 		<view class="bottom" @click="setShowNext">保存</view>
 		<view class="next" v-if="isShowNext">
@@ -38,12 +23,45 @@
 	export default {
 		data() {
 			return {
-				isShowNext:false
+				isShowNext:false,
+				title:{
+					title:'问题是开飞机上看'
+				},
+				checkbox:[
+					{
+						title:'可是飞机开始发1'
+					},
+					{
+						title:'可是飞机开始发2'
+					},
+					{
+						title:'可是飞机开始发3'
+					}
+				]
 			}
 		},
 		methods: {
 			setShowNext(){
 				this.isShowNext = !this.isShowNext;
+			},
+			getNowStatus(data){
+				
+			},
+			resetAll(){
+				this.$refs.sildTitle.resetLeft();
+				this.$refs.sild.map(v=>{
+					v.resetLeft();
+				})
+				// this.$refs.sild.resetLeft();
+			},
+			addItem(){
+				this.checkbox.push({
+					title:''
+				})
+			},
+			deleteItem(index){
+				console.log(index);
+				this.checkbox.splice(index,1)
 			}
 		},
 		components:{

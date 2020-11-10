@@ -3,32 +3,19 @@
 		<view class="top">
 			<textarea placeholder="输入创建的问题的描述"></textarea>
 			<view class="topImageList">
-				<view class="imageItem">
-					<image src=""></image>
-					<image src="" class="delete"></image>
+				<view v-for="(v,k) in imageList" :key="k" :class="'imageItem '+((k)%3 == 1?'imageItem1':'imageItem')" >
+					<image :src="v"></image>
+					<image src="" class="delete" @click="deleteImage(k)"></image>
 				</view>
-				<view class="imageItem imageItem1">
+				<view :class="'imageItem imageAdd '+((imageList.length)%3 == 1?'imageItem1':'imageItem')" @click="getImages">
 					<image src=""></image>
-					<image src="" class="delete"></image>
-				</view>
-				<view class="imageItem">
-					<image src=""></image>
-					<image src="" class="delete"></image>
-				</view>
-				<view class="imageItem ">
-					<image src=""></image>
-					<image src="" class="delete"></image>
-				</view>
-				<view class="imageItem imageItem1">
-					<image src=""></image>
-					<image src="" class="delete"></image>
 				</view>
 			</view>
 		</view>
 		<view class="textView">
 			<view class="title">问题解释</view>
 			<input />
-			<view class="title">问题解释</view>
+			<view class="title">问题诊断</view>
 			<textarea></textarea>
 		</view>
 	</view>
@@ -38,11 +25,32 @@
 	export default {
 		data() {
 			return {
-				
+				imageList:[],
+				tempFile:[]
 			}
 		},
 		methods: {
-			
+			getImages(){
+				let that = this;
+				uni.chooseImage({
+				    count: 6,
+				    sizeType: ['original', 'compressed'],
+				    sourceType: ['album'],
+				    success: function(res) {
+						console.log(res);
+				        // 预览图片
+						console.log(res.tempFilePaths);
+				        that.imageList = that.imageList.concat(res.tempFilePaths);
+						console.log(that.imageList)
+						that.tempFile = that.tempFile.concat(res.tempFiles)
+				    }
+				    });
+			},
+			deleteImage(index){
+				console.log(index);
+				this.tempFile.splice(index,1);
+				this.imageList.splice(index,1);
+			}
 		}
 	}
 </script>
@@ -85,6 +93,8 @@
 		left: 0;
 		width:184rpx;
 		height: 184rpx;
+	}
+	.imageAdd{
 		background-color: red;
 	}
 	.imageItem .delete{

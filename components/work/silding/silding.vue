@@ -1,17 +1,35 @@
 <template>
 	<view class="sild" >
-		<view class="sildLeft" :style="'left:'+left+'rpx'" @touchstart="start" @touchmove="move"  @touchend="end">
-			<view class="text" v-if="!isEdit">徒手几十人检查</view>
+		<view class="sildLeft" @click.stop="" :style="'left:'+left+'rpx'" @touchstart="start" @touchmove="move"  @touchend="end">
+			<view class="text" v-if="!isEdit">{{data.title}}</view>
 			<input class="text" v-else />
-			<image src=""></image>
+			<image src="" ></image>
 		</view>
-		<image src="" :style="'right:'+(-50 + right)+'rpx'" class="delete"></image>
+		<image src="" @click="deleteItem" :style="'right:'+(-50 + right)+'rpx'" class="delete"></image>
 		<view class="back"></view>
 	</view>
 </template>
 
 <script>
 	export default {
+		props:{
+			data:{
+				type:Object,
+				default:()=>{
+					return {
+						title:'默认文字'
+					}
+				}
+			},
+			isRun:{
+				type:Boolean,
+				default:true
+			},
+			index:{
+				type:Number,
+				default:-1
+			}
+		},
 		data() {
 			return {
 				isEdit:false,
@@ -24,11 +42,19 @@
 		},
 		methods: {
 			start(e){
+				this.$emit('reset',{});
+				if(!this.isRun){
+					return false;
+				}
 				this.startLeft = e.changedTouches[0].clientX;
 				this.moveLeft = e.changedTouches[0].clientX;
 				this.isShow = false;
+				this.isReset = false;
 			},
 			move(e){
+				if(!this.isRun){
+					return false;
+				}
 				let move = e.changedTouches[0].clientX;
 				if(move < this.moveLeft){
 					this.isShow = true;
@@ -40,12 +66,23 @@
 				this.moveLeft = move;
 			},
 			end(e){
+				if(!this.isRun){
+					return false;
+				}
 				this.startLeft = 0;
 				this.moveLeft = 0;
 				if(this.isShow){
 					this.left = -50;
 					this.right = 100;
 				}else{
+					this.left = 0;
+					this.right = 50;
+				}
+				this.isReset = true;
+				
+			},
+			resetLeft(){
+				if(this.isReset){
 					this.left = 0;
 					this.right = 50;
 				}
@@ -60,6 +97,19 @@
 					this.left +=num;
 				}
 				this.right = 50-this.left;
+			},
+			deleteItem(){
+				let that = this;
+				uni.showModal({
+					title:"温馨提示",
+					content:"确定要删除该选项？",
+					confirmColor:'#31D880',
+					mask:true,
+					success() {
+						that.$emit('deleteItem',this.index)
+					}
+				})
+				
 			}
 		}
 	}

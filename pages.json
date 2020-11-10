@@ -16,6 +16,15 @@
 				}
 		},
 		{
+				"path" : "pages/work/createTitleType/createTitleType",
+				"style" : {
+					"navigationBarTitleText":"评定量表",
+					"navigationBarBackgroundColor":"#31D880",
+					"navigationBarTextStyle":"white"
+					
+				}
+		},
+		{
 				"path" : "pages/work/createProblem/createProblem",
 				"style" : {
 					"navigationBarTitleText":"评定量表",
@@ -327,7 +336,7 @@
             }
             
         }
-	    ],
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarBackgroundColor": "#FFFFFF",
