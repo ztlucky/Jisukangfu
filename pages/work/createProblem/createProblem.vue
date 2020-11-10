@@ -28,15 +28,7 @@
 					title:'问题是开飞机上看'
 				},
 				checkbox:[
-					{
-						title:'可是飞机开始发1'
-					},
-					{
-						title:'可是飞机开始发2'
-					},
-					{
-						title:'可是飞机开始发3'
-					}
+					
 				]
 			}
 		},
@@ -49,9 +41,11 @@
 			},
 			resetAll(){
 				this.$refs.sildTitle.resetLeft();
-				this.$refs.sild.map(v=>{
-					v.resetLeft();
-				})
+				if(this.$refs.sild){
+					this.$refs.sild.map(v=>{
+						v.resetLeft();
+					})
+				}
 				// this.$refs.sild.resetLeft();
 			},
 			addItem(){
@@ -60,7 +54,6 @@
 				})
 			},
 			deleteItem(index){
-				console.log(index);
 				this.checkbox.splice(index,1)
 			}
 		},

@@ -105,8 +105,11 @@
 					content:"确定要删除该选项？",
 					confirmColor:'#31D880',
 					mask:true,
-					success() {
-						that.$emit('deleteItem',this.index)
+					success(e) {
+						if(!e.cancel){
+							that.$emit('deleteItem',this.index)
+						}
+						
 					}
 				})
 				

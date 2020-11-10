@@ -97,6 +97,5 @@
 		background: linear-gradient(180deg, #31D880 0%, #24CE59 100%);
 		box-shadow: 0px 10rpx 14rpx 0px rgba(49, 216, 128, 0.33);
 		border-radius: 40rpx;
-
 	}
 </style>
