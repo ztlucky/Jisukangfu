@@ -49,10 +49,10 @@
 		the-style="margin: 20upx auto;font-size: 46upx;  " 
 		      
 		        placeholder='请选择诊断结果' 
-		        :binData="data2"
+		        :binData="illnessData"
   		        overflow="hide"
 		        @getBackVal="getBackVal"
-		        :selectIco="true"
+		        :selectIco="false"
 		        >
 		        </yealuo-select>
 				<view class="bottomview">
@@ -80,18 +80,7 @@
  		},
 		data() {
 			return {
-				data2: [
-				                    {id: 1, value: '选项1'},
-				                    {id: 2, value: '选项2'},
-				                    {id: 3, value: '选项3'},
-				                    {id: 4, value: '选项4'},
-				                    {id: 5, value: '选项5'},
-				                    {id: 6, value: '这是6'},
-				                    {id: 7, value: '这是7'},
-				                    {id: 8, value: '这是8'},
-				                    {id: 9, value: '这是9'},
-				                    {id: 10, value: '这是10'},
-				                ],
+			    illnessData:[],
 				viewHeight:0,
  				 huanzhename:'',
 				 huanzheIDNumber:'',
@@ -100,9 +89,13 @@
 			 detailAdress:'',
  				//选中后的显示值
 				res:"请选择省市区",
-				        selecValue: '双皮奶'
+				selecValue: '双皮奶'
 
 			}
+		},
+		onLoad:function(e){
+			this.getillnessUserList();
+			
 		},
 		onShow:function(){
 		 
@@ -112,10 +105,46 @@
 		},
 		methods: {
 			//选中值传（值可自定义，初始id与value用|分割，根据实际用途定义）
-			            getBackVal:function(e){
+		  getBackVal:function(e){
 			                console.log(e)
 			            },
-
+         //获取病症 
+		 getillnessUserList(){
+		 this.$app.request({
+		 		
+		 		url: this.$api.huanzhe.getillnessList,
+				//getApp().globalData.userId
+		 		data: {
+					pagenum:1,
+					pagesize:10,
+		 			userid:11 ,
+ 		 		},
+		 		method: 'GET',
+		 		success: res => {
+		 			console.log(res)
+		 				 
+		 			if(res.code == 200){
+		 				 //  this.illnessData = res.data.records;
+ 				  	// this.illnessData.concat(res.data.records);
+					for (var i = 0; i < res.data.records.length; i++) {
+						this.illnessData.push(res.data.records[i]);
+ 					}
+						//  this.illnessData.push(res.data.records[1]);
+						
+						console.log("789789")
+						
+							console.log( this.illnessData)
+									  
+		 			}
+		 			
+		 		},
+		 		fail: res => {
+		 		},
+		 		complete: res => {
+		 			 
+		 		}
+		 	});
+		 },
 			address(e){
 			  console.log("点击了确认")
 			  this.res=e.value.join("-");

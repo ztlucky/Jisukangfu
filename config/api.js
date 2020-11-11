@@ -67,6 +67,11 @@ let api = {
 		feedback: apiRoot + "user/feedback.html",
 		logout: apiRoot + "user/logout.html",
 	},
+	huanzhe:{
+		//获取病症
+		getillnessList:apiRoot+"app/illness/listByUser",
+		//添加患者
+ 	},
 	wechat: {
 		miniAppLogin: apiRoot + 'wechat/miniAppLogin',
 		mpLogin: apiRoot + 'wechat/mpLogin',
