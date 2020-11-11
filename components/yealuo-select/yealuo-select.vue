@@ -4,11 +4,11 @@
 		<view class="yealuo-con" :style="isShowAllBack?'background-color:#F5F5F5':''">
 			<slot name='left'></slot>
 			<input class="input" :style="'padding: 0 '+padding" :disabled="theDisabled" :placeholder="placeholder" v-model="theValue" @input="theInput" @tap='isShow=data.length' @focus="theFocus" @blur="theBlur" autocomplete="off" />
-			<image :src='!isShow? "../../static/wodehuanzhe/below.png":"../../static/wodehuanzhe/top.png"' class="rightImage"></image>
-			<slot name='right' v-if="selectIco">
+			<image :src='!isShow? "/static/wodehuanzhe/below.png":"/static/wodehuanzhe/top.png"' class="rightImage"></image>
+			<!-- <slot name='right' v-if="selectIco">
 				<svg class="icon" v-if="!isShow" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="530"><path d="M512 714.666667c-8.533333 0-17.066667-2.133333-23.466667-8.533334l-341.333333-341.333333c-12.8-12.8-12.8-32 0-44.8 12.8-12.8 32-12.8 44.8 0l320 317.866667 317.866667-320c12.8-12.8 32-12.8 44.8 0 12.8 12.8 12.8 32 0 44.8L533.333333 704c-4.266667 8.533333-12.8 10.666667-21.333333 10.666667z" p-id="531"></path></svg>
 				<svg class="icon" v-else style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1927"><path d="M904.533333 674.133333l-362.666666-362.666666c-17.066667-17.066667-42.666667-17.066667-59.733334 0l-362.666666 362.666666c-17.066667 17.066667-17.066667 42.666667 0 59.733334 17.066667 17.066667 42.666667 17.066667 59.733333 0L512 401.066667l332.8 332.8c8.533333 8.533333 19.2 12.8 29.866667 12.8s21.333333-4.266667 29.866666-12.8c17.066667-17.066667 17.066667-42.666667 0-59.733334z" p-id="1928"></path></svg>
-			</slot>
+			</slot> -->
 		</view>
 		<view class="yealuo-select" v-show="show">
 			<view class="data">
@@ -107,6 +107,10 @@
 				default:'0rpx'
 			},
 			isShowAllBack:{
+				type:Boolean,
+				default:false
+			},
+			isSetUrl:{
 				type:Boolean,
 				default:false
 			}

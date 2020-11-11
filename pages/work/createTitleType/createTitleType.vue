@@ -2,7 +2,7 @@
 	<view class="view">
 		<view class="content">
 			<view class="title">评定量表分类</view>
-			<yealuo @getBackVal="getBackVal" :selectIco="true" placeholder="请选择分类" width="590" :binData="binData" checkType="radio"
+			<yealuo @getBackVal="getBackVal" the-style="font-size: 46upx;"  :selectIco="true" overflow="hide" :isSetUrl="true" placeholder="请选择分类" width="590" :binData="binData" 
 			 :isShowAllBack="true" padding="20rpx"></yealuo>
 			<view class="title">评定量表标题</view>
 			<input placeholder="请输入要创建的评定量表的标题" />
