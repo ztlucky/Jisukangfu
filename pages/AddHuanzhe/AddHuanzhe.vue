@@ -1,50 +1,48 @@
 <template>
 	<view>
-		<scroll-view scroll-y="true"  :style="[{height:viewHeight + 'px'}]"  @scroll="scroll"  >
-		<view class="topview">
-			<image src="../../static/wodehuanzhe/bg_wodehuanzhe.png" class="topimageview" mode="aspectFill"></image>
-				<text class="title1">请输入</text>	
-					 <text class="title2">患者信息、诊断结果</text>
-					 <view class="line1">
-					 	
-					 </view>
-			<view class="topitemView"> 
-				 <text class="huanzhexinxi"  >患者信息</text>
-				  <view class="greenline">
-				  	
-				  </view>
- <text class="name">姓名</text>
-		<input adjust-position="true" class="inputview" placeholder="请输入患者名字" v-model="huanzhename"/>	 
- <view class="sexview">
- 	<image class="sexImage" @click="changeSelectIndex(1)" :src="selectIndex == 1?'../../static/wodehuanzhe/selectedcopy.png':'../../static/wodehuanzhe/unselectedcopy.png'"></image>
-	<text :class="selectIndex ==1?'selecttext':'unselecttext'" @click="changeSelectIndex(1)"> 男</text>
-	<image class="sexImage"  @click="changeSelectIndex(2)" :src="selectIndex == 2?'../../static/wodehuanzhe/selectedcopy.png':'../../static/wodehuanzhe/unselectedcopy.png'"></image>
-	<text :class="selectIndex ==2?'selecttext':'unselecttext'"  @click="changeSelectIndex(2)">女</text>
- </view>
-                      
-										
-		<text class="name">身份证号</text>
-				<input adjust-position="true" class="inputview" placeholder="请输入患者身份证号" v-model="huanzheIDNumber"/>			  
-				<text class="name">手机号</text>
-						<input adjust-position="true" class="inputview" placeholder="请输入患者手机号" v-model="huanzheMobile"/>	
-						<text class="name">地址</text>
-								<pickers @address="address" @close="close">
-									<view class="chooseshengshiqu">
-										<input adjust-position="true" class="input" placeholder="请选择省市区" v-model="res" :disabled="true">
-										
-										</input>
- 										<image src="../../static/wodehuanzhe/below.png" class="rightImage"></image>
-									</view> 
-						 
- 								
- 									
-								</pickers>
-								<textarea  @blur="bindTextAreaBlur" class="detailAdressView" placeholder="请输入详细地址"  style="height: 130px;" maxlength="-1" adjust-position="true"/>
-		<text class="huanzhexinxi">患者信息</text>
+		<scroll-view scroll-y="true" :style="[{height:viewHeight + 'px'}]" @scroll="scroll">
+			<view class="topview">
+				<image src="../../static/wodehuanzhe/bg_wodehuanzhe.png" class="topimageview" mode="aspectFill"></image>
+				<text class="title1">请输入</text>
+				<text class="title2">患者信息、诊断结果</text>
+				<view class="line1">
+
+				</view>
+				<view class="topitemView">
+					<text class="huanzhexinxi">患者信息</text>
+					<view class="greenline">
+
+					</view>
+					<text class="name">姓名</text>
+					<input adjust-position="true" class="inputview" placeholder="请输入患者名字" v-model="huanzhename" />
+					<view class="sexview">
+						<image class="sexImage" @click="changeSelectIndex(1)" :src="selectIndex == 1?'../../static/wodehuanzhe/selectedcopy.png':'../../static/wodehuanzhe/unselectedcopy.png'"></image>
+						<text :class="selectIndex ==1?'selecttext':'unselecttext'" @click="changeSelectIndex(1)"> 男</text>
+						<image class="sexImage" @click="changeSelectIndex(2)" :src="selectIndex == 2?'../../static/wodehuanzhe/selectedcopy.png':'../../static/wodehuanzhe/unselectedcopy.png'"></image>
+						<text :class="selectIndex ==2?'selecttext':'unselecttext'" @click="changeSelectIndex(2)">女</text>
+					</view>
+
+
+					<text class="name">身份证号</text>
+					<input adjust-position="true" class="inputview" placeholder="请输入患者身份证号" v-model="huanzheIDNumber" />
+					<text class="name">手机号</text>
+					<input adjust-position="true" class="inputview" placeholder="请输入患者手机号" v-model="huanzheMobile" />
+					<text class="name">地址</text>
+					<pickers @address="address" @close="close">
+						<view class="chooseshengshiqu">
+							<input adjust-position="true" class="input" placeholder="请选择省市区" v-model="res" :disabled="true">
+
+							</input>
+							<image src="../../static/wodehuanzhe/below.png" class="rightImage"></image>
+						</view>
+					</pickers>
+					<textarea @blur="bindTextAreaBlur" class="detailAdressView" placeholder="请输入详细地址" style="height: 130px;" maxlength="-1"
+					 adjust-position="true" />
+					<text class="huanzhexinxi">患者信息</text>
 		 <view class="greenline">
 		 	
 		 </view>
-		<text class="name">病症</text>
+		<text class="name">诊断</text>
 		<yealuo-select class="inputview" 
 		the-style="margin: 20upx auto;font-size: 46upx;  " 
 		      
@@ -55,6 +53,17 @@
 		        :selectIco="true"
 		        >
 		        </yealuo-select>
+				<text class="name">症状</text>
+				<yealuo-select class="inputview" 
+				the-style="margin: 20upx auto;font-size: 46upx;  " 
+				      
+				        placeholder='请选择症状' 
+				        :binData="data2"
+				        overflow="hide"
+				        @getBackVal="getBackVal"
+				        :selectIco="true"
+				        >
+				        </yealuo-select>
 				<view class="bottomview">
 					<text class="baocun">保存</text>
 					<text class="jixupingding" @click="pingdingAction">继续评定</text>

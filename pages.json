@@ -265,9 +265,8 @@
         ,{
             "path" : "pages/HuanzheDetail/HuanzheDetail",
             "style" : {
-				"navigationBarTitleText":"患者详情"
-				
-			}
+            	"navigationStyle":"custom"
+            }
         }
         ,{
             "path" : "pages/AddHuanzhe/AddHuanzhe",
