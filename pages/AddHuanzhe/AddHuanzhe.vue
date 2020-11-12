@@ -1,69 +1,60 @@
 <template>
 	<view>
-		<scroll-view scroll-y="true" :style="[{height:viewHeight + 'px'}]" @scroll="scroll">
-			<view class="topview">
-				<image src="../../static/wodehuanzhe/bg_wodehuanzhe.png" class="topimageview" mode="aspectFill"></image>
-				<text class="title1">请输入</text>
-				<text class="title2">患者信息、诊断结果</text>
-				<view class="line1">
-
-				</view>
-				<view class="topitemView">
-					<text class="huanzhexinxi">患者信息</text>
-					<view class="greenline">
-
-					</view>
-					<text class="name">姓名</text>
-					<input adjust-position="true" class="inputview" placeholder="请输入患者名字" v-model="huanzhename" />
-					<view class="sexview">
-						<image class="sexImage" @click="changeSelectIndex(1)" :src="selectIndex == 1?'../../static/wodehuanzhe/selectedcopy.png':'../../static/wodehuanzhe/unselectedcopy.png'"></image>
-						<text :class="selectIndex ==1?'selecttext':'unselecttext'" @click="changeSelectIndex(1)"> 男</text>
-						<image class="sexImage" @click="changeSelectIndex(2)" :src="selectIndex == 2?'../../static/wodehuanzhe/selectedcopy.png':'../../static/wodehuanzhe/unselectedcopy.png'"></image>
-						<text :class="selectIndex ==2?'selecttext':'unselecttext'" @click="changeSelectIndex(2)">女</text>
-					</view>
-
-
-					<text class="name">身份证号</text>
-					<input adjust-position="true" class="inputview" placeholder="请输入患者身份证号" v-model="huanzheIDNumber" />
-					<text class="name">手机号</text>
-					<input adjust-position="true" class="inputview" placeholder="请输入患者手机号" v-model="huanzheMobile" />
-					<text class="name">地址</text>
-					<pickers @address="address" @close="close">
-						<view class="chooseshengshiqu">
-							<input adjust-position="true" class="input" placeholder="请选择省市区" v-model="res" :disabled="true">
-
-							</input>
-							<image src="../../static/wodehuanzhe/below.png" class="rightImage"></image>
-						</view>
-					</pickers>
-					<textarea @blur="bindTextAreaBlur" class="detailAdressView" placeholder="请输入详细地址" style="height: 130px;" maxlength="-1"
-					 adjust-position="true" />
-					<text class="huanzhexinxi">患者信息</text>
+		<scroll-view scroll-y="true"  :style="[{height:viewHeight + 'px'}]"  @scroll="scroll"  >
+		<view class="topview">
+			<image src="../../static/wodehuanzhe/bg_wodehuanzhe.png" class="topimageview" mode="aspectFill"></image>
+				<text class="title1">请输入</text>	
+					 <text class="title2">患者信息、诊断结果</text>
+					 <view class="line1">
+					 	
+					 </view>
+			<view class="topitemView"> 
+				 <text class="huanzhexinxi"  >患者信息</text>
+				  <view class="greenline">
+				  	
+				  </view>
+ <text class="name">姓名</text>
+		<input adjust-position="true" class="inputview" placeholder="请输入患者名字" v-model="huanzhename"/>	 
+ <view class="sexview">
+ 	<image class="sexImage" @click="changeSelectIndex(1)" :src="selectIndex == 1?'../../static/wodehuanzhe/selectedcopy.png':'../../static/wodehuanzhe/unselectedcopy.png'"></image>
+	<text :class="selectIndex ==1?'selecttext':'unselecttext'" @click="changeSelectIndex(1)"> 男</text>
+	<image class="sexImage"  @click="changeSelectIndex(2)" :src="selectIndex == 2?'../../static/wodehuanzhe/selectedcopy.png':'../../static/wodehuanzhe/unselectedcopy.png'"></image>
+	<text :class="selectIndex ==2?'selecttext':'unselecttext'"  @click="changeSelectIndex(2)">女</text>
+ </view>
+                      
+										
+		<text class="name">身份证号</text>
+				<input adjust-position="true" class="inputview" placeholder="请输入患者身份证号" v-model="huanzheIDNumber"/>			  
+				<text class="name">手机号</text>
+						<input adjust-position="true" class="inputview" placeholder="请输入患者手机号" v-model="huanzheMobile"/>	
+						<text class="name">地址</text>
+								<pickers @address="address" @close="close">
+									<view class="chooseshengshiqu">
+										<input adjust-position="true" class="input" placeholder="请选择省市区" v-model="res" :disabled="true">
+										
+										</input>
+ 										<image src="../../static/wodehuanzhe/below.png" class="rightImage"></image>
+									</view> 
+						 
+ 								
+ 									
+								</pickers>
+								<textarea  @blur="bindTextAreaBlur" class="detailAdressView" placeholder="请输入详细地址"  style="height: 130px;" maxlength="-1" adjust-position="true"/>
+		<text class="huanzhexinxi">患者信息</text>
 		 <view class="greenline">
 		 	
 		 </view>
-		<text class="name">诊断</text>
+		<text class="name">病症</text>
 		<yealuo-select class="inputview" 
 		the-style="margin: 20upx auto;font-size: 46upx;  " 
 		      
 		        placeholder='请选择诊断结果' 
-		        :binData="data2"
+		        :binData="illnessData"
   		        overflow="hide"
 		        @getBackVal="getBackVal"
-		        :selectIco="true"
+		        :selectIco="false"
 		        >
 		        </yealuo-select>
-				<text class="name">症状</text>
-				<yealuo-select class="inputview" 
-				the-style="margin: 20upx auto;font-size: 46upx;  " 
-				      
-				        placeholder='请选择症状' 
-				        :binData="data2"
-				        overflow="hide"
-				        @getBackVal="getBackVal"
-				        :selectIco="true"
-				        >
-				        </yealuo-select>
 				<view class="bottomview">
 					<text class="baocun">保存</text>
 					<text class="jixupingding" @click="pingdingAction">继续评定</text>
@@ -89,18 +80,7 @@
  		},
 		data() {
 			return {
-				data2: [
-				                    {id: 1, value: '选项1'},
-				                    {id: 2, value: '选项2'},
-				                    {id: 3, value: '选项3'},
-				                    {id: 4, value: '选项4'},
-				                    {id: 5, value: '选项5'},
-				                    {id: 6, value: '这是6'},
-				                    {id: 7, value: '这是7'},
-				                    {id: 8, value: '这是8'},
-				                    {id: 9, value: '这是9'},
-				                    {id: 10, value: '这是10'},
-				                ],
+			    illnessData:[],
 				viewHeight:0,
  				 huanzhename:'',
 				 huanzheIDNumber:'',
@@ -109,9 +89,13 @@
 			 detailAdress:'',
  				//选中后的显示值
 				res:"请选择省市区",
-				        selecValue: '双皮奶'
+				selecValue: '双皮奶'
 
 			}
+		},
+		onLoad:function(e){
+			this.getillnessUserList();
+			
 		},
 		onShow:function(){
 		 
@@ -121,10 +105,46 @@
 		},
 		methods: {
 			//选中值传（值可自定义，初始id与value用|分割，根据实际用途定义）
-			            getBackVal:function(e){
+		  getBackVal:function(e){
 			                console.log(e)
 			            },
-
+         //获取病症 
+		 getillnessUserList(){
+		 this.$app.request({
+		 		
+		 		url: this.$api.huanzhe.getillnessList,
+				//getApp().globalData.userId
+		 		data: {
+					pagenum:1,
+					pagesize:10,
+		 			userid:11 ,
+ 		 		},
+		 		method: 'GET',
+		 		success: res => {
+		 			console.log(res)
+		 				 
+		 			if(res.code == 200){
+		 				 //  this.illnessData = res.data.records;
+ 				  	// this.illnessData.concat(res.data.records);
+					for (var i = 0; i < res.data.records.length; i++) {
+						this.illnessData.push(res.data.records[i]);
+ 					}
+						//  this.illnessData.push(res.data.records[1]);
+						
+						console.log("789789")
+						
+							console.log( this.illnessData)
+									  
+		 			}
+		 			
+		 		},
+		 		fail: res => {
+		 		},
+		 		complete: res => {
+		 			 
+		 		}
+		 	});
+		 },
 			address(e){
 			  console.log("点击了确认")
 			  this.res=e.value.join("-");

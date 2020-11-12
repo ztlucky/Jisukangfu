@@ -6,18 +6,21 @@
 		},
 		onShow: function() {
 			console.log('App Show')
-			var args = plus.runtime.arguments;
+			// #ifdef APP-PLUS
+			  var args = plus.runtime.arguments;
 			if (args) {
-				// 处理args参数，如直达到某新页面等  
-				console.log(args)
-
+			  	// 处理args参数，如直达到某新页面等  
+			 	console.log(args)
+			
 			}
+			// #endif
+			
 		},
 		onHide: function() {
 			console.log('App Hide')
 		},
 		globalData: {
-			userId: uni.getStorageSync('userid') ? uni.getStorageSync('userid') : '',
+			userId: uni.getStorageSync('userid') ? uni.getStorageSync('userid') : 1,
 			userName: uni.getStorageSync('name') ? uni.getStorageSync('name') : '游客',
 
 

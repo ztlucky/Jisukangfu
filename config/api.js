@@ -23,11 +23,11 @@ let api = {
 	shouye:{
 		//首页接口
 		//获取课程类型列表
-		getcourseCategoryList:apiRoot + "app/course/getCourseType",
+		getcourseCategoryList:apiRoot + "/datatype/datatype/list",
 		//推荐课程列表
-		getRecommendcourseList:apiRoot + "app/course/AllCourseList",
+		getRecommendcourseList:apiRoot + "app/home_page/recommendedCourses",
 		//推荐学习班
-		getRecommendClassList:apiRoot + "app/class/classList",
+		getRecommendClassList:apiRoot + "app/home_page/recommendedClass",
 		//朋友在看
 		getPengyouzaikanList:apiRoot +"app/home_page/getFriendLook",
 		//轮播图
@@ -67,6 +67,11 @@ let api = {
 		feedback: apiRoot + "user/feedback.html",
 		logout: apiRoot + "user/logout.html",
 	},
+	huanzhe:{
+		//获取病症
+		getillnessList:apiRoot+"app/illness/listByUser",
+		//添加患者
+ 	},
 	wechat: {
 		miniAppLogin: apiRoot + 'wechat/miniAppLogin',
 		mpLogin: apiRoot + 'wechat/mpLogin',

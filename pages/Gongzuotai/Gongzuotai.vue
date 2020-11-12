@@ -189,7 +189,18 @@
 							 animationType:'slide-in-right'
 						 })
 					 }
-					 break
+					 break;
+						 
+					 case 1:{
+						 uni.navigateTo({
+						 							 url:'../work/history/history',
+						 							 animationDuration:300,
+						 							 animationType:'slide-in-right'
+						 })
+					 }
+					 break;
+					 
+					 
 				 }
 				 uni.showToast({
 				 	title:'你点击了'+index,
@@ -227,7 +238,11 @@
 					 }
 					 break;
 					 case 1:{
-					 				 
+					 	uni.navigateTo({
+					 		url:'../work/compare/compare',
+					 		animationDuration:300,
+					 		animationType:"slide-in-right"
+					 	})					 
 					 }
 					 break;
 					 case 2 :{
@@ -238,10 +253,11 @@
 					 }
 					 break;
 					 case 3 :{
-					 						uni.showToast({
-					 							title:'你点击了我的患者'+index,
-					 											icon:'none'
-					 						}) 
+					 	uni.navigateTo({
+					 		url:'../work/setBack/setBack',
+					 		animationDuration:300,
+					 		animationType:"slide-in-right"
+					 	})						 
 					 }
 					 break;
 				 }
