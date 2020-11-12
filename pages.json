@@ -16,6 +16,24 @@
 				}
 		},
 		{
+				"path" : "pages/HuanzheDetail/addXiangMu/addXiangMu",
+				"style" : {
+					"navigationBarTitleText":"添加项目",
+					"navigationBarBackgroundColor":"#31D880",
+					"navigationBarTextStyle":"white"
+					
+				}
+		},
+		{
+				"path" : "pages/HuanzheDetail/kangfuxiangmu/kangfuxiangmu",
+				"style" : {
+					"navigationBarTitleText":"康复项目",
+					"navigationBarBackgroundColor":"#31D880",
+					"navigationBarTextStyle":"white"
+					
+				}
+		},
+		{
 				"path" : "pages/work/createTitleType/createTitleType",
 				"style" : {
 					"navigationBarTitleText":"评定量表",

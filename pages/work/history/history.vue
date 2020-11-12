@@ -12,7 +12,7 @@
 							</view>
 							<view class="info">
 								<view class="infoType">
-										<image src=""></image>
+										<image src="../../../static/gongzuotai/icon_zhenduan1.png"></image>
 										<view>诊断：心脏病</view>
 								</view>
 								<view class="">
@@ -114,7 +114,7 @@
 	width:28rpx;
 	height: 28rpx;
 	border-radius: 50%;
-	background-color: red;
+	/* background-color: red; */
 	margin:4rpx;
 }
 .right .info >view:nth-child(1) view{
