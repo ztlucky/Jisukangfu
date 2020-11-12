@@ -1,12 +1,12 @@
 <template>
 	<view class="view">
 		<view class="navList">
-			<view class="item" v-for="(i,k) in [1,2,3]" :key="k">
+			<view class="item" v-for="(i,k) in list" :key="k" @click="jumpNext(k)">
 				<view class="itemLeft">
-					<view class="title">评定量表</view>
-					<view class="text hidden">选择用肯定是会计师苦上加苦飞机上看</view>
+					<view class="title">{{i.title}}</view>
+					<view class="text hidden">{{i.subtitle}}</view>
 				</view>
-				<image src="" class="itemRight"></image>
+				<image  :src="i.image" class="itemRight"></image>
 			</view>
 		</view>
 	</view>
@@ -16,11 +16,51 @@
 	export default {
 		data() {
 			return {
-				list:[]
+				list:[{
+					title:"评定量表",
+					subtitle:"选择创建的题库打造合适的评定量表",
+					image:'../../../static/gongzuotai/icon_pingdingliangbiao.png'
+				},
+				{
+					title:"疾病诊断、症状表现、一键比较",
+					subtitle:"创建常见的疾病诊状",
+					image:'../../../static/gongzuotai/icon_jibingzhenduan.png'
+				},
+				{
+					title:"治疗项目",
+					subtitle:"创建常用的疾病治疗项目",
+					image:'../../../static/gongzuotai/icon_zhiliaoxiangmu.png'
+				}
+				
+				]
 			}
 		},
 		methods: {
-			
+				
+			jumpNext(k){
+					
+				// if(k==0){
+					uni.navigateTo({
+						url:'../pingDingLiangBiao/pingDingLiangBiao',
+						animationDuration:300,
+						animationType:'slide-in-right'
+					})
+					
+				// }else if(k == 1){
+				// 	uni.navigateTo({
+				// 		url:'../pingDingLiangBiao/pingDingLiangBiao',
+				// 		animationDuration:300,
+				// 		animationType:'slide-in-right'
+				// 	})
+				// }else{
+				// 	uni.navigateTo({
+				// 		url:'../pingDingLiangBiao/pingDingLiangBiao',
+				// 		animationDuration:300,
+				// 		animationType:'slide-in-right'
+				// 	})
+				// }
+				
+			}
 		}
 	}
 </script>
@@ -59,6 +99,5 @@
 	.item .itemRight{
 		width:80rpx;
 		height: 80rpx;
-		background-color: red;
-	}
+ 	}
 </style>
