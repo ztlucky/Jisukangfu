@@ -341,7 +341,8 @@ export default {
 //获取朋友在看
 	
 getpengyouZaikan(){
-	console.log("dudhi"+getApp().globalData.userId),
+	console.log("dudhi"+getApp().globalData.userId)
+	var that = this
 	this.$app.request({
 		url: this.$api.shouye.getPengyouzaikanList,
 		method: 'GET',
@@ -352,7 +353,7 @@ getpengyouZaikan(){
 		success: res => {
 			console.log("++++"+res)
 			if (res.code == 200) {
-    this.pengyouzaikanList = res.data
+              that.pengyouzaikanList = res.data
 				 
 			} else {
 				this.$alert(res.msg);
@@ -363,17 +364,21 @@ getpengyouZaikan(){
 },
 		/*获取子类别数据*/
 		getCategory() {
+			var that = this;
 			this.$app.request({
 				url: this.$api.shouye.getcourseCategoryList,
 				method: 'GET',
 				dataType: 'json',
 				success: res => {
+					console.log("dddddd")
+					console.log(res)
 					if (res.code == 200) {
-						this.category = res.data;
-						if (this.category_index > -1) {
-							let nextIndex = this.category_index - 1;
+ 						console.log(res)
+						that.category = res.result.records;
+						if (that.category_index > -1) {
+							let nextIndex = that.category_index - 1;
 							nextIndex = nextIndex <= 0 ? 0 : nextIndex;
-							this.scroll_category_id = `category_id-${nextIndex}`; //动画滚动,滚动至中心位置
+							that.scroll_category_id = `category_id-${nextIndex}`; //动画滚动,滚动至中心位置
 						}
 					} else {
 						this.$alert(res.msg);
@@ -386,34 +391,28 @@ getpengyouZaikan(){
 		/*获取推荐课程数据*/
 		getRecommendCoureData() {
 			console.log('getdata'+this.category_id)
+			var that = this;
 			this.$app.request({
 				url: this.$api.shouye.getRecommendcourseList,
 				data: {
-					coursetype: this.category_id,
-					pagenum:1,
-					page_size:10,
-					sorttype:1
+					course_type: that.category_id,
+					pageNo:1,
+					pageSize:10,
+					user_id:10 //getApp().globalData.userId
 				},
-				method: 'POST',
+				method: 'GET',
 				dataType: 'json',
 				success: res => {
+					console.log(res)
 					
- 				    this.$refs.hrPullLoad.reSet();
+ 				    that.$refs.hrPullLoad.reSet();
 					if (res.code == 200) {
- 						console.log(res.data.records)
-						if(res.data.records.length >6){
-							this.recommendCourseList =  	res.data.records.slice(0,6);
-							
-						}else{
-							this.recommendCourseList = 	res.data.records;
-							
-						}
- 						console.log(this.recommendCourseList)
- 						
- 						this.showPageLoading = false;
+						
+					that.recommendCourseList = 	res.result; 
+					that.showPageLoading = false;
 						
 					} else {
- 						this.$alert(res.msg);
+ 						that.$alert(res.msg);
 					}
 				},
 				fail: res => {
@@ -433,12 +432,8 @@ getpengyouZaikan(){
 				dataType: 'json',
 				success: res => {
 					
-					if (res.code == 200) {
-						 
-							
- 							this.slider =   res.result;
-							
-					 
+					if (res.code == 200) {							
+ 							this.slider =   res.result; 
 						
 					} else {
 						this.$alert(res.msg);
@@ -456,23 +451,24 @@ getpengyouZaikan(){
 		},
 		// 获取推荐学习班 //推荐花费的
 getRecommendClassList() {
+	var that = this;
  			this.$app.request({
 				url: this.$api.shouye.getRecommendClassList,
 				data: {
-					classtype: this.category_id,
-					costtype:1,
+					class_type: this.category_id,
+					pageNo:1,
 					pagenum:1,
-					pagesize:10,
-					sorttype:1
+					pageSize:10,
+					user_id:10 //getApp().globalData.userId
 				},
-				method: 'POST',
+				method: 'GET',
 				dataType: 'json',
 				success: res => {
 					
  					if (res.code == 200) {
 						 
  					 
-							this.banjiList =res.data.records;
+							that.banjiList =res.result;
 							
 						}
   						

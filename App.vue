@@ -20,7 +20,7 @@
 			console.log('App Hide')
 		},
 		globalData: {
-			userId: uni.getStorageSync('userid') ? uni.getStorageSync('userid') : '',
+			userId: uni.getStorageSync('userid') ? uni.getStorageSync('userid') : 1,
 			userName: uni.getStorageSync('name') ? uni.getStorageSync('name') : '游客',
 
 

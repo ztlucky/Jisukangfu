@@ -3,16 +3,16 @@
 		<navigator :url="'/pages/Daxue/BanjiDetail/BanjiDetail?id=' + item.id" class="item" v-for="(item, index) in list" :key="index" hover-class="none">
 	 <view  class="topview">
 		 <view class="imageview">
-		 	<image class="newimage" :src="item.cover"  ></image>
+		 	<image class="newimage" :src="item.coverurl"  ></image>
 		 	<text class="liveview">班级</text>
 		 </view>
 		
  				 <view class="newrightText">
-					 <view class="newtitle">{{ item.classname }}</view> 
+					 <view class="newtitle">{{ item.name }}</view> 
 					 	<view class="newSubtitle">{{item.presentation}} </view>
 					<text class="price">¥{{item.cost}}元</text>
 					<view class="bottomview">
-					<text class="newpeopleCount">{{item.read }}人观看</text>
+					<text class="newpeopleCount">{{item.num }}人观看</text>
 						<text class="lessonCount">共15节课</text>
 						
 					</view>
