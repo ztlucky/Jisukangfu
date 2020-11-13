@@ -10,7 +10,7 @@
  				 <view class="newrightText">
 					 <view class="newtitle">{{ item.name }}</view> 
 					 	<view class="newSubtitle">{{item.presentation}} </view>
-					<text class="price">¥{{item.cost}}元</text>
+					<text class="price">¥{{item.joincost}}元</text>
 					<view class="bottomview">
 					<text class="newpeopleCount">{{item.num }}人观看</text>
 						<text class="lessonCount">共15节课</text>
