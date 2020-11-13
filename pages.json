@@ -1,6 +1,24 @@
 {
 	"pages": [ 
 		{
+			 "path" : "pages/Daxue/Daxue",
+				 
+			 "style":{
+				 "navigationStyle":"custom",
+					 
+				 "app-plus":{
+					 "titleNView":"false",
+					 "scrollIndicator":"none",
+					 "safearea": {  
+					     "bottom": {  
+					         "offset": "auto"  
+					     }  
+					 }
+				 }
+			 }
+		 }
+		,
+		{
 				"path" : "pages/work/pingDingLiangBiao/pingDingLiangBiao",
 				"style" : {
 					"navigationStyle":"custom"
@@ -78,24 +96,7 @@
 					
 				}
 		},
- 		{
-			 "path" : "pages/Daxue/Daxue",
-				 
-			 "style":{
-				 "navigationStyle":"custom",
-					 
-				 "app-plus":{
-					 "titleNView":"false",
-					 "scrollIndicator":"none",
-					 "safearea": {  
- 					     "bottom": {  
-					         "offset": "auto"  
-					     }  
-					 }
-				 }
-			 }
-		 }
-		,
+ 		
 	    {
             "path" : "pages/Gongzuotai/Gongzuotai",
             "style" : {
@@ -122,7 +123,19 @@
         ,{
             "path" : "pages/Wode/Wode",
             "style" : {
-				"navigationBarTitleText":"我的"
+				"navigationBarTitleText":"我的",
+				"app-plus":{
+						
+					"titleNView":{
+						"buttons":[{
+							"text": "\ue502",
+							"fontSrc": "/static/uni.ttf",
+							"fontSize": "22px",
+							"color": "#000000"
+							 
+						}] 
+					}
+				}
 				
 			}
         }
@@ -350,6 +363,45 @@
             {
                 "navigationBarTitleText": "关于我们",
                 "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/Wode/PersonalInfo/PersonalInfo",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "个人信息",
+                "enablePullDownRefresh": false,
+				"navigationBarBackgroundColor":"#FFFFFF",
+				"navigationBarTextStyle":"black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/Wode/Zizhirenzheng/Zizhirenzheng",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "资质认证",
+                "enablePullDownRefresh": false,
+				"navigationBarBackgroundColor":"#FFFFFF",
+				"navigationBarTextStyle":"black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/Wode/ResetPassword/ResetPassword",
+            "style" :                                                                                    
+            {
+              "navigationStyle":"custom"
+            }
+            
+        }
+        ,{
+            "path" : "pages/Wode/EditInfo/EditInfo",
+            "style" :                                                                                    
+            {
+                "navigationStyle":"custom"
+                
             }
             
         }
