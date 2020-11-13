@@ -25,6 +25,15 @@
 				}
 		},
 		{
+				"path" : "pages/work/addNotes/addNotes",
+				"style" : {
+					"navigationBarTitleText":"添加笔记",
+					"navigationBarBackgroundColor":"#31D880",
+					"navigationBarTextStyle":"white"
+					
+				}
+		},
+		{
 				"path" : "pages/work/createProblemInfo/createProblemInfo",
 				"style" : {
 					"navigationBarTitleText":"评定量表",
