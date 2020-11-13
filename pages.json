@@ -16,6 +16,47 @@
 				}
 		},
 		{
+				"path" : "pages/work/xiangMu/xiangMu",
+				"style" : {
+					"navigationStyle":"custom"
+				}
+		},
+		{
+				"path" : "pages/HuanzheDetail/kangFuJiLu/kangFuJiLu",
+				"style" : {
+					"navigationBarTitleText":"康复评定",
+					"navigationBarBackgroundColor":"#31D880",
+					"navigationBarTextStyle":"white"
+					
+				}
+		},
+		{
+				"path" : "pages/HuanzheDetail/record/record",
+				"style" : {
+					"navigationBarTitleText":"患者记录",
+					"navigationBarBackgroundColor":"#31D880",
+					"navigationBarTextStyle":"white"
+					
+				}
+		},
+		{
+				"path" : "pages/HuanzheDetail/addRecord/addRecord",
+				"style" : {
+					"navigationBarTitleText":"患者记录",
+					"navigationBarBackgroundColor":"#31D880",
+					"navigationBarTextStyle":"white"
+				}
+		},
+		{
+				"path" : "pages/HuanzheDetail/addCaseHistory/addCaseHistory",
+				"style" : {
+					"navigationBarTitleText":"病例",
+					"navigationBarBackgroundColor":"#31D880",
+					"navigationBarTextStyle":"white"
+					
+				}
+		},
+		{
 				"path" : "pages/HuanzheDetail/addXiangMu/addXiangMu",
 				"style" : {
 					"navigationBarTitleText":"添加项目",

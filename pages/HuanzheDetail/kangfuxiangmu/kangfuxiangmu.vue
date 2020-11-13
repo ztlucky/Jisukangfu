@@ -31,13 +31,13 @@
 				</view>
 				<view class="itemBottom">
 					<view class="">剩余时间：5天</view>
-					<view class="">结束</view>
+					<view class="" @click="endXiangMu(k)">结束</view>
 				</view>
 			</view>
 		</view>
 		<view class="bottom">添加项目</view>
-		<view class="muBiaoView">
-			<view class="muBiaoViewBack"></view>
+		<view class="muBiaoView" v-if="isShowPerformWindow">
+			<view class="muBiaoViewBack" @click="setShowPerformWindowStatus"></view>
 			<view class="muBiaoViewContent">
 				<view class="title">短期目标</view>
 				<view class="contentText">
@@ -45,16 +45,29 @@
 					<view class="contentCenter">
 						<view class="title"> 请为本次治疗打分</view>
 						<view class="setNumber">
-							<view class="numberBotton">-</view>
-							<input :disabled="true" value="10" />
-							<view class="numberBotton">+</view>
+							<view class="numberBotton" @click="setNumber(-1)">-</view>
+							<input :disabled="true" :value="number" />
+							<view class="numberBotton" @click="setNumber(1)">+</view>
 						</view>
-						<view class="confirm">确认进度</view>
-						<view class="stop">停止进度</view>
+						<view class="confirm" @click="confirmProgress">确认进度</view>
+						<view class="stop" @click="stopProgress">停止进度</view>
 					</view>
 					<view class="title">长期目标</view>
 				</view>
 				<view class="text">脑卒中又称脑血管意外（CVA），主要是指脑动脉系统病变引起的血管痉挛。</view>
+			</view>
+		</view>
+		<view class="finishView" v-if="isShowFinishWindow">
+			<view class="finishViewBack" @click="setShowFinishWindowStatus"></view>
+			<view class="finisViewContent">
+				<image src="" class="finisViewContentImage"></image>
+				<view class="finisViewScore">
+					<image src="" class="scoreImage"></image>
+					<view class="scoreText">80</view>
+				</view>
+				<view class="title">您的本次项目得分为</view>
+				<view class="text">恭喜您完成本次项目</view>
+				<view class="finishConfirm" @click="confirmFinish">确定</view>
 			</view>
 		</view>
 	</view>
@@ -63,11 +76,39 @@
 	export default {
 		data() {
 			return {
-
+				isShowPerformWindow:false,
+				number:1,
+				isShowFinishWindow:false
 			}
 		},
 		methods: {
-
+			setShowPerformWindowStatus(){
+				this.isShowPerformWindow = !this.isShowPerformWindow;
+			},
+			endXiangMu(index){
+				this.nowIndex = index;
+				this.setShowPerformWindowStatus();
+			},
+			setNumber(data){
+				let num = this.number;
+				num+=data;
+				if(num>=1 && num<=10){
+					this.number = num;
+				}
+			},
+			confirmProgress(){
+				this.setShowPerformWindowStatus();
+				this.setShowFinishWindowStatus();
+			},
+			stopProgress(){
+				this.setShowPerformWindowStatus();
+			},
+			setShowFinishWindowStatus(){
+				this.isShowFinishWindow = !this.isShowFinishWindow;
+			},
+			confirmFinish(){
+				this.setShowFinishWindowStatus();
+			}
 		}
 	}
 </script>
@@ -403,6 +444,99 @@
 	.stop{
 		background-color: #FFFFFF;
 		color: #31D880;
-		
+	}
+	.finishView{
+		width: 100vw;
+		height: 100vh;
+		position: fixed;
+		top:0rpx;
+		left: 0rpx;
+	}
+	.finishViewBack{
+		width: 100vw;
+		height: 100vh;
+		background-color: rgba(0,0,0,.6);
+		position: absolute;
+		top:0;
+		left: 0;
+	}
+	.finisViewContent{
+		width:518rpx;
+		height: 612rpx;
+		position: absolute;
+		top:50%;
+		left: 50%;
+		transform: translate(-50%,-50%);
+	}
+	.finisViewContentImage{
+		width: 518rpx;
+		height: 612rpx;
+		/* background-color: red; */
+		position: absolute;
+		top:0;
+		left: 0;
+	}
+	.finisViewContent .finishConfirm{
+		position: absolute;
+		z-index: 2;
+		left: 50%;
+		transform: translateX(-50%);
+		bottom: -8rpx;
+		width: 308rpx;
+		height: 80rpx;
+		background: #31D880;
+		border-radius: 50rpx;
+		font-size: 28rpx;
+		font-family: PingFangSC-Regular, PingFang SC;
+		font-weight: 400;
+		color: #FFFFFF;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.finisViewScore{
+		position: relative;
+		width:278rpx;
+		height: 278rpx;
+		margin-left: 120rpx;
+		margin-top: 98rpx;
+	}
+	.finisViewScore image{
+		width:278rpx;
+		height: 278rpx;
+		/* background-color: #007AFF; */
+	}
+	.finisViewScore .scoreText{
+		position: absolute;
+		top:74rpx;
+		width: 100%;
+		left: 0;
+		text-align: center;
+		font-size: 96rpx;
+		font-family: DIN-Bold, DIN;
+		font-weight: bold;
+		color: #FFFFFF;
+		line-height: 118rpx;
+	}
+	.finisViewContent .title{
+			position: relative;
+			z-index: 1;
+			margin-top:38rpx;
+			font-size: 30rpx;
+			font-family: PingFangSC-Semibold, PingFang SC;
+			font-weight: 600;
+			color: #333333;
+			line-height: 42rpx;
+	}
+	.finisViewContent .text{
+			position: relative;
+			z-index: 1;
+			font-size: 28rpx;
+			font-family: PingFangSC-Regular, PingFang SC;
+			font-weight: 400;
+			color: #666666;
+			line-height: 40rpx;
+			margin-top: 6rpx;
+			text-align: center;
 	}
 </style>
