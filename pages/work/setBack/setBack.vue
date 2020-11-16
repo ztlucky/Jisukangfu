@@ -39,26 +39,26 @@
 				
 			jumpNext(k){
 					
-				// if(k==0){
+				if(k==0){
 					uni.navigateTo({
 						url:'../pingDingLiangBiao/pingDingLiangBiao',
 						animationDuration:300,
 						animationType:'slide-in-right'
 					})
 					
-				// }else if(k == 1){
-				// 	uni.navigateTo({
-				// 		url:'../pingDingLiangBiao/pingDingLiangBiao',
-				// 		animationDuration:300,
-				// 		animationType:'slide-in-right'
-				// 	})
-				// }else{
-				// 	uni.navigateTo({
-				// 		url:'../pingDingLiangBiao/pingDingLiangBiao',
-				// 		animationDuration:300,
-				// 		animationType:'slide-in-right'
-				// 	})
-				// }
+				}else if(k == 1){
+					uni.navigateTo({
+						url:'../pingDingLiangBiaoType/pingDingLiangBiaoType',
+						animationDuration:300,
+						animationType:'slide-in-right'
+					})
+				}else{
+					uni.navigateTo({
+						url:'/pages/work/xiangMu/xiangMu',
+						animationDuration:300,
+						animationType:'slide-in-right'
+					})
+				}
 				
 			}
 		}

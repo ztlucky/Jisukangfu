@@ -57,7 +57,8 @@
 .list .item .topview .imageview .newimage {
   height: 240rpx;
   width: 160rpx;
-  border-radius: 16rpx;
+  -webkit-border-radius: 16rpx;
+          border-radius: 16rpx;
 }
 .list .item .topview .imageview .liveview {
   position: absolute;
@@ -65,7 +66,8 @@
   width: 46rpx;
   height: 24rpx;
   line-height: 24rpx;
-  border-radius: 8rpx;
+  -webkit-border-radius: 8rpx;
+          border-radius: 8rpx;
   background-color: #777;
   color: #FFFFFF;
   bottom: 14rpx;
@@ -101,7 +103,8 @@
   padding-right: 15rpx;
   padding-top: 10rpx;
   padding-bottom: 10rpx;
-  border-radius: 8rpx;
+  -webkit-border-radius: 8rpx;
+          border-radius: 8rpx;
 }
 .list .item .topview .newrightText .price {
   font-size: 20rpx;

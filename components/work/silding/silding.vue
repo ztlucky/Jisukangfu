@@ -1,12 +1,12 @@
 <template>
 	<view class="sild" >
-		<view class="sildLeft" @click.stop="" :style="'left:'+left+'rpx'" @touchstart="start" @touchmove="move"  @touchend="end">
-			<view class="text" v-if="!isEdit">{{data.title}}</view>
-			<input class="text" v-else />
-			<image src="" ></image>
+		<view class="sildLeft" @click.stop="" :style="'width:'+(!isRun?'640':'500')+'rpx'" >
+			<view class="text hidden" :style="'width:'+(!isRun?'494':'442')+'rpx;color:'+(data.title?'#333333':'#888888')" v-if="!isEdit">{{data.title?data.title:' '}}</view>
+			<input placeholder="请输入选项内容" class="text" :focus="true" @blur="blur()" :style="'width:'+(!isRun?'494':'442')+'rpx'" v-else v-model="data.title"/>
+			<image src="" @click="setEditStatus()"></image>
 		</view>
-		<image src="" @click="deleteItem" :style="'right:'+(-50 + right)+'rpx'" class="delete"></image>
-		<view class="back"></view>
+		<image src="" v-if="isRun" @click="deleteItem"  class="delete"></image>
+		<!-- <view class="back"></view> -->
 	</view>
 </template>
 
@@ -113,6 +113,17 @@
 					}
 				})
 				
+			},
+			setEditStatus(){
+				this.isEdit = !this.isEdit;
+			},
+			blur(){
+				let that = this;
+				this.setEditStatus();
+				this.$emit('editTitle',{
+					index:that.index,
+					value:that.data.title
+				})
 			}
 		}
 	}
@@ -122,9 +133,9 @@
 	.sild{
 		width:640rpx;
 		height: 80rpx;
-		position: relative;
+		/* position: relative;
 		left: 0;
-		top:0;
+		top:0; */
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
@@ -141,9 +152,9 @@
 		border-radius: 8rpx;
 		padding-left: 28rpx;
 		padding-right: 26rpx;
-		position: absolute;
+		/* position: absolute;
 		top:0;
-		left: 0;
+		left: 0; */
 	}
 	.sildLeft > image{
 		width:32rpx;
@@ -151,13 +162,14 @@
 		background-color: #000000;
 	}
 	.sild .delete{
-		position: absolute;
-		top:0;
-		transform: translateY(80%);
-		right: 14rpx;
+		/* position: absolute; */
+		/* top:0; */
+		/* transform: translateY(80%); */
+		/* right: 14rpx; */
 		width: 30rpx;
 		height: 30rpx;
 		background-color:#E02020;
+		margin-right: 22rpx;
 		/* margin:14rpx; */
 	}
 	.sild .back{

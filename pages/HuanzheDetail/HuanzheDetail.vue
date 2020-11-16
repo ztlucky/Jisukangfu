@@ -1,7 +1,7 @@
 <template>
 	<view class="contentView">
 		<nav-bar :bgColor="bgColor" fontColor="#fff" title="患者详情">
-			<view slot="right"  @click="save" class="navRight">治疗结束</view>
+			<view slot="right" @click="save" class="navRight">治疗结束</view>
 		</nav-bar>
 		<scroll-view scroll-y="true" @scroll="scroll" :style="[{height:viewHeight + 'px'}]">
 			<view class="huanzheview">
@@ -9,7 +9,7 @@
 					<image src="../../static/gongzuotai/icon_nv.png"></image>
 					<view class="huanzherightview">
 						<view class="firstView">
-							<text class="name">刘胡兰</text>
+							<text class="name">刘胡兰 <text class="num">5床</text></text>
 							<text class="detail">性别：女 年龄：56</text>
 						</view>
 						<view class="secodview">
@@ -24,27 +24,27 @@
 				</view>
 
 			</view>
-			
+
 			<view class="kangfubgview">
 				<view class="titleView">
 					<view class="leftview">
 						<image class="image1" src="../../static/Huanzhexiangqing/icon_mubiao.png"></image>
 						<text>病历</text>
 					</view>
-					<view class="rightview">
+					<view class="rightview" @click="toPage('/pages/HuanzheDetail/addCaseHistory/addCaseHistory')">
 						<image src="../../static/Huanzhexiangqing/icon_tiaozhengmubiao.png" class="image2"></image>
-			
+
 						<text>填写病历</text>
 					</view>
-			
+
 				</view>
 				<view class="lineview">
-			
+
 				</view>
 				<view class="mubiaoview">
 					<view class="upview">
 						<view class="dot">
-			
+
 						</view>
 						<text class="dotTitle">诊断</text>
 					</view>
@@ -53,7 +53,7 @@
 				<view class="mubiaoview">
 					<view class="upview">
 						<view class="dot">
-			
+
 						</view>
 						<text class="dotTitle">诊疗意见</text>
 					</view>
@@ -61,8 +61,8 @@
 				</view>
 				<image src="" class="viewImage"></image>
 			</view>
-			
-			
+
+
 			<!-- 			 //康复目标
  -->
 			<view class="kangfubgview">
@@ -71,7 +71,7 @@
 						<image class="image1" src="../../static/Huanzhexiangqing/icon_mubiao.png"></image>
 						<text>康复目标</text>
 					</view>
-					<view class="rightview">
+					<view class="rightview" @click="toPage('/pages/KangfuMubiao/KangfuMubiao')">
 						<image src="../../static/Huanzhexiangqing/icon_tiaozhengmubiao.png" class="image2"></image>
 
 						<text>调整目标</text>
@@ -101,31 +101,31 @@
 				</view>
 			</view>
 			<!-- //康复项目 -->
-			
-			
+
+
 			<view class="kangfubgview">
 				<view class="titleView">
 					<view class="leftview">
 						<image class="image1" src="../../static/Huanzhexiangqing/icon_kangfuxiangmu.png"></image>
 						<text>康复项目</text>
 					</view>
-					<view class="rightview">
+					<view class="rightview" @click="toPage('/pages/HuanzheDetail/kangfuxiangmu/kangfuxiangmu')">
 						<image src="../../static/Huanzhexiangqing/icon_tiaozhengmubiao.png" class="image2"></image>
 						<text>调整项目</text>
 					</view>
 				</view>
 				<view class="lineview">
-				
+
 				</view>
 				<view class="xiangmuList">
-					<view class="xiangmuItem" v-for="(v,k) in [1,2,3]" :key="k">
+					<view class="xiangmuItem"  v-for="(v,k) in [1,2,3]" :key="k">
 						<view class="dot"></view>
 						<view class="xiangmuItemRight">
-							<view style="display: flex;align-items: center;"> 
+							<view style="display: flex;align-items: center;">
 								<view class="itemRightTitle hidden">治疗项目双方就开始</view>
 								<view class="itemRightTime">17:00 - 19:00</view>
 							</view>
-							<view class="itemRightRun">执行</view>
+							<view class="itemRightRun" @click="toPage('/pages/HuanzheDetail/kangfuxiangmu/kangfuxiangmu')">执行</view>
 						</view>
 					</view>
 				</view>
@@ -168,7 +168,7 @@
 						<image class="image1" src="../../static/Huanzhexiangqing/icon_pingding.png"></image>
 						<text>康复评定</text>
 					</view>
-					<view class="rightview">
+					<view class="rightview" @click="toPage('/pages/HuanzheDetail/kangFuJiLu/kangFuJiLu')">
 
 
 						<text>全部评定</text>
@@ -179,11 +179,11 @@
 
 				</view>
 				<view class="xiangmuList">
-					<view class="xiangmuItem" v-for="(v,k) in [1,2,3]" :key="k">
+					<view class="xiangmuItem" @click="toPage('/pages/HuanzheDetail/evaluation/evaluation')" v-for="(v,k) in [1,2,3]" :key="k">
 						<view class="dot"></view>
 						<view class="xiangmuItemRight">
-								<view class="itemRightTitle itemRightTitle1 hidden">治疗项目双方就开始治疗项目双方就开始治疗项目双方就开始治疗项目双方就开始治疗项目双方就开始</view>
-								<image class="itemRightImage" src=""></image>
+							<view class="itemRightTitle itemRightTitle1 hidden">治疗项目双方就开始治疗项目双方就开始治疗项目双方就开始治疗项目双方就开始治疗项目双方就开始</view>
+							<image class="itemRightImage" src="../../static/f_my_kecheng_arrow.png"></image>
 						</view>
 					</view>
 				</view>
@@ -214,7 +214,7 @@
 						<image class="image1" src="../../static/Huanzhexiangqing/icon_jilu.png"></image>
 						<text>患者记录</text>
 					</view>
-					<view class="rightview">
+					<view class="rightview" @click="toPage('/pages/HuanzheDetail/record/record')">
 
 
 						<text>全部记录</text>
@@ -224,7 +224,7 @@
 				<view class="lineview">
 
 				</view>
-				<view class="mubiaoview">
+				<view class="mubiaoview" @click="toPage('/pages/HuanzheDetail/recordInfo/recordInfo')" v-for="(v,k) in [1,2,3]" :key="k">
 					<view class="upview">
 						<view class="dot">
 						</view>
@@ -236,19 +236,7 @@
 
 					</view>
 				</view>
-				<view class="mubiaoview">
-					<view class="upview">
-						<view class="dot">
-
-						</view>
-						<text class="huanzhejiluTitle">患者记录1</text>
-
-					</view>
-					<text class="huanzhejilushijian">2020-06-30 06:00</text>
-					<view class="huanzhelineView">
-
-					</view>
-				</view>
+				
 			</view>
 			<view class="kejianview">
 				<text>其他人可见</text>
@@ -256,8 +244,8 @@
 			</view>
 		</scroll-view>
 		<view class="bottomview">
-			<text class="huanzhepingding">患者评定</text>
-			<text class="kangfujilu">康复记录</text>
+			<text class="huanzhepingding" @click="toPage('/pages/KangfuPingdingListPage/KangfuPingdingListPage')">患者评定</text>
+			<text class="kangfujilu" @click="toPage('/pages/HuanzheDetail/record/record')">康复记录</text>
 		</view>
 	</view>
 </template>
@@ -300,6 +288,13 @@
 				// top = top==0?1:top;
 				// let color = (top/100);
 				// this.bgColor = `rgba(49, 216, 128, ${color == 0?1:color})`;
+			},
+			toPage(url) {
+				uni.navigateTo({
+					url,
+					animationDuration: 300,
+					animationType: 'slide-in-right'
+				})
 			}
 		}
 	}
@@ -524,14 +519,16 @@
 
 
 		}
-		.viewImage{
-			width:244rpx;
+
+		.viewImage {
+			width: 244rpx;
 			height: 140rpx;
 			background-color: red;
 			margin-left: 82rpx;
-			margin-top:24rpx;
+			margin-top: 24rpx;
 			margin-bottom: 14rpx;
 		}
+
 		.lineview {
 			height: 2rpx;
 			background-color: #EAEAEA;
@@ -728,60 +725,70 @@
 		}
 
 	}
-	.navRight{
-		width:134rpx;
+
+	.navRight {
+		width: 134rpx;
 		height: 48rpx;
 		text-align: center;
 		line-height: 48rpx;
-		font-size:26rpx;
-		color:#2CD571;
+		font-size: 26rpx;
+		color: #2CD571;
 		background-color: #FFFFFF;
 		border-radius: 8rpx;
 		margin-right: 30rpx;
 	}
-	.xiangmuList{
+
+	.xiangmuList {
 		padding-bottom: 8rpx;
 	}
-	.xiangmuItem{
-		width:690rpx;
+
+	.xiangmuItem {
+		width: 690rpx;
 		height: 100rpx;
 		display: flex;
 		align-items: center;
-		.dot{
-			width:8rpx;
+
+		.dot {
+			width: 8rpx;
 			height: 8rpx;
 			background-color: #31D880;
 			border-radius: 50%;
 			margin-left: 40rpx;
 			margin-right: 24rpx;
 		}
-		.xiangmuItemRight{
+
+		.xiangmuItemRight {
 			flex: 1;
 			display: flex;
 			height: 100rpx;
 			align-items: center;
 			justify-content: space-between;
 			border-bottom: 2rpx solid #f5f5f5;
-			font-size:28rpx;
-			color:#333;
-			.itemRightTitle{
-				width:164rpx;
+			font-size: 28rpx;
+			color: #333;
+
+			.itemRightTitle {
+				width: 164rpx;
 				margin-right: 22rpx;
-			} 
-			.itemRightTitle1{
-				width:500rpx;
 			}
-			.itemRightImage{
-				width:8rpx;
-				height: 16rpx;
+
+			.itemRightTitle1 {
+				width: 500rpx;
+			}
+
+			.itemRightImage {
+				width: 24rpx;
+				height: 30rpx;
 				margin-right: 30rpx;
-				background-color: red;
+				// background-color: red;
 			}
-			.itemRightTime{
-				font-size:24rpx;
-				color:#999999;
+
+			.itemRightTime {
+				font-size: 24rpx;
+				color: #999999;
 			}
-			.itemRightRun{
+
+			.itemRightRun {
 				width: 80rpx;
 				height: 40rpx;
 				background-color: #31D880;
@@ -789,10 +796,18 @@
 				margin-right: 30rpx;
 				text-align: center;
 				line-height: 40rpx;
-				color:#FFFFFF;
+				color: #FFFFFF;
 				font-size: 24rpx;
 			}
 		}
 	}
-	
+	.num{
+		display: inline-block;
+		margin-top: 10rpx;
+		margin-left: 16rpx;
+		font-size: 22rpx;
+		font-family: PingFangSC-Regular, PingFang SC;
+		font-weight: 400;
+		color: #666666;
+	}
 </style>

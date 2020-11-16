@@ -45,7 +45,7 @@
 					</view>
 					<view class="rightItemId">
 						<view class="id">编号：45678987654</view>
-						<view class="itemIdButton">查看患者</view>
+						<view class="itemIdButton" @click="toPage('/pages/HuanzheDetail/huanZheInfo/huanZheInfo')">查看患者</view>
 					</view>
 					<view class="rightItemDate">诊疗周期：2020.09.10-2020-11.07</view>
 				</view>
@@ -62,7 +62,13 @@
 			}
 		},
 		methods: {
-			
+			toPage(url) {
+				uni.navigateTo({
+					url,
+					animationDuration: 300,
+					animationType: 'slide-in-right'
+				})
+			}
 		}
 	}
 </script>

@@ -58,7 +58,8 @@
   left: 0;
   height: 135rpx;
   width: 135rpx;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 @-webkit-keyframes globalLoadingRotate {
 from {
@@ -83,7 +84,8 @@ to {
 .global-loading:before {
   border: 4rpx solid #f7f7f7;
   border-right-color: #8cc7b5;
-  border-radius: 100%;
+  -webkit-border-radius: 100%;
+          border-radius: 100%;
   -webkit-animation: globalLoadingRotate linear 1.5s infinite;
           animation: globalLoadingRotate linear 1.5s infinite;
 }

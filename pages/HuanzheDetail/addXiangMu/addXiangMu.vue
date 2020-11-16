@@ -31,7 +31,7 @@
 				<image src="" @click="deleteTimeView(k)" class="timeItemRight"></image>
 			</view>
 			<view class="addItem" @click="addItem">
-				<image src=""></image>
+				<image src="../../../static/favaadd.png"></image>
 				<view class="">添加一个时间</view>
 			</view>
 			<view class="save">保存</view>
@@ -242,7 +242,7 @@
 	.addItem image {
 		width: 32rpx;
 		height: 32rpx;
-		background-color: red;
+		/* background-color: red; */
 		margin-left: 24rpx;
 		margin-right: 16rpx;
 	}

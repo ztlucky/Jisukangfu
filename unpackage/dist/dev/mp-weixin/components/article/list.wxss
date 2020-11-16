@@ -25,9 +25,6 @@
 /* 透明度 */
 /* 文章场景相关 */
 /*文章列表*/
-.list {
-  margin-top: 10rpx;
-}
 .list .item {
   width: 100%;
   margin-left: 30rpx;
@@ -54,14 +51,16 @@
 .list .item .topview .newimage {
   height: 160rpx;
   width: 240rpx;
-  border-radius: 8rpx;
+  -webkit-border-radius: 8rpx;
+          border-radius: 8rpx;
 }
 .list .item .topview .liveview {
   position: absolute;
   font-size: 18rpx;
   width: 94rpx;
   height: 28rpx;
-  border-radius: 4rpx;
+  -webkit-border-radius: 4rpx;
+          border-radius: 4rpx;
   background-color: #31D880;
   color: #FFFFFF;
   top: 16rpx;
@@ -120,7 +119,8 @@
   bottom: 0rpx;
   width: 74rpx;
   height: 36rpx;
-  border-radius: 18rpx;
+  -webkit-border-radius: 18rpx;
+          border-radius: 18rpx;
   background-color: #EBEBEB;
   color: #000000;
   font-size: 20rpx;

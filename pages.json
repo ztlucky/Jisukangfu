@@ -19,7 +19,25 @@
 		 }
 		,
 		{
+				"path" : "pages/work/pingDingLiangBiaoType/pingDingLiangBiaoType",
+				"style" : {
+					"navigationStyle":"custom"
+				}
+		},
+		{
+				"path" : "pages/work/pingDingLiangBiaoProblemType/pingDingLiangBiaoProblemType",
+				"style" : {
+					"navigationStyle":"custom"
+				}
+		},
+		{
 				"path" : "pages/work/pingDingLiangBiao/pingDingLiangBiao",
+				"style" : {
+					"navigationStyle":"custom"
+				}
+		},
+		{
+				"path" : "pages/work/pingDingLiangBiaoInfo/pingDingLiangBiaoInfo",
 				"style" : {
 					"navigationStyle":"custom"
 				}
@@ -27,10 +45,52 @@
 		{
 				"path" : "pages/work/addNotes/addNotes",
 				"style" : {
-					"navigationBarTitleText":"添加笔记",
+					"navigationBarTitleText":"学习笔记",
 					"navigationBarBackgroundColor":"#31D880",
 					"navigationBarTextStyle":"white"
 					
+				}
+		},
+		{
+				"path" : "pages/HuanzheDetail/huanZheInfo/huanZheInfo",
+				"style" : {
+					"navigationBarTitleText":"患者详情",
+					"navigationBarBackgroundColor":"#31D880",
+					"navigationBarTextStyle":"white"
+					
+				}
+		},
+		{
+				"path" : "pages/work/notesInfo/notesInfo",
+				"style" : {
+					"navigationBarTitleText":"学习笔记",
+					"navigationBarBackgroundColor":"#31D880",
+					"navigationBarTextStyle":"white"
+					
+				}
+		},
+		{
+				"path" : "pages/HuanzheDetail/evaluation/evaluation",
+				"style" : {
+					"navigationBarTitleText":"康复评定",
+					"navigationBarBackgroundColor":"#31D880",
+					"navigationBarTextStyle":"white"
+					
+				}
+		},
+		{
+				"path" : "pages/HuanzheDetail/recordInfo/recordInfo",
+				"style" : {
+					"navigationBarTitleText":"患者记录",
+					"navigationBarBackgroundColor":"#31D880",
+					"navigationBarTextStyle":"white"
+					
+				}
+		},
+		{
+				"path" : "pages/work/notesList/notesList",
+				"style" : {
+					"navigationStyle":"custom"
 				}
 		},
 		{

@@ -1,18 +1,66 @@
 {
   "pages": [
     "pages/Daxue/Daxue",
-    "pages/Zhiliao/Zhiliao",
+    "pages/work/pingDingLiangBiaoType/pingDingLiangBiaoType",
+    "pages/work/pingDingLiangBiaoProblemType/pingDingLiangBiaoProblemType",
+    "pages/work/pingDingLiangBiao/pingDingLiangBiao",
+    "pages/work/pingDingLiangBiaoInfo/pingDingLiangBiaoInfo",
+    "pages/work/addNotes/addNotes",
+    "pages/HuanzheDetail/huanZheInfo/huanZheInfo",
+    "pages/work/notesInfo/notesInfo",
+    "pages/HuanzheDetail/evaluation/evaluation",
+    "pages/HuanzheDetail/recordInfo/recordInfo",
+    "pages/work/notesList/notesList",
+    "pages/work/createProblemInfo/createProblemInfo",
+    "pages/work/xiangMu/xiangMu",
+    "pages/HuanzheDetail/kangFuJiLu/kangFuJiLu",
+    "pages/HuanzheDetail/record/record",
+    "pages/HuanzheDetail/addRecord/addRecord",
+    "pages/HuanzheDetail/addCaseHistory/addCaseHistory",
+    "pages/HuanzheDetail/addXiangMu/addXiangMu",
+    "pages/HuanzheDetail/kangfuxiangmu/kangfuxiangmu",
+    "pages/work/createTitleType/createTitleType",
+    "pages/work/createProblem/createProblem",
+    "pages/work/setBack/setBack",
+    "pages/work/compare/compare",
+    "pages/work/history/history",
+    "pages/Gongzuotai/Gongzuotai",
     "pages/WodeKangfu/WodeKangfu",
     "pages/Wode/Wode",
     "pages/Search/Search",
     "pages/Message/Message",
-    "pages/Zhibo/Zhibo"
+    "pages/Zhibo/Zhibo",
+    "pages/Daxue/Kaoshi/Kaoshi",
+    "pages/Daxue/Kecheng/Kecheng",
+    "pages/Daxue/XuexiBan/XuexiBan",
+    "pages/Daxue/TeacherDetail/TeacherDetail",
+    "pages/Daxue/Zhibodetail/Zhibodetail",
+    "pages/Daxue/KechengDetail/KechengDetail",
+    "pages/Daxue/BanjiDetail/BanjiDetail",
+    "pages/Order/ConfirmOrder/ConfirmOrder",
+    "pages/Login/Login/Login",
+    "pages/Login/PasswordLogin/PasswordLogin",
+    "pages/Login/ForgotPassword/ForgotPassword",
+    "pages/Login/PasswordLogin/ResetPassword/ResetPassword",
+    "pages/Login/SetPassword/SetPassword",
+    "pages/WodeHuanzhe/WodeHuanzhe",
+    "pages/HuanzheDetail/HuanzheDetail",
+    "pages/AddHuanzhe/AddHuanzhe",
+    "pages/Daxue/RecommendCourse/RecommendCourse",
+    "pages/Daxue/BanjiTuijian/BanjiTuijian",
+    "pages/KangfuPingdingListPage/KangfuPingdingListPage",
+    "pages/KangfuMubiao/KangfuMubiao",
+    "pages/AboutUs/AboutUs",
+    "pages/Wode/PersonalInfo/PersonalInfo",
+    "pages/Wode/Zizhirenzheng/Zizhirenzheng",
+    "pages/Wode/ResetPassword/ResetPassword",
+    "pages/Wode/EditInfo/EditInfo"
   ],
   "subPackages": [],
   "window": {
     "navigationBarTextStyle": "black",
-    "navigationBarBackgroundColor": "#F8F8F8",
-    "backgroundColor": "#F8F8F8"
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "backgroundColor": "#FFFFFF"
   },
   "tabBar": {
     "color": "#333333",
@@ -28,7 +76,7 @@
       },
       {
         "iconPath": "static/icon_gongzuotai_morem.png",
-        "pagePath": "pages/Zhiliao/Zhiliao",
+        "pagePath": "pages/Gongzuotai/Gongzuotai",
         "selectedIconPath": "static/icon_gongzuotai_xuanzhong.png",
         "text": "工作台"
       },
@@ -46,5 +94,7 @@
       }
     ]
   },
-  "usingComponents": {}
+  "usingComponents": {
+    "nav-bar": "/components/zhouWei-navBar/index"
+  }
 }

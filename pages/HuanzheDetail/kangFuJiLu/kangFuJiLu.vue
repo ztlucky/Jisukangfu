@@ -1,7 +1,7 @@
 <template>
 	<view class="viewPage">
 		<view class="list">
-			<view class="item" v-for="(v,k) in [1,2,3,4,5,6,7,8,9]" :key="k">
+			<view class="item" @click="toPage('/pages/HuanzheDetail/evaluation/evaluation')" v-for="(v,k) in [1,2,3,4,5,6,7,8,9]" :key="k">
 				<view class="itemLeft"></view>
 				<view class="itemRight">
 					<view class="text">
@@ -11,7 +11,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="save">康复评定</view>
+		<view class="save" @click="toPage('/pages/KangfuPingdingListPage/KangfuPingdingListPage')">康复评定</view>
 	</view>
 </template>
 
@@ -23,7 +23,13 @@
 			}
 		},
 		methods: {
-			
+			toPage(url) {
+				uni.navigateTo({
+					url,
+					animationDuration: 300,
+					animationType: 'slide-in-right'
+				})
+			}
 		}
 	}
 </script>

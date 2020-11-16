@@ -35,7 +35,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="bottom">添加项目</view>
+		<view class="bottom" @click="toPage('/pages/HuanzheDetail/addXiangMu/addXiangMu')">添加项目</view>
 		<view class="muBiaoView" v-if="isShowPerformWindow">
 			<view class="muBiaoViewBack" @click="setShowPerformWindowStatus"></view>
 			<view class="muBiaoViewContent">
@@ -108,7 +108,17 @@
 			},
 			confirmFinish(){
 				this.setShowFinishWindowStatus();
+			},
+			toPage(url) {
+				uni.navigateTo({
+					url,
+					animationDuration: 300,
+					animationType: 'slide-in-right'
+				})
 			}
+		},
+		created() {
+			
 		}
 	}
 </script>

@@ -1,4 +1,10 @@
 {
   "navigationBarTitleText": "直播",
-  "usingComponents": {}
+  "usingComponents": {
+    "scroller": "/components/scroller/scroller",
+    "article-list": "/components/article/list",
+    "page-loading": "/components/loading/pageLoading",
+    "iconfont": "/components/iconfont/iconfont",
+    "banji-list": "/components/article/banji"
+  }
 }

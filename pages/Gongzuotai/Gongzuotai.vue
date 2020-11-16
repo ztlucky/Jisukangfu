@@ -1,581 +1,617 @@
 <template>
-	<view  >
-		<scroll-view scroll-y="true"  :style="[{height:viewHeight + 'px'}]"  >
-			
-			 
+	<view>
+		<scroll-view scroll-y="true" :style="[{height:viewHeight + 'px'}]">
+
+
 			<view class="bgview">
-				<image class="bgimage" src="../../static/gongzuotai/bg_gongzuotai.png"  :style="[{height:topImageHeight + 'px'}]" ></image> 
-				
+				<image class="bgimage" src="../../static/gongzuotai/bg_gongzuotai.png" :style="[{height:topImageHeight + 'px'}]"></image>
+
 				<text class="maintitle">工作台</text>
-				 <text class="nametitle">刘胡兰 > </text>
-				 <text class="time">2020-06-16</text>  
-				 <text class="loginout" @click="loginoutaction">退出</text>
-				 <view class="hview">
-				 	<view class="v_view">
-				 		<text class="uptitle">2675</text>
-				 				<text class="downtitle">得分</text>
-				 	</view>
-				 			<view class="v_line">
-				 				
-				 			</view>
-				 			<view class="v_view">
-				 				<text class="uptitle">321h29min</text>
-				 				<text class="downtitle">服务时长</text>
-				 			</view>
-				 			<view class="v_line">
-				 				
-				 			</view>
-				 			<view class="v_view">
-				 				<text class="uptitle">365人</text>
-				 				<text class="downtitle">服务人数</text>
-				 			</view>
-				 </view>
-				 <view class="secondview">
-				 	<view class="secondH_view">
-				 		<view class="secondV_view" v-for="(item,index) in huanzheTitle" @click="huanzheAction(index)" :key='index'>
-				 			<image :src="item.icon" ></image>
-				 					<text>{{item.title}}</text>
-				 		</view>		 
-				 	</view>
-					<view class="zhiboHview"  >
-							
-							 
-							 <view class="zhiboview" :style="[{height:zhiboimageheight + 'px',width:zhiboimagewidth + 'px'}]" @click="zhiboaction(0)">
-							 	<image src="../../static/gongzuotai/bg_zhibo.png" class="zhiboimage":style="[{height:zhiboimageheight + 'px',width:zhiboimagewidth + 'px'}]" ></image>
-							<text class="zhibotitle">名医科普直播</text>
-							 <text class="zhibosubtitle">健康知识科普</text>
-							 <text class="tipview">看直播</text>
-							 </view>
-					<view class="zhiboview" :style="[{height:zhiboimageheight + 'px',width:zhiboimagewidth + 'px'}]" @click="zhiboaction(1)">
-					 	<image src="../../static/gongzuotai/bg_huiyuan.png" class="zhiboimage":style="[{height:zhiboimageheight + 'px',width:zhiboimagewidth + 'px'}]" ></image>
-					<text class="zhibotitle">升级成为会员</text>
-					 <text class="zhibosubtitle">工作台使用</text>
-					 <text class="huiyuantipview">升级会员</text>
-					 </view>
-					 
-							
-						</view>
-						<view class="lineview">
-							
-						</view>
-						<view class="secondH_view">
-							<view class="secondV_view2" v-for="(item,index) in wodehuanzhe" :key='index' @click="wodehuanzheAction(index)">
-							 	<image :src="item.icon"  ></image>
-								<text>{{item.title}}</text>
-							 </view>
-							 
-							 
-							 
+				<text class="nametitle">刘胡兰 > </text>
+				<text class="time">2020-06-16</text>
+				<text class="loginout" @click="loginoutaction">退出</text>
+				<view class="hview">
+					<view class="v_view">
+						<text class="uptitle">2675</text>
+						<text class="downtitle">得分</text>
+					</view>
+					<view class="v_line">
+
+					</view>
+					<view class="v_view">
+						<text class="uptitle">321h29min</text>
+						<text class="downtitle">服务时长</text>
+					</view>
+					<view class="v_line">
+
+					</view>
+					<view class="v_view">
+						<text class="uptitle">365人</text>
+						<text class="downtitle">服务人数</text>
+					</view>
+				</view>
+				<view class="secondview">
+					<view class="secondH_view">
+						<view class="secondV_view" v-for="(item,index) in huanzheTitle" @click="huanzheAction(index)" :key='index'>
+							<image :src="item.icon"></image>
+							<text>{{item.title}}</text>
 						</view>
 					</view>
-					<view class="listtipview">
-						 	<text class="listtitle">患者列表</text>
-							<text class="listrighttitle">查看更多 > </text>
-						 </view>
-						  
-					 
-						 <view class="huanzheview" @click="huanzheXiangqing()">
-						 	 	<view class="huanzheTopview">
-						 	 		<image src="../../static/gongzuotai/icon_nv.png" ></image>
-						 			<view class="huanzherightview">
-						 				<view class="firstView">
-						 					<text class="name">刘胡兰</text>
-											<text class="detail">性别：女 年龄：56</text>
-						 				</view>
-										<view class="zhenduanview">
-											<image class="zhenduanimage" src="../../static/gongzuotai/icon_zhenduan1.png" ></image>
-											<text>诊断：心脏病</text>
-										</view>
-						 			</view> 
-						 	 	</view>
-						 		<view class="Hlinew">
-						 			
-						 		</view>
-						 		<view class="huanzheBottomView">
-						  
-						 			<view class="timeview">
-						 <image src="../../static/gongzuotai/icon_shijian_hong.png" mode=""></image>
-						 <text>输入时间：2020-05-32 06:52</text>
-						 			</view>
-									<text class="bianhao">编号：68554513</text>
-						 		</view>
-						 		
-						 	 </view>
+					<view class="zhiboHview">
+
+
+						<view class="zhiboview" :style="[{height:zhiboimageheight + 'px',width:zhiboimagewidth + 'px'}]" @click="zhiboaction(0)">
+							<image src="../../static/gongzuotai/bg_zhibo.png" class="zhiboimage" :style="[{height:zhiboimageheight + 'px',width:zhiboimagewidth + 'px'}]"></image>
+							<text class="zhibotitle">名医科普直播</text>
+							<text class="zhibosubtitle">健康知识科普</text>
+							<text class="tipview">看直播</text>
+						</view>
+						<view class="zhiboview" :style="[{height:zhiboimageheight + 'px',width:zhiboimagewidth + 'px'}]" @click="zhiboaction(1)">
+							<image src="../../static/gongzuotai/bg_huiyuan.png" class="zhiboimage" :style="[{height:zhiboimageheight + 'px',width:zhiboimagewidth + 'px'}]"></image>
+							<text class="zhibotitle">升级成为会员</text>
+							<text class="zhibosubtitle">工作台使用</text>
+							<text class="huiyuantipview">升级会员</text>
+						</view>
+
+
+					</view>
+					<view class="lineview">
+
+					</view>
+					<view class="secondH_view">
+						<view class="secondV_view2" v-for="(item,index) in wodehuanzhe" :key='index' @click="wodehuanzheAction(index)">
+							<image :src="item.icon"></image>
+							<text>{{item.title}}</text>
+						</view>
+
+
+
+					</view>
+				</view>
+				<view class="listtipview">
+					<text class="listtitle">患者列表</text>
+					<text class="listrighttitle">查看更多 > </text>
+				</view>
+
+
+				<view class="huanzheview" @click="huanzheXiangqing()">
+					<view class="huanzheTopview">
+						<image src="../../static/gongzuotai/icon_nv.png"></image>
+						<view class="huanzherightview">
+							<view class="firstView">
+								<text class="name">刘胡兰</text>
+								<text class="detail">性别：女 年龄：56</text>
+							</view>
+							<view class="zhenduanview">
+								<image class="zhenduanimage" src="../../static/gongzuotai/icon_zhenduan1.png"></image>
+								<text>诊断：心脏病</text>
+							</view>
+						</view>
+					</view>
+					<view class="Hlinew">
+
+					</view>
+					<view class="huanzheBottomView">
+
+						<view class="timeview">
+							<image src="../../static/gongzuotai/icon_shijian_hong.png" mode=""></image>
+							<text>输入时间：2020-05-32 06:52</text>
+						</view>
+						<text class="bianhao">编号：68554513</text>
+					</view>
+
+				</view>
 			</view>
-			
+
 		</scroll-view>
-	 
+
 	</view>
-	
+
 </template>
 
 <script>
- 	export default {
+	export default {
 		data() {
 			return {
-				viewHeight:0,
-				huanzheTitle:[{
-					title:'新增患者',
-					icon:'../../static/gongzuotai/icon_xinzeng.png'
-				},{
-					title:'历史患者',
-					icon:'../../static/gongzuotai/icon_lishi.png'
-				},
-				{
-					title:'添加笔记',
-					icon:'../../static/gongzuotai/icon_biji.png'
-				}
-					 ],
-			
-			wodehuanzhe:[{
-				title:'我的患者',
-				icon:'../../static/gongzuotai/icon_wodehuanzhe.png'
-			},
-			{
-				title:'一键比较',
-				icon:'../../static/gongzuotai/icon_bijiao.png'
-			},
-			{
-				title:'学习笔记本',
-				icon:'../../static/gongzuotai/icon_bijiben.png'
-			},
-			{
-				title:'后台设置',
-				icon:'../../static/gongzuotai/icon_houtai.png'
-			}
-			],
- 				topImageHeight:'',
-				zhiboimagewidth:'',
-				zhiboimageheight:'',
-				
- 				 
+				viewHeight: 0,
+				huanzheTitle: [{
+						title: '新增患者',
+						icon: '../../static/gongzuotai/icon_xinzeng.png'
+					}, {
+						title: '历史患者',
+						icon: '../../static/gongzuotai/icon_lishi.png'
+					},
+					{
+						title: '添加笔记',
+						icon: '../../static/gongzuotai/icon_biji.png'
+					}
+				],
+
+				wodehuanzhe: [{
+						title: '我的患者',
+						icon: '../../static/gongzuotai/icon_wodehuanzhe.png'
+					},
+					{
+						title: '一键比较',
+						icon: '../../static/gongzuotai/icon_bijiao.png'
+					},
+					{
+						title: '学习笔记本',
+						icon: '../../static/gongzuotai/icon_bijiben.png'
+					},
+					{
+						title: '后台设置',
+						icon: '../../static/gongzuotai/icon_houtai.png'
+					}
+				],
+				topImageHeight: '',
+				zhiboimagewidth: '',
+				zhiboimageheight: '',
+
+
 			}
 		},
-	 
-		onShow:function(){
+
+		onShow: function() {
 			this.viewHeight = this.$app.getwindowHeight()
-			this.topImageHeight = this.$app.getwindowWidth()*0.73
-			this.zhiboimagewidth = this.$app.getwindowWidth()*0.4;
-			this.zhiboimageheight = this.zhiboimagewidth*0.5
-  			
+			this.topImageHeight = this.$app.getwindowWidth() * 0.73
+			this.zhiboimagewidth = this.$app.getwindowWidth() * 0.4;
+			this.zhiboimageheight = this.zhiboimagewidth * 0.5
+
 		},
 		methods: {
-			 //退出登录
-			 loginoutaction(){
-				 uni.showModal({
-				 	title:"提示",
-					content:'确认退出当前登录账号？',
-					 success:function(e){
-							
-					 	if(e.confirm){
-							            console.log('用户点击确定');
+			//退出登录
+			loginoutaction() {
+				uni.showModal({
+					title: "提示",
+					content: '确认退出当前登录账号？',
+					success: function(e) {
 
-						}else if(e.cancel){
-							            console.log('用户点击取消');
+						if (e.confirm) {
+							console.log('用户点击确定');
+
+						} else if (e.cancel) {
+							console.log('用户点击取消');
 
 						}
-					 }
-				 })
-			 },
-				//新增患者 历史患者  添加笔记 等响应方法
-			 huanzheAction(index){
-				 switch(index){
-						 
-					 case 0:{
-							 
-						 uni.navigateTo({
-							 url:'../AddHuanzhe/AddHuanzhe',
-							 animationDuration:300,
-							 animationType:'slide-in-right'
-						 })
-					 }
-					 break;
-						 
-					 case 1:{
-						 uni.navigateTo({
-						 							 url:'../work/history/history',
-						 							 animationDuration:300,
-						 							 animationType:'slide-in-right'
-						 })
-					 }
-					 break;
-					 
-					 
-				 }
-				 uni.showToast({
-				 	title:'你点击了'+index,
-					icon:'none'
-				 })
-			 },
-			 //直播，成为会员点击响应方法
-			 zhiboaction(index){
-					 
-				 if(index == 0){
-					 uni.navigateTo({
-					 	url:'../Zhibo/Zhibo',
-						animationType:'slide-in-right',
-						animationDuration:300
-					 })
-				 }else{
-					 uni.showToast({
-					 	title:'你点击了'+index,
-					 					icon:'none'
-					 })
-				 }
-				 
-			 },
-			 //我的患者 一键比较 学习笔记本 后台设置
-			 wodehuanzheAction(index){
-					 
-				 switch(index){
-						 
-					 case 0 :{
-						uni.navigateTo({
-							url:'../WodeHuanzhe/WodeHuanzhe',
-							animationDuration:300,
-							animationType:"slide-in-right"
-						})		
-					 }
-					 break;
-					 case 1:{
-					 	uni.navigateTo({
-					 		url:'../work/compare/compare',
-					 		animationDuration:300,
-					 		animationType:"slide-in-right"
-					 	})					 
-					 }
-					 break;
-					 case 2 :{
-					 						uni.showToast({
-					 							title:'你点击了我的患者'+index,
-					 											icon:'none'
-					 						}) 
-					 }
-					 break;
-					 case 3 :{
-					 	uni.navigateTo({
-					 		url:'../work/setBack/setBack',
-					 		animationDuration:300,
-					 		animationType:"slide-in-right"
-					 	})						 
-					 }
-					 break;
-				 }
-				
-			 },
-			 //患者详情
-				 
-			 huanzheXiangqing(){
-				 uni.navigateTo({
-				 	url:'../HuanzheDetail/HuanzheDetail',
-					animationDuration:300,
-					animationType:'slide-in-right'
-				 })
-			 }
-			 
+					}
+				})
+			},
+			//新增患者 历史患者  添加笔记 等响应方法
+			huanzheAction(index) {
+				switch (index) {
+
+					case 0:
+						{
+
+							uni.navigateTo({
+								url: '../AddHuanzhe/AddHuanzhe',
+								animationDuration: 300,
+								animationType: 'slide-in-right'
+							})
+						}
+						break;
+
+					case 1:
+						{
+							uni.navigateTo({
+								url: '../work/history/history',
+								animationDuration: 300,
+								animationType: 'slide-in-right'
+							})
+						}
+						break;
+					case 2:
+						{
+							uni.navigateTo({
+								url: '/pages/work/addNotes/addNotes',
+								animationDuration: 300,
+								animationType: 'slide-in-right'
+							})
+						}
+						break;
+
+
+				}
+				uni.showToast({
+					title: '你点击了' + index,
+					icon: 'none'
+				})
+			},
+			//直播，成为会员点击响应方法
+			zhiboaction(index) {
+
+				if (index == 0) {
+					uni.navigateTo({
+						url: '../Zhibo/Zhibo',
+						animationType: 'slide-in-right',
+						animationDuration: 300
+					})
+				} else {
+					uni.showToast({
+						title: '你点击了' + index,
+						icon: 'none'
+					})
+				}
+
+			},
+			//我的患者 一键比较 学习笔记本 后台设置
+			wodehuanzheAction(index) {
+
+				switch (index) {
+
+					case 0:
+						{
+							uni.navigateTo({
+								url: '../WodeHuanzhe/WodeHuanzhe',
+								animationDuration: 300,
+								animationType: "slide-in-right"
+							})
+						}
+						break;
+					case 1:
+						{
+							uni.navigateTo({
+								url: '../work/compare/compare',
+								animationDuration: 300,
+								animationType: "slide-in-right"
+							})
+						}
+						break;
+					case 2:
+						{
+							uni.navigateTo({
+								url: '/pages/work/notesList/notesList',
+								animationDuration: 300,
+								animationType: "slide-in-right"
+							})
+						}
+						break;
+					case 3:
+						{
+							uni.navigateTo({
+								url: '../work/setBack/setBack',
+								animationDuration: 300,
+								animationType: "slide-in-right"
+							})
+						}
+						break;
+				}
+
+			},
+			//患者详情
+
+			huanzheXiangqing() {
+				uni.navigateTo({
+					url: '../HuanzheDetail/HuanzheDetail',
+					animationDuration: 300,
+					animationType: 'slide-in-right'
+				})
+			}
+
 		}
 	}
 </script>
 <style>
-	 
-	</style>
+
+</style>
 <style scoped lang="scss">
-   	
-	.bgview{
-   	display: flex;
-	flex-direction: column;
-	background-color: #F7F7F7;
-	position: relative;
-	padding-bottom: 30rpx;
-   	.bgimage{
-		width: 100%;
- 		  position: absolute;
-		  z-index: 0;
-      	}
-	.maintitle{
-		font-size: 56rpx;
- 		font-weight: 600;
-		color: #FFFFFF;
-		margin-left:56rpx;
-		margin-top: 110rpx;
-		 line-height: 80rpx;
- 		  z-index: 1;
-  	}	
-	.nametitle{
-		
-		font-size: 36rpx;
-		font-family: PingFangSC-Semibold, PingFang SC;
-		font-weight: 600;
-		color: #FFFFFF;
-		margin-left: 56rpx;
-		margin-top: 10rpx;
-          z-index: 1;
- 
- 	}
-		
-	.loginout{
-		width: 166rpx;
-		height: 48rpx;
-		background: #D3FFF3;
-		border-radius: 29rpx;
-		font-size: 24rpx;
-		font-family: PingFangSC-Semibold, PingFang SC;
-		font-weight: 600;
-		color: #64E09F;
-		line-height: 48rpx;
-		text-align: center;
-		position: absolute;
-		z-index: 1;
-		top:146rpx ;
-		right: 30rpx;
-	}
-	.time{
-		font-size: 24rpx;
-		font-family: PingFangSC-Regular, PingFang SC;
-		font-weight: 400;
-		color: #D3FFF3;
-		margin-left: 56rpx;
-		margin-top: 14rpx;
-		 z-index: 1;
-		
- 	}
-		 
-	 .hview{
-		 display: flex;
-		 flex-direction: row;
-		 justify-content: space-around;
-		align-items: center;
-	margin-top: 34rpx;
- z-index: 1;
-	
-		 .v_view{
-			 display: flex;
-			 flex-direction: column;
-			 align-items: center;
-				 
-			 .uptitle{
-				 font-size: 36rpx;
- 				 font-weight: 600;
-				 color: #FFFFFF;
-			 }
-			 .downtitle{
-				 font-size: 24rpx;
- 				 color: #CBFEF4;
-				 margin-top: 5rpx;
-			 }
-		 }
-			 
-		 .v_line{
-			 width: 2rpx;
-			 height: 54rpx;
-			 background-color: #C4FFF1;
-			 
-		 }
-	 }
-	 .secondview{
- 		 display:  flex;
-		 flex-direction: column;
-		 background: #FFFFFF;
-		 box-shadow: 0px 4rpx 8rpx 0px rgba(233, 233, 233, 0.5);
-		 border-radius: 16rpx;
-		 margin-left:30rpx ;
-		 margin-right: 30rpx;
-		 margin-top: 30rpx;
-		 z-index:2;
-			 
-		 .secondH_view{
-			 display: flex;
-			 flex-direction: row;
-			 justify-content: space-around;
-			 
-			 .secondV_view{
-				 display: flex;
-				 flex-direction: column;
-				 align-items: center;
-				 image{
-					 width: 108rpx;
-					 height: 78rpx;
-					 margin-top: 30rpx;
-				 }
-				 text{
-					 font-size: 28rpx;
-					 font-family: PingFangSC-Semibold, PingFang SC;
-					 font-weight: 600;
-					 color: #333333;
-					 margin-top: 20rpx;
- 				 }
-			 }
-			 .secondV_view2{
-				 display: flex;
-				 flex-direction: column;
-				 align-items: center;
-				 margin-bottom: 62rpx;
-				 image{
-				 					 width: 72rpx;
-				 					 height: 72rpx;
-				 					 margin-top: 52rpx;
-				 }
-				 text{
-				 					 font-size: 24rpx;
-  				 					 color: #333333;
-				 					 margin-top: 12rpx;
-				 }
-			 }
-			
-		 }
-			 
-		 .zhiboHview{
-			 display: flex;
-			 flex-direction: row;
-			 justify-content: space-between;
-			 padding-left: 30rpx;
-			 padding-right: 30rpx;
-			 margin-top:36rpx ;
-			 
- 			 .zhiboview{
-				 display: flex;
-				 flex-direction: column;
-				 position: relative;
-				 .zhiboimage{
-					 position: absolute;
-				 		z-index: -1;		  
-				 }
-				 .zhibotitle{
-	
-					 font-size: 26rpx;
- 					 font-weight: 500;
-					 color: #333333;
-					 margin-left:24rpx ;
-					 margin-top: 18rpx;
- 				 }
-					 
-				 .zhibosubtitle{
-					 
-					 font-size: 22rpx;
-					 font-family: PingFangSC-Regular, PingFang SC;
-					 font-weight: 400;
-					 color: #999999;
-					 margin-left:24rpx ;
-					 margin-top: 5rpx;
-					 
- 				 }	
-				  .huiyuantipview{
-				   					width: 89rpx;
-				   					height: 30rpx;
-				   					background: #3FC5AA;
-				   					border: 2px solid #3FC5AA;
-				    					 font-size: 20rpx;
-				   					 font-family: PingFangSC-Regular, PingFang SC;
-				   					 font-weight: 400;
-				   					 color: #FFFFFF;
-				  					  text-align: center;
-				  					  line-height: 30rpx;
-				  					  margin-left: 26rpx;
-				  					  margin-top: 16rpx;
-				  }
-				 .tipview{
- 					width: 89rpx;
- 					height: 30rpx;
- 					background: #32C5FF;
- 					border: 2px solid #32C5FF;
-  					 font-size: 20rpx;
- 					 font-family: PingFangSC-Regular, PingFang SC;
- 					 font-weight: 400;
- 					 color: #FFFFFF;
-					  text-align: center;
-					  line-height: 30rpx;
-					  margin-left: 26rpx;
-					  margin-top: 16rpx;
- 				 }
-			 }
-			 
-		 }
-			 
-		 .lineview{
- 			 height: 2px;
-			 margin-left:30rpx ;
-			 margin-right: 30rpx;
-			 margin-top: 30rpx;
-			 background-color:#E6E6E6 ;
-		 }
-	 }
-		 
-	 .listtipview{
-		 display: flex;
-		 flex-direction: row;
-		 justify-content: space-between;
-		 margin-left: 30rpx;
-		 margin-right: 30rpx;
-		margin-top: 44rpx;
-			 align-items: center;
-		 .listtitle{
-			 font-size: 28rpx;
-			 font-family: PingFangSC-Medium, PingFang SC;
-			 font-weight: 500;
-			 color: #333333;
- 		 }
-			 
-		 .listrighttitle{
-			 font-size: 20rpx;
-			 font-family: PingFangSC-Regular, PingFang SC;
-			 font-weight: 400;
-			 color: #999999;
- 		 }
-	 }
-	 .huanzheview{
-  		background: #FFFFFF;
-		border-radius: 16rpx; 
-		margin-left:30rpx ;
-		margin-right: 30rpx;
-		margin-top: 30rpx;
+	.bgview {
 		display: flex;
 		flex-direction: column;
-				
-			.huanzheTopview{
+		background-color: #F7F7F7;
+		position: relative;
+		padding-bottom: 30rpx;
+
+		.bgimage {
+			width: 100%;
+			position: absolute;
+			z-index: 0;
+		}
+
+		.maintitle {
+			font-size: 56rpx;
+			font-weight: 600;
+			color: #FFFFFF;
+			margin-left: 56rpx;
+			margin-top: 110rpx;
+			line-height: 80rpx;
+			z-index: 1;
+		}
+
+		.nametitle {
+
+			font-size: 36rpx;
+			font-family: PingFangSC-Semibold, PingFang SC;
+			font-weight: 600;
+			color: #FFFFFF;
+			margin-left: 56rpx;
+			margin-top: 10rpx;
+			z-index: 1;
+
+		}
+
+		.loginout {
+			width: 166rpx;
+			height: 48rpx;
+			background: #D3FFF3;
+			border-radius: 29rpx;
+			font-size: 24rpx;
+			font-family: PingFangSC-Semibold, PingFang SC;
+			font-weight: 600;
+			color: #64E09F;
+			line-height: 48rpx;
+			text-align: center;
+			position: absolute;
+			z-index: 1;
+			top: 146rpx;
+			right: 30rpx;
+		}
+
+		.time {
+			font-size: 24rpx;
+			font-family: PingFangSC-Regular, PingFang SC;
+			font-weight: 400;
+			color: #D3FFF3;
+			margin-left: 56rpx;
+			margin-top: 14rpx;
+			z-index: 1;
+
+		}
+
+		.hview {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-around;
+			align-items: center;
+			margin-top: 34rpx;
+			z-index: 1;
+
+			.v_view {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+
+				.uptitle {
+					font-size: 36rpx;
+					font-weight: 600;
+					color: #FFFFFF;
+				}
+
+				.downtitle {
+					font-size: 24rpx;
+					color: #CBFEF4;
+					margin-top: 5rpx;
+				}
+			}
+
+			.v_line {
+				width: 2rpx;
+				height: 54rpx;
+				background-color: #C4FFF1;
+
+			}
+		}
+
+		.secondview {
+			display: flex;
+			flex-direction: column;
+			background: #FFFFFF;
+			box-shadow: 0px 4rpx 8rpx 0px rgba(233, 233, 233, 0.5);
+			border-radius: 16rpx;
+			margin-left: 30rpx;
+			margin-right: 30rpx;
+			margin-top: 30rpx;
+			z-index: 2;
+
+			.secondH_view {
 				display: flex;
 				flex-direction: row;
-				image{
-					width:118rpx ;
-					height: 118rpx;
-					margin-top:20rpx ;
-					margin-left: 30rpx;
-					
+				justify-content: space-around;
+
+				.secondV_view {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+
+					image {
+						width: 108rpx;
+						height: 78rpx;
+						margin-top: 30rpx;
+					}
+
+					text {
+						font-size: 28rpx;
+						font-family: PingFangSC-Semibold, PingFang SC;
+						font-weight: 600;
+						color: #333333;
+						margin-top: 20rpx;
+					}
 				}
-				.huanzherightview{
+
+				.secondV_view2 {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					margin-bottom: 62rpx;
+
+					image {
+						width: 72rpx;
+						height: 72rpx;
+						margin-top: 52rpx;
+					}
+
+					text {
+						font-size: 24rpx;
+						color: #333333;
+						margin-top: 12rpx;
+					}
+				}
+
+			}
+
+			.zhiboHview {
+				display: flex;
+				flex-direction: row;
+				justify-content: space-between;
+				padding-left: 30rpx;
+				padding-right: 30rpx;
+				margin-top: 36rpx;
+
+				.zhiboview {
+					display: flex;
+					flex-direction: column;
+					position: relative;
+
+					.zhiboimage {
+						position: absolute;
+						z-index: -1;
+					}
+
+					.zhibotitle {
+
+						font-size: 26rpx;
+						font-weight: 500;
+						color: #333333;
+						margin-left: 24rpx;
+						margin-top: 18rpx;
+					}
+
+					.zhibosubtitle {
+
+						font-size: 22rpx;
+						font-family: PingFangSC-Regular, PingFang SC;
+						font-weight: 400;
+						color: #999999;
+						margin-left: 24rpx;
+						margin-top: 5rpx;
+
+					}
+
+					.huiyuantipview {
+						width: 89rpx;
+						height: 30rpx;
+						background: #3FC5AA;
+						border: 2px solid #3FC5AA;
+						font-size: 20rpx;
+						font-family: PingFangSC-Regular, PingFang SC;
+						font-weight: 400;
+						color: #FFFFFF;
+						text-align: center;
+						line-height: 30rpx;
+						margin-left: 26rpx;
+						margin-top: 16rpx;
+					}
+
+					.tipview {
+						width: 89rpx;
+						height: 30rpx;
+						background: #32C5FF;
+						border: 2px solid #32C5FF;
+						font-size: 20rpx;
+						font-family: PingFangSC-Regular, PingFang SC;
+						font-weight: 400;
+						color: #FFFFFF;
+						text-align: center;
+						line-height: 30rpx;
+						margin-left: 26rpx;
+						margin-top: 16rpx;
+					}
+				}
+
+			}
+
+			.lineview {
+				height: 2px;
+				margin-left: 30rpx;
+				margin-right: 30rpx;
+				margin-top: 30rpx;
+				background-color: #E6E6E6;
+			}
+		}
+
+		.listtipview {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			margin-left: 30rpx;
+			margin-right: 30rpx;
+			margin-top: 44rpx;
+			align-items: center;
+
+			.listtitle {
+				font-size: 28rpx;
+				font-family: PingFangSC-Medium, PingFang SC;
+				font-weight: 500;
+				color: #333333;
+			}
+
+			.listrighttitle {
+				font-size: 20rpx;
+				font-family: PingFangSC-Regular, PingFang SC;
+				font-weight: 400;
+				color: #999999;
+			}
+		}
+
+		.huanzheview {
+			background: #FFFFFF;
+			border-radius: 16rpx;
+			margin-left: 30rpx;
+			margin-right: 30rpx;
+			margin-top: 30rpx;
+			display: flex;
+			flex-direction: column;
+
+			.huanzheTopview {
+				display: flex;
+				flex-direction: row;
+
+				image {
+					width: 118rpx;
+					height: 118rpx;
+					margin-top: 20rpx;
+					margin-left: 30rpx;
+
+				}
+
+				.huanzherightview {
 					display: flex;
 					flex-direction: column;
 					flex: 1;
-						
-					.firstView{
+
+					.firstView {
 						display: flex;
 						flex-direction: row;
 						position: relative;
-						.name{
-  							font-size: 28rpx;
+
+						.name {
+							font-size: 28rpx;
 							font-family: PingFangSC-Medium, PingFang SC;
 							font-weight: 500;
 							color: #333333;
 							margin-left: 26rpx;
 							margin-top: 34rpx;
- 						}
-						.detail{
-							
+						}
+
+						.detail {
+
 							font-size: 20rpx;
 							font-weight: 400;
 							color: #666666;
-							margin-top:36rpx;
- 							position: absolute;
-							right:30rpx ;
-							 
+							margin-top: 36rpx;
+							position: absolute;
+							right: 30rpx;
+
 						}
-				
+
 					}
-						
-					.zhenduanview{
+
+					.zhenduanview {
 						width: fit-content;
 						background: #F0F0F0;
 						height: 36rpx;
-  						border-radius: 22rpx;
+						border-radius: 22rpx;
 						display: flex;
 						flex-direction: row;
 						align-items: center;
@@ -583,94 +619,101 @@
 						padding-right: 15rpx;
 						margin-top: 9rpx;
 						padding-top: 5rpx;
-						.zhenduanimage{
+
+						.zhenduanimage {
 							width: 28rpx;
 							height: 28rpx;
- 							margin-top: 0rpx;
+							margin-top: 0rpx;
 							margin-left: 5rpx;
- 							
+
 						}
-						text{
-						font-size: 20rpx;
-						font-family: PingFangSC-Medium, PingFang SC;
-						font-weight: 500;
-						color: #333333;
-						margin-left: 8rpx;
- 						}
+
+						text {
+							font-size: 20rpx;
+							font-family: PingFangSC-Medium, PingFang SC;
+							font-weight: 500;
+							color: #333333;
+							margin-left: 8rpx;
+						}
 					}
-					
-				 	
-					
-					
+
+
+
+
 				}
 			}
-			.Hlinew{
-			height:2rpx ;
-  			background-color: #EAEAEA;
-			margin-top: 18rpx;
- 		}
-			
-		.huanzheBottomView{
-			display: flex;
-            flex-direction: row;
-			margin-bottom: 15rpx;
-			position: relative;
-			.bianhao{
-				
-				font-size: 20rpx;
-				font-family: PingFangSC-Regular, PingFang SC;
-				font-weight: 400;
-				color: #666666;
-  				margin-top: 15rpx;
-				position:absolute ;
-				right:32rpx ;
-				
- 			}
-			.timeview{
-				margin-top: 15rpx;
+
+			.Hlinew {
+				height: 2rpx;
+				background-color: #EAEAEA;
+				margin-top: 18rpx;
+			}
+
+			.huanzheBottomView {
 				display: flex;
 				flex-direction: row;
-				align-items: center;
-				margin-left: 30rpx;	
-					
-				text{
-					
+				margin-bottom: 15rpx;
+				position: relative;
+
+				.bianhao {
+
 					font-size: 20rpx;
 					font-family: PingFangSC-Regular, PingFang SC;
 					font-weight: 400;
-					color: #999999;
-					margin-left: 10rpx;
-				}
-				image{
-					width: 28rpx;
-					height: 28rpx;
-				
-				}	
-			}
-		}
-		.huanzheleftview{
-			display: flex;
-			flex-direction: column;
-				align-items: center;
-				margin-left:46rpx ;
-				
-		
-				
-			text{
-				
-				font-size: 28rpx;
-				font-family: PingFangSC-Medium, PingFang SC;
-				font-weight: 500;
-				color: #333333;
-				margin-top: 15rpx;
-				margin-bottom: 20rpx;
- 			}
-		}
-		
-	
-	 }
-	 
+					color: #666666;
+					margin-top: 15rpx;
+					position: absolute;
+					right: 32rpx;
 
- 
-}	
- </style>
+				}
+
+				.timeview {
+					margin-top: 15rpx;
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					margin-left: 30rpx;
+
+					text {
+
+						font-size: 20rpx;
+						font-family: PingFangSC-Regular, PingFang SC;
+						font-weight: 400;
+						color: #999999;
+						margin-left: 10rpx;
+					}
+
+					image {
+						width: 28rpx;
+						height: 28rpx;
+
+					}
+				}
+			}
+
+			.huanzheleftview {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				margin-left: 46rpx;
+
+
+
+				text {
+
+					font-size: 28rpx;
+					font-family: PingFangSC-Medium, PingFang SC;
+					font-weight: 500;
+					color: #333333;
+					margin-top: 15rpx;
+					margin-bottom: 20rpx;
+				}
+			}
+
+
+		}
+
+
+
+	}
+</style>

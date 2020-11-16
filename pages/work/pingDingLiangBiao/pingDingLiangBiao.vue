@@ -4,21 +4,24 @@
 			<view slot="right" v-if="isEdit" @click="save" class="navRight">保存</view>
 		</nav-bar>
 		<view class="list">
-			<view class="item" v-for="(i,k) in [1,2,3]" :key="k">
+			<view class="item" @click="toPage(isEdit?k:'/pages/work/pingDingLiangBiaoProblemType/pingDingLiangBiaoProblemType',!isEdit)" v-for="(v,k) in list" :key="k">
 				<view class="itemLeft"></view>
 				<view class="itemRight">
-					<view class="rightText hidden">评定量表可是飞机上看评定量表可是飞机上看</view>
-					<view class="rightView">
-						<view>100</view>
-						<image src=""></image>
+					<view class="rightText hidden">{{v.text}}</view>
+					<view class="rightView" v-if="!isEdit">
+						<view>{{v.value}}</view>
+						<image src="../../../static/f_my_kecheng_arrow.png"></image>
+					</view>
+					<view class="rightView rightView1" v-else>
+						<image :src="v.isSelected?'/static/order/icon_xuanzhong.png':' '"></image>
 					</view>
 				</view>
 			</view>
 		</view>
-		<view class="bottom" v-if="!isEdit" @click="setNowStatus">编辑评定量表分类</view>
+		<view class="bottom" v-if="!isEdit" @click="setNowStatus">编辑评定量表</view>
 		<view class="bottomNav" v-else>
-			<view class="">删除选中的分类</view>
-			<view class="">添加新的分类</view>
+			<view class="">删除选中的量表({{num}})</view>
+			<view class="">添加新的量表</view>
 		</view>
 	</view>
 </template>
@@ -28,6 +31,24 @@
 		data() {
 			return {
 			isEdit:false,
+			list:[
+				{
+					text:"平淡量表解释纷纷i使肌肤死角史可法",
+					value:89,
+					isSelected:false
+				},
+				{
+					text:"平淡量表解释纷纷i使肌肤死角史可法",
+					value:89,
+					isSelected:false
+				},
+				{
+					text:"平淡量表解释纷纷i使肌肤死角史可法",
+					value:89,
+					isSelected:false
+				}
+			],
+			num:0
 			}
 		},
 		methods: {
@@ -36,6 +57,25 @@
 			},
 			save(){
 				this.setNowStatus();
+			},
+			toPage(url,f = true){
+				if(!f){
+					this.list[url].isSelected = !this.list[url].isSelected;
+					let num = 0;
+					this.list.map(v=>{
+						if(v.isSelected){
+							num++;
+						}
+					})
+					this.num = num;
+				}else{
+					console.log(url)
+					uni.navigateTo({
+						url,
+						animationDuration: 300,
+						animationType: 'slide-in-right'
+					})
+				}
 			}
 		}
 	}
@@ -103,7 +143,7 @@
 	.rightView image{
 		width:24rpx;
 		height: 24rpx;
-		background-color: red;
+		/* background-color: red; */
 		margin-right: 28rpx;
 	}
 	.bottom{
@@ -153,5 +193,9 @@
 		border-radius: 40rpx;
 		font-size:28rpx;
 		color:#FFFFFF;
+	}
+	.rightView1 image{
+		background-color: #DDDDDD;
+		border-radius: 50%;
 	}
 </style>

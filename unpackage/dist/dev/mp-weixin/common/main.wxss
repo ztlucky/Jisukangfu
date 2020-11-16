@@ -13,10 +13,41 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	/*每个页面公共css */
-/* 	//控制滚动条
+	/* 	//控制滚动条
  */
-::-webkit-scrollbar{
-		  display: none;
+::-webkit-scrollbar {
+		display: none;
+}
+.hidden {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+}
+.hidden2 {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+}
+.uni-radio-input:hover {
+		border-color: #31D880 !important;
 }
 

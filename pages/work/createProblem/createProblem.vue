@@ -2,9 +2,9 @@
 	<view class="view" @click="resetAll">
 		<view class="content" @click="resetAll">
 			<view class="title">问题标题</view>
-			<silding :isRun="false" ref="sildTitle" @reset="resetAll" :data="title"></silding>
+			<silding @editTitle="editTitle" :isRun="false" ref="sildTitle" @reset="resetAll" :data="title"></silding>
 			<view class="title">评定量表选择题</view>
-			<silding @deleteItem="deleteItem" ref="sild" @reset="resetAll" v-for="(v,i) in checkbox" :key="i" :data="v" :index="i"></silding>
+			<silding @editTitle="editTitle" @deleteItem="deleteItem" ref="sild" @reset="resetAll" v-for="(v,i) in checkbox" :key="i" :data="v" :index="i"></silding>
 			<view class="addItem" @click="addItem">添加新的选项</view>
 		</view>
 		<view class="bottom" @click="setShowNext">保存</view>
@@ -25,7 +25,7 @@
 			return {
 				isShowNext:false,
 				title:{
-					title:'问题是开飞机上看'
+					title:''
 				},
 				checkbox:[
 					
@@ -55,6 +55,13 @@
 			},
 			deleteItem(index){
 				this.checkbox.splice(index,1)
+			},
+			editTitle(data){
+				if(data.index ==-1){
+					this.title.title = data.value;
+				}else{
+					this.checkbox[data.index].title = data.value;
+				}
 			}
 		},
 		components:{
@@ -71,13 +78,14 @@
 		padding-bottom: 120rpx;
 	}
 	.content{
-		width:590rpx;
-		padding:0 50rpx;
+		width:640rpx;
+		padding:0 30rpx;
 		margin-left: 30rpx;
 		/* margin-top: 32rpx; */
 		background-color: #FFFFFF;
 		padding-top:24rpx;
 		padding-bottom: 74rpx;
+		overflow-x: hidden;
 	}
 	.title{
 		padding-top:16rpx;

@@ -1,19 +1,26 @@
 <template>
-	<view class="viewPage">
-		<view class="content">
-			<view class="title">诊断</view>
-			<input placeholder="请填写诊断" />
-			<view class="title">诊疗意见</view>
-			<textarea  placeholder="请填写诊疗意见"></textarea>
+	<view class="view">
+		<view class="top">
+			<textarea placeholder="请输入笔记内容..."></textarea>
+			<view class="topImageList">
+				<view v-for="(v,k) in imageList" :key="k" :class="'imageItem '+((k)%3 == 1?'imageItem1':'imageItem')" >
+					<image :src="v"></image>
+					<image src="" class="delete" @click="deleteImage(k)"></image>
+				</view>
+				<view :class="'imageItem imageAdd '+((imageList.length)%3 == 1?'imageItem1':'imageItem')" @click="getImages">
+					<image src=""></image>
+				</view>
+			</view>
 		</view>
 		<view class="save">保存</view>
 	</view>
 </template>
+
 <script>
 	export default {
 		data() {
 			return {
-				list:[],
+				imageList:[],
 				tempFile:[]
 			}
 		},
@@ -28,8 +35,8 @@
 						console.log(res);
 				        // 预览图片
 						console.log(res.tempFilePaths);
-				        that.list = that.list.concat(res.tempFilePaths);
-						console.log(that.list)
+				        that.imageList = that.imageList.concat(res.tempFilePaths);
+						console.log(that.imageList)
 						that.tempFile = that.tempFile.concat(res.tempFiles)
 				    }
 				    });
@@ -37,105 +44,91 @@
 			deleteImage(index){
 				console.log(index);
 				this.tempFile.splice(index,1);
-				this.list.splice(index,1);
+				this.imageList.splice(index,1);
 			}
 		}
 	}
 </script>
 
 <style scoped>
-	.viewPage{
-		width:100vw;
+	.view{
+		width:750rpx;
 		min-height: 100vh;
-		background-color: #F6F6F6;
-		overflow: hidden;
-		/* padding-bottom: 180rpx; */
+		background-color: #f6f6f6;
 	}
-	.content{
+	.top{
+		width:690rpx;
+		padding:34rpx 30rpx;
+		background-color: #FFFFFF;
+		padding-bottom: 4rpx;
+	}
+	.topImageList{
 		
-		width: 630rpx;
-		padding:0 30rpx;
-		padding-top:4rpx;
-		border-radius: 16rpx;
-		margin: 30rpx;
-		background-color:#FFFFFF;
-		padding-bottom: 84rpx;
-		
-	}
-	.title{
-		
-		padding-top:36rpx;
-		font-size: 32rpx;
-		font-family: PingFangSC-Semibold, PingFang SC;
-		font-weight: 600;
-		color: #333333;
-		line-height: 44rpx;
-	}
-	input{
-		width:574rpx;
-		height: 80rpx;
-		background-color: #F5F5F5;
-		padding:0 28rpx;
-		border-radius: 8rpx;
-		margin-top:20rpx;
-		font-size: 28rpx;
-		font-family: PingFangSC-Regular, PingFang SC;
-		font-weight: 400;
-		line-height: 40rpx;
-	}
-	textarea{
-		margin-top: 20rpx;
-		width: 574rpx;
-		height: 350rpx;
-		padding:20rpx 28rpx;
-		background: #F5F5F5;
-		border-radius: 8rpx;
-		font-size: 28rpx;
-		font-family: PingFangSC-Regular, PingFang SC;
-		font-weight: 400;
-		line-height: 40rpx;
-	}
-	.list{
-		width:590rpx;
 		display: flex;
 		flex-wrap: wrap;
-		/* margin-top:26rpx; */
-		padding-bottom: 56rpx;
 	}
-	.addImage , .imageItem{
-		width:176rpx;
-		height: 176rpx;
+	.top textarea{
+		height: 100rpx;
+		margin-bottom: 20rpx;
+		font-size:28rpx;
+	}
+	.imageItem{
 		position: relative;
-		margin: 30rpx 0;
-		margin-bottom: 0rpx;
-	}
-	.addImage{
-		background-color: #F5F5F5;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-	.addImage image{
-		width:50rpx;
-		height: 44rpx;
-		background-color: red;
-	}
-	.imageItem > image:nth-child(2){
-		width: 176rpx;
-		height: 176rpx;
-		background-color: red;
+		width:184rpx;
+		height: 184rpx;
+		margin-bottom: 30rpx;
 	}
 	.imageItem1{
 		margin:30rpx;
-		margin-bottom: 0rpx;
+		margin-top: 0rpx;
 	}
-	.imageItem .deleteImage{
+	.imageItem image:nth-child(1){
+		position: absolute;
+		top:0;
+		left: 0;
+		width:184rpx;
+		height: 184rpx;
+	}
+	.imageAdd{
+		background-color: red;
+	}
+	.imageItem .delete{
 		width:28rpx;
 		height: 28rpx;
 		position: absolute;
-		z-index: 2;
-		right: 8rpx;
 		top:8rpx;
+		right: 8rpx;
+		background-color: #007AFF;
+		border-radius: 50%;	
+	}
+	.textView{
+		width:690rpx;
+		padding:0 30rpx;
+		background-color: #FFFFFF;
+		margin-top:30rpx;
+		padding-bottom: 30rpx;
+	}
+	.title{
+		color:#999999;
+		font-size:28rpx;
+		padding-top:24rpx;
+	}
+	.textView input{
+		font-size:28rpx;
+		color:#333333;
+		line-height: 60rpx;
+		height: 60rpx;
+		/* padding: 0 20rpx; */
+	}
+	.textView view:nth-child(3){
+		padding-top:38rpx;
+		border-top:2rpx solid #E5E5E5;
+	}
+	.textView textarea{
+	height: 80rpx;
+	font-size:28rpx;
+	width:100%;
+	border-bottom: 2rpx solid #E5E5E5;
 	}
 	.save {
 		position: fixed;
