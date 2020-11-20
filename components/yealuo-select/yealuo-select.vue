@@ -130,6 +130,10 @@
 		watch: {
 			value(val){
 				this.theValue = val;
+			},
+			binData(data){
+				this.odData = data;
+				this.theValue = '';
 			}
 			
 		},

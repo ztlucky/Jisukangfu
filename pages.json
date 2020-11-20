@@ -52,6 +52,15 @@
 				}
 		},
 		{
+				"path" : "pages/work/editXiangMu/editXiangMu",
+				"style" : {
+					"navigationBarTitleText":"项目",
+					"navigationBarBackgroundColor":"#31D880",
+					"navigationBarTextStyle":"white"
+					
+				}
+		},
+		{
 				"path" : "pages/HuanzheDetail/huanZheInfo/huanZheInfo",
 				"style" : {
 					"navigationBarTitleText":"患者详情",
@@ -90,7 +99,8 @@
 		{
 				"path" : "pages/work/notesList/notesList",
 				"style" : {
-					"navigationStyle":"custom"
+					"navigationStyle":"custom",
+					"enablePullDownRefresh": true
 				}
 		},
 		{

@@ -110,6 +110,7 @@
 </template>
 
 <script>
+	import request from '../../utils/util.js';
 	export default {
 		data() {
 			return {
@@ -158,6 +159,9 @@
 			this.zhiboimagewidth = this.$app.getwindowWidth() * 0.4;
 			this.zhiboimageheight = this.zhiboimagewidth * 0.5
 
+		},
+		created() {
+			this.getHuanZheList();
 		},
 		methods: {
 			//退出登录
@@ -287,8 +291,25 @@
 					animationDuration: 300,
 					animationType: 'slide-in-right'
 				})
-			}
+			},
 
+			init() {
+				this.getHuanZheList();
+			},
+			getHuanZheList() {
+				let that = this;
+				return request({
+					url: that.$api.huanzhe.getMyPatientsList,
+					type: 'GET',
+					data: {
+						pageNo: 1,
+						pageSize: 6
+					},
+					userId: getApp().globalData.userId
+				}).then(data => {
+					console.log(data);
+				})
+			}
 		}
 	}
 </script>

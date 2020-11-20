@@ -1,27 +1,30 @@
 <template>
 	<view class="view">
 		<view class="top">
-			<textarea placeholder="请输入笔记内容..."></textarea>
+			<textarea placeholder="请输入笔记内容..." @input="input"></textarea>
 			<view class="topImageList">
 				<view v-for="(v,k) in imageList" :key="k" :class="'imageItem '+((k)%3 == 1?'imageItem1':'imageItem')" >
 					<image :src="v"></image>
-					<image src="" class="delete" @click="deleteImage(k)"></image>
+					<image src="../../../static/icon_delete.png" class="delete" @click="deleteImage(k)"></image>
 				</view>
 				<view :class="'imageItem imageAdd '+((imageList.length)%3 == 1?'imageItem1':'imageItem')" @click="getImages">
-					<image src=""></image>
+					<image class="image" src="../../../static/img_icon.png"></image>
 				</view>
 			</view>
 		</view>
-		<view class="save">保存</view>
+		<view class="save" @click="save()">保存</view>
 	</view>
 </template>
 
 <script>
+	import onloadImage from "../../../utils/loadImage.js"
+	import request from "../../../utils/util.js"
 	export default {
 		data() {
 			return {
 				imageList:[],
-				tempFile:[]
+				tempFile:[],
+				value:''
 			}
 		},
 		methods: {
@@ -34,17 +37,62 @@
 				    success: function(res) {
 						console.log(res);
 				        // 预览图片
-						console.log(res.tempFilePaths);
 				        that.imageList = that.imageList.concat(res.tempFilePaths);
-						console.log(that.imageList)
 						that.tempFile = that.tempFile.concat(res.tempFiles)
 				    }
 				    });
 			},
 			deleteImage(index){
-				console.log(index);
 				this.tempFile.splice(index,1);
 				this.imageList.splice(index,1);
+			},
+			save(){
+				let that = this;
+				if(!this.value){
+					uni.showToast({
+						title:"请输入笔记内容",
+						duration:2000,
+						icon:"none"
+					});
+					return false;
+				}
+				// return request({
+				// 	url:that.$api.notes.addNotes,
+				// 	data:{
+				// 		"studyNotes":{
+				// 			userId:getApp().globalData.userId,
+				// 			content:that.value,
+				// 			flie:'这是一个文件',
+				// 		}
+				// 	},
+				// 	type:'POST'
+				// }).then(data=>{
+				// 	uni.showToast({
+				// 		title:data.message,
+				// 		duration:1500,
+				// 		success() {
+				// 			setTimeout(()=>{
+				// 				uni.navigateBack();
+				// 			},1500);
+				// 		}
+				// 	})
+				// })
+				onloadImage.init({
+					tempFiles:that.tempFile,
+					tempFilePaths:that.imageList
+				},(data)=>{
+					console.log(data.imageUrl);
+					// return request({
+					// 	userId:getApp().globalData.userId,
+					// 	content:that.value,
+					// 	flie:'这是一个文件'
+					// }).then(data=>{
+					// 	console.log(data);
+					// })
+				}).upload();
+			},
+			input(e){
+				this.value = e.detail.value
 			}
 		}
 	}
@@ -90,7 +138,18 @@
 		height: 184rpx;
 	}
 	.imageAdd{
-		background-color: red;
+		/* background-color: red; */
+		
+		background: #EFFFF6;
+		border-radius: 8rpx;
+		border: 2rpx dashed #78F4B3;
+	}
+	.imageAdd image:nth-child(1){
+		width:50rpx;
+		height: 50rpx;
+		top:50%;
+		left: 50%;
+		transform: translate(-50%,-50%);
 	}
 	.imageItem .delete{
 		width:28rpx;
@@ -98,7 +157,7 @@
 		position: absolute;
 		top:8rpx;
 		right: 8rpx;
-		background-color: #007AFF;
+		/* background-color: #007AFF; */
 		border-radius: 50%;	
 	}
 	.textView{
