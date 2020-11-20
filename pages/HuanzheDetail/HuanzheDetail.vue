@@ -9,15 +9,15 @@
 					<image src="../../static/gongzuotai/icon_nv.png"></image>
 					<view class="huanzherightview">
 						<view class="firstView">
-							<text class="name">刘胡兰 <text class="num">5床</text></text>
-							<text class="detail">性别：女 年龄：56</text>
+							<text class="name">{{info.name}} <text class="num">{{info.bunk}}床</text></text>
+							<text class="detail">性别：{{info.sex == 1?'男':'女'}} 年龄：{{info.age}}</text>
 						</view>
 						<view class="secodview">
 							<view class="zhenduanview">
 								<image class="zhenduanimage" src="../../static/gongzuotai/icon_zhenduan1.png"></image>
-								<text>诊断：心脏病</text>
+								<text>诊断：{{info.illnessName}}</text>
 							</view>
-							<text class="timetext">时间:2020-05-22 06:52</text>
+							<text class="timetext">时间:{{info.createTime}}</text>
 						</view>
 
 					</view>
@@ -88,7 +88,7 @@
 						</view>
 						<text class="dotTitle">短期目标</text>
 					</view>
-					<text class="mubiaodetail">站立平衡达到三级，十天。</text>
+					<text class="mubiaodetail">{{info.shortTermGoals?info.shortTermGoals:'暂未设置'}}</text>
 				</view>
 				<view class="mubiaoview">
 					<view class="upview">
@@ -97,7 +97,7 @@
 						</view>
 						<text class="dotTitle">长期目标</text>
 					</view>
-					<text class="mubiaodetail">可独立行走。</text>
+					<text class="mubiaodetail">{{info.longTermGoals?info.longTermGoals:'暂未设置'}}</text>
 				</view>
 			</view>
 			<!-- //康复项目 -->
@@ -251,6 +251,7 @@
 </template>
 
 <script>
+	import request from '../../utils/util.js'
 	export default {
 		data() {
 			return {
@@ -274,15 +275,36 @@
 
 					}
 				],
-				bgColor: "rgba(49, 216, 128, 1)"
-
+				bgColor: "rgba(49, 216, 128, 1)",
+				id:0,
+				info:{}
 			}
 		},
 		onShow: function() {
 			this.viewHeight = this.$app.getwindowHeight() - 69
 
 		},
+		onLoad(options) {
+			this.id = options.id?options.id:0;
+			this.init();
+		},
 		methods: {
+			init(){
+				this.getInfo();
+			},
+			getInfo(){
+				let that = this;
+				return request({
+					url:that.$api.huanzhe.getInfo,
+					type:"GET",
+					data:{
+						id:that.id
+					}
+				},true,true).then(data=>{
+					that.info = data;
+					console.log(data);
+				})
+			},
 			scroll(e) {
 				// let top = e.detail.scrollTop>=100?100:e.detail.scrollTop;
 				// top = top==0?1:top;
@@ -291,7 +313,7 @@
 			},
 			toPage(url) {
 				uni.navigateTo({
-					url,
+					url:`${url}?id=${this.info.id}`,
 					animationDuration: 300,
 					animationType: 'slide-in-right'
 				})

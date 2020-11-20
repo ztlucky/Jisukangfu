@@ -1,50 +1,65 @@
 <template>
 	<view>
-		<scroll-view scroll-y="true"  :style="[{height:viewHeight + 'px'}]"  @scroll="scroll"  >
-		<view class="topview">
-			<image src="../../static/wodehuanzhe/bg_wodehuanzhe.png" class="topimageview" mode="aspectFill"></image>
-				<text class="title1">请输入</text>	
-					 <text class="title2">患者信息、诊断结果</text>
-					 <view class="line1">
-					 	
-					 </view>
-			<view class="topitemView"> 
-				 <text class="huanzhexinxi"  >患者信息</text>
-				  <view class="greenline">
-				  	
-				  </view>
- <text class="name">姓名</text>
-		<input adjust-position="true" class="inputview" placeholder="请输入患者名字" v-model="huanzhename"/>	 
- <view class="sexview">
- 	<image class="sexImage" @click="changeSelectIndex(1)" :src="selectIndex == 1?'../../static/wodehuanzhe/selectedcopy.png':'../../static/wodehuanzhe/unselectedcopy.png'"></image>
-	<text :class="selectIndex ==1?'selecttext':'unselecttext'" @click="changeSelectIndex(1)"> 男</text>
-	<image class="sexImage"  @click="changeSelectIndex(2)" :src="selectIndex == 2?'../../static/wodehuanzhe/selectedcopy.png':'../../static/wodehuanzhe/unselectedcopy.png'"></image>
-	<text :class="selectIndex ==2?'selecttext':'unselecttext'"  @click="changeSelectIndex(2)">女</text>
- </view>
-                      
-										
-		<text class="name">身份证号</text>
-				<input adjust-position="true" class="inputview" placeholder="请输入患者身份证号" v-model="huanzheIDNumber"/>			  
-				<text class="name">手机号</text>
-						<input adjust-position="true" class="inputview" placeholder="请输入患者手机号" v-model="huanzheMobile"/>	
-						<text class="name">地址</text>
-								<pickers @address="address" @close="close">
-									<view class="chooseshengshiqu">
-										<input adjust-position="true" class="input" placeholder="请选择省市区" v-model="res" :disabled="true">
-										
-										</input>
- 										<image src="../../static/wodehuanzhe/below.png" class="rightImage"></image>
-									</view> 
-						 
- 								
- 									
-								</pickers>
-								<textarea  @blur="bindTextAreaBlur" class="detailAdressView" placeholder="请输入详细地址"  style="height: 130px;" maxlength="-1" adjust-position="true"/>
-		<text class="huanzhexinxi">患者信息</text>
+		<scroll-view scroll-y="true" :style="[{height:viewHeight + 'px'}]" @scroll="scroll">
+			<view class="topview">
+				<image src="../../static/wodehuanzhe/bg_wodehuanzhe.png" class="topimageview" mode="aspectFill"></image>
+				<text class="title1">请输入</text>
+				<text class="title2">患者信息、诊断结果</text>
+				<view class="line1">
+
+				</view>
+				<view class="topitemView">
+					<text class="huanzhexinxi">患者信息</text>
+					<view class="greenline">
+
+					</view>
+					<text class="name">姓名</text>
+					<input adjust-position="true" class="inputview" placeholder="请输入患者名字" v-model="huanzhename" />
+					<view class="sexview">
+						<image class="sexImage" @click="changeSelectIndex(1)" :src="selectIndex == 1?'../../static/wodehuanzhe/selectedcopy.png':'../../static/wodehuanzhe/unselectedcopy.png'"></image>
+						<text :class="selectIndex ==1?'selecttext':'unselecttext'" @click="changeSelectIndex(1)"> 男</text>
+						<image class="sexImage" @click="changeSelectIndex(2)" :src="selectIndex == 2?'../../static/wodehuanzhe/selectedcopy.png':'../../static/wodehuanzhe/unselectedcopy.png'"></image>
+						<text :class="selectIndex ==2?'selecttext':'unselecttext'" @click="changeSelectIndex(2)">女</text>
+					</view>
+
+
+					<text class="name">身份证号</text>
+					<input adjust-position="true" class="inputview" placeholder="请输入患者身份证号" v-model="huanzheIDNumber" />
+					<text class="name">手机号</text>
+					<input adjust-position="true" class="inputview" placeholder="请输入患者手机号" v-model="huanzheMobile" />
+					<text class="name">地址</text>
+					<pickers @address="address" @close="close">
+						<view class="chooseshengshiqu">
+							<input adjust-position="true" class="input" placeholder="请选择省市区" v-model="res" :disabled="true">
+
+							</input>
+							<image src="../../static/wodehuanzhe/below.png" class="rightImage"></image>
+						</view>
+
+
+
+					</pickers>
+					<text class="name">地址</text>
+					<textarea @blur="bindTextAreaBlur" class="detailAdressView" placeholder="请输入详细地址" style="height: 130px;" maxlength="-1"
+					 adjust-position="true" />
+					<text class="name">患者来源</text>
+					 <yealuo-select class="inputview" 
+					 the-style="margin: 20upx auto;font-size: 46upx;  " 
+					       
+					         placeholder='请选择患者来源' 
+					         :binData="sourceData"
+					         overflow="hide"
+					         @getBackVal="getBackVal2"
+					         :selectIco="false"
+					         >
+					         </yealuo-select>
+					 <text class="name">床位</text>
+					 <input adjust-position="true" type="number" class="inputview" placeholder="请输入床位" v-model="beds" />
+					<text class="huanzhexinxi">患者信息</text>
 		 <view class="greenline">
 		 	
 		 </view>
-		<text class="name">病症</text>
+		<text class="name">诊断</text>
 		<yealuo-select class="inputview" 
 		the-style="margin: 20upx auto;font-size: 46upx;  " 
 		      
@@ -55,8 +70,20 @@
 		        :selectIco="false"
 		        >
 		        </yealuo-select>
+				<text class="name">症状</text>
+				<yealuo-select class="inputview" 
+				the-style="margin: 20upx auto;font-size: 46upx;  " 
+				      
+				        placeholder='请选择症状结果' 
+				        :binData="symptomsData"
+				        overflow="hide"
+				        @getBackVal="getBackVal1"
+				        :selectIco="false"
+						checkType="checkbox"
+				        >
+				        </yealuo-select>
 				<view class="bottomview">
-					<text class="baocun">保存</text>
+					<text class="baocun" @click="save()">保存</text>
 					<text class="jixupingding" @click="pingdingAction">继续评定</text>
 				</view>
 		 
@@ -71,8 +98,8 @@
 
 <script>
 	import pickers from "@/components/ming-picker/ming-picker.vue"
-	    import yealuoInputs from '@/components/yealuo-select/yealuo-select.vue'
-
+	import yealuoInputs from '@/components/yealuo-select/yealuo-select.vue'
+	import request from "../../utils/util.js"
  	export default {
 		components: {pickers,
 		            yealuoInputs
@@ -80,7 +107,25 @@
  		},
 		data() {
 			return {
-			    illnessData:[],
+			    illnessData:[
+					
+				],
+				symptomsData:[],
+				sourceData:[{//患者来源
+					id:1,
+					value:'门诊'
+				},
+				{
+					id:2,
+					value:'住院'
+				},
+				{
+					id:3,
+					value:'互联网'
+				}],
+				sourceValue:null,
+				illnessValue:null,
+				symptomsValue:null,
 				viewHeight:0,
  				 huanzhename:'',
 				 huanzheIDNumber:'',
@@ -89,7 +134,8 @@
 			 detailAdress:'',
  				//选中后的显示值
 				res:"请选择省市区",
-				selecValue: '双皮奶'
+				selecValue: '双皮奶',
+				beds:''//床位
 
 			}
 		},
@@ -105,45 +151,116 @@
 		},
 		methods: {
 			//选中值传（值可自定义，初始id与value用|分割，根据实际用途定义）
-		  getBackVal:function(e){
-			                console.log(e)
-			            },
+		  getBackVal:function(data){
+			  this.illnessValue = {
+			  	id:data.split('|')[1],
+			  	value:data.split('|')[0]
+			  }
+			    this.getSymptomsData();
+			},
+						
+		getBackVal1(data){
+			let str = [];
+			let str1 = [];
+			if(data){
+				data.map(v=>{
+					str.push(v.split('|')[1]);
+					str1.push(v.split('|')[0]);
+				})
+			}
+			str = str.join(",");
+			str1 = str1.join(",")
+			this.symptomsValue = {
+				id:str,
+				value:str1
+			}
+		},
+		getBackVal2(data){
+			this.sourceValue = {
+				id:data.split('|')[1],
+				value:data.split('|')[0]
+			}
+		},
+		//获取症状列表
+		getSymptomsData(){
+			let that = this;
+			 return request({
+				 url:that.$api.huanzhe.getSymptomsList,
+				 type:"GET",
+				 data:{
+					 pageNo:1,
+					 pageSize:40,
+					 userId:getApp().globalData.userId,
+					 illnessId:that.illnessValue.id
+				 }
+			 },true,true).then(data=>{
+				 let list = [];
+				 data.records.map(v=>{
+					 list.push({
+						 id:v.id,
+						 value:v.name
+					 })
+				 });
+				 that.symptomsData = list;
+				 that.symptomsValue = null;
+			 })
+		},
          //获取病症 
 		 getillnessUserList(){
-		 this.$app.request({
+			 let that = this;
+			 return request({
+				 url:that.$api.huanzhe.getillnessList,
+				 type:"GET",
+				 data:{
+					 pageNo:1,
+					 pageSize:40,
+					 userId:getApp().globalData.userId
+				 }
+			 },true,true).then(data=>{
+				 let list = [];
+				 data.records.map(v=>{
+					 list.push({
+						 id:v.id,
+						 value:v.name
+					 })
+				 });
+				 that.illnessData = list;
+			 })
+		 // this.$app.request({
 		 		
-		 		url: this.$api.huanzhe.getillnessList,
-				//getApp().globalData.userId
-		 		data: {
-					pagenum:1,
-					pagesize:10,
-		 			userid:11 ,
- 		 		},
-		 		method: 'GET',
-		 		success: res => {
-		 			console.log(res)
+		 // 		url: this.$api.huanzhe.getillnessList,
+			// 	//getApp().globalData.userId
+		 // 		data: {
+			// 		pageNo:1,
+			// 		pageSize:40,
+		 // 			userId:0 ,
+ 		//  		},
+		 // 		method: 'GET',
+		 // 		success: res => {
+		 // 			console.log(res)
 		 				 
-		 			if(res.code == 200){
-		 				 //  this.illnessData = res.data.records;
- 				  	// this.illnessData.concat(res.data.records);
-					for (var i = 0; i < res.data.records.length; i++) {
-						this.illnessData.push(res.data.records[i]);
- 					}
-						//  this.illnessData.push(res.data.records[1]);
+		 // 			if(res.code == 200){
+		 // 				 //  this.illnessData = res.data.records;
+ 		// 		  	// this.illnessData.concat(res.data.records);
+			// 		for (var i = 0; i < res.result.records.length; i++) {
+			// 			this.illnessData.push(res.result.records[i]);
+ 		// 			}
+			// 			//  this.illnessData.push(res.data.records[1]);
 						
-						console.log("789789")
+			// 			console.log("789789")
 						
-							console.log( this.illnessData)
+			// 				console.log( this.illnessData)
 									  
-		 			}
+		 // 			}
 		 			
-		 		},
-		 		fail: res => {
-		 		},
-		 		complete: res => {
+		 // 		},
+		 // 		fail: res => {
+		 // 		},
+		 // 		complete: res => {
 		 			 
-		 		}
-		 	});
+		 // 		}
+		 // 	});
+		 
 		 },
 			address(e){
 			  console.log("点击了确认")
@@ -180,7 +297,6 @@
 							                          timingFunc: 'easeIn'
 							                      }
 							                  });
-							console.log(e.detail.scrollTop)
 							
 						}else{
 							uni.setNavigationBarColor({
@@ -203,7 +319,6 @@
 						}
  			        },
 			 pingdingAction(){
-				 console.log('eeee')
 				 uni.navigateTo({
 				 	url:'../KangfuPingdingListPage/KangfuPingdingListPage',
 					animationDuration:300,
@@ -211,11 +326,109 @@
 				 })
 				 
 				 
+			 },
+			 save(){
+			 		 let str = "";
+			 		 if(!this.huanzhename){
+			 			 str = '请输入患者姓名'
+			 		 }else if(!this.huanzheIDNumber){
+			 			 str = "请输入患者身份证号"
+			 		 }else if(!this.checkCode(this.huanzheIDNumber)){
+						 str = "请输入患者正确身份证号"
+					 }else if(!this.huanzheMobile){
+			 			 str = "请输入患者手机号"
+			 		 }else if(this.res == "请选择省市区"){
+			 			 str = "请选择地区"
+			 		 }else if(!this.detailAdress){
+			 			 str = "请输入详细地址"
+			 		 }else if(!this.sourceValue){
+			 			 str = "请选择患者来源"
+			 		 }else if(this.sourceValue.id == 2 &&!this.beds){
+			 			str = "请输入床位"
+			 		 }else if(!this.illnessValue){
+			 			 str = "请选择诊断结果"
+			 		 }else if(!this.symptomsValue){
+			 			 str = "请选择症状结果"
+			 		 }
+			 		 if(str){
+						 uni.showToast({
+							title: str,
+							icon:'none',
+							duration: 2000
+						})
+			 		 }else{
+						 let that = this;
+			 		 	console.log(this.huanzhename,
+							this.huanzheIDNumber,
+							this.huanzheMobile,this.res,this.detailAdress,this.sourceValue,this.illnessValue,this.symptomsValue)		 
+			 		 let age = that.discriCard(that.huanzheIDNumber);
+					 return request({
+						 url:that.$api.huanzhe.addHuanZhe,
+						 type:"POST",
+						 data:{
+								 name:that.huanzhename,
+								 age,
+								 sex:that.selectIndex,
+								 bunk:that.beds,
+								 idNo:that.huanzheIDNumber,
+								 phoneNumber:that.huanzheMobile,
+								 detailedAddress:that.detailAdress,
+								 patientsSource:that.sourceValue.id,
+								 illnessId:Number.parseInt(that.illnessValue.id),
+								 symptomId:that.symptomsValue.id,
+								 illnessName:that.illnessValue.value,
+								 symptomName:that.symptomsValue.value,
+								 province:that.res.split("-")[0],
+								 city:that.res.split("-")[1],
+								 county:that.res.split("-")[2],
+								 userId:getApp().globalData.userId
+						 }
+					 }).then(data=>{
+						 uni.showToast({
+						 	title:data.message,
+						 	duration:1500,
+						 	success() {
+						 		setTimeout(()=>{
+						 			uni.navigateBack();
+						 		},1500);
+						 	}
+						 })
+					 })
+					 
+					 }
+			 		 
+			 },
+			 discriCard(UUserCard){ 
+				UUserCard.substring(6, 10) + "-" + UUserCard.substring(10, 12) + "-" + UUserCard.substring(12, 14); 
+					var myDate = new Date(); 
+					var month = myDate.getMonth() + 1; 
+					var day = myDate.getDate(); 
+					var age = myDate.getFullYear() - UUserCard.substring(6, 10) - 1; 
+					if (UUserCard.substring(10, 12) < month || UUserCard.substring(10, 12) == month && UUserCard.substring(12, 14) <= day) { 
+					age++; 
+					} 
+					return age;
+				},
+				checkCode(val) {
+				        var p = /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
+				        var factor = [ 7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2 ];
+				        var parity = [ 1, 0, 'X', 9, 8, 7, 6, 5, 4, 3, 2 ];
+				        var code = val.substring(17);
+				        if(p.test(val)) {
+				            var sum = 0;
+				            for(var i=0;i<17;i++) {
+				                sum += val[i]*factor[i];
+				            }
+				            if(parity[sum % 11] == code.toUpperCase()) {
+				                return true;
+				            }
+				        }
+				        return false;
+				    }
+			 
 			 }
-		 
 			 
 			 
-		}
 	}
 </script>
 <style>
