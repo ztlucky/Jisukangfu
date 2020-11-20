@@ -1,26 +1,54 @@
 <template>
 	<view class="viewPage">
 		<view class="content">
-			<view class="text">
-				始创于2007年始终秉承诚信、有爱和良父义务精神及“做中国更好的整形美容医院”的品牌愿景，以顾客满意度为宗旨，接轨国际医疗标准，勇担行业自律先锋，全力打造高品质医疗服务体系更屡获“公众信赖品牌医院”称号并成为卫生部全国示范推广单位。始终注重品牌发展与专业医美精神的共融并济，与美同行，塑美于世。
-			</view>
-			<image src="../../../static/gongzuotai/bg_zhibo.png"></image>
-			<image src="../../../static/gongzuotai/bg_zhibo.png"></image>
-			<image src="../../../static/gongzuotai/bg_zhibo.png"></image>
-			<image src="../../../static/gongzuotai/bg_zhibo.png"></image>
+			<view class="text">{{info.content}}</view>
+			<image mode="aspectFill" :src="v.url" v-for="(v,k) in info.file" :key="k" @click="lookImage(k)"></image>
 		</view>
 	</view>
 </template>
 
 <script>
+	import request from "../../../utils/util.js"
 	export default {
 		data() {
 			return {
-				
+				info:{}
 			}
 		},
+		onLoad(data){
+			this.id = data.id?data.id:13;
+			this.init();
+		},
 		methods: {
-			
+			init(){
+				this.getInfo()
+			},
+			getInfo(){
+				let that = this;
+				return request({
+					url:getApp().$api.notes.getInfo,
+					type:"GET",
+					data:{
+						id:that.id
+					}
+				},true,true).then(data=>{
+					data.file = JSON.parse(data.file);
+					that.info = data;
+					console.log(data);
+				})
+			},
+			lookImage(k){
+				let that = this;
+				let urls = [];
+				this.info.file.map(v=>{
+					urls.push(v.url);
+				})
+				console.log(urls);
+				uni.previewImage({
+					urls,
+					current:k
+				})
+			}
 		}
 	}
 </script>

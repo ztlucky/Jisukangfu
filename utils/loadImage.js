@@ -3,7 +3,6 @@ import request from './util.js'
 import config from '../config/api.js';
 class loadImage {
 	init(data, fn = () => {}) {
-		console.log(data);
 		this.imageList = data.tempFiles;
 		this.imagePathList = data.tempFilePaths;
 		this.author = data.author ? data.author : 'labi'
@@ -15,10 +14,24 @@ class loadImage {
 	}
 
 	upload() {
+		// if(this.nowCount == 0){
+			uni.showLoading({
+				title:`图片上传中（${this.nowCount}/${this.imageList.length}）`,
+				mask:true
+			})
+		// }
 		if (this.imageList.length == this.nowCount) {
-			this.fn(this);
+			let file = [];
+			this.imageList.map((v,k)=>{
+				file.push({
+				type:v.type?v.type:'img',
+				url:this.imageUrl[k]
+			})
+			})
+			this.fn(this,JSON.stringify(file));
+			uni.hideLoading();
 		} else {
-			if (this.imageList[this.nowCount].type && this.imageList[this.nowCount + 1].type == 'video') {
+			if (this.imageList[this.nowCount].type && this.imageList[this.nowCount].type == 'video') {
 				this.uploadVideo(this.imageList[this.nowCount]);
 			} else {
 				this.uploadImage(this.imageList[this.nowCount]);
@@ -27,8 +40,9 @@ class loadImage {
 	}
 	uploadImage() {
 		let that = this;
-		let file_type = '.' + (this.imagePathList[this.nowCount].split(".")[this.imagePathList[this.nowCount].split(".").length -1]);
-			console.log()
+		// let file_type = '.' + (this.imagePathList[this.nowCount].split(".")[this.imagePathList[this.nowCount].split(".").length -1]);
+		//app图片选择异常
+		let file_type = '.png'
 		return request({
 			url: config.oss.getPictureUrl,
 			type: "GET",

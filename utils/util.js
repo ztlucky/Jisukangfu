@@ -34,7 +34,9 @@ function request(options = {},isShowLoading = true,isBackData = false) {
 					rejected(err)
 				},
 				complete() {
-					uni.hideLoading()
+					if(isShowLoading){
+						uni.hideLoading()
+					}
 				}
 			});
 		})
