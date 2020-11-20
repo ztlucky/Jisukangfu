@@ -12,20 +12,27 @@
 					<image mode="aspectFill" :src="v" class=""></image>
 				</view>
 				<view :class="'addImage '+((list.length)%3 == 1?'imageItem1':'addImage')" @click="getImages">
-					<image src=""></image>
+					<image src="../../../static/icon_camera.png"></image>
 				</view>
 			</view>
 		</view>
-		<view class="save">保存</view>
+		<view class="save" @click="save">保存</view>
 	</view>
 </template>
 <script>
+	import request from "../../../utils/util.js";
+	import onloadImage from "../../../utils/loadImage.js";
 	export default {
 		data() {
 			return {
 				list:[],
-				tempFile:[]
+				tempFile:[],
+				title:'',
+				content:''
 			}
+		},
+		onLoad(data) {
+			this.id = data.id?data.id:22;
 		},
 		methods: {
 			getImages(){
@@ -37,17 +44,50 @@
 				    success: function(res) {
 						console.log(res);
 				        // 预览图片
-						console.log(res.tempFilePaths);
 				        that.list = that.list.concat(res.tempFilePaths);
-						console.log(that.list)
 						that.tempFile = that.tempFile.concat(res.tempFiles)
 				    }
 				    });
 			},
 			deleteImage(index){
-				console.log(index);
 				this.tempFile.splice(index,1);
 				this.list.splice(index,1);
+			},
+			save(){
+				let that = this;
+				let str = '';
+				if(!this.title){
+					str = "请填写诊断信息"
+				}else if(!this.text){
+					str = "请填写诊疗意见"
+				}else if(this.list.length == 0){
+					str = "请先选择图片"
+				}
+				onloadImage.init({
+					tempFiles:that.tempFile,
+					tempFilePaths:that.list
+				},(data,str)=>{
+					return request({
+						url:getApp().$api.huanzhe.addMedical,
+						data:{
+							patientId:that.id,
+							diagnose:that.title,
+							medicalOpinion:that.text,
+							file:str
+						},
+						type:"POST"
+					}).then(data=>{
+						console.log(data);
+						uni.showToast({
+							title:'保存成功',
+							duration:1500
+						})
+						setTimeout(()=>{
+							uni.navigateBack();
+						},1500)
+						console.log(data);
+					})
+				}).upload();
 			}
 		}
 	}
@@ -121,16 +161,17 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		border-radius: 8rpx;
 	}
 	.addImage image{
 		width:50rpx;
 		height: 44rpx;
-		background-color: red;
+		/* background-color: red; */
 	}
 	.imageItem > image:nth-child(2){
 		width: 176rpx;
 		height: 176rpx;
-		background-color: red;
+		/* background-color: red; */
 	}
 	.imageItem1{
 		margin:30rpx;

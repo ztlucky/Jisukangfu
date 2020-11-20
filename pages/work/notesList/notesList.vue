@@ -4,10 +4,10 @@
 			<!-- <view slot="right" v-if="isEdit" @click="save" class="navRight">保存</view> -->
 		</nav-bar>
 		<view class="list">
-			<view class="item" @click="toPage('/pages/work/notesInfo/notesInfo')" v-for="(i,k) in [1,2,3]" :key="k">
+			<view class="item" @click="toPage('/pages/work/notesInfo/notesInfo',v.id)" v-for="(v,k) in list" :key="k">
 				<view class="itemLeft"></view>
 				<view class="itemRight">
-					<view class="rightText hidden">评定量表可是飞机上看评定量表可是飞机上看</view>
+					<view class="rightText hidden">{{v.content}}</view>
 					<view class="rightView">
 						<!-- <view>100</view> -->
 						<image src="../../../static/f_my_kecheng_arrow.png"></image>
@@ -27,7 +27,8 @@
 				isGetMoreList: true,
 				isOnLoad: false,
 				index: 0,
-				size: 10
+				size: 10,
+				list:[]
 			}
 		},
 		created() {
@@ -46,7 +47,10 @@
 			}
 		},
 		methods: {
-			toPage(url) {
+			toPage(url,id) {
+				if(url == "/pages/work/notesInfo/notesInfo"){
+					url+=`?id=${id}`
+				}
 				uni.navigateTo({
 					url,
 					animationDuration: 300,
@@ -68,9 +72,15 @@
 						pageSize: that.size,
 						userId: getApp().globalData.userId
 					}
-				}).then(data => {
+				},true,true).then(data => {
+					if(data.records.length >= that.size){
+						that.isGetMoreList = true;
+					}else{
+						that.isGetMoreList = false;
+					}
+					that.list = that.list.concat(data.records);
+					that.index++;
 					that.isOnLoad = false;
-					console.log(data);
 				}).catch(err => {
 					that.isOnLoad = false;
 				})

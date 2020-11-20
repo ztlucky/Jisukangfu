@@ -27,6 +27,9 @@
 				value:''
 			}
 		},
+		onLoad(){
+				
+		},
 		methods: {
 			getImages(){
 				let that = this;
@@ -80,15 +83,26 @@
 				onloadImage.init({
 					tempFiles:that.tempFile,
 					tempFilePaths:that.imageList
-				},(data)=>{
-					console.log(data.imageUrl);
-					// return request({
-					// 	userId:getApp().globalData.userId,
-					// 	content:that.value,
-					// 	flie:'这是一个文件'
-					// }).then(data=>{
-					// 	console.log(data);
-					// })
+				},(data,str)=>{
+					console.log(data.imageUrl,str);
+					return request({
+						url:getApp().$api.notes.addNotes,
+						data:{
+							userId:getApp().globalData.userId,
+							content:that.value,
+							file:str
+						},
+						type:"POST"
+					}).then(data=>{
+						uni.showToast({
+							title:'保存成功',
+							duration:1500
+						})
+						setTimeout(()=>{
+							uni.navigateBack();
+						},1500)
+						console.log(data);
+					})
 				}).upload();
 			},
 			input(e){
