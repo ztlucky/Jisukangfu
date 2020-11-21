@@ -255,9 +255,9 @@ const request = function(req) {
 		dataType: req.dataType || "json",
 		success: function(res) {
 			if (res.data.code == '1000') {
-				login(); //登录
+			//	login(); //登录
 			} else if (res.data.code == '1003') {
-				bindMobile(); //绑定手机号码
+				//bindMobile(); //绑定手机号码
 			} else {
 				if (req.success) {
 					console.log(res)
