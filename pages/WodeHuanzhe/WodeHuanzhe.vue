@@ -72,7 +72,7 @@
 
 					</view>
 					<uni-grid :column="2" :square="false" :showBorder="false" @change="" :highlight="false">
-						<uni-grid-item v-for="(Item ,index) in item.treatmentList" :key="index" :index="index">
+						<uni-grid-item v-for="(Item ,Index) in item.treatmentList" :key="Index" :index="Index">
 							<view class="huanzheBottomItem">
 								<view class="greendot"></view>
 								<text class="title">PT 10:00-11:00 </text>

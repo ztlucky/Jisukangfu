@@ -17,18 +17,18 @@
 		data() {
 			return {
 				list:[{
-					title:"评定量表",
-					subtitle:"选择创建的题库打造合适的评定量表",
+					title:"单选题",
+					subtitle:"创建评定量表的单选题",
 					image:'../../../static/gongzuotai/icon_pingdingliangbiao.png'
 				},
 				{
-					title:"疾病诊断、症状表现、一键比较",
-					subtitle:"创建常见的疾病诊状",
+					title:"多选题",
+					subtitle:"创建评定量表的多选题",
 					image:'../../../static/gongzuotai/icon_jibingzhenduan.png'
 				},
 				{
-					title:"治疗项目",
-					subtitle:"创建常用的疾病治疗项目",
+					title:"说明题",
+					subtitle:"创建评定量表的说明题",
 					image:'../../../static/gongzuotai/icon_zhiliaoxiangmu.png'
 				}
 				
@@ -40,21 +40,21 @@
 			jumpNext(k){
 					
 				if(k==0){
-					uni.navigateTo({
-						url:'../pingDingLiangBiaoType/pingDingLiangBiaoType',
+					uni.redirectTo({
+						url:'/pages/work/createProblem/createProblem?index=1',
 						animationDuration:300,
 						animationType:'slide-in-right'
 					})
 					
 				}else if(k == 1){
-					uni.navigateTo({
-						url:'../pingDingLiangBiaoType/pingDingLiangBiaoType',
+					uni.redirectTo({
+						url:'/pages/work/createProblem/createProblem?index=2',
 						animationDuration:300,
 						animationType:'slide-in-right'
 					})
 				}else{
-					uni.navigateTo({
-						url:'/pages/work/xiangMu/xiangMu',
+					uni.redirectTo({
+						url:'/pages/work/createProblem/createProblem?index=3',
 						animationDuration:300,
 						animationType:'slide-in-right'
 					})

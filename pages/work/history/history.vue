@@ -5,14 +5,14 @@
 				<view class="headerText">{{timeType == -1?'时间排序':timeType == 0?'时间升序':'时间降序'}}</view>
 				<image class="headerImage" src="../../../static/Huanzhexiangqing/icon_xuanze.png"></image>
 			</view>
-			<view class="headerList" :style="`top:${isShowTimeType?'80rpx':'-100rpx'}`">
+			<view class="headerList" :style="'top:'+(isShowTimeType?'80rpx':'-100rpx')">
 				<view class="headerItem" @click="setTimeType(0)">时间升序</view>
 				<view class="headerItem" @click="setTimeType(1)">时间降序</view>
 			</view>
 		</view>
 		<view class="headerBack" v-if="isShowTimeType" @click="setHeaderStatus()"></view>
 		<view class="list">
-			<view class="item" v-for="(i,k) in [1,2,3]" :key="k">
+			<view class="item" v-for="(v,k) in [1,2,3]" :key="k">
 				<view class="itemTop">
 						<image class="left" src=""></image>
 						<view class="right">

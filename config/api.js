@@ -39,7 +39,9 @@ let api = {
 	    getPingDingliebiaoList:apiRoot + "app/ratingScale/listByUser",
 		//评定量表下的分类
 		getPingDingItemList:apiRoot + "app/questionType/listByRatingScale",
-		
+		addQuestion:`${apiRoot}question/question/add`,
+		addType:`${apiRoot}rating_scale_classify/ratingScaleClassify/add`,
+		getTypeList:`${apiRoot}rating_scale_classify/ratingScaleClassify/list`
 		
 	},
 	user: {
@@ -77,7 +79,9 @@ let api = {
 		getSymptomsList:`${apiRoot}symptom/symptom/list`,
 		addHuanZhe:`${apiRoot}patient/patient/add`,//添加患者
 		addResult:`${apiRoot}assess_result/assessResult/add`,
-		addMedical:`${apiRoot}medical_history/medicalHistory/add`//添加病历
+		addMedical:`${apiRoot}medical_history/medicalHistory/add`,//添加病历
+		addIllness:`${apiRoot}illness/illness/add`,
+		addSymptom:`${apiRoot}symptom/symptom/add`
  	},
 	wechat: {
 		miniAppLogin: apiRoot + 'wechat/miniAppLogin',

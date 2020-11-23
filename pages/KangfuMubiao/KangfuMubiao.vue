@@ -1,11 +1,11 @@
 <template>
-	<view class="contentview"> 
-	<scroll-view scroll-y="true" :style="[{height:mainscrollvieheight + 'px'}]" class="mainscrollview">
-		<view class="bgview">
-			<text class="title">短期目标</text>
-			<textarea  @blur="bindTextAreaBlur" class="duanqimubiao" placeholder="请输入患者的短期目标"  style="height: 100px;" maxlength="-1" v-model="duanqimubiao"
-			 adjust-position="true"/>
-			<text class="kuaijiebiaoqian">快捷标签</text>
+	<view class="contentview">
+		<scroll-view scroll-y="true" :style="[{height:mainscrollvieheight + 'px'}]" class="mainscrollview">
+			<view class="bgview">
+				<text class="title">短期目标</text>
+				<textarea @blur="bindTextAreaBlur" class="duanqimubiao" placeholder="请输入患者的短期目标" style="height: 100px;" maxlength="-1"
+				 v-model="duanqimubiao" adjust-position="true" />
+				<text class="kuaijiebiaoqian">快捷标签</text>
 			<view class="kuaijiebiaoqianview">
 				<uni-grid :column="2"   :square="false"  :showBorder = "false" :highlight="false">
 					<uni-grid-item  v-for="(item ,index) in kuaijiebianqianArray" :key ="index" :index= "index"   >

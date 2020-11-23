@@ -52,6 +52,15 @@
 				}
 		},
 		{
+				"path" : "pages/work/selectedProblemType/selectedProblemType",
+				"style" : {
+					"navigationBarTitleText":"选择题目",
+					"navigationBarBackgroundColor":"#31D880",
+					"navigationBarTextStyle":"white"
+					
+				}
+		},
+		{
 				"path" : "pages/work/editXiangMu/editXiangMu",
 				"style" : {
 					"navigationBarTitleText":"项目",
@@ -196,6 +205,12 @@
 					"navigationBarBackgroundColor":"#31D880",
 					"navigationBarTextStyle":"white"
 					
+				}
+		},
+		{
+				"path" : "pages/work/problemType/problemType",
+				"style" : {
+					"navigationStyle":"custom"
 				}
 		},
 		{
@@ -464,6 +479,14 @@
             "path" : "pages/KangfuPingdingListPage/KangfuPingdingListPage",
             "style" : {
 				"navigationBarTitleText":"康复评定",
+				"navigationBarBackgroundColor":"#31D880",
+				"navigationBarTextStyle":"white"
+				
+			}
+        },{
+            "path" : "pages/work/addPingDingLiangBiaoType/addPingDingLiangBiaoType",
+            "style" : {
+				"navigationBarTitleText":"添加分类",
 				"navigationBarBackgroundColor":"#31D880",
 				"navigationBarTextStyle":"white"
 				

@@ -5,40 +5,77 @@
 			<yealuo @getBackVal="getBackVal" the-style="font-size: 46upx;"  :selectIco="true" overflow="hide" :isSetUrl="true" placeholder="请选择分类" width="590" :binData="binData" 
 			 :isShowAllBack="true" padding="20rpx"></yealuo>
 			<view class="title">评定量表标题</view>
-			<input placeholder="请输入要创建的评定量表的标题" />
+			<input placeholder="请输入要创建的评定量表的标题" v-model="title"/>
 		</view>
-		<view class="bottom">下一步</view>
+		<view class="bottom" @click="next">下一步</view>
 	</view>
 </template>
 
 <script>
-	import yealuo from "../../../components/yealuo-select/yealuo-select.vue"
+	import yealuo from "../../../components/yealuo-select/yealuo-select.vue";
+	import request from "../../../utils/util.js"
 	export default {
 		data() {
 			return {
-				binData: [{
-						value: '那此处也好',
-						id: 1
-					},
-					{
-						value: '那此处也好2',
-						id: 2
-					},
-					{
-						value: '那此处也好3',
-						id: 3
-					},
-					{
-						value: '那此处也好4',
-						id: 4
-					}
-				]
+				binData: [
+				],
+				nowIndex:-1,
+				title:''
 			}
+		},
+		onLoad() {
+			this.init();
 		},
 		methods: {
 			getBackVal(data) {
-				console.log(data.split('|'));
-
+				this.nowIndex = data.split('|')[1];
+			},
+			init(){
+				this.getList();
+			},
+			getList(){
+				let that = this;
+				return request({
+					url:getApp().$api.pingdingliangbiao.getTypeList,
+					type:"GET",
+					data:{
+						pageNo:1,
+						pageSize:200,
+						userId:getApp().globalData.userId
+					}
+				},true,true).then(data=>{
+					if(data.records.length !=0){
+						data.records.map(v=>{
+							v.value = v.name;
+						})
+					}
+					that.binData = data.records;
+				})
+			},
+			next(){
+				if(this.nowIndex == -1){
+					uni.showToast({
+						title:'请选择分类',
+						duration:1500,
+						icon:"none",
+						mask:true
+					});
+					return false;
+				}else if(!this.title){
+					uni.showToast({
+						title:'请输入量表的标题',
+						duration:1500,
+						icon:"none",
+						mask:true
+					});
+					return false;
+				}
+				let url = `/pages/work/pingDingLiangBiaoProblemType/pingDingLiangBiaoProblemType?typeid=${this.binData[this.nowIndex].id}&typename=${this.title}`;
+				uni.navigateTo({
+					url,
+					animationDuration: 300,
+					animationType: 'slide-in-right'
+				})
 			}
 		},
 		components: {

@@ -3,13 +3,13 @@
 		<nav-bar  bgColor="#31D880" backState="1000" fontColor="#ffffff" title="评定量表" type="ordinary">
 			<view slot="right" v-if="isEdit" @click="save" class="navRight">保存</view>
 		</nav-bar>
-		<view class="list">
+		<view class="list" v-if="list.length!=0">
 			<view class="item" @click="toPage(isEdit?k:'/pages/work/pingDingLiangBiaoInfo/pingDingLiangBiaoInfo',!isEdit)" v-for="(v,k) in list" :key="k">
 				<view class="itemLeft"></view>
 				<view class="itemRight">
 					<view class="rightText hidden">{{v.text}}</view>
 					<view class="rightView" v-if="!isEdit">
-						<!-- <view>{{v.value}}</view> -->
+						<view>{{v.value}}</view>
 						<image src="../../../static/f_my_kecheng_arrow.png"></image>
 					</view>
 					<view class="rightView rightView1" v-else>
@@ -18,10 +18,10 @@
 				</view>
 			</view>
 		</view>
-		<view class="bottom" v-if="!isEdit" @click="setNowStatus">编辑评定量表分类</view>
+		<view class="bottom" v-if="!isEdit" @click="setNowStatus">编辑量表问题</view>
 		<view class="bottomNav" v-else>
-			<view class="">删除选中的分类({{num}})</view>
-			<view class="">添加新的分类</view>
+			<view class="">删除选中的问题({{num}})</view>
+			<view class="" @click="toPage('/pages/work/createProblem/createProblem')">添加新的问题</view>
 		</view>
 	</view>
 </template>
@@ -32,21 +32,21 @@
 			return {
 			isEdit:false,
 			list:[
-				{
-					text:"问题量表分类i使肌肤死角史可法",
-					value:89,
-					isSelected:false
-				},
-				{
-					text:"平淡量表解释纷纷i使肌肤死角史可法",
-					value:89,
-					isSelected:false
-				},
-				{
-					text:"平淡量表解释纷纷i使肌肤死角史可法",
-					value:89,
-					isSelected:false
-				}
+				// {
+				// 	text:"问题量表分类i使肌肤死角史可法",
+				// 	value:'单选题',
+				// 	isSelected:false
+				// },
+				// {
+				// 	text:"平淡量表解释纷纷i使肌肤死角史可法",
+				// 	value:'多选题',
+				// 	isSelected:false
+				// },
+				// {
+				// 	text:"平淡量表解释纷纷i使肌肤死角史可法",
+				// 	value:'说明题',
+				// 	isSelected:false
+				// }
 			],
 			num:0
 			}
@@ -138,6 +138,10 @@
 	}
 	.rightView view{
 		margin-right: 32rpx;
+		font-size: 24rpx;
+		font-family: PingFangSC-Regular, PingFang SC;
+		font-weight: 400;
+		color: #999999;
 	}
 	.rightView image{
 		width:24rpx;

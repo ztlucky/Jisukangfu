@@ -21,7 +21,7 @@
 		<view class="bottom" v-if="!isEdit" @click="setNowStatus">编辑评定量表</view>
 		<view class="bottomNav" v-else>
 			<view class="">删除选中的量表({{num}})</view>
-			<view class="">添加新的量表</view>
+			<view class="" @click="toPage('/pages/work/createTitleType/createTitleType')">添加新的量表</view>
 		</view>
 	</view>
 </template>
@@ -139,6 +139,11 @@
 	}
 	.rightView view{
 		margin-right: 32rpx;
+		
+		font-size: 24rpx;
+		font-family: PingFangSC-Regular, PingFang SC;
+		font-weight: 400;
+		color: #666666;
 	}
 	.rightView image{
 		width:24rpx;

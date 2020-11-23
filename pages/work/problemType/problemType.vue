@@ -20,7 +20,7 @@
 		</view>
 		<view class="bottom" v-if="!isEdit" @click="setNowStatus">编辑评定量表分类</view>
 		<view class="bottomNav" v-else>
-			<view class="">删除选中的分类({{num}})</view>
+			<view class="">删除选中的分类	({{num}})</view>
 			<view class="" @click="toPage('/pages/work/addPingDingLiangBiaoType/addPingDingLiangBiaoType')">添加新的分类</view>
 		</view>
 	</view>
@@ -43,7 +43,6 @@
 		},
 		onShow() {
 			this.init(true);
-			this.isEdit = false;
 		},
 		methods: {
 			setNowStatus(){
@@ -63,14 +62,13 @@
 				}
 				return request({
 					type:'GET',
-					url:getApp().$api.huanzhe.getSymptomsList,
+					url:getApp().$api.pingdingliangbiao.getTypeList,
 					data:{
 						pageNo:that.index,
 						pageSize:that.size,
 						userId:getApp().globalData.userId
 					}
 				},true,true).then(data=>{
-					console.log(data.records.length);
 					if(data.records.length >= that.size){
 						this.isGetMoreList = true;
 					}else{
@@ -83,7 +81,7 @@
 						that.list = that.list.concat(data.records);
 					}
 					
-					console.log(that.list);
+					console.log(data);
 				})
 			},
 			toPage(url,f = true){

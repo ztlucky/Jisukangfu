@@ -1,11 +1,11 @@
 <template>
 	<view class="sild" >
 		<view class="sildLeft" @click.stop="" :style="'width:'+(!isRun?'640':'500')+'rpx'" >
-			<view class="text hidden" :style="'width:'+(!isRun?'494':'442')+'rpx;color:'+(data.title?'#333333':'#888888')" v-if="!isEdit">{{data.title?data.title:' '}}</view>
-			<input placeholder="请输入选项内容" class="text" :focus="true" @blur="blur()" :style="'width:'+(!isRun?'494':'442')+'rpx'" v-else v-model="data.title"/>
-			<image src="" @click="setEditStatus()"></image>
+			<view :class="isRun?'text hidden':'text hidden text1'" :style="'width:'+(!isRun?'494':'442')+'rpx;color:'+(dataprops.title?'#333333':'#888888')" v-if="!isEdit">{{dataprops.title?dataprops.title:isRun?'请输入选项内容':'请输入问题标题'}}</view>
+			<input :placeholder="isRun?'请输入选项内容':'请输入问题标题'" class="text" :focus="true" @blur="blur()" :style="'width:'+(!isRun?'494':'442')+'rpx'" v-else v-model="dataprops.title"/>
+			<image src="/static/work/edit.png" @click="setEditStatus()"></image>
 		</view>
-		<image src="" v-if="isRun" @click="deleteItem"  class="delete"></image>
+		<image src="/static/work/delete.png" v-if="isRun" @click="deleteItem"  class="delete"></image>
 		<!-- <view class="back"></view> -->
 	</view>
 </template>
@@ -13,11 +13,11 @@
 <script>
 	export default {
 		props:{
-			data:{
+			dataprops:{
 				type:Object,
 				default:()=>{
 					return {
-						title:'默认文字'
+						title:''
 					}
 				}
 			},
@@ -115,6 +115,17 @@
 				
 			},
 			setEditStatus(){
+				if(this.isRun){
+					console.log(this.dataprops);
+					this.dataprops.imgList = JSON.stringify(this.dataprops.imgList);
+					let str = `?index=${this.dataprops.index}&title=${this.dataprops.title}&text=${this.dataprops.text}&text1=${this.dataprops.text1}&imglist=${this.dataprops.imgList}`;
+					uni.navigateTo({
+						url:"/pages/work/createProblemInfo/createProblemInfo"+str,
+						animationDuration: 300,
+						animationType: 'slide-in-right'
+					})
+					return false;
+				}
 				this.isEdit = !this.isEdit;
 			},
 			blur(){
@@ -122,7 +133,7 @@
 				this.setEditStatus();
 				this.$emit('editTitle',{
 					index:that.index,
-					value:that.data.title
+					value:that.dataprops.title
 				})
 			}
 		}
@@ -159,7 +170,7 @@
 	.sildLeft > image{
 		width:32rpx;
 		height: 32rpx;
-		background-color: #000000;
+		/* background-color: #000000; */
 	}
 	.sild .delete{
 		/* position: absolute; */
@@ -168,7 +179,7 @@
 		/* right: 14rpx; */
 		width: 30rpx;
 		height: 30rpx;
-		background-color:#E02020;
+		/* background-color:#E02020; */
 		margin-right: 22rpx;
 		/* margin:14rpx; */
 	}
@@ -179,5 +190,8 @@
 		position: absolute;
 		right: -2rpx;
 		top:0;
+	}
+	.text1{
+		color: #F5F5F5;
 	}
 </style>

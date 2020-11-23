@@ -4,8 +4,8 @@
 
 
 			<view class="bgview">
-				<image class="bgimage" src="../../static/gongzuotai/bg_gongzuotai.png" :style="[{height:topImageHeight + 'px'}]"></image>
-
+				<!-- <image class="bgimage" src="../../static/gongzuotai/bg_gongzuotai.png" :style="[{height:topImageHeight + 'px'}]"></image> -->
+				<view class="bgimage" :style="'width:100%;'+'height:'+topImageHeight +'px'"></view>
 				<text class="maintitle">工作台</text>
 				<text class="nametitle">刘胡兰 > </text>
 				<text class="time">2020-06-16</text>
@@ -328,6 +328,7 @@
 			width: 100%;
 			position: absolute;
 			z-index: 0;
+			background-color: #31D880;
 		}
 
 		.maintitle {
