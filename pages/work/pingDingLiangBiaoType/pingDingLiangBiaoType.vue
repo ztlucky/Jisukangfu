@@ -1,10 +1,11 @@
 <template>
 	<view class="view">
-		<nav-bar  bgColor="#31D880" backState="1000" fontColor="#ffffff" title="评定量表" type="ordinary">
+		<nav-bar bgColor="#31D880" backState="1000" fontColor="#ffffff" title="评定量表" type="ordinary">
 			<view slot="right" v-if="isEdit" @click="save" class="navRight">保存</view>
 		</nav-bar>
 		<view class="list" v-if="list.length!=0">
-			<view class="item" @click="toPage(isEdit?k:'/pages/work/pingDingLiangBiao/pingDingLiangBiao',!isEdit)" v-for="(v,k) in list" :key="k">
+			<view class="item" @click="toPage(isEdit?k:'/pages/work/pingDingLiangBiao/pingDingLiangBiao',!isEdit)" v-for="(v,k) in list"
+			 :key="k">
 				<view class="itemLeft"></view>
 				<view class="itemRight">
 					<view class="rightText hidden">{{v.name}}</view>
@@ -20,7 +21,7 @@
 		</view>
 		<view class="bottom" v-if="!isEdit" @click="setNowStatus">编辑评定量表分类</view>
 		<view class="bottomNav" v-else>
-			<view class="">删除选中的分类({{num}})</view>
+			<view class="" @click="deleteItem">删除选中的分类({{num}})</view>
 			<view class="" @click="toPage('/pages/work/addPingDingLiangBiaoType/addPingDingLiangBiaoType')">添加新的分类</view>
 		</view>
 	</view>
@@ -31,14 +32,14 @@
 	export default {
 		data() {
 			return {
-			isEdit:false,
-			list:[
-				
-			],
-			num:0,
-			index:1,
-			size:10,
-			isGetMoreList:true
+				isEdit: false,
+				list: [
+
+				],
+				num: 0,
+				index: 1,
+				size: 10,
+				isGetMoreList: true
 			}
 		},
 		onShow() {
@@ -46,62 +47,106 @@
 			this.isEdit = false;
 		},
 		methods: {
-			setNowStatus(){
+			setNowStatus() {
 				this.isEdit = !this.isEdit;
 			},
-			save(){
+			save() {
 				this.setNowStatus();
 			},
-			init(){
+			init() {
 				this.getList();
 			},
-			getList(f = false){
+			getList(f = false) {
 				let that = this;
-				if(f){
+				if (f) {
 					this.list = [];
 					this.index = 1;
 				}
 				return request({
-					type:'GET',
-					url:getApp().$api.huanzhe.getSymptomsList,
-					data:{
-						pageNo:that.index,
-						pageSize:that.size,
-						userId:getApp().globalData.userId
+					type: 'GET',
+					url: getApp().$api.huanzhe.getillnessList,
+					data: {
+						pageNo: that.index,
+						pageSize: that.size,
+						userId: getApp().globalData.userId
 					}
-				},true,true).then(data=>{
+				}, true, true).then(data => {
 					console.log(data.records.length);
-					if(data.records.length >= that.size){
+					if (data.records.length >= that.size) {
 						this.isGetMoreList = true;
-					}else{
+					} else {
 						this.isGetMoreList = false;
 					}
 					f = true;
-					if(f){
+					if (f) {
 						that.list = (data.records);
-					}else{
+					} else {
 						that.list = that.list.concat(data.records);
 					}
-					
+
 					console.log(that.list);
 				})
 			},
-			toPage(url,f = true){
-				if(!f){
+			toPage(url, f = true) {
+				if (!f) {
 					this.list[url].isSelected = !this.list[url].isSelected;
 					let num = 0;
-					this.list.map(v=>{
-						if(v.isSelected){
+					this.list.map(v => {
+						if (v.isSelected) {
 							num++;
 						}
 					})
 					this.num = num;
-				}else{
+				} else {
 					uni.navigateTo({
 						url,
 						animationDuration: 300,
 						animationType: 'slide-in-right'
 					})
+				}
+			},
+			deleteItem() {
+				let that = this;
+				if (this.num == 0) {
+					uni.showToast({
+						title: '请选择要删除的分类',
+						duration: 1500,
+						icon: "none",
+						mask: true
+					})
+				} else {
+					let ids = [];
+					this.list.map(v => {
+						if (v.isSelected) {
+							ids.push(v.id)
+						}
+					});
+					ids = ids.join(",");
+					uni.showModal({
+						title: '温馨提示',
+						content: '您确定要删除所选分类？',
+						confirmColor: '#31D880',
+						success: function(res) {
+							if (res.confirm) {
+								return request({
+									type: "DELETE",
+									url: getApp().$api.huanzhe.deleteIllness+`?ids=${ids}`
+								}).then(data => {
+									uni.showToast({
+										title: '删除成功',
+										duration: 1500,
+										mask: true
+									})
+									setTimeout(() => {
+										that.init(true);
+										that.isEdit = false;
+										that.num = 0;
+									}, 1000)
+								})
+							}
+						}
+					})
+
 				}
 			}
 		}
@@ -109,76 +154,88 @@
 </script>
 
 <style scoped>
-	.view{
+	.view {
 		min-height: 100vh;
 		background-color: #f6f6f6;
 	}
-	.navRight{
-		width:104rpx;
+
+	.navRight {
+		width: 104rpx;
 		height: 40rpx;
 		text-align: center;
-		font-size:24rpx;
-		color:#31D880;
+		font-size: 24rpx;
+		color: #31D880;
 		background-color: #FFFFFF;
 		border-radius: 8rpx;
 		margin-right: 30rpx;
 	}
-	.list{
+
+	.list {
 		width: 690rpx;
-		margin:30rpx;
+		margin: 30rpx;
 		border-radius: 12rpx;
 		background-color: #FFFFFF;
-		padding-bottom: 46rpx; 
+		padding-bottom: 46rpx;
 	}
-	.list .item{
+
+	.list .item {
 		height: 102rpx;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 		/* padding-bottom: 46rpx; */
 	}
-	.item .itemLeft{
-		width:8rpx;
+
+	.item .itemLeft {
+		width: 8rpx;
 		height: 8rpx;
 		background-color: #31D880;
 		border-radius: 50%;
 		margin-left: 32rpx;
 	}
-	.item .itemRight{
+
+	.item .itemRight {
 		display: flex;
-		width:620rpx;
-		border-bottom: 2rpx solid #EAEAEA;;
+		width: 620rpx;
+		border-bottom: 2rpx solid #EAEAEA;
+		;
 	}
-	.itemRight{
+
+	.itemRight {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 		height: 102rpx;
 	}
-	.itemRight .rightText{
+
+	.itemRight .rightText {
 		max-width: 440rpx;
-		font-size:28rpx;
-		color:#333333;
+		font-size: 28rpx;
+		color: #333333;
 	}
-	.rightView{
+
+	.rightView {
 		display: flex;
 		align-items: center;
 	}
-	.rightView view{
+
+	.rightView view {
 		margin-right: 32rpx;
-		
+
 		font-size: 24rpx;
 		font-family: PingFangSC-Regular, PingFang SC;
 		font-weight: 400;
 		color: #666666;
 	}
-	.rightView image{
-		width:24rpx;
+
+	.rightView image {
+		width: 24rpx;
 		height: 24rpx;
 		/* background-color: red; */
 		margin-right: 28rpx;
 	}
-	.bottom{
+
+	.bottom {
 		position: fixed;
 		transform: translateX(-50%);
 		left: 50%;
@@ -190,43 +247,48 @@
 		border-radius: 40rpx;
 		text-align: center;
 		line-height: 80rpx;
-		font-size:28rpx;
-		color:#FFFFFF
+		font-size: 28rpx;
+		color: #FFFFFF
 	}
-	.bottomNav{
+
+	.bottomNav {
 		position: fixed;
 		transform: translateX(-50%);
 		left: 50%;
 		bottom: 30rpx;
 		display: flex;
-		width:690rpx;
+		width: 690rpx;
 		/* margin-left: 30rpx; */
 		justify-content: space-between;
-		
+
 	}
-	.bottomNav >view{
+
+	.bottomNav>view {
 		line-height: 80rpx;
 		text-align: center;
 	}
-	.bottomNav >view:nth-child(1){
+
+	.bottomNav>view:nth-child(1) {
 		width: 330rpx;
 		height: 80rpx;
 		border-radius: 40rpx;
-		border:2rpx solid #E02020;
-		font-size:28rpx;
-		color:#E02020;
+		border: 2rpx solid #E02020;
+		font-size: 28rpx;
+		color: #E02020;
 		background-color: #FFFFFF;
 	}
-	.bottomNav >view:nth-child(2){
+
+	.bottomNav>view:nth-child(2) {
 		width: 330rpx;
 		height: 80rpx;
 		background: linear-gradient(180deg, #31D880 0%, #24CE59 100%);
 		box-shadow: 0px 10rpx 14rpx 0px rgba(49, 216, 128, 0.33);
 		border-radius: 40rpx;
-		font-size:28rpx;
-		color:#FFFFFF;
+		font-size: 28rpx;
+		color: #FFFFFF;
 	}
-	.rightView1 image{
+
+	.rightView1 image {
 		background-color: #DDDDDD;
 		border-radius: 50%;
 	}

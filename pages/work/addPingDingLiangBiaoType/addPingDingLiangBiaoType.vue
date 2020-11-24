@@ -31,7 +31,7 @@
 				}
 				return request({
 					type:"POST",
-					url:getApp().$api.huanzhe.addSymptom,
+					url:getApp().$api.huanzhe.addIllness,
 					data:{
 						name:that.title,
 						userId:getApp().globalData.userId

@@ -52,6 +52,15 @@
 				}
 		},
 		{
+				"path" : "pages/WodeKangfu/simpleDoctorDesc/simpleDoctorDesc",
+				"style" : {
+					"navigationBarTitleText":"医生详情",
+					"navigationBarBackgroundColor":"#31D880",
+					"navigationBarTextStyle":"white"
+					
+				}
+		},
+		{
 				"path" : "pages/work/selectedProblemType/selectedProblemType",
 				"style" : {
 					"navigationBarTitleText":"选择题目",
@@ -146,9 +155,34 @@
 				}
 		},
 		{
+				"path" : "pages/WodeKangfu/doctorInfo/doctorInfo",
+				"style" : {
+					"navigationBarTitleText":"医生详情",
+					"navigationBarBackgroundColor":"#31D880",
+					"navigationBarTextStyle":"white"
+					
+				}
+		},
+		{
 				"path" : "pages/HuanzheDetail/addRecord/addRecord",
 				"style" : {
 					"navigationBarTitleText":"患者记录",
+					"navigationBarBackgroundColor":"#31D880",
+					"navigationBarTextStyle":"white"
+				}
+		},
+		{
+				"path" : "pages/WodeKangfu/myDoctor/myDoctor",
+				"style" : {
+					"navigationBarTitleText":"我的医生",
+					"navigationBarBackgroundColor":"#31D880",
+					"navigationBarTextStyle":"white"
+				}
+		},
+		{
+				"path" : "pages/WodeKangfu/allDoctor/allDoctor",
+				"style" : {
+					"navigationBarTitleText":"全部医生",
 					"navigationBarBackgroundColor":"#31D880",
 					"navigationBarTextStyle":"white"
 				}
@@ -251,7 +285,7 @@
         ,{
             "path" : "pages/WodeKangfu/WodeKangfu",
             "style" : {
-				"navigationBarTitleText":"咨询"
+				"navigationStyle":"custom"
 				
 			}
         }
