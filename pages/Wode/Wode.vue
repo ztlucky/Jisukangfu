@@ -87,7 +87,7 @@
 	 </view>
 	 <view class="bgview">
 	 	 
-	 	<view class="iconview">
+	 	<view class="iconview" @click="toPage('/pages/Wode/live/live')">
 	 		<image class="iconimage" src="../../static/Me/icon_zhibo.png" mode=""></image>
 	 			<text class="icontitle">我的直播</text>
 				<image src="../../static/icon_jiantou.png" mode="" class="rightIcon"></image>
@@ -96,7 +96,7 @@
 	 	 
 	 		<view class="lineview">
 	 		</view>
-	 		<view class="iconview">
+	 		<view class="iconview" >
 	 			<image class="iconimage" src="../../static/Me/icon_kecheng.png" mode=""></image>
 	 			<text class="icontitle">我的课程</text>
 	 			<image src="../../static/icon_jiantou.png" mode="" class="rightIcon"></image>
@@ -177,6 +177,13 @@
 				}else{
 					this.money = "193.00"
 				}
+			},
+			toPage(url){
+				uni.navigateTo({
+					url,
+					animationDuration: 300,
+					animationType: 'slide-in-right'
+				})	
 			}
 		}
 	}
