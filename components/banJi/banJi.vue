@@ -1,5 +1,5 @@
 <template>
-	<view class="item">
+	<view class="item" @click="toPage('/pages/Wode/banJiDesc/banJiDesc')">
 		<view class="banJiInfo">
 			<image class="infoIcon" src="/static/gongzuotai/bg_huiyuan.png"></image>
 			<view class="banJiInfoTips">课程</view>
@@ -26,7 +26,13 @@
 			}
 		},
 		methods: {
-			
+			toPage(url){
+				uni.navigateTo({
+					url,
+					animationDuration: 300,
+					animationType: 'slide-in-right'
+				})
+			}
 		}
 	}
 </script>

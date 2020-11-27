@@ -56,6 +56,15 @@
 			}
 		},
 		{
+			"path": "pages/work/createProblemType/createProblemType",
+			"style": {
+				"navigationBarTitleText": "评定量表",
+				"navigationBarBackgroundColor": "#31D880",
+				"navigationBarTextStyle": "white"
+
+			}
+		},
+		{
 			"path": "pages/Wode/live/live",
 			"style": {
 				"navigationBarTitleText": "我的直播",

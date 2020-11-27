@@ -1,5 +1,5 @@
 <template>
-	<view class="item">
+	<view class="item" @click="toPage()">
 		<view class="itemLeft">
 			<image mode="aspectFill" src="/static/gongzuotai/bg_zhibo.png"></image>
 			<view class="tips">
@@ -25,49 +25,60 @@
 	export default {
 		data() {
 			return {
-				
+
 			}
 		},
 		methods: {
-			
+			toPage() {
+				uni.navigateTo({
+					url: "/pages/Daxue/Zhibodetail/Zhibodetail",
+					animationDuration: 300,
+					animationType: 'slide-in-right'
+				})
+			}
+
 		}
 	}
 </script>
 
 <style scoped>
-	.item{
-		
-		width:690rpx;
+	.item {
+
+		width: 690rpx;
 		height: 160rpx;
 		display: flex;
-		padding:0 30rpx;
-		padding-top:30rpx;
+		padding: 0 30rpx;
+		padding-top: 30rpx;
 	}
-	.item .itemLeft{
+
+	.item .itemLeft {
 		position: relative;
-		width:240rpx;
+		width: 240rpx;
 		height: 160rpx;
 		border-radius: 16rpx;
 		overflow: hidden;
 		margin-right: 30rpx;
 	}
-	.itemLeft image{
+
+	.itemLeft image {
 		position: absolute;
-		top:0;
+		top: 0;
 		left: 0;
-		width:240rpx;
-		height:160rpx;
+		width: 240rpx;
+		height: 160rpx;
 	}
-	.dot{
+
+	.dot {
 		width: 6rpx;
 		height: 6rpx;
 		background: #FFFFFF;
 		border-radius: 50%;
-		margin:0 8rpx;
+		margin: 0 8rpx;
 	}
-	.itemLeft .tips{
+
+	.itemLeft .tips {
 		position: absolute;
-		top:16rpx;
+		top: 16rpx;
 		left: 12rpx;
 		z-index: 1;
 		width: 94rpx;
@@ -82,51 +93,59 @@
 		align-items: center;
 		text-align: center;
 	}
-	.itemRight{
+
+	.itemRight {
 		flex: 1;
 	}
-	.itemRight .title{
+
+	.itemRight .title {
 		font-size: 28rpx;
 		font-family: PingFangSC-Medium, PingFang SC;
 		font-weight: 500;
 		color: #333333;
 		line-height: 40rpx;
 	}
-	.itemAddress{
+
+	.itemAddress {
 		font-size: 24rpx;
 		font-family: PingFangSC-Regular, PingFang SC;
 		font-weight: 400;
 		color: #999999;
 		line-height: 34rpx;
-		margin:8rpx 0;
+		margin: 8rpx 0;
 	}
-	.itemInfo{
+
+	.itemInfo {
 		display: flex;
 		justify-content: space-between;
 		height: 36rpx;
 		align-items: center;
 	}
-	.itemInfo > view:nth-child(1){
+
+	.itemInfo>view:nth-child(1) {
 		font-size: 18rpx;
 		font-family: PingFangSC-Medium, PingFang SC;
 		font-weight: 500;
 		color: #FF2828;
 		line-height: 26rpx;
 	}
-	.itemInfo >view:nth-child(2){
-		width:220rpx;
+
+	.itemInfo>view:nth-child(2) {
+		width: 220rpx;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 	}
-	.itemInfo > view:nth-child(2)>view:nth-child(1){
+
+	.itemInfo>view:nth-child(2)>view:nth-child(1) {
 		font-size: 18rpx;
 		font-family: PingFangSC-Regular, PingFang SC;
 		font-weight: 400;
 		color: #999999;
 		line-height: 26rpx;
 	}
-	.itemInfo >view:nth-child(2)>view:nth-child(2){
+
+	.itemInfo>view:nth-child(2)>view:nth-child(2) {
 		width: 74rpx;
 		height: 36rpx;
 		background: #EBEBEB;
@@ -137,5 +156,5 @@
 		color: #333333;
 		text-align: center;
 		line-height: 36rpx;
-	} 
+	}
 </style>

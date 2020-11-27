@@ -12,6 +12,8 @@
 </template>
 
 <script>
+	// import {Component ,Vue} from 'vue-property-decorator';
+	// console.log(Component ,Vue)
 	import yealuo from "../../../components/yealuo-select/yealuo-select.vue";
 	import request from "../../../utils/util.js"
 	export default {
@@ -29,6 +31,13 @@
 		methods: {
 			getBackVal(data) {
 				this.nowIndex = data.split('|')[1];
+				let nowIndex = 0;
+				this.binData.map((v,k)=>{
+					if(v.id == this.nowIndex){
+						nowIndex = k;
+					}
+				});
+				this.nowIndex = nowIndex;
 			},
 			init(){
 				this.getList();
@@ -36,7 +45,7 @@
 			getList(){
 				let that = this;
 				return request({
-					url:getApp().$api.pingdingliangbiao.getTypeList,
+					url:getApp().$api.huanzhe.getillnessList,
 					type:"GET",
 					data:{
 						pageNo:1,
@@ -70,7 +79,7 @@
 					});
 					return false;
 				}
-				let url = `/pages/work/pingDingLiangBiaoProblemType/pingDingLiangBiaoProblemType?typeid=${this.binData[this.nowIndex].id}&typename=${this.title}`;
+				let url = `/pages/work/pingDingLiangBiaoProblemType/pingDingLiangBiaoProblemType?typeid=${this.binData[this.nowIndex].id}&name=${this.title}&typename=${this.binData[this.nowIndex].name}`;
 				uni.navigateTo({
 					url,
 					animationDuration: 300,

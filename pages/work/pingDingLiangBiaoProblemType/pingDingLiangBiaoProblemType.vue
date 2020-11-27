@@ -18,45 +18,120 @@
 				</view>
 			</view>
 		</view>
-		<view class="bottom" v-if="!isEdit" @click="setNowStatus">编辑量表问题</view>
+		<view class="bottom" v-if="!isEdit" @click="setNowStatus">编辑量表问题分类</view>
 		<view class="bottomNav" v-else>
-			<view class="">删除选中的问题({{num}})</view>
-			<view class="" @click="toPage('/pages/work/createProblem/createProblem')">添加新的问题</view>
+			<view class="" @click="deleteItem">删除选中的分类({{num}})</view>
+			<view class="" @click="toPage('/pages/work/createProblemType/createProblemType')">添加新的分类</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import request from '../../../utils/util.js'
 	export default {
 		data() {
 			return {
 			isEdit:false,
-			list:[
-				// {
-				// 	text:"问题量表分类i使肌肤死角史可法",
-				// 	value:'单选题',
-				// 	isSelected:false
-				// },
-				// {
-				// 	text:"平淡量表解释纷纷i使肌肤死角史可法",
-				// 	value:'多选题',
-				// 	isSelected:false
-				// },
-				// {
-				// 	text:"平淡量表解释纷纷i使肌肤死角史可法",
-				// 	value:'说明题',
-				// 	isSelected:false
-				// }
-			],
-			num:0
+			list:[],
+			num:0,
+			index: 1,
+			size: 10,
+			id:-1,
+			isGetMoreList: true
 			}
 		},
+		onLoad(data){
+			if(data.id){
+				this.id = data.id;
+				this.getList();
+			}else{
+				this.typeId = data.typeid;
+				this.typename = data.typename;
+				this.name = data.name;
+				this.addEvent()
+			}
+		},
+		onUnload(){
+			uni.$off("addItem",this.setList);
+		},
 		methods: {
+			deleteItem(){
+				if(this.num == 0){
+					uni.showToast({
+						title:"请选择要删除的分类",
+						mask:true,
+						duration:1500,
+						icon:"none"
+					})
+					return false;
+				}
+				if(this.id == -1){
+					let list = [];
+					this.list.map(v=>{
+						if(!v.isSelected){
+							list.push(v)
+						}
+					})
+					this.list = list;
+					this.num = 0;
+				}else{
+					
+				}
+			},
+			addEvent(){
+				uni.$on("addItem",this.setList)
+			},
+			setList(data){
+				this.list.push({
+					text:data
+				});
+			},
 			setNowStatus(){
 				this.isEdit = !this.isEdit;
 			},
 			save(){
-				this.setNowStatus();
+				if(this.list.length == 0){
+					this.setNowStatus();
+				}else{
+					let data = {};
+					let list = [];
+					data.typeId = this.typeId;
+					data.typeName = this.typename
+					data.name = this.name;
+					if(this.list.length == 0){
+						
+					}else{
+						this.list.map(v=>{
+							list.push({
+								name:v.text
+							})
+						})
+					}
+					data.ratingScaleClassifyList = list;
+					data.userId = getApp().globalData.userId;
+					return request({
+						url:getApp().$api.pingdingliangbiao.add,
+						type:"POST",
+						data
+					}).then(data=>{
+						uni.showToast({
+							title:'保存成功',
+							duration:1500,
+							mask:1500
+						});
+						
+						setTimeout(()=>{
+							console.log('保存成功');
+							uni.navigateBack({
+								delta:2
+							})
+						},1500)
+					}).catch(err=>{
+						console.log(err)
+					})
+				}
+				
+				
 			},
 			toPage(url,f = true){
 				if(!f){
@@ -75,6 +150,21 @@
 						animationType: 'slide-in-right'
 					})
 				}
+			},
+			getList(){
+				let that = this;
+				return request({
+					url:getApp().$api.pingdingliangbiao.getQuestionList,
+					type:"GET",
+					data:{
+						pageNo:that.index,
+						pageSize:that.size,
+						userId:getApp().globalData.userId,
+						typeid:that.id
+					}
+				}).then(data=>{
+					console.log(data);
+				})
 			}
 		}
 	}

@@ -1,5 +1,5 @@
- // let apiRoot = 'http://www.huaxiakangfu.com:8090/';
-let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
+ let apiRoot = 'http://www.huaxiakangfu.com:8090/';
+// let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
 let api = {
 	common: {
 		aboutUs: apiRoot + 'common/aboutUs.html',
@@ -41,7 +41,10 @@ let api = {
 		getPingDingItemList:apiRoot + "app/questionType/listByRatingScale",
 		addQuestion:`${apiRoot}question/question/add`,
 		addType:`${apiRoot}rating_scale_classify/ratingScaleClassify/add`,
-		getTypeList:`${apiRoot}rating_scale_classify/ratingScaleClassify/list`
+		getTypeList:`${apiRoot}rating_scale_classify/ratingScaleClassify/list`,
+		getList:`${apiRoot}rating_scale/ratingScale/list`,
+		getQuestionList:`${apiRoot}question/question/list`,
+		add:`${apiRoot}rating_scale/ratingScale/add`
 		
 	},
 	user: {

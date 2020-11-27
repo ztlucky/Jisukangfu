@@ -182,6 +182,12 @@
 		border-radius: 8rpx;
 		white-space: nowrap;
 		margin-right: 10rpx;
+		
+		font-size: 20rpx;
+		font-family: PingFangSC-Regular, PingFang SC;
+		font-weight: 400;
+		color: #666666;
+		line-height: 40rpx;
 	}
 	.lectureAddress{
 		width: 670rpx;

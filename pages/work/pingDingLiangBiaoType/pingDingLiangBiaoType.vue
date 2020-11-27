@@ -4,7 +4,7 @@
 			<view slot="right" v-if="isEdit" @click="save" class="navRight">保存</view>
 		</nav-bar>
 		<view class="list" v-if="list.length!=0">
-			<view class="item" @click="toPage(isEdit?k:'/pages/work/pingDingLiangBiao/pingDingLiangBiao',!isEdit)" v-for="(v,k) in list"
+			<view class="item" @click="toPage(isEdit?k:'/pages/work/pingDingLiangBiao/pingDingLiangBiao?id='+v.id,!isEdit)" v-for="(v,k) in list"
 			 :key="k">
 				<view class="itemLeft"></view>
 				<view class="itemRight">

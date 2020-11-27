@@ -59,27 +59,6 @@
 					});
 					return false;
 				}
-				// return request({
-				// 	url:that.$api.notes.addNotes,
-				// 	data:{
-				// 		"studyNotes":{
-				// 			userId:getApp().globalData.userId,
-				// 			content:that.value,
-				// 			flie:'这是一个文件',
-				// 		}
-				// 	},
-				// 	type:'POST'
-				// }).then(data=>{
-				// 	uni.showToast({
-				// 		title:data.message,
-				// 		duration:1500,
-				// 		success() {
-				// 			setTimeout(()=>{
-				// 				uni.navigateBack();
-				// 			},1500);
-				// 		}
-				// 	})
-				// })
 				onloadImage.init({
 					tempFiles:that.tempFile,
 					tempFilePaths:that.imageList

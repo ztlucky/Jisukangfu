@@ -3,7 +3,7 @@
 		<view class="list">
 			<live v-for="(v,k) in [1,2,3,4,1,2,3,4,5,6,7,8]" :key="k"></live>
 		</view>
-		<view class="save">新建直播课程</view>
+		<view class="save" @click="create">新建直播课程</view>
 	</view>
 </template>
 
@@ -16,7 +16,13 @@
 			}
 		},
 		methods: {
-			
+			create(){
+				uni.navigateTo({
+					url:"/pages/Zhibo/createLive/createLive",
+					animationDuration: 300,
+					animationType: 'slide-in-right'
+				})
+			}
 		}
 	}
 </script>

@@ -3,11 +3,11 @@
 		<nav-bar  bgColor="#31D880" backState="1000" fontColor="#ffffff" title="评定量表" type="ordinary">
 			<view slot="right" v-if="isEdit" @click="save" class="navRight">保存</view>
 		</nav-bar>
-		<view class="list">
-			<view class="item" @click="toPage(isEdit?k:'/pages/work/pingDingLiangBiaoProblemType/pingDingLiangBiaoProblemType',!isEdit)" v-for="(v,k) in list" :key="k">
+		<view class="list" v-if="list.length !=0">
+			<view class="item" @click="toPage(isEdit?k:('/pages/work/pingDingLiangBiaoProblemType/pingDingLiangBiaoProblemType?id=' + v.typeId),!isEdit)" v-for="(v,k) in list" :key="k">
 				<view class="itemLeft"></view>
 				<view class="itemRight">
-					<view class="rightText hidden">{{v.text}}</view>
+					<view class="rightText hidden">{{v.name}}</view>
 					<view class="rightView" v-if="!isEdit">
 						<view>{{v.value}}</view>
 						<image src="../../../static/f_my_kecheng_arrow.png"></image>
@@ -27,29 +27,32 @@
 </template>
 
 <script>
+	import request from "../../../utils/util.js";
 	export default {
 		data() {
 			return {
 			isEdit:false,
-			list:[
-				{
-					text:"平淡量表解释纷纷i使肌肤死角史可法",
-					value:89,
-					isSelected:false
-				},
-				{
-					text:"平淡量表解释纷纷i使肌肤死角史可法",
-					value:89,
-					isSelected:false
-				},
-				{
-					text:"平淡量表解释纷纷i使肌肤死角史可法",
-					value:89,
-					isSelected:false
-				}
-			],
-			num:0
+			list:[],
+			num:0,
+			index:1,
+			size:10
 			}
+		},
+		onReachBottom() {
+			// 触底的时候请求数据，即为上拉加载更多
+			if (this.isGetMoreList) {
+				this.getList();
+			} else {
+				uni.showToast({
+					title: "暂无更多数据",
+					duration: 1500,
+					icon:"none"
+				})
+			}
+		},
+		onLoad(data) {
+			this.id = data.id?data.id:5;
+			this.getList(true);
 		},
 		methods: {
 			setNowStatus(){
@@ -69,13 +72,37 @@
 					})
 					this.num = num;
 				}else{
-					console.log(url)
 					uni.navigateTo({
 						url,
 						animationDuration: 300,
 						animationType: 'slide-in-right'
 					})
 				}
+			},
+			getList(f = false){
+				if(f){
+					this.index = 1;
+					this.list = [];
+				}
+				let that = this;
+				return request({
+					url:getApp().$api.pingdingliangbiao.getList,
+					type:'GET',
+					data:{
+						typeId:that.id,
+						pageNo:that.index,
+						pageSize:that.size
+					}
+				},true,true).then(data=>{
+					console.log(data);
+					if(data.records.length>=that.size){
+						that.isGetMoreList = true
+					}else{
+						that.isGetMoreList = false
+					}
+					that.list = that.list.concat(data.records);
+					that.index++;
+				})
 			}
 		}
 	}

@@ -96,7 +96,7 @@
 	 	 
 	 		<view class="lineview">
 	 		</view>
-	 		<view class="iconview" >
+	 		<view class="iconview" @click="toPage('/pages/Wode/course/course')">
 	 			<image class="iconimage" src="../../static/Me/icon_kecheng.png" mode=""></image>
 	 			<text class="icontitle">我的课程</text>
 	 			<image src="../../static/icon_jiantou.png" mode="" class="rightIcon"></image>
@@ -104,7 +104,7 @@
 	 		<view class="lineview">
 	 			
 	 		</view>
-	 		<view class="iconview">
+	 		<view class="iconview" @click="toPage('/pages/Wode/banJi/banJi')">
 	 			<image class="iconimage" src="../../static/Me/icon_banji.png" mode=""></image>
 	 			<text class="icontitle">我的班级</text>
 	 			<image class="rightIcon" src="../../static/icon_jiantou.png" mode=""></image>

@@ -1,5 +1,5 @@
 <template>
-	<view class="courseItem">
+	<view class="courseItem" @click="toPage()">
 		<image mode="aspectFill" src="/static/gongzuotai/bg_zhibo.png"></image>
 		<view class="title hidden2">数字化种牙是全球公认的先进种植技术数字化种牙是全球公认的先进种植技术</view>
 		<view class="tips">课程</view>
@@ -15,7 +15,13 @@
 			}
 		},
 		methods: {
-			
+			toPage() {
+				uni.navigateTo({
+					url: "/pages/Daxue/Zhibodetail/Zhibodetail",
+					animationDuration: 300,
+					animationType: 'slide-in-right'
+				})
+			}
 		}
 	}
 </script>

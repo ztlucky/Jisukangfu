@@ -10,7 +10,7 @@
 					</view>
 					<view class="rightView">
 						<view class="name" v-if="isNotEdit">蜡笔小新</view>
-						<view class="tips">未发送</view>
+						<view class="tips">19.20元</view>
 						<image src="../../../static/f_my_kecheng_arrow.png"></image>
 					</view>
 				</view>
