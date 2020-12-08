@@ -23,6 +23,12 @@
 			}
 		},
 		{
+			"path": "pages/work/symptoms/symptoms",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
 			"path": "pages/work/pingDingLiangBiaoProblemType/pingDingLiangBiaoProblemType",
 			"style": {
 				"navigationStyle": "custom"
@@ -30,6 +36,18 @@
 		},
 		{
 			"path": "pages/work/pingDingLiangBiao/pingDingLiangBiao",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/work/disease/disease",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/work/diseaseType/diseaseType",
 			"style": {
 				"navigationStyle": "custom"
 			}
@@ -47,6 +65,12 @@
 			}
 		},
 		{
+			"path": "pages/work/pingDingLiangBiaoProblem/pingDingLiangBiaoProblem",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
 			"path": "pages/work/addNotes/addNotes",
 			"style": {
 				"navigationBarTitleText": "学习笔记",
@@ -59,6 +83,33 @@
 			"path": "pages/work/createProblemType/createProblemType",
 			"style": {
 				"navigationBarTitleText": "评定量表",
+				"navigationBarBackgroundColor": "#31D880",
+				"navigationBarTextStyle": "white"
+
+			}
+		},
+		{
+			"path": "pages/work/problemInfo/problemInfo",
+			"style": {
+				"navigationBarTitleText": "评定量表",
+				"navigationBarBackgroundColor": "#31D880",
+				"navigationBarTextStyle": "white"
+
+			}
+		},
+		{
+			"path": "pages/work/createTextProblem/createTextProblem",
+			"style": {
+				"navigationBarTitleText": "评定量表",
+				"navigationBarBackgroundColor": "#31D880",
+				"navigationBarTextStyle": "white"
+
+			}
+		},
+		{
+			"path": "pages/work/addSymptoms/addSymptoms",
+			"style": {
+				"navigationBarTitleText": "添加分类",
 				"navigationBarBackgroundColor": "#31D880",
 				"navigationBarTextStyle": "white"
 
@@ -217,6 +268,15 @@
 			"path": "pages/work/notesInfo/notesInfo",
 			"style": {
 				"navigationBarTitleText": "学习笔记",
+				"navigationBarBackgroundColor": "#31D880",
+				"navigationBarTextStyle": "white"
+
+			}
+		},
+		{
+			"path": "pages/Wode/measurement/measurement",
+			"style": {
+				"navigationBarTitleText": "康复评定",
 				"navigationBarBackgroundColor": "#31D880",
 				"navigationBarTextStyle": "white"
 

@@ -1,7 +1,7 @@
 <template>
 	<view class="view">
 		<view class="content">
-			<view class="title">评定量表分类标题</view>
+			<view class="title">分类标题</view>
 			<input placeholder="请输入要创建的分类标题" v-model="title"/>
 		</view>
 		<view class="bottom" @click="save">保存</view>
@@ -9,7 +9,6 @@
 </template>
 
 <script>
-	import yealuo from "../../../components/yealuo-select/yealuo-select.vue";
 	import request from "../../../utils/util"
 	export default {
 		data() {
@@ -47,9 +46,6 @@
 					},1500)
 				})
 			}
-		},
-		components: {
-			yealuo
 		}
 
 	}

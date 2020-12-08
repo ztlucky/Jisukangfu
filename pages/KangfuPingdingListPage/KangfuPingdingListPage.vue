@@ -2,28 +2,31 @@
 	<view class="coontentView" >
 		<scroll-view scroll-y="true" class="leftScrollview" :style="[{height:mainscrollviewHeight + 'px'}]">
 			<view  v-for="(item,index) in kangdinglist" :key = 'index' @click="changecurrentIndex(index)" >
-				<view class="categroyItem" :style="[{background:currenCateIndex == index? '#FFFFFF':'#F8F8F8'}]" >
+				<view class="categroyItem " :style="[{background:currenCateIndex == index? '#FFFFFF':'#F8F8F8'}]" >
 					<view class="leftline" v-show="currenCateIndex == index">
 						
 					</view>
-					<text :class="currenCateIndex == index? 'categroy_greenTitle':'categroyTitle'"  >{{item.name}}</text>
-					<text :class="currenCateIndex == index? 'number_greentext':'numbertext'" >{{item.number}}</text>
+					<text :class="currenCateIndex == index? 'categroy_greenTitle hidden2':'categroyTitle hidden2'">{{item.name}}</text>
+					<text :class="currenCateIndex == index? 'number_greentext hidden':'numbertext hidden'" >{{item.ratingScaleSize?item.ratingScaleSize:0}}个</text>
 				</view>
 				
 			</view>
 		</scroll-view>
  			
-		<scroll-view scroll-y="true"   :style="[{height:mainscrollviewHeight + 'px'}]">
-			<uni-grid :column="2"  :square="false"   :showBorder="false" @change="listdidclick" :highlight="false"  >
-				<uni-grid-item  v-for="(item ,index) in pingdingItemList" :key ="index" :index= "index" >
-				   <view class="gridviewItem">
-				   	<image src="../../static/wodehuanzhe/icon_pingding.png"  class="iconimage" ></image>
-							<text class="nametext">{{item.name}}</text>
+		<view style="position: relative;padding-bottom: 70px;width: 100%;" class="liangBiaoList"  :style="[{height:(mainscrollviewHeight - 70) + 'px'}]">
+			<!-- <uni-grid :column="2"  :square="false"   :showBorder="false" @change="listdidclick" :highlight="false"  >
+				<uni-grid-item  v-for="(item ,index) in pingdingItemList" :key ="index" :index= "index" > -->
+				   <view class="gridviewItem" v-for="(item ,index) in pingdingItemList" @click="listdidclick(index)" :key ="index" :index= "index">
+						<image src="../../static/wodehuanzhe/icon_pingding.png"  class="iconimage" ></image>
+						<view class="nametext hidden2">{{item.name}}</view>
 				   </view>
-				 	
-				 </uni-grid-item>
-			</uni-grid> 
-		</scroll-view>
+				 <!-- </uni-grid-item>
+			</uni-grid> -->
+			<view class="bottomView">
+				<view class="viewItem">结束</view>
+				<view class="viewItem" @click="toPage('/pages/KangfuMubiao/KangfuMubiao?id='+id)">设定康复目标</view>
+			</view>
+		</view>
  			
  	</view>
 </template>
@@ -31,6 +34,7 @@
 <script>
 	import uniGrid from "@/components/uni-grid/uni-grid.vue"
 	import uniGridItem from "@/components/uni-grid-item/uni-grid-item.vue"
+	import request from "../../utils/util.js";
 	export default {
 	
 	components: {uniGrid,uniGridItem},
@@ -45,80 +49,61 @@
 		},
 		onShow:function(){
 			this.mainscrollviewHeight = this.$app.getwindowHeight()
+			
+			
+		},
+		onLoad(options) {
 			this.pingdingItemList = [];
 			this.kangdinglist = [];
-			this.getPingdingList();
-			//this.getPingDingItemList();
+			this.getillnessList().then(()=>{
+				this.getPingDingLiangBiao();
+			});
+			this.id = options.id?options.id:0;
 		},
 		methods: {
-			listdidclick: function(e){
-				//e.detail.index
+			listdidclick: function(index){
+				let id = this.pingdingItemList[index].id;
+				let name = this.pingdingItemList[index].name;
+				this.toPage(`/pages/Wode/measurement/measurement?id=${id}&patientid=${this.id}&name=${name}`);
+			},
+			getillnessList(){
+				let that = this;
+				return request({
+					url:getApp().$api.huanzhe.getillnessList,
+					type:"GET",
+					data:{
+						paseNo:1,
+						pageSize:200,
+						c_r:true
+					}
+				},true,true).then(data=>{
+					that.kangdinglist = data.records;
+				})
+			},
+			getPingDingLiangBiao(){
+				let that = this;
+				return request({
+					url:getApp().$api.pingdingliangbiao.getList,
+					type:"GET",
+					data:{
+						pageNo:1,
+						pageSize:100,
+						typeId:that.kangdinglist[that.currenCateIndex].id
+					}
+				},true,true).then(data=>{
+					that.pingdingItemList = data.records;
+				})
+			},
+			changecurrentIndex(index){
+				this.currenCateIndex = index;
+				this.getPingDingLiangBiao();
+			},
+			toPage(url){
 				uni.navigateTo({
-					url:'../KangfuMubiao/KangfuMubiao',
+					url,
 					animationType:"slide-in-right",
 					animationDuration:300
 				})	
-			},
-			// 评定列表下的分类
-			getPingDingItemList(){
-				this.$app.request({
-					url: this.$api.pingdingliangbiao.getPingDingItemList,
-					data: {
-						ratingscaleid: this.kangdinglist[this.currenCateIndex].id,
-						pagenum:1,
-						pagesize:10,
-					},
-					method: 'GET',
-					dataType: 'json',
-					success: res => {
-						
-						if (res.code == 200) {
-								this.pingdingItemList  = this.pingdingItemList.concat(res.data.records);
- 						} else {
-							this.$alert(res.msg);
-						}
-					},
-					fail: res => {
-						
-					},
-					complete: res => {
-						//this.$refs.hrPullLoad.reSet();
-						
-					}
-				});
-			},
-			//评定列表的总分类	
-			getPingdingList(){
-				this.$app.request({
-					url: this.$api.pingdingliangbiao.getPingDingliebiaoList,
-					data: {
-						userid: 11,//getApp().globalData.userId
- 						pagenum:1,
-						pagesize:10,
- 					},
-					method: 'GET',
-					dataType: 'json',
-					success: res => {
-						
-						if (res.code == '200') {
-								 this.kangdinglist = this.kangdinglist.concat(res.data.records);
-								 this.getPingDingItemList();
- 								
-						} else {
-							this.$alert(res.msg);
-						}
-					},
-					fail: res => {
-						
-					},
-					complete: res => {
-						//this.$refs.hrPullLoad.reSet();
-						
-					}
-				});
-			},	
-			changecurrentIndex(index){
-				this.currenCateIndex = index
 			}
 		}
 	}
@@ -140,20 +125,26 @@
 				margin-top: 50rpx;
 				padding-bottom: 20rpx;
 			      .iconimage{
-			  margin-top: 36rpx;
-			width: 46rpx;
-			height: 54rpx;
+				  margin-top: 36rpx;
+				width: 46rpx;
+				height: 54rpx;
 			      }
 				  .nametext{
-					  margin-left:28rpx;
-					  margin-right:28rpx;
+					  max-width: 160rpx;
+					  // display: block;
+					  align-items: center;
+					  // height: 68rpx;
+					  line-height: 28rpx;
+					  // margin-left:28rpx;
+					  // margin-right:28rpx;
 					  margin-top: 14rpx;
 					  font-size: 24rpx;
 					  font-family: PingFangSC-Regular, PingFang SC;
 					  font-weight: 400;
 					  color: #333333;
 					  text-align: center;
-					  max-lines: 2;
+					  white-space: pre-wrap;
+					  // max-lines: 2;
 				  }
 				
 			}
@@ -172,6 +163,12 @@
 		height:150rpx ;
 		align-items: center;
 		background-color: #F8F8F8;
+		text{
+			// display: flex;
+			// justify-content: center;
+			text-align: center;
+			width:140rpx;
+		}
 		.leftline{
 			position: absolute;
 			width: 4rpx;
@@ -227,4 +224,46 @@
 		
 	
 }
+
+.bottomView{
+	position: fixed;
+	bottom: 30rpx;
+	right: 30rpx;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width:480rpx;
+	padding-left: 20rpx;
+	.viewItem{
+		width:222rpx;
+		height: 80rpx;
+		font-size: 28rpx;
+		font-family: PingFangSC-Medium, PingFang SC;
+		font-weight: 500;
+		color: #2AD36B;
+		border-radius: 40rpx;
+		border: 2rpx solid #2AD36B;
+		line-height: 80rpx;
+		text-align: center;
+	}
+	.viewItem:nth-child(2){
+		width:226rpx;
+		color:#FFFFFF;
+		background: linear-gradient(180deg, #31D880 0%, #24CE59 100%);
+		box-shadow: 0px 10px 14px 0px rgba(49,216,128,0.33);
+	}
+}
+</style>
+<style scoped>
+	.liangBiaoList{
+		width:550rpx;
+		display: flex;
+		flex-wrap:wrap;
+		overflow-y: scroll;
+		align-content:flex-start;
+	}
+	.liangBiaoList .gridviewItem{
+		width:200rpx;
+		height: 160rpx;
+	}
 </style>

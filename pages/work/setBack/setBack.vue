@@ -48,7 +48,7 @@
 					
 				}else if(k == 1){
 					uni.navigateTo({
-						url:'../pingDingLiangBiaoType/pingDingLiangBiaoType',
+						url:'/pages/work/diseaseType/diseaseType',
 						animationDuration:300,
 						animationType:'slide-in-right'
 					})

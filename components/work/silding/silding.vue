@@ -125,6 +125,14 @@
 						animationType: 'slide-in-right'
 					})
 					return false;
+				}else{
+					let imgList = JSON.stringify(this.dataprops.imgList);
+					let str = `?index=-1&title=${this.dataprops.title}&text=${this.dataprops.text}&text1=${this.dataprops.text1}&imglist=${imgList}`;
+					uni.navigateTo({
+						url:"/pages/work/createProblemInfo/createProblemInfo"+str,
+						animationDuration: 300,
+						animationType: 'slide-in-right'
+					})
 				}
 				this.isEdit = !this.isEdit;
 			},

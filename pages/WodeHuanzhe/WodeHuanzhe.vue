@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<scroll-view scroll-y="true" :style="[{height:viewHeight + 'px'}]" @scroll="scroll">
+		<scroll-view scroll-y="true" :style="[{height:viewHeight + 'px'}]" @scroll="scroll" @scrolltolower="addMoreData">
 			<view class="topview">
 				<image src="../../static/wodehuanzhe/bg_wodehuanzhe.png" class="topimageview" mode="aspectFill"></image>
 
@@ -36,8 +36,9 @@
 
 						</uni-grid-item>
 					</uni-grid>
-					<view class="moreview" @click="moreaction">查看更多 v
-
+					<view class="moreview" @click="moreaction">
+						<view>查看更多</view>
+						<image src="../../static/f_my_kecheng_arrow.png"></image>
 					</view>
 					<view class="defenview">
 						<view class="defenrightview">
@@ -51,7 +52,7 @@
 				<!-- 			//患者列表 -->
 				<text class="huanzheliebiaoTitle">患者列表</text>
 
-				<view class="huanzheview"  v-for="(item,index) in huanzhelist" :key='index'>
+				<view class="huanzheview" v-for="(item,index) in huanzhelist" :key='index'>
 					<view class="huanzheTopview">
 						<image src="../../static/gongzuotai/icon_nv.png"></image>
 						<view class="huanzherightview">
@@ -60,11 +61,11 @@
 								<text class="detail">性别：{{item.sex== 1?'男':'女'}} 年龄：{{item.age}}</text>
 							</view>
 							<view class="zhenduanview">
-								<image class="zhenduanimage" src="../../static/gongzuotai/icon_zhenduan1.png"></image>
+								<image class="zhenduanimage" src="/static/gongzuotai/icon_zhenduan1.png"></image>
 								<text>诊断：{{item.illnessName?item.illnessName:''}}</text>
 
 							</view>
-							<text class="bianhao">编号：{{item.id}}</text>
+							<text class="bianhao">编号：{{item.idNo}}</text>
 							<text class="chakanhuanzheview" @click="huanzheXiangqing(index)">查看患者</text>
 						</view>
 					</view>
@@ -78,8 +79,6 @@
 								<text class="title">PT 10:00-11:00 </text>
 								<view class="zhixing">执行</view>
 							</view>
-
-
 						</uni-grid-item>
 					</uni-grid>
 
@@ -123,13 +122,24 @@
 				uni.showToast({
 					title: "暂无更多数据",
 					duration: 1500,
-					icon:"none"
+					icon: "none"
 				})
 			}
 		},
 		methods: {
 			init() {
 				this.getMyPatientsList();
+			},
+			addMoreData() {
+				if (this.isGetMoreHuanZheList) {
+					this.getMyPatientsList();
+				} else {
+					uni.showToast({
+						title: "暂无更多数据",
+						duration: 1500,
+						icon: "none"
+					})
+				}
 			},
 			getMyPatientsList() {
 				let that = this;
@@ -143,7 +153,7 @@
 					type: 'GET'
 				}, true, true).then(data => {
 					let list = that.huanzhelist;
-					if (data.records && data.records.length >= that.size) {
+					if (data.records && (data.records.length) >= that.size) {
 						that.isGetMoreHuanZheList = true;
 					} else {
 						that.isGetMoreHuanZheList = false;
@@ -196,7 +206,6 @@
 				}
 			},
 			resetData() {
-				console.log('dddd');
 				this.currentHuanzhetongji = [];
 				if (this.ishowMore) {
 					this.currentHuanzhetongji = this.huanzhetongji
@@ -217,7 +226,7 @@
 
 			huanzheXiangqing(index) {
 				uni.navigateTo({
-					url: '../HuanzheDetail/HuanzheDetail?id='+this.huanzhelist[index].id,
+					url: '../HuanzheDetail/HuanzheDetail?id=' + this.huanzhelist[index].id,
 					animationDuration: 300,
 					animationType: 'slide-in-right'
 				})
@@ -394,6 +403,13 @@
 				color: #999999;
 				text-align: center;
 				padding-bottom: 20rpx;
+
+				image {
+					width: 30rpx;
+					height: 30rpx;
+					transform: rotate(90deg);
+					margin-left: 10rpx;
+				}
 			}
 
 		}

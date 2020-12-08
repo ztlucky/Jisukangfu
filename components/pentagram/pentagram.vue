@@ -69,6 +69,7 @@
 		position: relative;
 	}
 	.item view{
+		/* overflow: hidden; */
 		position: absolute;
 		top:0;
 		left: 0;

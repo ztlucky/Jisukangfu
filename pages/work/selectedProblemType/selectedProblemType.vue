@@ -14,6 +14,9 @@
 
 <script>
 	export default {
+		onLoad(data) {
+			this.id = data.id;
+		},
 		data() {
 			return {
 				list:[{
@@ -32,29 +35,30 @@
 					image:'../../../static/gongzuotai/icon_zhiliaoxiangmu.png'
 				}
 				
-				]
+				],
+				id:-1
 			}
 		},
 		methods: {
 				
 			jumpNext(k){
-					
+					let that = this;
 				if(k==0){
 					uni.redirectTo({
-						url:'/pages/work/createProblem/createProblem?index=1',
+						url:'/pages/work/createProblem/createProblem?index=1&id='+that.id,
 						animationDuration:300,
 						animationType:'slide-in-right'
 					})
 					
 				}else if(k == 1){
 					uni.redirectTo({
-						url:'/pages/work/createProblem/createProblem?index=2',
+						url:'/pages/work/createProblem/createProblem?index=2&id='+that.id,
 						animationDuration:300,
 						animationType:'slide-in-right'
 					})
 				}else{
 					uni.redirectTo({
-						url:'/pages/work/createProblem/createProblem?index=3',
+						url:'/pages/work/createTextProblem/createTextProblem?index=3&id='+that.id,
 						animationDuration:300,
 						animationType:'slide-in-right'
 					})

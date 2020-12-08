@@ -3,6 +3,7 @@
 		<nav-bar :bgColor="bgColor" fontColor="#fff" title="患者详情">
 			<view slot="right" @click="save" class="navRight">治疗结束</view>
 		</nav-bar>
+		
 		<scroll-view scroll-y="true" @scroll="scroll" :style="[{height:viewHeight + 'px'}]">
 			<view class="huanzheview">
 				<view class="huanzheTopview">
@@ -15,7 +16,7 @@
 						<view class="secodview">
 							<view class="zhenduanview">
 								<image class="zhenduanimage" src="../../static/gongzuotai/icon_zhenduan1.png"></image>
-								<text>诊断：{{info.illnessName}}</text>
+								<text class="hidden">诊断：{{info.illnessName}}</text>
 							</view>
 							<text class="timetext">时间:{{info.createTime}}</text>
 						</view>
@@ -48,7 +49,7 @@
 						</view>
 						<text class="dotTitle">诊断</text>
 					</view>
-					<text class="mubiaodetail">脑血栓造成的肢体偏瘫。</text>
+					<text class="mubiaodetail">{{info.diagnose?info.diagnose:'无'}}</text>
 				</view>
 				<view class="mubiaoview">
 					<view class="upview">
@@ -57,9 +58,9 @@
 						</view>
 						<text class="dotTitle">诊疗意见</text>
 					</view>
-					<text class="mubiaodetail">多运动，多吃饭。</text>
+					<text class="mubiaodetail">{{info.medicalOpinion?info.medicalOpinion:'无'}}</text>
 				</view>
-				<image src="" class="viewImage"></image>
+				<image :src="item.url" mode="aspectFill" class="viewImage" v-for="(item , index) in info.file"></image>
 			</view>
 
 
@@ -179,14 +180,15 @@
 
 				</view>
 				<view class="xiangmuList">
-					<view class="xiangmuItem" @click="toPage('/pages/HuanzheDetail/evaluation/evaluation')" v-for="(v,k) in [1,2,3]" :key="k">
+					<view class="xiangmuItem" @click="toPage('/pages/HuanzheDetail/evaluation/evaluation',v.id)" v-for="(v,k) in info.assessResults" :key="k">
 						<view class="dot"></view>
 						<view class="xiangmuItemRight">
-							<view class="itemRightTitle itemRightTitle1 hidden">治疗项目双方就开始治疗项目双方就开始治疗项目双方就开始治疗项目双方就开始治疗项目双方就开始</view>
+							<view class="itemRightTitle itemRightTitle1 hidden">{{v.ratingScaleName}}</view>
 							<image class="itemRightImage" src="../../static/f_my_kecheng_arrow.png"></image>
 						</view>
 					</view>
 				</view>
+				<view class="notData" v-if="info.assessResults.length == 0">暂无数据</view>
 				<!-- <view class="mubiaoview">
 					<view class="upview">
 						<view class="dot">
@@ -224,24 +226,25 @@
 				<view class="lineview">
 
 				</view>
-				<view class="mubiaoview" @click="toPage('/pages/HuanzheDetail/recordInfo/recordInfo')" v-for="(v,k) in [1,2,3]" :key="k">
+				<view class="mubiaoview" @click="toPage('/pages/HuanzheDetail/recordInfo/recordInfo',v.id)" v-for="(v,k) in info.patientRecords" :key="k">
 					<view class="upview">
 						<view class="dot">
 						</view>
-						<text class="huanzhejiluTitle">患者记录1</text>
+						<text class="huanzhejiluTitle hidden">{{v.content}}</text>
 
 					</view>
-					<text class="huanzhejilushijian">2020-06-30 06:00</text>
+					<text class="huanzhejilushijian">{{v.createTime}}</text>
 					<view class="huanzhelineView">
 
 					</view>
 				</view>
-				
+				<view class="notData" v-if="info.patientRecords.length == 0">暂无数据</view>
 			</view>
 			<view class="kejianview">
 				<text>其他人可见</text>
 				<switch class="switchView" checked="true" style='zoom:.75;' :color="switchColor" />
 			</view>
+			<view style="width:100%;height:120rpx"></view>
 		</scroll-view>
 		<view class="bottomview">
 			<text class="huanzhepingding" @click="toPage('/pages/KangfuPingdingListPage/KangfuPingdingListPage')">患者评定</text>
@@ -252,6 +255,7 @@
 
 <script>
 	import request from '../../utils/util.js'
+	import tool from "../../utils/tool.js"
 	export default {
 		data() {
 			return {
@@ -281,12 +285,15 @@
 			}
 		},
 		onShow: function() {
-			this.viewHeight = this.$app.getwindowHeight() - 69
+			this.viewHeight = this.$app.getwindowHeight() - 69;
+			if(this.id){
+				this.init();
+			}
 
 		},
 		onLoad(options) {
-			this.id = options.id?options.id:0;
-			this.init();
+			this.id = options.id?options.id:1;
+			
 		},
 		methods: {
 			init(){
@@ -301,8 +308,17 @@
 						id:that.id
 					}
 				},true,true).then(data=>{
+					if(data.file){
+						data.file = JSON.parse(data.file);
+					}
+					// if(data.patientRecords.length >=1){
+						// data.patientRecords.map((v,k)=>{
+							// console.log(data.patientRecords[k].createTime);
+							// data.patientRecords[k].createTime = new tool().formDate(new Date(data.patientRecords[k].createTime),'2')
+						// })
+					// }
 					that.info = data;
-					console.log(data);
+					console.log(that.info);
 				})
 			},
 			scroll(e) {
@@ -311,12 +327,54 @@
 				// let color = (top/100);
 				// this.bgColor = `rgba(49, 216, 128, ${color == 0?1:color})`;
 			},
-			toPage(url) {
-				uni.navigateTo({
-					url:`${url}?id=${this.info.id}`,
+			toPage(url,id) {
+				let that = this;
+				switch(url){
+					case '/pages/HuanzheDetail/addCaseHistory/addCaseHistory':
+						url = `/pages/HuanzheDetail/addCaseHistory/addCaseHistory`
+						let file = that.info.file;
+						let data = {
+							file,
+							title:that.info.diagnose,
+							content:that.info.medicalOpinion
+						}
+						uni.setStorageSync("cases",{
+							data
+						});
+					break;
+					case '/pages/HuanzheDetail/kangfuxiangmu/kangfuxiangmu':
+						let data1 = {
+							name:that.info.name,
+							sex:that.info.sex,
+							age:that.info.age,
+							illnessName:that.info.illnessName
+						};
+							uni.setStorageSync("huanZheInfo",{
+								huanZheInfo:data1
+							});
+					break;
+				}
+				console.log(url);
+				if(url == '/pages/HuanzheDetail/recordInfo/recordInfo'){
+					uni.navigateTo({
+						url:`${url}?id=${this.info.id}&illnessid=${this.info.illnessId}&recordid=${id}`,
+						animationDuration: 300,
+						animationType: 'slide-in-right'
+					})
+				}else if(url == '/pages/HuanzheDetail/evaluation/evaluation'){
+					uni.navigateTo({
+						url:`${url}?id=${this.info.id}&illnessid=${this.info.illnessId}&assessid=${id}`,
+						animationDuration: 300,
+						animationType: 'slide-in-right'
+					})
+				} else{
+					uni.navigateTo({
+					url:`${url}?id=${this.info.id}&illnessid=${this.info.illnessId}`,
 					animationDuration: 300,
 					animationType: 'slide-in-right'
 				})
+				}
+				
 			}
 		}
 	}
@@ -331,14 +389,22 @@
 		display: flex;
 		flex-direction: column;
 	}
-
+	.notData{
+		text-align: center;
+		line-height: 60rpx;
+		color:#ccc;
+		padding-top:20rpx;
+	}
 	.bottomview {
+		width:100%;
 		height: 69px;
 		display: flex;
 		flex-direction: row;
 		justify-content: space-around;
 		align-items: center;
-
+		position: fixed;
+		bottom: 0;
+		left: 0;
 		background-color: #FFFFFF;
 
 		.huanzhepingding {
@@ -439,7 +505,7 @@
 						padding-right: 15rpx;
 						margin-top: 9rpx;
 						padding-top: 5rpx;
-
+						display: flex;
 						.zhenduanimage {
 							width: 28rpx;
 							height: 28rpx;
@@ -449,6 +515,7 @@
 						}
 
 						text {
+							width:200rpx;
 							font-size: 20rpx;
 							font-family: PingFangSC-Medium, PingFang SC;
 							font-weight: 500;
@@ -543,9 +610,9 @@
 		}
 
 		.viewImage {
-			width: 244rpx;
-			height: 140rpx;
-			background-color: red;
+			width: 530rpx;
+			height: 300rpx;
+			// background-color: red;
 			margin-left: 82rpx;
 			margin-top: 24rpx;
 			margin-bottom: 14rpx;
@@ -576,7 +643,7 @@
 				}
 
 				.huanzhejiluTitle {
-
+					width:580rpx;
 					font-size: 26rpx;
 					font-family: PingFangSC-Regular, PingFang SC;
 					font-weight: 400;

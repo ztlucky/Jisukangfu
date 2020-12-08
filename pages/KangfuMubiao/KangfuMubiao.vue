@@ -8,7 +8,7 @@
 				<text class="kuaijiebiaoqian">快捷标签</text>
 			<view class="kuaijiebiaoqianview">
 				<uni-grid :column="2"   :square="false"  :showBorder = "false" :highlight="false">
-					<uni-grid-item  v-for="(item ,index) in kuaijiebianqianArray" :key ="index" :index= "index"   >
+					<uni-grid-item  v-for="(item ,index) in kuaijiebianqianArray[kuaijiebianqianArrayIndex]" :key ="index" :index= "index"   >
 					
 					 <text  class="bianqiantext" @click="duanqikuaijiebianqianclick(index)">
 					 	 
@@ -20,7 +20,7 @@
 				</uni-grid>
 			</view>
 			<view class="huanyipi">
-				<view class="centerview">
+				<view class="centerview" @click="setStatus(1)">
 					<image src="../../icon_gongzuotai_xuanzhong.png"class="image"></image>
 					<text class="text">换一批</text>					
 				</view>
@@ -30,20 +30,16 @@
 			 adjust-position="true"/>
 			<text class="kuaijiebiaoqian">快捷标签</text>
 			<view class="kuaijiebiaoqianview">
-				<uni-grid :column="2"  :square="false"   :showBorder="false" @change="duanqikuaijiebianqianclick" :highlight="false">
-					<uni-grid-item  v-for="(item ,index) in kuaijiebianqianArray" :key ="index" :index= "index" >
+				<uni-grid :column="2"  :square="false"   :showBorder="false"  :highlight="false">
+					<uni-grid-item  v-for="(item ,index) in (kuaijiebianqianArray1[kuaijiebianqianArrayIndex1])" :key ="index" :index= "index" >
 					
-					 <text  class="bianqiantext" @click="changqikuaijiebianqianclick(index)">
-					 	 
-					 	 {{item}} 
-					 						 
-					 </text>
+					 <text  class="bianqiantext" @click="duanqikuaijiebianqianclick1(index)">{{item}} </text>
 					 	
 					 </uni-grid-item>
 				</uni-grid>
 			</view>
 			<view class="huanyipi">
-				<view class="centerview">
+				<view class="centerview" @click="setStatus(2)">
 					<image src="../../icon_gongzuotai_xuanzhong.png"class="image"></image>
 					<text class="text">换一批</text>
 					
@@ -51,7 +47,7 @@
 			</view>
 		</view>
 	</scroll-view>
- 		<view class="saveBtn">保存</view>
+ 		<view class="saveBtn" @click="save">保存</view>
 		<s-popup custom-class="demo-popup" position="center" v-model="visible">
 			<view class="bgtanchuangview">
 				<text class="greenBtn">设立目标</text>
@@ -66,51 +62,142 @@
 
 <script>
 	import sPopup from '../../components/s-popup/index.vue';
-
+	import request from "../../utils/util.js"
 	export default {
 		 components: {
 		    sPopup
 		  },
 		data() {
 			return {   
-				
+				status:1,
+				status1:1,
 				visible: false,
-
+				kuaijiebianqianArrayIndex:0,
+				kuaijiebianqianArrayIndex1:0,
 				mainscrollvieheight:0,
 				duanqimubiao:'',
 				changqimubiao:'',
-				kuaijiebianqianArray:['平稳站立30s',
-				'永久站立，跑五公里',
-				'马拉松比赛拿到名次',
-				'平稳站立30s马拉松比赛拿到名次',
-				'永久站立，跑五公里',
-				'马拉松比赛拿到名次马拉松比赛拿到名次马拉松比赛拿到名次']
+				kuaijiebianqianNowIndex:-1,
+				kuaijiebianqianNowIndex1:-1,
+				kuaijiebianqianArray:[
+					['平稳站立30s',
+					'永久站立，跑五公里',
+					'马拉松比赛拿到名次',
+					'平稳站立30s马拉松比赛拿到名次',
+					'永久站立，跑五公里',
+					'马拉松比赛拿到名次马拉松比赛拿到名次马拉松比赛拿到名次'],
+					['1平稳站立30s',
+					'1永久站立，跑五公里',
+					'1马拉松比赛拿到名次',
+					'1平稳站立30s马拉松比赛拿到名次',
+					'1永久站立，跑五公里',
+					'1马拉松比赛拿到名次马拉松比赛拿到名次马拉松比赛拿到名次'],
+					['2平稳站立30s',
+					'2永久站立，跑五公里',
+					'2马拉松比赛拿到名次',
+					'2平稳站立30s马拉松比赛拿到名次',
+					'2永久站立，跑五公里',
+					'2马拉松比赛拿到名次马拉松比赛拿到名次马拉松比赛拿到名次']
+				],
+				kuaijiebianqianArray1:[
+					['平稳站立30s',
+					'永久站立，跑五公里',
+					'马拉松比赛拿到名次',
+					'平稳站立30s马拉松比赛拿到名次',
+					'永久站立，跑五公里',
+					'马拉松比赛拿到名次马拉松比赛拿到名次马拉松比赛拿到名次'],
+					['1平稳站立30s',
+					'1永久站立，跑五公里',
+					'1马拉松比赛拿到名次',
+					'1平稳站立30s马拉松比赛拿到名次',
+					'1永久站立，跑五公里',
+					'1马拉松比赛拿到名次马拉松比赛拿到名次马拉松比赛拿到名次'],
+					['2平稳站立30s',
+					'2永久站立，跑五公里',
+					'2马拉松比赛拿到名次',
+					'2平稳站立30s马拉松比赛拿到名次',
+					'2永久站立，跑五公里',
+					'2马拉松比赛拿到名次马拉松比赛拿到名次马拉松比赛拿到名次']
+				]
 			}
+		},
+		onLoad(options) {
+			this.id = options.id?options.id:0;
 		},
 		onShow:function(){
 	      this.mainscrollvieheight = this.$app.getwindowHeight()-100
 		},
 		methods: {
 			bindTextAreaBlur: function (e) {
-			           console.log(e.detail.value)
-									this.duanqimubiao = e.detail.value;
-			       },
-				   bindChangqiTextAreaBlur: function (e) {
-				              console.log(e.detail.value)
-				   						this.changqimubiao = e.detail.value;
-				          },
-							  
-						  duanqikuaijiebianqianclick(index){
-							  console.log(this.duanqimubiao)
-							  
-							  this.duanqimubiao = this.kuaijiebianqianArray[index]
-							  
-						  },
-						  changqikuaijiebianqianclick(index){
- 						  							  
-						  							  this.changqimubiao = this.kuaijiebianqianArray[index]
-						  							  
-						  }
+				this.duanqimubiao = e.detail.value;
+		   },
+		   bindChangqiTextAreaBlur: function (e) {
+				this.changqimubiao = e.detail.value;
+			}, 
+		  duanqikuaijiebianqianclick(index){
+			  this.duanqimubiao = this.kuaijiebianqianArray[this.kuaijiebianqianArrayIndex][index];
+			  this.kuaijiebianqianNowIndex = index;
+		  }, 
+		  duanqikuaijiebianqianclick1(index){
+			  this.changqimubiao = this.kuaijiebianqianArray1[this.kuaijiebianqianArrayIndex1][index];
+			  this.kuaijiebianqianNowIndex1 = index;
+		  },
+		  changqikuaijiebianqianclick(index){		  
+			this.changqimubiao = this.kuaijiebianqianArray[index]						  
+		  },
+		  setStatus(type){
+			  if(type == 1){
+				  if(this.kuaijiebianqianArray.length-1 == this.kuaijiebianqianArrayIndex){
+					  this.status = -1;
+				  }else if(this.kuaijiebianqianArrayIndex == 0){
+					  this.status = 1;
+				  }
+				  this.kuaijiebianqianArrayIndex += this.status;
+			  }else{
+				  if(this.kuaijiebianqianArray1.length-1 == this.kuaijiebianqianArrayIndex1){
+				  					  this.status1 = -1;
+				  }else if(this.kuaijiebianqianArrayIndex1 == 0){
+				  					  this.status1 = 1;
+				  }
+				  this.kuaijiebianqianArrayIndex1 += this.status1;
+			  }
+		  },
+		  save(){
+			  let that = this;
+			  if(this.duanqimubiao == ''){
+				  uni.showToast({
+				  	title:'请填写短期目标',
+				  	duration:1500,
+				  	icon:"none"
+				  });
+				  return false;
+			  }else if(this.changqimubiao == ''){
+				  uni.showToast({
+				  	title:'请填写长期目标',
+				  	duration:1500,
+				  	icon:"none"
+				  });
+				  return false;
+			  }
+			  
+			  return request({
+				  url:getApp().$api.huanzhe.editHuanZhe,
+				  type:'PUT',
+				  data:{
+					  id:that.id,
+					  shortTermGoals:that.duanqimubiao,
+					  longTermGoals:that.changqimubiao
+				  }
+			  }).then(()=>{
+				  uni.showToast({
+				  	title:'保存成功',
+				  	duration:1500
+				  })
+				  setTimeout(()=>{
+				  	uni.navigateBack();
+				  },1500)
+			  })
+		  }
 		}
 	}
 </script>
@@ -150,7 +237,7 @@
 			}
 				
 			.duanqimubiao{
-				
+				width:540rpx;
 				background: #F6F6F6;
 				border-radius: 10px;
 				border: 2rpx solid #EAEAEA;

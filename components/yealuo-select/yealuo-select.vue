@@ -22,7 +22,7 @@
 				</view>
 				</radio-group>
 				<checkbox-group v-else-if="checkType=='checkbox'" @change="selectCheckbox">
-				<view class="select-item" :class="'item-'+overflow" v-for="(item, index) in data" :key="index" >
+				<view class="select-item" style="height: 60rpx;" :class="'item-'+overflow" v-for="(item, index) in data" :key="index" >
 					<label class="item-text" :class="{active: theValue.indexOf(item.value)!=-1 }">
 					<checkbox name="name1" color="#31D880" checked v-if="theValue.indexOf(item.value)!=-1 " :value="item.value+'|'+item.id"></checkbox>
 					<checkbox name="name1" v-else :value="item.value+'|'+item.id"></checkbox>
@@ -113,6 +113,10 @@
 			isSetUrl:{
 				type:Boolean,
 				default:false
+			},
+			uid:{
+				type:String,
+				default:'0'
 			}
 		},
 		data() {
@@ -171,12 +175,20 @@
 							var arr=[];
 							arr.push(odData[i].value+"|"+odData[i].id)
 						  this.$emit('getBackVal',arr);
+						  this.$emit('getBackVal1',{
+						  	value:arr,
+						  	uid:this.uid
+						  })
 						}
 					}
 					if(!isHas){
 						var arr=[];
 						arr.push(val)
 						 this.$emit('getBackVal',arr);
+						 this.$emit('getBackVal1',{
+						 	value:arr,
+						 	uid:this.uid
+						 })
 					}
 				}
 				this.data=data;
@@ -196,7 +208,11 @@
 					this.isShow = false;
 					str=str.split("|")[0];
 				}
-				this.$emit('getBackVal',val)
+				this.$emit('getBackVal',val);
+				this.$emit('getBackVal1',{
+					value:val,
+					uid:this.uid
+				})
 				
 				this.theValue = str;
 			}

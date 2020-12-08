@@ -1,10 +1,10 @@
 <template>
 	<view class="view">
 		<view class="top">
-			<textarea placeholder="输入创建的问题的描述" v-model="title"></textarea>
+			<textarea placeholder="输入创建的描述" v-model="title"></textarea>
 			<view class="topImageList">
 				<view v-for="(v,k) in imageList" :key="k" :class="'imageItem '+((k)%3 == 1?'imageItem1':'imageItem')" >
-					<image :src="v"></image>
+					<image :src="v" mode="aspectFill"></image>
 					<image mode="aspectFill" src="../../../static/icon_delete.png" class="delete" @click="deleteImage(k)"></image>
 				</view>
 				<view :class="'imageItem imageAdd '+((imageList.length)%3 == 1?'imageItem1':'imageItem')" @click="getImages">
@@ -13,9 +13,9 @@
 			</view>
 		</view>
 		<view class="textView">
-			<view class="title">问题解释</view>
+			<view class="title">{{index == -1?'问题':'选项'}}解释</view>
 			<input v-model="text"/>
-			<view class="title">问题诊断</view>
+			<view class="title">{{index == -1?'问题':'选项'}}诊断</view>
 			<textarea v-model="text1"></textarea>
 		</view>
 		<view class="save" @click="save()">保存</view>
@@ -42,8 +42,9 @@
 			this.text = data.text?data.text:'';
 			this.text1 = data.text1?data.text1:'';
 			this.tempFile = data.imglist?JSON.parse(data.imglist):[];
-			this.imageList = data.imglist?JSON.parse(data.imglist):[]
-;			console.log(data);
+			this.imageList = data.imglist?JSON.parse(data.imglist):[];
+			
+;			console.log(this.imageList);
 		},
 		methods: {
 			getImages(){
@@ -67,11 +68,11 @@
 				let str = '';
 				let that = this;
 				if(!this.title){
-					str = '请输入创建的问题描述';
+					str = `请输入创建的描述`;
 				}else if(!this.text){
-					str = '请输入问题解释'
+					str = '请输入解释'
 				}else if(!this.text1){
-					str = '请输入问题诊断'
+					str = '请输入诊断'
 				}else if(this.imageList.length == 0){
 					str = '请选择图片'
 				}

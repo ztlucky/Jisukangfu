@@ -3,7 +3,7 @@
 		<nav-bar bgColor="#31D880" backState="1000" fontColor="#ffffff" title="学习笔记" type="ordinary">
 			<!-- <view slot="right" v-if="isEdit" @click="save" class="navRight">保存</view> -->
 		</nav-bar>
-		<view class="list">
+		<view class="list" v-if="list.length !=0">
 			<view class="item" @click="toPage('/pages/work/notesInfo/notesInfo',v.id)" v-for="(v,k) in list" :key="k">
 				<view class="itemLeft"></view>
 				<view class="itemRight">

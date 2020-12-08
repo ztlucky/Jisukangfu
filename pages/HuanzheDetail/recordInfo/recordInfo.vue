@@ -1,26 +1,43 @@
 <template>
 	<view class="viewPage">
 		<view class="content">
-			<view class="text">
-				始创于2007年始终秉承诚信、有爱和良父义务精神及“做中国更好的整形美容医院”的品牌愿景，以顾客满意度为宗旨，接轨国际医疗标准，勇担行业自律先锋，全力打造高品质医疗服务体系更屡获“公众信赖品牌医院”称号并成为卫生部全国示范推广单位。始终注重品牌发展与专业医美精神的共融并济，与美同行，塑美于世。
-			</view>
-			<image src="../../../static/gongzuotai/bg_zhibo.png"></image>
-			<view class="video">
-				<video object-fit="cover" poster="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1605501411332&di=6e6844ccb5e722e457c8c7ae5f3cb10d&imgtype=0&src=http%3A%2F%2Fa0.att.hudong.com%2F30%2F29%2F01300000201438121627296084016.jpg" src="" :show-center-play-btn="true"></video>
+			<view class="text">{{info.content}}</view>
+			<view v-for="(v,index) in info.file">
+				<image :src="v.url" v-if="v.type == 'image'"></image>
+				<view class="video" v-if="v.type == 'video'">
+					<video object-fit="cover" poster="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1605501411332&di=6e6844ccb5e722e457c8c7ae5f3cb10d&imgtype=0&src=http%3A%2F%2Fa0.att.hudong.com%2F30%2F29%2F01300000201438121627296084016.jpg" src="" :show-center-play-btn="true"></video>
+				</view>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import request from "../../../utils/util.js"
 	export default {
 		data() {
 			return {
-				
+				info:{}
 			}
 		},
+		onLoad(options) {
+			this.id = options.recordid?options.recordid:0;
+			this.getInfo();
+		},
 		methods: {
-			
+			getInfo(){
+				let that = this;
+				return request({
+					type:"GET",
+					url:getApp().$api.huanzhe.getRecordInfo,
+					data:{
+						id:that.id
+					}
+				},true,true).then(data=>{
+					data.file = JSON.parse(data.file)
+					that.info = data;
+				})
+			}
 		}
 	}
 </script>

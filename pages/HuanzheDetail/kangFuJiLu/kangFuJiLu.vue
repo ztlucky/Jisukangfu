@@ -1,26 +1,45 @@
 <template>
 	<view class="viewPage">
 		<view class="list">
-			<view class="item" @click="toPage('/pages/HuanzheDetail/evaluation/evaluation')" v-for="(v,k) in [1,2,3,4,5,6,7,8,9]" :key="k">
+			<view class="item" @click="toPage('/pages/HuanzheDetail/evaluation/evaluation?assessid='+v.id)" v-for="(v,k) in list" :key="k">
 				<view class="itemLeft"></view>
 				<view class="itemRight">
 					<view class="text">
-						<view class="title hidden">患者记录患者记录患者记录患者记录患者记录患者记录患者记录1</view>
+						<view class="title hidden">{{v.ratingScaleName}}</view>
 					</view>
 					<image src="../../../static/f_my_kecheng_arrow.png"></image>
 				</view>
 			</view>
 		</view>
-		<view class="save" @click="toPage('/pages/KangfuPingdingListPage/KangfuPingdingListPage')">康复评定</view>
+		<view class="save" @click="toPage('/pages/KangfuPingdingListPage/KangfuPingdingListPage?id='+patientId)">康复评定</view>
 	</view>
 </template>
 
 <script>
+	import request from '../../../utils/util.js'
 	export default {
 		data() {
 			return {
-				
+				list:[]
 			}
+		},
+		onReachBottom() {
+			// 触底的时候请求数据，即为上拉加载更多
+			if (this.isGetMoreList) {
+				this.getList();
+			} else {
+				uni.showToast({
+					title: "暂无更多数据",
+					duration: 1500,
+					icon:"none"
+				})
+			}
+		},
+		onShow() {
+			this.getList(true);
+		},
+		onLoad(options) {
+			this.patientId = options.id?options.id:0;
 		},
 		methods: {
 			toPage(url) {
@@ -28,6 +47,39 @@
 					url,
 					animationDuration: 300,
 					animationType: 'slide-in-right'
+				})
+			},
+			getList(f = false) {
+				
+				let that = this;
+				if (f) {
+					this.list = [];
+					this.index = 1;
+				}
+				return request({
+					type: 'GET',
+					url: getApp().$api.pingdingliangbiao.getResultList,
+					data: {
+						pageNo: that.index,
+						pageSize: that.size,
+						userId: getApp().globalData.userId,
+						patientId:that.patientId
+					}
+				}, true, true).then(data => {
+					console.log(data.records.length);
+					if (data.records.length >= that.size) {
+						this.isGetMoreList = true;
+					} else {
+						this.isGetMoreList = false;
+					}
+					f = true;
+					if (f) {
+						that.list = (data.records);
+					} else {
+						that.list = that.list.concat(data.records);
+					}
+
+					console.log(that.list);
 				})
 			}
 		}

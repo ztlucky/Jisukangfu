@@ -2,9 +2,9 @@
 	<view class="viewPage">
 		<view class="content">
 			<view class="title">诊断</view>
-			<input placeholder="请填写诊断" />
+			<input placeholder="请填写诊断" v-model="title" />
 			<view class="title">诊疗意见</view>
-			<textarea  placeholder="请填写诊疗意见"></textarea>
+			<textarea  placeholder="请填写诊疗意见" v-model="content"></textarea>
 			<view class="title">上传图片</view>
 			<view class="list">
 				<view :class="((k)%3 == 1?'imageItem imageItem1':'imageItem')"  v-for="(v,k) in list" :key="k">
@@ -32,9 +32,23 @@
 			}
 		},
 		onLoad(data) {
-			this.id = data.id?data.id:22;
+			this.id = data.id?data.id:0;
+			this.getData();
 		},
 		methods: {
+			getData(){
+				let data = uni.getStorageSync("cases").data;
+				console.log(data);
+				let file = data.file;
+				this.title = data.title?data.title:'';
+				this.content = data.content?data.content:''
+				if(file){
+					file.map(v=>{
+						this.list.push(v.url);
+						this.tempFile.push(v.url);
+					})
+				}
+			},
 			getImages(){
 				let that = this;
 				uni.chooseImage({
@@ -58,26 +72,33 @@
 				let str = '';
 				if(!this.title){
 					str = "请填写诊断信息"
-				}else if(!this.text){
+				}else if(!this.content){
 					str = "请填写诊疗意见"
 				}else if(this.list.length == 0){
 					str = "请先选择图片"
+				}
+				if(str){
+					uni.showToast({
+						title:str,
+						duration:1500,
+						icon:"none"
+					});
+					return false;
 				}
 				onloadImage.init({
 					tempFiles:that.tempFile,
 					tempFilePaths:that.list
 				},(data,str)=>{
 					return request({
-						url:getApp().$api.huanzhe.addMedical,
+						url:getApp().$api.huanzhe.editHuanZhe,
 						data:{
-							patientId:that.id,
+							id:that.id,
 							diagnose:that.title,
-							medicalOpinion:that.text,
+							medicalOpinion:that.content,
 							file:str
 						},
-						type:"POST"
+						type:"PUT"
 					}).then(data=>{
-						console.log(data);
 						uni.showToast({
 							title:'保存成功',
 							duration:1500
@@ -85,7 +106,6 @@
 						setTimeout(()=>{
 							uni.navigateBack();
 						},1500)
-						console.log(data);
 					})
 				}).upload();
 			}
@@ -141,6 +161,7 @@
 		font-family: PingFangSC-Regular, PingFang SC;
 		font-weight: 400;
 		line-height: 40rpx;
+		margin-top: 20rpx;
 	}
 	.list{
 		width:590rpx;

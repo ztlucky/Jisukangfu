@@ -15,7 +15,11 @@
 		data() {
 			return {
 				title:"",
+				id:-1
 				}
+		},
+		onLoad(data){
+			this.id = data.id?data.id:-1;
 		},
 		methods: {
 			save(){
@@ -29,8 +33,28 @@
 					});
 					return false;
 				}
-				uni.$emit('addItem',this.title);
-				uni.navigateBack();
+				if(this.id == -1){
+					uni.$emit('addItem',this.title);
+					uni.navigateBack();
+				}else{
+					return request({
+						url:getApp().$api.pingdingliangbiao.addQuestionType,
+						data:{
+							ratingScaleId:that.id,
+							name:that.title
+						},
+						type:"POST"
+					}).then(data=>{
+						uni.showToast({
+							title:'添加成功',
+							duration:1500
+						});
+						setTimeout(()=>{
+							uni.navigateBack();
+						},1000);
+					})
+					
+				}
 			}
 		},
 		components: {

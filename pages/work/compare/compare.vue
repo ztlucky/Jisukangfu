@@ -1,31 +1,14 @@
 <template>
 	<view class="view">
-		<view class="leftList">
-			<view class="leftItem" v-for="(i,k) in [1,2,3,4,5,6,7,4,5,6,8,9]" :key="k">
+		<scroll-view class="leftList" @scrolltolower="getIllness" :scroll-y="true">
+			<view :class="k != nowIllnessIndex?'leftItem':'leftItem leftItem1'" v-for="(item,k) in illnessList"  :key="k" @click="setIllnessStatus(k)">
 				<view class="itemBorder"></view>
-				<view class="itemText">脑血栓{{k}}</view>
+				<view class="itemText hidden2">{{item.name}}</view>
 			</view>
-			<view class="leftItem leftItem1">
-				<view class="itemBorder"></view>
-				<view class="itemText">脑血栓</view>
-			</view>
-			<view class="leftItem">
-				<view class="itemBorder"></view>
-				<view class="itemText">脑血栓</view>
-			</view>
-		</view>
+		</scroll-view>
 		<view class="rightContent">
 			<view class="rightTop">
-				<view class="">夏治偏瘫</view>
-				<view class="">夏治偏瘫</view>
-				<view class="">夏治瘫偏瘫</view>
-				<view class="selected">夏治偏瘫偏瘫偏瘫</view>
-				<view class="">夏治偏瘫</view>
-				<view class="">夏治偏瘫</view>
-				<view class="">夏治偏瘫</view>
-				<view class="">夏治瘫偏瘫</view>
-				<view class="">夏治偏瘫偏瘫偏瘫</view>
-				<view class="">夏治偏瘫</view>
+				<view :class="nowSymptomIndex == index?'selected':''" @click="setSymptomIndex(index)" v-for="(item,index) in illnessList[nowIllnessIndex].symptomList">{{item.name}}</view>
 			</view>
 			<view class="rightList">
 				<view class="rightItem" v-for="(i,k) in [1,2,3,4,5,6,7,8,9,12,]" :key="k">
@@ -55,13 +38,85 @@
 </template>
 
 <script>
+	import request from "../../../utils/util.js"
 	export default {
 		data() {
 			return {
-				
+				isGetMoreIllnessData:true,
+				illnessIndex:1,
+				illnessSize:20,
+				illnessList:[],
+				nowIllnessIndex:0,
+				nowSymptomIndex:0,
+				huanZheInde:1,
+				huanZheSize:20,
+				huanZheList:[],
+				isGetMoreHuanZheData:true
 			}
 		},
+		onLoad() {
+			this.init();
+		},
 		methods: {
+			init(){
+				this.getIllness().then(()=>{
+					this.getHuanZheList();
+				});
+			},
+			setIllnessStatus(index){
+				this.nowIllnessIndex = index;
+				this.getHuanZheList(true);
+			},
+			setSymptomIndex(index){
+				this.nowSymptomIndex = index;
+				this.getHuanZheList(true);
+			},
+			getIllness(){
+				let that = this;
+				if(this.isGetMoreIllnessData){
+					return request({
+						url:getApp().$api.huanzhe.getillnessList,
+						type:"GET",
+						data:{
+							pageNo:that.illnessIndex,
+							pageSize:that.illnessSize,
+							userId:getApp().globalData.userId
+						}
+					},true,true).then(data=>{
+						if(data.records.length == that.illnessSize){
+							that.isGetMoreIllnessData = true;
+						}else{
+							that.isGetMoreIllnessData = false;
+						}
+						that.illnessList = that.illnessList.concat(data.records);
+						console.log(that.illnessList)
+					})
+				}
+			},
+			getHuanZheList(f){
+				if(f){
+					this.isGetMoreHuanZheData = true;
+					this.huanZheInde = 1;
+					this.huanZheList = []
+				}
+				let id = this.illnessList[this.nowIllnessIndex].symptomList[this.nowSymptomIndex];
+				let that = this;
+				if(id){
+					return request({
+						url:getApp().$api.huanzhe.getRecordList,
+						type:"GET",
+						data:{
+							condition:true,
+							pageNo:that.huanZheInde,
+							pageSize:that.huanZheSize,
+							symptomIds:id
+						}
+					},true,true).then(data=>{
+						console.log(data);
+						// that.isGetMoreHuanZheData = 
+					})
+				}
+			},
 			toPage(url) {
 				uni.navigateTo({
 					url,
@@ -81,7 +136,6 @@
 		width:200rpx;
 		height: 100vh;
 		background-color: #F8F8F8;
-		overflow-y: scroll;
 	}
 	.leftItem{
 		font-size: 32rpx;
@@ -110,6 +164,7 @@
 		background-color: #FFFFFF;
 		color:#31D880;
 	}
+	
 	.rightContent{
 		width:490rpx;
 		margin:0 30rpx;

@@ -57,6 +57,7 @@
 				this.getList();
 			},
 			getList(f = false) {
+				
 				let that = this;
 				if (f) {
 					this.list = [];

@@ -6,26 +6,24 @@
 					<image src="../../../static/Huanzhexiangqing/icon_pingding.png"></image>
 					<text class="titleText">结果</text>
 				</view>
-				<view class="problem" v-for="(v,k) in [1,2,3,4]" :key="k">
-					<text class="title">问题</text>
-					<view class="text">
-						将健侧下肢稍外展,对抗徒手阻力将使下肢内收。观察患侧下肢有无内收动作或内收肌群收缩(Raimiste现象)
+				<view v-for="(v,k) in info.selectedProblemList" :key="k">
+					<view class="problem" v-if="v.content.type == 1|| v.content.type == 2">
+						<text class="title">问题</text>
+						<view class="text">{{v.content.title}}</view>
+						<image class="image" :src="item" v-for="(item,index) in v.content.file" :key="index"></image>
+						<view class="title">选项</view>
+						<view class="options">
+							<view v-for="(vv,kk) in v.content.content" :key="kk">
+								<view class="optionsItem" v-if="vv.isSelected">
+									<view class="dot"></view>
+									<view class="optionsText">{{vv.title}}</view>
+								</view>
+							</view>
+						</view>
 					</view>
-					<image class="image"></image>
-					<view class="title">选项</view>
-					<view class="options">
-						<view class="optionsItem">
-							<view class="dot"></view>
-							<view class="optionsText">肌群收缩不充分没有动作</view>
-						</view>
-						<view class="optionsItem">
-							<view class="dot"></view>
-							<view class="optionsText">肌群收缩不充分没有动作</view>
-						</view>
-						<view class="optionsItem">
-							<view class="dot"></view>
-							<view class="optionsText">肌群收缩不充分没有动作</view>
-						</view>
+					<view class="problem" v-if="v.content.type == 3" style="padding-bottom: 40rpx;">
+						<text class="title">问题</text>
+						<view class="text">{{v.content.content}}</view>
 					</view>
 				</view>
 			</view>
@@ -35,11 +33,9 @@
 					<image src="../../../static/Huanzhexiangqing/icon_pingding.png"></image>
 					<text class="titleText">注意问题</text>
 				</view>
-				<view class="problem problem1" v-for="(v,k) in [1,2,3,4]" :key="k">
-					<text class="title">问题{{k}}</text>
-					<view class="text">
-						将健侧下肢稍外展,对抗徒手阻力将使下肢内收。观察患侧下肢有无内收动作或内收肌群收缩(Raimiste现象)
-					</view>
+				<view class="problem problem1" v-for="(v,k) in info.selectedList" :key="k">
+					<text class="title">问题{{k+1}}</text>
+					<view class="text" v-for="(vv,kk) in v">{{vv.text}}</view>
 					
 				</view>
 			</view>
@@ -48,11 +44,9 @@
 					<image src="../../../static/Huanzhexiangqing/icon_pingding.png"></image>
 					<text class="titleText">治疗方案</text>
 				</view>
-				<view class="problem problem1" v-for="(v,k) in [1,2,3,4]" :key="k">
-					<text class="title">问题{{k}}</text>
-					<view class="text">
-						将健侧下肢稍外展,对抗徒手阻力将使下肢内收。观察患侧下肢有无内收动作或内收肌群收缩(Raimiste现象)
-					</view>
+				<view class="problem problem1" v-for="(v,k) in info.selectedList1" :key="k">
+					<text class="title">问题{{k+1}}</text>
+					<view class="text" v-for="(vv,kk) in v">{{vv.text}}</view>
 					
 				</view>
 			</view>
@@ -61,14 +55,35 @@
 </template>
 
 <script>
+	import request from '../../../utils/util.js'
 	export default {
 		data() {
 			return {
-
+				info:{}
 			}
 		},
+		onLoad(options) {
+			this.id = options.assessid?options.assessid:0;
+			this.getInit();
+		},
 		methods: {
-
+			getInit(){
+				let that = this;
+				return request({
+					url:getApp().$api.pingdingliangbiao.getResult,
+					type:"GET",
+					data:{
+						id:that.id
+					}
+				},true,true).then(data=>{
+					data = JSON.parse(data.result);
+					data.selectedProblemList.map((v,k)=>{
+						data.selectedProblemList[k].content = JSON.parse(data.selectedProblemList[k].content);
+					})
+					this.info = data;
+					console.log(data)
+				})
+			}
 		}
 	}
 </script>

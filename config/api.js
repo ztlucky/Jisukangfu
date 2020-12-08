@@ -1,5 +1,5 @@
- let apiRoot = 'http://www.huaxiakangfu.com:8090/';
-// let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
+ // let apiRoot = 'http://www.huaxiakangfu.com:8090/';
+let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
 let api = {
 	common: {
 		aboutUs: apiRoot + 'common/aboutUs.html',
@@ -40,11 +40,20 @@ let api = {
 		//评定量表下的分类
 		getPingDingItemList:apiRoot + "app/questionType/listByRatingScale",
 		addQuestion:`${apiRoot}question/question/add`,
-		addType:`${apiRoot}rating_scale_classify/ratingScaleClassify/add`,
 		getTypeList:`${apiRoot}rating_scale_classify/ratingScaleClassify/list`,
 		getList:`${apiRoot}rating_scale/ratingScale/list`,
 		getQuestionList:`${apiRoot}question/question/list`,
-		add:`${apiRoot}rating_scale/ratingScale/add`
+		getQuestionType:`${apiRoot}question_classify/questionClassify/list`,
+		add:`${apiRoot}rating_scaleratingScale/add`,
+		addQuestionType:`${apiRoot}question_classify/questionClassify/add`,
+		deleteQuestionType:`${apiRoot}rating_scale_classify/ratingScaleClassify/deleteBatch`,
+		deleteQuestion:`${apiRoot}question/question/deleteBatch`,
+		getQuestionInfo:`${apiRoot}question/question/queryById`,
+		editQuestionInfo:`${apiRoot}question/question/edit`,
+		getInfo:`${apiRoot}rating_scale/ratingScale/queryById`,
+		addResult:`${apiRoot}assess_result/assessResult/add`,
+		getResult:`${apiRoot}assess_result/assessResult/queryById`,
+		getResultList:`${apiRoot}assess_result/assessResult/list`
 		
 	},
 	user: {
@@ -85,7 +94,17 @@ let api = {
 		addMedical:`${apiRoot}medical_history/medicalHistory/add`,//添加病历
 		addIllness:`${apiRoot}illness/illness/add`,
 		addSymptom:`${apiRoot}symptom/symptom/add`,
-		deleteIllness:`${apiRoot}illness/illness/deleteBatch`
+		deleteIllness:`${apiRoot}illness/illness/deleteBatch`,
+		editHuanZhe:`${apiRoot}patient/patient/edit`,
+		getRehabilitationList:`${apiRoot}treatment/treatment/list`,//康复项目列表
+		getRecordList:`${apiRoot}patient_record/patientRecord/list`,
+		deleteSymptom:`${apiRoot}symptom/symptom/deleteBatch`,
+		addRecord:`${apiRoot}patient_record/patientRecord/add`,
+		getRecordInfo:`${apiRoot}patient_record/patientRecord/queryById`,
+		addProgram:`${apiRoot}treatment_program/treatmentProgram/add`,//添加治疗项目
+		getProgramList:`${apiRoot}treatment_program/treatmentProgram/list`,//获取治疗项目列表
+		deleteProgram:`${apiRoot}treatment_program/treatmentProgram/deleteBatch`,
+		addTreatment:`${apiRoot}treatment/treatment/add`
  	},
 	wechat: {
 		miniAppLogin: apiRoot + 'wechat/miniAppLogin',
@@ -100,6 +119,9 @@ let api = {
 		"addNotes":`${apiRoot}study_notes/studyNotes/add`,
 		"getList":`${apiRoot}study_notes/studyNotes/list`,
 		"getInfo":`${apiRoot}study_notes/studyNotes/queryById`
+	},
+	work:{
+		'getInfo':`${apiRoot}patient/patient/YSWorkbench`
 	}
 };
 export default api;

@@ -319,15 +319,12 @@
 						}
  			        },
 			 pingdingAction(){
-				 uni.navigateTo({
-				 	url:'../KangfuPingdingListPage/KangfuPingdingListPage',
-					animationDuration:300,
-					animationType:'slide-in-right'
-				 })
+				
+				 this.save(false)
 				 
 				 
 			 },
-			 save(){
+			 save(f = true){
 			 		 let str = "";
 			 		 if(!this.huanzhename){
 			 			 str = '请输入患者姓名'
@@ -387,9 +384,17 @@
 						 uni.showToast({
 						 	title:data.message,
 						 	duration:1500,
-						 	success() {
+						 	success(data) {
 						 		setTimeout(()=>{
-						 			uni.navigateBack();
+									if(f){
+										uni.navigateBack();
+									}else{
+										uni.navigateTo({
+											url:'../KangfuPingdingListPage/KangfuPingdingListPage',
+															animationDuration:300,
+															animationType:'slide-in-right'
+										})
+									}
 						 		},1500);
 						 	}
 						 })

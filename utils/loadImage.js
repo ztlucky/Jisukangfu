@@ -44,7 +44,7 @@ class loadImage {
 	upload() {
 		// if(this.nowCount == 0){
 			uni.showLoading({
-				title:`图片上传中（${this.nowCount}/${this.imageList.length}）`,
+				title:`文件上传中（${this.nowCount}/${this.imageList.length}）`,
 				mask:true
 			})
 		// }
@@ -60,7 +60,7 @@ class loadImage {
 			uni.hideLoading();
 		} else {
 			if (this.imageList[this.nowCount].type && this.imageList[this.nowCount].type == 'video') {
-				this.uploadVideo(this.imageList[this.nowCount]);
+				this.uploadVideo(this.imageList[this.nowCount].value);
 			} else {
 				if(this.imagePathList[this.nowCount].substring(0,5) == 'https'){
 					this.imageUrl.push(this.imagePathList[this.nowCount]);
@@ -97,7 +97,7 @@ class loadImage {
 	}
 	getFile(obj) {
 		console.log(obj)
-		let file = this.imageList[this.nowCount]; //注意：直接上传file文件，不要用FormData对象的形式传
+		let file = this.imageList[this.nowCount].value?this.imageList[this.nowCount].value:this.imageList[this.nowCount]; //注意：直接上传file文件，不要用FormData对象的形式传
 		let that = this;
 		let config = {
 			headers: {

@@ -3,78 +3,168 @@
 		<nav-bar  bgColor="#31D880" backState="1000" fontColor="#ffffff" title="评定量表" type="ordinary">
 			<view slot="right" v-if="isEdit" @click="save" class="navRight">保存</view>
 		</nav-bar>
-		<view class="problem" v-for="(v,k) in [1,2,3,4]" :key="k">
-			<view class="title">
-				<view class="titleText">问题</view>
-				<image v-if="isEdit" src="../../../static/order/icon_xuanzhong.png"></image>
-			</view>
-			<view class="text">
-				将健侧下肢稍外展,对抗徒手阻力将使下肢内收。观察患侧下肢有无内收动作或内收肌群收缩(Raimiste现象)
-			</view>
-			<image class="image"></image>
-			<view class="title">
-				<view class="titleText">选项</view>
-				<!-- <image src="../../../static/order/icon_xuanzhong.png"></image> -->
-			</view>
-			<view class="options">
-				<view class="optionsItem">
-					<view class="dot"></view>
-					<view class="optionsText">肌群收缩不充分没有动作</view>
+		<view v-for="(v,k) in list" :key="k">
+			<view class="problem" v-if="v.type == 1" @click="setStatus(k)">
+				<view class="title">
+					<view class="titleText">问题</view>
+					<image v-if="isEdit" :src="v.isSelected?'../../../static/order/icon_xuanzhong.png':''"></image>
 				</view>
-				<view class="optionsItem">
-					<view class="dot"></view>
-					<view class="optionsText">肌群收缩不充分没有动作</view>
+				<view class="text">
+					{{v.title}}
 				</view>
-				<view class="optionsItem">
-					<view class="dot"></view>
-					<view class="optionsText">肌群收缩不充分没有动作</view>
+				<image class="image" v-for="(item , index) in v.file" :src="item"></image>
+				<view class="title">
+					<view class="titleText">选项</view>
+					<!-- <image src="../../../static/order/icon_xuanzhong.png"></image> -->
+				</view>
+				<view class="options">
+					<view class="optionsItem" v-for="(vv,kk) in v.content" :key="kk">
+						<view class="dot"></view>
+						<view class="optionsText">{{vv.title}}</view>
+					</view>
+				</view>
+				<view class="edit">
+					<view class="editText" @click="toPage('/pages/work/createProblem/createProblem?id='+v.id+'&edit=2')">编辑</view>
 				</view>
 			</view>
-			<view class="edit">
-				<view class="editText" @click="toPage('/pages/work/createProblem/createProblem')">编辑</view>
+			<view class="problem" v-if="v.type == 2" @click="setStatus(k)">
+				<view class="title">
+					<view class="titleText">问题</view>
+					<image v-if="isEdit" :src="v.isSelected?'../../../static/order/icon_xuanzhong.png':''"></image>
+				</view>
+				<view class="text">
+					{{v.title}}
+				</view>
+				<image class="image" v-for="(item , index) in v.file" :src="item"></image>
+				<view class="title">
+					<view class="titleText">选项</view>
+					<!-- <image src="../../../static/order/icon_xuanzhong.png"></image> -->
+				</view>
+				<view class="options">
+					<view class="optionsItem" v-for="(vv,kk) in v.content" :key="kk">
+						<view class="dot"></view>
+						<view class="optionsText">{{vv.title}}</view>
+					</view>
+				</view>
+				<view class="edit">
+					<view class="editText" @click="toPage('/pages/work/createProblem/createProblem?id='+v.id+'&edit=2')">编辑</view>
+				</view>
+			</view>
+			<view class="problem" v-if="v.type == 3" @click="setStatus(k)">
+				<view class="title">
+					<view class="titleText">问题</view>
+					<image v-if="isEdit" :src="v.isSelected?'../../../static/order/icon_xuanzhong.png':''"></image>
+				</view>
+				<view class="text">
+					{{v.title}}
+				</view>
+				
+				<view class="edit">
+					<view class="editText" @click="toPage('/pages/work/createTextProblem/createTextProblem?id='+v.id+'&edit=2')">编辑</view>
+				</view>
 			</view>
 		</view>
-		<view class="bottom" v-if="!isEdit" @click="setNowStatus">编辑评定量表分类</view>
+		<view class="bottom" v-if="!isEdit" @click="setNowStatus">编辑问题</view>
 		<view class="bottomNav" v-else>
-			<view class="">删除选中的分类({{num}})</view>
-			<view class="">添加新的分类</view>
+			<view class="" @click="deleteItem">删除选中的问题({{num}})</view>
+			<view class="" @click="toPage('/pages/work/selectedProblemType/selectedProblemType?id='+id)">添加新的问题</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import request from "../../../utils/util.js";
 	export default {
 		data() {
 			return {
 			isEdit:false,
-			list:[
-				{
-					text:"平淡量表解释纷纷i使肌肤死角史可法",
-					value:89,
-					isSelected:false
-				},
-				{
-					text:"平淡量表解释纷纷i使肌肤死角史可法",
-					value:89,
-					isSelected:false
-				},
-				{
-					text:"平淡量表解释纷纷i使肌肤死角史可法",
-					value:89,
-					isSelected:false
-				}
-			],
-			num:0
+			list:[],
+			num:0,
+			index:1,
+			size:10
 			}
 		},
+		onReachBottom() {
+			// 触底的时候请求数据，即为上拉加载更多
+			if (this.isGetMoreList) {
+				this.getList();
+			} else {
+				uni.showToast({
+					title: "暂无更多数据",
+					duration: 1500,
+					icon:"none"
+				})
+			}
+		},
+		onShow() {
+			this.getList(true);
+		},
+		onLoad(data) {
+			this.id = data.id?data.id:5;
+			
+		},
 		methods: {
+			setStatus(index){
+				let isSelected = this.list[index].isSelected;
+				this.list[index].isSelected = !isSelected;
+				if(isSelected){
+					this.num--;
+				}else{
+					this.num++;
+				}
+			},
+			deleteItem() {
+				let that = this;
+				if (this.num == 0) {
+					uni.showToast({
+						title: '请选择要删除的分类',
+						duration: 1500,
+						icon: "none",
+						mask: true
+					})
+				} else {
+					let ids = [];
+					this.list.map(v => {
+						if (v.isSelected) {
+							ids.push(v.id)
+						}
+					});
+					ids = ids.join(",");
+					uni.showModal({
+						title: '温馨提示',
+						content: '您确定要删除所选问题？',
+						confirmColor: '#31D880',
+						success: function(res) {
+							if (res.confirm) {
+								return request({
+									type: "DELETE",
+									url: getApp().$api.pingdingliangbiao.deleteQuestion+`?ids=${ids}`
+								}).then(data => {
+									uni.showToast({
+										title: '删除成功',
+										duration: 1500,
+										mask: true
+									})
+									setTimeout(() => {
+										that.getList(true);
+										that.isEdit = false;
+										that.num = 0;
+									}, 1000)
+								})
+							}
+						}
+					})
+			
+				}
+			},
 			setNowStatus(){
 				this.isEdit = !this.isEdit;
 			},
 			save(){
 				this.setNowStatus();
 			},
-			toPage(url,f = true){
+			toPage(url,f = true,index = 0){
+				let that = this;
 				if(!f){
 					this.list[url].isSelected = !this.list[url].isSelected;
 					let num = 0;
@@ -85,15 +175,63 @@
 					})
 					this.num = num;
 				}else{
-					uni.navigateTo({
-						url,
-						animationDuration: 300,
-						animationType: 'slide-in-right'
-					})
+					
+						uni.navigateTo({
+							url,
+							animationDuration: 300,
+							animationType: 'slide-in-right'
+						})
+					
+					
 				}
+			},
+			getList(f = false){
+				if(f){
+					this.index = 1;
+					this.list = [];
+					this.num = 0;
+					this.isEdit = false;
+				}
+				let that = this;
+				return request({
+					url:getApp().$api.pingdingliangbiao.getQuestionList,
+					type:'GET',
+					data:{
+						classifyId:that.id,
+						pageNo:that.index,
+						pageSize:that.size
+					}
+				},true,true).then(data=>{
+					if(data.records.length !=0){
+						data.records.map((v,k)=>{
+							if(v.file){
+								data.records[k].file = JSON.parse(data.records[k].file);
+							}
+							if(data.records[k].content){
+								data.records[k].content = JSON.parse(data.records[k].content);
+								let imgs = [];
+								data.records[k].content.map(vv=>{
+									imgs.concat(vv.imgList)
+								})
+								data.records[k].imgs = imgs;
+								console.log(imgs);
+							}
+						})
+					}
+					if(data.records.length>=that.size){
+						that.isGetMoreList = true
+					}else{
+						that.isGetMoreList = false
+					}
+					that.list = that.list.concat(data.records);
+					that.index++;
+					console.log(that.list);
+					
+				})
 			}
 		}
 	}
+	
 </script>
 
 <style scoped>
@@ -232,13 +370,12 @@
 		margin: 10rpx 30rpx;
 		width:468rpx;
 		height: 222rpx;
-		background-color: red;
 		margin-right: 150rpx;
 	}
 	.optionsItem{
-		height: 40rpx;
+		height: auto;
 		display: flex;
-		align-items: center;
+		/* align-items: center; */
 	}
 	.optionsItem .dot{
 		width:10rpx;
@@ -246,8 +383,10 @@
 		background-color: #31D880;
 		border-radius: 50%;
 		margin-left: 50rpx;
+		margin-top:16rpx;
 	}
 	.optionsItem .optionsText{
+		max-width: 590rpx;
 		margin-left: 20rpx;
 		font-size: 28rpx;
 		font-family: PingFangSC-Regular, PingFang SC;

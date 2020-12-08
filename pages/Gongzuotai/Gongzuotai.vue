@@ -12,21 +12,21 @@
 				<text class="loginout" @click="loginoutaction">退出</text>
 				<view class="hview">
 					<view class="v_view">
-						<text class="uptitle">2675</text>
+						<text class="uptitle">{{info.score?info.score:0}}</text>
 						<text class="downtitle">得分</text>
 					</view>
 					<view class="v_line">
 
 					</view>
 					<view class="v_view">
-						<text class="uptitle">321h29min</text>
+						<text class="uptitle">{{info.time?info.time:0}}</text>
 						<text class="downtitle">服务时长</text>
 					</view>
 					<view class="v_line">
 
 					</view>
 					<view class="v_view">
-						<text class="uptitle">365人</text>
+						<text class="uptitle">{{info.people?info.people:0}}人</text>
 						<text class="downtitle">服务人数</text>
 					</view>
 				</view>
@@ -148,7 +148,7 @@
 				topImageHeight: '',
 				zhiboimagewidth: '',
 				zhiboimageheight: '',
-
+				info:{}
 
 			}
 		},
@@ -160,8 +160,11 @@
 			this.zhiboimageheight = this.zhiboimagewidth * 0.5
 
 		},
-		created() {
-			this.getHuanZheList();
+		onLoad() {
+			this.getInfo().then(()=>{
+				this.getHuanZheList();
+			})
+			
 		},
 		methods: {
 			//退出登录
@@ -179,6 +182,19 @@
 
 						}
 					}
+				})
+			},
+			getInfo() {
+				let that = this;
+				return request({
+					url: getApp().$api.work.getInfo,
+					type: 'GET',
+					data:{
+						id:getApp().globalData.userId
+					}
+				},true,true).then(data=>{
+					that.info = data
+					console.log(data);
 				})
 			},
 			//新增患者 历史患者  添加笔记 等响应方法
@@ -217,10 +233,6 @@
 
 
 				}
-				uni.showToast({
-					title: '你点击了' + index,
-					icon: 'none'
-				})
 			},
 			//直播，成为会员点击响应方法
 			zhiboaction(index) {

@@ -32,8 +32,8 @@
 				</view>
 			</view>
 		</view>
-		<view class="onLoadCover border">
-			<image src="../../../static/zhibo/img_fengmian.png"></image>
+		<view class="onLoadCover border" @click="getCover">
+			<image :src="cover.imageList.length!=0?cover.imageList[0]:'../../../static/zhibo/img_fengmian.png'"></image>
 			<view >上传封面</view>
 		</view>
 		<view class="course border">
@@ -57,12 +57,13 @@
 				</view>
 			</view>
 			<view class="selectedItem">
-				<view class="selectedTitle">
+				<view class="selectedTitle" @click="selectedFilePDF">
 					<image src="/static/zhibo/icon_sucai.png"></image>
 					<view class="">选择素材（仅限MP4和PDF文件）</view>
 				</view>
 				<view class="selectedFile">
-					<image src="/static/zhibo/img_tianjia.png"></image>
+					<video :src="item" v-for="(item , index) in material.videoList"></video>
+					<image src="/static/zhibo/img_tianjia.png" @click="getMaterial"></image>
 				</view>
 			</view>
 		</view>
@@ -108,20 +109,91 @@
 				</view>
 			</view>
 		</view>
-		<view class="save">提交申请</view>
+		<view class="save">提交申请</view>	
+		<l-file ref="lFile"></l-file>
+		<choose ref="chooesFile" :image="isAddImage" :count="count" :video="isAddVideo" :pdf="isAddPDF"></choose>
 	</view>
 </template>
 
 <script>
+	import lFile from "@/components/l-file/l-file.vue"
+	import choose from "@/components/chooes-file/chooes-file.vue"
 	export default {
 		data() {
 			return {
 				imageList:[],
 				tempFile:[],
-				value:''
+				value:'',
+				isAddImage:true,
+				isAddVideo:false,
+				isAddPDF:false,
+				count:1,
+				cover:{
+					imageList:[],
+					tempFile:[]
+				},
+				material:{
+					videoList:[],
+					videoFile:[],
+					pdfList:[],
+					pdfFile:[]
+				}
 			}
 		},
+		components:{
+				lFile,
+				choose
+		},
+		onLoad() {
+			this.addEvent();
+		},
+		onUnload(){
+			uni.$off();
+		},
 		methods: {
+			addEvent(){
+				let that = this;
+				uni.$on("getImage",res=>{
+					switch (that.fileType){
+						case 'cover':
+						that.cover.imageList = res.res.tempFilePaths;
+						that.cover.tempFile = res.res.tempFiles;
+							
+							console.log(res.res);
+						break;
+					}
+				})
+				uni.$on("getVideo",res=>{
+					console.log(res);
+					switch (that.fileType){
+						case 'material':
+							that.material.videoList.push(res.res.tempFilePath);
+							that.material.videoFile.push(res.res.tempFile);
+							console.log(res.res,res.res)
+						break;
+					}
+				})
+				
+			},
+			showChoose(){
+				this.$refs.chooesFile.cancel(true);
+			},
+			getCover(){
+				this.isAddImage = true;
+				this.isAddVideo = false;
+				this.isAddPDF = false;
+				this.count = 1;
+				this.fileType = 'cover';
+				this.showChoose();
+			},
+			getMaterial(){
+				this.isAddImage = false;
+				this.isAddVideo = true;
+				this.isAddPDF = true;
+				this.count = 9;
+				this.fileType = 'material';
+				this.showChoose();
+			},
 			getImages(){
 				let that = this;
 				uni.chooseImage({
@@ -142,6 +214,10 @@
 			},
 			input(e){
 				this.value = e.detail.value
+			},
+			selectedFilePDF(){
+				console.log("1111")
+				this.showChoose();
 			}
 		}
 	}

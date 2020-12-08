@@ -13,7 +13,7 @@
 			<view class="nextBack" @click="setShowNext"></view>
 			<view class="nextContent">
 				<view class="" @click="setShowNext()">继续添加题目</view>
-				<view class="" @click="save()">结束</view>
+				<view class="" @click="save()">结束{{edit == 2?'修改':''}}</view>
 			</view>
 		</view>
 	</view>
@@ -28,7 +28,10 @@
 				isShowNext: false,
 				title: {
 					title: '',
-					type: 'title'
+					type: 'title',
+					text: '',
+					text1: '',
+					imgList: []
 				},
 				checkbox: [
 
@@ -38,16 +41,46 @@
 		},
 		onLoad(data) {
 			this.index = data.index;
+			this.id = data.id;
+			this.edit = data.edit?data.edit:1;
 			this.addEvent();
+			if(this.edit == 2){
+				this.getInfo();
+			}
 		},
 		onUnload() {
 			this.chooseEvent();
 		},
 		methods: {
+			getInfo(){
+				let that = this;
+				return request({
+					url:getApp().$api.pingdingliangbiao.getQuestionInfo,
+					type:"GET",
+					data:{
+						id:that.id
+					}
+				},true,true).then(data=>{
+					that.checkbox = JSON.parse(data.content);
+					that.title = {
+						title:data.describes,
+						type:'title',
+						text:data.describes,
+						text1:data.solution,
+						imgList:JSON.parse(data.file)
+						
+					};
+				})
+			},
 			addEvent() {
 				uni.$on('addItem', (res) => {
 					console.log(res);
-					this.$set(this.checkbox, res.index, res);
+					if(res.index == -1){
+						this.title = res;
+					}else{
+						this.$set(this.checkbox, res.index, res);
+					}
+					
 				})
 			},
 			chooseEvent() {
@@ -58,7 +91,7 @@
 					let d = this.validation();
 					if (this.title.title == '') {
 						uni.showToast({
-							title: '请输入问题标题',
+							title: '请添加问题标题',
 							duration: 1500,
 							icon: 'none'
 						});
@@ -76,7 +109,38 @@
 				this.isShowNext = !this.isShowNext;
 
 			},
+			upData(){
+				let that = this;
+				return request({
+					type:'PUT',
+					url:getApp().$api.pingdingliangbiao.editQuestionInfo,
+					data:{
+						content:that.checkboxStr,
+						type:that.index,//0单选，1多选，2说明
+						title:that.title.title,
+						describes:that.title.title,
+						existingProblem:that.title.text,
+						solution:that.title.text1,
+						file:JSON.stringify(that.title.imgList),
+						id:that.id
+					}
+				}).then(data=>{
+					uni.showToast({
+						title:'修改成功',
+						duration:1500,
+						mask:true
+					});
+					setTimeout(()=>{
+						uni.navigateBack();
+					},1500)
+					console.log(data);
+				})
+			},
 			save(){
+				if(this.edit == 2){
+					this.upData();
+					return false;
+				}
 				let that = this;
 				return request({
 					type:'POST',
@@ -84,7 +148,12 @@
 					data:{
 						content:that.checkboxStr,
 						type:that.index,//0单选，1多选，2说明
-						title:that.title.title
+						title:that.title.title,
+						classifyId:that.id,
+						describes:that.title.title,
+						existingProblem:that.title.text,
+						solution:that.title.text1,
+						file:JSON.stringify(that.title.imgList)
 					}
 				}).then(data=>{
 					uni.showToast({

@@ -11,33 +11,33 @@
 			</view>
 		</view>
 		<view class="headerBack" v-if="isShowTimeType" @click="setHeaderStatus()"></view>
-		<view class="list">
-			<view class="item" v-for="(v,k) in [1,2,3]" :key="k">
+		<view class="list" v-if="huanzhelist.length>=1">
+			<view class="item" v-for="(v,k) in huanzhelist" :key="k">
 				<view class="itemTop">
-						<image class="left" src=""></image>
+						<image class="left" :src="v.sex==1?'../../../static/gongzuotai/icon_nan.png':'../../../static/gongzuotai/icon_nv.png'"></image>
 						<view class="right">
 							<view class="name">
-								<view class="">刘胡兰</view>
-								<view >6床</view>
+								<view class="hidden" style="width:380rpx">{{v.name}}</view>
+								<view >{{v.bunk}}床</view>
 							</view>
 							<view class="info">
 								<view class="infoType">
-										<image src="../../../static/gongzuotai/icon_zhenduan1.png"></image>
-										<view>诊断：心脏病</view>
+										<image src="/static/gongzuotai/icon_zhenduan1.png"></image>
+										<view class="hidden" style="width:180rpx">诊断：{{v.illnessName?v.illnessName:''}}</view>
 								</view>
 								<view class="">
-									<view>性别：女</view>
-									<view>年龄：56</view>
+									<view>性别：{{v.sex == 1?'男':'女'}}</view>
+									<view>年龄：{{v.age}}</view>
 								</view>
 							</view>
 							<view class="id">
-								<view>编号：345678　</view>
-								<view @click="toPage('/pages/HuanzheDetail/HuanzheDetail')">查看患者</view>
+								<view>编号：{{v.idNo}}</view>
+								<view @click="toPage('/pages/HuanzheDetail/HuanzheDetail?id='+v.id)">查看患者</view>
 							</view>
 						</view>
 				</view>
 				<view class="itemBottom">
-					诊疗周期：2019.3.18 - 2020.7.17
+					诊疗周期：{{v.createTime}} - {{v.endTime?v.endTime:''}}
 				</view>
 			</view>
 		</view>
@@ -45,12 +45,31 @@
 </template>
 
 <script>
+	import request from "../../../utils/util.js"
 	export default {
 		data() {
 			return {
 				isShowTimeType:false,
-				timeType:-1
+				timeType:-1,
+				index:1,
+				size:10,
+				isGetMoreHuanZheList:true,
+				huanzhelist:[]
 			}
+		},
+		onReachBottom() {
+			if (this.isGetMoreHuanZheList) {
+				this.getMyPatientsList();
+			} else {
+				uni.showToast({
+					title: "暂无更多数据",
+					duration: 1500,
+					icon:"none"
+				})
+			}
+		},
+		onLoad() {
+			this.getMyPatientsList();
 		},
 		methods: {
 			setHeaderStatus(){
@@ -59,12 +78,47 @@
 			setTimeType(num){
 				this.setHeaderStatus();
 				this.timeType = num;
+				this.getMyPatientsList(true);
 			},
 			toPage(url) {
 				uni.navigateTo({
 					url,
 					animationDuration: 300,
 					animationType: 'slide-in-right'
+				})
+			},
+			getMyPatientsList(f = false) {
+				if(f){
+					this.index = 1;
+					this.huanzhelist = [];
+					this.isGetMoreHuanZheList = true;
+				}
+				let that = this;
+				return request({
+					url: that.$api.huanzhe.getMyPatientsList,
+					data: {
+						pageNo: that.index,
+						pageSize: that.size,
+						userId: getApp().globalData.userId,
+						order:that.timeType == 1?'desc':'asc',
+						column:'createTime'
+					},
+					type: 'GET'
+				}, true, true).then(data => {
+					let list = that.huanzhelist;
+					if(data.records.length != 0){
+						data.records.map((v,k)=>{
+							data.records[k].createTime = data.records[k].createTime?data.records[k].createTime.split(" ")[0]:'';
+							data.records[k].endTime = data.records[k].endTime?data.records[k].endTime.split(" ")[0]:''
+						})
+					}
+					if (data.records && data.records.length >= that.size) {
+						that.isGetMoreHuanZheList = true;
+					} else {
+						that.isGetMoreHuanZheList = false;
+					}
+					that.huanzhelist = that.huanzhelist.concat(data.records);
+					this.index++;
 				})
 			}
 		}
@@ -155,7 +209,7 @@
 	width:154rpx;
 	height: 154rpx;
 	border-radius: 50%;
-	background-color: #007AFF;
+
 }
 .right{
 	width:458rpx;

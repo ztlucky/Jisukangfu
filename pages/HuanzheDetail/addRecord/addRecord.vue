@@ -1,38 +1,122 @@
 <template>
 	<view class="viewPage">
 		<view class="viewHeader">
-			<yealuo placeholder="请选择标签" width="690" :binData="listText" padding="20rpx" :isShowAllBack="true" :selectIco="true"></yealuo>
+			<yealuo placeholder="请选择标签" checkType="checkbox" @getBackVal1="getBackVal" width="690" :binData="listText" padding="20rpx" :isShowAllBack="true" :selectIco="true"></yealuo>
 		</view>
-		<input placeholder="请输入内容..." />
+		<input placeholder="请输入内容..." v-model="text" />
 		<view class="list">
 			<view :class="((k)%3 == 1?'imageItem imageItem1':'imageItem')" v-for="(v,k) in list" :key="k">
 				<image class="deleteImage" @click="deleteImage(k)" src="../../../static/close.png"></image>
 
-				<image mode="aspectFill" :src="v.value" v-if="v.type == 'image'" class=""></image>
-				<video object-fit="cover" :src="v.value" v-else class=""></video>
+				<image mode="aspectFill" :src="v" v-if="tempFile[k].type == 'image'" class=""></image>
+				<video object-fit="cover" :src="v" v-else class=""></video>
 			</view>
-			<view :class="'addImage '+((list.length)%3 == 1?'imageItem1':'addImage')" @click="selectedFile">
-				<image src=""></image>
+			<view :class="'addImage '+((list.length)%3 == 1?'imageItem1':'addImage')" @click="getValue">
+				<image src="../../../static/img_icon.png"></image>
 			</view>
 		</view>
-		<view class="save">保存</view>
+		<view class="save" @click="save()">保存</view>
+		<choose ref="chooesFile" :image="isAddImage" :count="count" :video="isAddVideo" :pdf="isAddPDF"></choose>
 	</view>
 </template>
 
 <script>
 	import yealuo from "@/components/yealuo-select/yealuo-select.vue"
+	import choose from "@/components/chooes-file/chooes-file.vue";
+	import request from "../../../utils/util.js"
+	import onloadImage from "../../../utils/loadImage.js"
 	export default {
 		data() {
 			return {
-				listText: [{
-					value: 1,
-					id: 2
-				}],
+				listText: [],
 				list: [],
-				tempFile: []
+				tempFile: [],
+				isAddImage:true,
+				isAddVideo:false,
+				isAddPDF:false,
+				count:1,
+				text:'',
+				nowListTextId:0
 			}
 		},
+		onLoad(options) {
+			this.illnessId = options.illnessid?options.illnessid:'';
+			this.patientId = options.id?options.id:''
+			this.addEvent();
+			this.getList();
+		},
 		methods: {
+			addEvent(){
+				let that = this;
+				uni.$on("getImage",res=>{
+					that.list = that.list.concat(res.res.tempFilePaths);
+					let tempFile = [];
+					res.res.tempFiles.map(v=>{
+						tempFile.push({
+							type:'image',
+							value:v
+						})
+					})
+					that.tempFile = that.tempFile.concat(tempFile);
+					console.log(that.tempFile);
+				})
+				uni.$on("getVideo",res=>{
+					that.list = that.list.concat(res.res.tempFilePaths);
+					let tempFile = [];
+					res.res.tempFiles.map(v=>{
+						tempFile.push({
+							type:'video',
+							value:v
+						})
+					})
+					that.tempFile = that.tempFile.concat(tempFile);
+				})
+				
+			},
+			getBackVal(e){
+				console.log(e);
+				if(e.value.length == 0){
+					this.nowListTextId = 0
+				}else{
+					let list = [];
+					e.value.map(v=>{
+						list.push(v.split("|")[1])
+					});
+					this.nowListTextId = list.join(",")
+				}
+				// this.nowListTextId = e.value.split("|")[1]
+			},
+			getList(){
+				let that = this;
+				return request({
+					url:getApp().$api.huanzhe.getSymptomsList,
+					pageNo:1,
+					pageSize:200,
+					illnessId:that.illnessId
+				},true,true).then(data=>{
+					let list = data.records;
+					let list1 = [];
+					list.map(v=>{
+						list1.push({
+							id:v.id,
+							value:v.name
+						})
+					})
+					 that.listText = list1;
+					 console.log(that.listText)
+				})
+			},
+			showChoose(){
+				this.$refs.chooesFile.cancel(true);
+			},
+			getValue(){
+				this.isAddImage = true;
+				this.isAddVideo = true;
+				this.isAddPDF = false;
+				this.count = 9;
+				this.fileType = 'cover';
+				this.showChoose();
+			},
 			getImages() {
 				let that = this;
 				uni.chooseImage({
@@ -56,39 +140,57 @@
 				this.tempFile.splice(index, 1);
 				this.list.splice(index, 1);
 			},
-			selectedFile() {
+			save(){
+				let str = '';
 				let that = this;
-				uni.showActionSheet({
-					title: "选择上传类型",
-					itemList: ['图片', '视频'],
-					success: (res) => {
-						console.log(res)
-						if (res.tapIndex == 0) {
-							that.getImages()
-						} else {
-							that.getVideo();
-						}
-					}
-				})
-			},
-			getVideo() {
-				let that = this;
-				uni.chooseVideo({
-					success: function(res) {
-						console.log(res);
-						let list = [];
-						list.push({
-							type: "video",
-							value: res.tempFilePath
+				if(this.nowListTextId == 0){
+					str = '请选择标签'
+				}else if(this.text == ''){
+					str = '请输入内容'
+				}else if(this.list.length == 0){
+					str = '请选择文件'
+				}
+				if(str){
+					uni.showToast({
+						title:str,
+						duration:1500,
+						icon:"none"
+					});
+					return false;
+				}
+				onloadImage.init({
+					tempFiles:that.tempFile,
+					tempFilePaths:that.list
+				},(data,str)=>{
+					console.log(data.imageUrl,str);
+					return request({
+						url:getApp().$api.huanzhe.addRecord,
+						data:{
+							userId:getApp().globalData.userId,
+							illnessId:that.illnessId,
+							file:str,
+							patientId:that.patientId,
+							symptomIds:that.nowListTextId,
+							content:that.text
+						},
+						type:"POST"
+					}).then(data=>{
+						uni.showToast({
+							title:'保存成功',
+							duration:1500
 						})
-						that.list = that.list.concat(list);
-						that.tempFile = that.tempFile.concat([res.tempFile])
-					}
-				})
+						setTimeout(()=>{
+							uni.navigateBack();
+						},1500)
+						console.log(data);
+					})
+				}).upload();
+				
 			}
 		},
 		components: {
-			yealuo
+			yealuo,
+			choose
 		}
 	}
 </script>
@@ -130,7 +232,6 @@
 	.addImage image {
 		width: 50rpx;
 		height: 44rpx;
-		background-color: red;
 	}
 
 	.imageItem>image:nth-child(2) {
@@ -183,9 +284,10 @@
 		font-size: 28rpx;
 		font-family: PingFangSC-Regular, PingFang SC;
 		font-weight: 400;
-		color: #999999;
+		/* color: #999999; */
 		line-height: 50rpx;
 		margin-bottom: 10rpx;
 		margin-left: 30rpx;
+		padding-right: 30rpx;
 	}
 </style>

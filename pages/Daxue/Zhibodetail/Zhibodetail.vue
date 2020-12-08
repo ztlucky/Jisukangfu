@@ -87,7 +87,6 @@
 		  	            </view>
 		  	            
 		  </view>
-		 
 	 </scroll-view>	
 	 <view class="bottomview">
 	 	<text class="price">原价100/会员价90</text>
@@ -104,7 +103,6 @@
 
 <script>
 	    import zzxTabs from "@/components/zzx-tabs/zzx-tabs.vue"
-
 	export default {
 		components: {
 		            zzxTabs

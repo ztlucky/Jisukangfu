@@ -3,13 +3,13 @@
 		<view class="xuangMuInfo">
 			<view class="infoLeft">
 				<view class="leftName">
-					<view class="">六花blab</view>
-					<view class="">性别：女</view>
-					<view class="">年龄:56</view>
+					<view class="">{{info.huanZheInfo.name}}</view>
+					<view class="">性别：{{info.huanZheInfo.sex == 1?'男':'女'}}</view>
+					<view class="">年龄：{{info.huanZheInfo.age}}</view>
 				</view>
 				<view class="leftType">
 					<image src="../../../static/gongzuotai/icon_zhenduan1.png"></image>
-					<view class="leftTypeText">诊断：心脏病</view>
+					<view class="leftTypeText">诊断：{{info.huanZheInfo.illnessName}}</view>
 				</view>
 			</view>
 			<view class="infoRight">
@@ -73,15 +73,54 @@
 	</view>
 </template>
 <script>
+	import request from "../../../utils/util.js"
 	export default {
 		data() {
 			return {
 				isShowPerformWindow:false,
 				number:1,
-				isShowFinishWindow:false
+				isShowFinishWindow:false,
+				isGetMoreList:true,
+				index:1,
+				size:10
 			}
 		},
+		onReachBottom() {
+			// 触底的时候请求数据，即为上拉加载更多
+			if (this.isGetMoreList) {
+				this.getList();
+			} else {
+				uni.showToast({
+					title: "暂无更多数据",
+					duration: 1500,
+					icon:"none"
+				})
+			}
+		},
+		onLoad(options) {
+			this.id = options.id?options.id:0;
+			this.init();
+		},
 		methods: {
+			init(){
+				this.getList();
+				this.info = uni.getStorageSync("huanZheInfo");
+				console.log(this.info);
+			},
+			getList(){
+				let that = this;
+				return request({
+					url:getApp().$api.huanzhe.getRehabilitationList,
+					type:"GET",
+					data:{
+						pageNo:that.index,
+						pageSize:that.size,
+						patientId:that.id
+					}
+				},true,true).then(data=>{
+					console.log(data);
+				})
+			},
 			setShowPerformWindowStatus(){
 				this.isShowPerformWindow = !this.isShowPerformWindow;
 			},
@@ -116,9 +155,6 @@
 					animationType: 'slide-in-right'
 				})
 			}
-		},
-		created() {
-			
 		}
 	}
 </script>

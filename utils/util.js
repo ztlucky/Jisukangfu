@@ -7,12 +7,14 @@ function request(options = {},isShowLoading = true,isBackData = false) {
 			mask:true
 		});
 	}
+	options = filterUrl(options);
 	return new Promise((resolved, rejected) => {
 			uni.request({
 				url: options.url,
 				data: options.data,
 				method: options.type,
 				success: (res) => {
+					
 					if(res.data.code !== 200){
 						uni.showToast({
 							title:res.data.message,
@@ -31,14 +33,31 @@ function request(options = {},isShowLoading = true,isBackData = false) {
 					
 				},
 				fail:(err) => {
-					rejected(err)
+					rejected(err);
 				},
-				complete() {
+				complete(data) {
 					if(isShowLoading){
-						uni.hideLoading()
+						uni.hideLoading();
 					}
 				}
 			});
 		})
+		
+		
+	}
+	function filterUrl(config){
+		switch(config.type){
+			case 'GET':
+				if(!config.data.userId){
+					config.data.userId  = getApp().globalData.userId
+				}
+			break;
+			case 'POST':
+				if(!config.data.userId){
+					config.data.userId  = getApp().globalData.userId
+				}
+			break;
+		}
+		return config;
 	}
 export default request;

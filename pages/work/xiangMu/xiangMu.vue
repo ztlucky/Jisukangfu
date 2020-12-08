@@ -3,64 +3,104 @@
 		<nav-bar  bgColor="#31D880" backState="1000" fontColor="#ffffff" title="项目" type="ordinary">
 			<view slot="right" v-if="isEdit" @click="save" class="navRight">保存</view>
 		</nav-bar>
-		<view class="list">
-			<view class="item" v-for="(v,k) in [1,2,3,4,5,6,7,8,9]" :key="k">
+		<view class="list" v-if="list.length >=1">
+			<view class="item"   @click="toPage(isEdit?k:('none'),!isEdit,k)" v-for="(v,k) in list" :key="k">
 				<view class="itemTop">
 					<view class="left">
 						<view class="dot"></view>
-						<view class="leftTitle hidden">PTWPEWE</view>
+						<view class="leftTitle hidden">{{v.name}}</view>
 					</view>
-					<image src="" v-if="isEdit"></image>
+					<image v-if="isEdit" :src="v.isSelected?'/static/order/icon_xuanzhong.png':' '"></image>
 				</view>
 				<view class="xiangMuList">
-					<view class="xiangMuItem" >
-						<view class="name">项目一</view>
+					<view class="xiangMuItem" v-for="(item,index) in v.treatmentProgramItemList">
+						<view class="name hidden">{{item.title}}</view>
 						<view class="xiangMuzItem">
 							<view class="dot"></view>
-							<view class="itemText">时间：90min</view>
+							<view class="itemText">时间：{{item.time}}min</view>
 						</view>
 						<view class="xiangMuzItem">
 							<view class="dot"></view>
-							<view class="itemText">费用：50</view>
+							<view class="itemText">费用：{{item.price}}</view>
 						</view>
 						<view class="xiangMuzItem">
 							<view class="dot"></view>
-							<view class="itemText">得分：50</view>
-						</view>
-					</view>
-					<view class="xiangMuItem">
-						<view class="name">项目一</view>
-						<view class="xiangMuzItem">
-							<view class="dot"></view>
-							<view class="itemText">时间：90min</view>
-						</view>
-						<view class="xiangMuzItem">
-							<view class="dot"></view>
-							<view class="itemText">费用：50</view>
-						</view>
-						<view class="xiangMuzItem">
-							<view class="dot"></view>
-							<view class="itemText">得分：50</view>
+							<view class="itemText">得分：{{item.score}}</view>
 						</view>
 					</view>
 				</view>
 			</view>
 		</view>
-		<view class="bottom" v-if="!isEdit" @click="setNowStatus">编辑评定量表分类</view>
+		<view class="bottom" v-if="!isEdit" @click="setNowStatus">编辑新的项目</view>
 		<view class="bottomNav" v-else>
-			<view class="">删除选中的分类</view>
-			<view class="">添加新的分类</view>
+			<view class="" @click="deleteItem">删除选中的项目<text v-if="num">({{num}})</text></view>
+			<view class="" @click="toPage('/pages/work/editXiangMu/editXiangMu')">添加新的项目</view>
 		</view>
 	</view>
 </template>
 
 <script>
-	import navBar from "../../../components/zhouWei-navBar/index.vue"
+	import navBar from "../../../components/zhouWei-navBar/index.vue";
+	import request from "../../../utils/util.js"
 	export default {
 		data() {
 			return {
-				isEdit:false
+				isEdit:false,
+				size:20,
+				list:[
+					{
+						name:'PTWpeWE',
+						isSelected:false,
+						list:[{
+							name:"项目一",
+							time:'155min',
+							price:'1586',
+							score:'15'
+						},
+						{
+							name:"项目15866",
+							time:'155min',
+							price:'1586',
+							score:'15'
+						}]
+					},
+					{
+						name:'PTWpeWE',
+						isSelected:false,
+						list:[{
+							name:"项目一",
+							time:'155min',
+							price:'1586',
+							score:'15'
+						},
+						{
+							name:"项目15866",
+							time:'155min',
+							price:'1586',
+							score:'15'
+						}]
+					},
+					{
+						name:'PTWpeWE',
+						isSelected:false,
+						list:[{
+							name:"项目一",
+							time:'155min',
+							price:'1586',
+							score:'15'
+						},
+						{
+							name:"项目15866",
+							time:'155min',
+							price:'1586',
+							score:'15'
+						}]
+					}
+				]
 			}
+		},
+		onShow() {
+			this.getList(true);
 		},
 		methods: {
 			setNowStatus(){
@@ -68,7 +108,104 @@
 			},
 			save(){
 				this.setNowStatus();
+			},
+			toPage(url,f = true,index = 0){
+				let that = this;
+				if(!f){
+					console.log(url);
+					this.list[url].isSelected = !this.list[url].isSelected;
+					this.$set(this.list,url,this.list[url])
+					let num = 0;
+					this.list.map((v,k)=>{
+						if(v.isSelected){
+							num++;
+						}
+					})
+					this.num = num;
+				}else{
+					console.log(url)
+					if(url == 'none') return
+						uni.navigateTo({
+							url,
+							animationDuration: 300,
+							animationType: 'slide-in-right'
+						})
+					
+					
+				}
+			},
+			getList(f = false){
+				if(f){
+					this.index = 1;
+					this.list = [];
+					this.num = 0;
+					this.isEdit = false;
+				}
+				let that = this;
+				return request({
+					url:getApp().$api.huanzhe.getProgramList,
+					type:'GET',
+					data:{
+						pageNo:that.index,
+						pageSize:that.size,
+						condition:true
+					}
+				},true,true).then(data=>{
+					console.log(data);
+					if(data.records.length>=that.size){
+						that.isGetMoreList = true
+					}else{
+						that.isGetMoreList = false
+					}
+					that.list = that.list.concat(data.records);
+					that.index++;
+				})
+			},
+			deleteItem() {
+				let that = this;
+				if (this.num == 0) {
+					uni.showToast({
+						title: '请选择要删除的分类',
+						duration: 1500,
+						icon: "none",
+						mask: true
+					})
+				} else {
+					let ids = [];
+					this.list.map(v => {
+						if (v.isSelected) {
+							ids.push(v.id)
+						}
+					});
+					ids = ids.join(",");
+					uni.showModal({
+						title: '温馨提示',
+						content: '您确定要删除所选分类？',
+						confirmColor: '#31D880',
+						success: function(res) {
+							if (res.confirm) {
+								return request({
+									type: "DELETE",
+									url: getApp().$api.huanzhe.deleteProgram+`?ids=${ids}`
+								}).then(data => {
+									uni.showToast({
+										title: '删除成功',
+										duration: 1500,
+										mask: true
+									})
+									setTimeout(() => {
+										that.getList(true);
+										that.isEdit = false;
+										that.num = 0;
+									}, 1000)
+								})
+							}
+						}
+					})
+
+				}
 			}
+		
 		},
 		components:{
 			navBar
@@ -89,10 +226,11 @@
 		background-color: #FFFFFF;
 		border-radius: 12rpx;
 		margin:30rpx;
-		padding-top:46rpx;
+		padding-top:32rpx;
 		padding-bottom: 40rpx;
 	}
 	.item{
+		margin-top:14rpx;
 		padding-bottom: 8rpx;
 	}
 	.itemTop{
@@ -100,6 +238,10 @@
 		align-items: center;
 		justify-content: space-between;
 		height: 40rpx;
+	}
+	.itemTop image{
+		background-color: #DDDDDD;
+		border-radius: 50%;
 	}
 	.item .left{
 		display: flex;
@@ -120,6 +262,7 @@
 		justify-content: flex-end;
 		margin-left: 72rpx;
 		border-bottom:2rpx solid #EAEAEA;
+		margin-top: 20rpx;
 	}
 	.xiangMuItem{
 		display: flex;
@@ -128,12 +271,17 @@
 		/* padding-left: 72rpx; */
 		padding-bottom: 20rpx;
 		
+		
 	}
 	.leftTitle{
 		max-width: 540rpx;
+		font-size: 28rpx;
+		font-family: PingFangSC-Regular, PingFang SC;
+		font-weight: 400;
+		color: #333333;
 	}
 	.xiangMuItem .name{
-		
+		max-width: 80rpx;
 		height: 40rpx;
 		line-height: 40rpx;
 		padding:0 14rpx;
@@ -224,7 +372,6 @@
 	.itemTop image{
 		width:24rpx;
 		height: 24rpx;
-		background-color: red;
 		margin-right: 30rpx;
 		border-radius: 50%;
 	}

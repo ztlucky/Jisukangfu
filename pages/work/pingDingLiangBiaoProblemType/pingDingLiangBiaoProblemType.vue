@@ -4,10 +4,10 @@
 			<view slot="right" v-if="isEdit" @click="save" class="navRight">保存</view>
 		</nav-bar>
 		<view class="list" v-if="list.length!=0">
-			<view class="item" @click="toPage(isEdit?k:'/pages/work/pingDingLiangBiaoInfo/pingDingLiangBiaoInfo',!isEdit)" v-for="(v,k) in list" :key="k">
+			<view class="item" @click="toPage(isEdit?k:'/pages/work/pingDingLiangBiaoInfo/pingDingLiangBiaoInfo?id='+v.id,!isEdit)" v-for="(v,k) in list" :key="k">
 				<view class="itemLeft"></view>
 				<view class="itemRight">
-					<view class="rightText hidden">{{v.text}}</view>
+					<view class="rightText hidden">{{v.name}}</view>
 					<view class="rightView" v-if="!isEdit">
 						<view>{{v.value}}</view>
 						<image src="../../../static/f_my_kecheng_arrow.png"></image>
@@ -21,7 +21,7 @@
 		<view class="bottom" v-if="!isEdit" @click="setNowStatus">编辑量表问题分类</view>
 		<view class="bottomNav" v-else>
 			<view class="" @click="deleteItem">删除选中的分类({{num}})</view>
-			<view class="" @click="toPage('/pages/work/createProblemType/createProblemType')">添加新的分类</view>
+			<view class="" @click="toPage('/pages/work/createProblemType/createProblemType?id='+id)">添加新的分类</view>
 		</view>
 	</view>
 </template>
@@ -40,7 +40,15 @@
 			isGetMoreList: true
 			}
 		},
+		onShow() {
+			console.log('onShow')
+			if(this.id !=-1){
+				this.getList(true);
+				this.isEdit = false;
+			}	
+		},
 		onLoad(data){
+			console.log('onLoad')
 			if(data.id){
 				this.id = data.id;
 				this.getList();
@@ -56,6 +64,7 @@
 		},
 		methods: {
 			deleteItem(){
+				let that = this;
 				if(this.num == 0){
 					uni.showToast({
 						title:"请选择要删除的分类",
@@ -75,7 +84,29 @@
 					this.list = list;
 					this.num = 0;
 				}else{
-					
+					let ids = [];
+					this.list.map(v=>{
+						if(v.isSelected){
+							ids.push(v.id);
+						}
+					})
+					ids = ids.join(",");
+					return request({
+						url:getApp().$api.pingdingliangbiao.deleteQuestionType+`?ids=${ids}`,
+						type:"DELETE",
+						data:{
+							
+						}
+					}).then(data=>{
+						uni.showToast({
+							title:'操作成功',
+							duration:1500
+						});
+						setTimeout(()=>{
+							that.isEdit = false;
+							that.getList(true);
+						},1000);
+					})
 				}
 			},
 			addEvent(){
@@ -151,19 +182,34 @@
 					})
 				}
 			},
-			getList(){
+			getList(f = false){
+				if(f){
+					this.index = 1;
+					this.list = [];
+				}
+				if(this.isRun) return;
+				this.isRun = true;
 				let that = this;
 				return request({
-					url:getApp().$api.pingdingliangbiao.getQuestionList,
+					url:getApp().$api.pingdingliangbiao.getQuestionType,
 					type:"GET",
 					data:{
 						pageNo:that.index,
 						pageSize:that.size,
-						userId:getApp().globalData.userId,
-						typeid:that.id
+						ratingScaleId:that.id
 					}
-				}).then(data=>{
-					console.log(data);
+				},true,true).then(data=>{
+					
+					if(data.records.length >= that.size){
+						that.isGetMoreList = true;
+					}else{
+						that.isGetMoreList = false
+					}
+					that.list = that.list.concat(data.records);
+					that.index++;
+					that.isRun = false;
+				}).catch(err=>{
+					that.isRun = false;
 				})
 			}
 		}

@@ -4,7 +4,7 @@
 			<view slot="right" v-if="isEdit" @click="save" class="navRight">保存</view>
 		</nav-bar>
 		<view class="list" v-if="list.length !=0">
-			<view class="item" @click="toPage(isEdit?k:('/pages/work/pingDingLiangBiaoProblemType/pingDingLiangBiaoProblemType?id=' + v.typeId),!isEdit)" v-for="(v,k) in list" :key="k">
+			<view class="item" @click="toPage(isEdit?k:('/pages/work/pingDingLiangBiaoProblemType/pingDingLiangBiaoProblemType?id=' + v.id),!isEdit,k)" v-for="(v,k) in list" :key="k">
 				<view class="itemLeft"></view>
 				<view class="itemRight">
 					<view class="rightText hidden">{{v.name}}</view>
@@ -61,7 +61,8 @@
 			save(){
 				this.setNowStatus();
 			},
-			toPage(url,f = true){
+			toPage(url,f = true,index = 0){
+				let that = this;
 				if(!f){
 					this.list[url].isSelected = !this.list[url].isSelected;
 					let num = 0;
@@ -72,11 +73,14 @@
 					})
 					this.num = num;
 				}else{
-					uni.navigateTo({
-						url,
-						animationDuration: 300,
-						animationType: 'slide-in-right'
-					})
+					
+						uni.navigateTo({
+							url,
+							animationDuration: 300,
+							animationType: 'slide-in-right'
+						})
+					
+					
 				}
 			},
 			getList(f = false){
@@ -106,6 +110,7 @@
 			}
 		}
 	}
+
 </script>
 
 <style scoped>

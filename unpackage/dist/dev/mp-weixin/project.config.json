@@ -40,6 +40,8 @@
   "libVersion": "",
   "appid": "touristappid",
   "projectname": "JisuKangfu",
+  "simulatorType": "wechat",
+  "simulatorPluginLibVersion": {},
   "condition": {
     "search": {
       "list": []
