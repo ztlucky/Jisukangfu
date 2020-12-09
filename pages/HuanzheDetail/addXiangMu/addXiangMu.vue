@@ -472,7 +472,7 @@
 						doctorAdviceType:that.listValue1.value,
 						frequency:that.listValue2.id,
 						patientId:that.id,
-						treatmentProgramId:that.listValue.value,
+						treatmentProgramId:that.listValue.id,
 						treatmentProgramName:that.listValue.value,
 						type:0,
 						shortGoals:that.duanqimubiao,

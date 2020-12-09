@@ -11,26 +11,26 @@
 				<view :class="nowSymptomIndex == index?'selected':''" @click="setSymptomIndex(index)" v-for="(item,index) in illnessList[nowIllnessIndex].symptomList">{{item.name}}</view>
 			</view>
 			<view class="rightList">
-				<view class="rightItem" v-for="(i,k) in [1,2,3,4,5,6,7,8,9,12,]" :key="k">
+				<view class="rightItem" v-for="(v,k) in huanZheList" :key="k">
 					<view class="rightItemName">
 						<view class="nameLeft">
-							<view class="name">刘宋琦{{k}}</view>
+							<view class="name hidden">{{v.name}}</view>
 							<view class="nameType">
-								<image src=""></image>
-								<view class="typeText">诊断：心脏病</view>
+								<image src="../../../static/gongzuotai/icon_zhenduan1.png"></image>
+								<view class="typeText hidden">诊断：心脏病</view>
 							</view>
 						</view>
-						<view class="nameRight">7床</view>
+						<view class="nameRight">{{v.bunk}}床</view>
 					</view>
 					<view class="rightItemAge">
-						<view class="">性别：女</view>
-						<view class>年龄：56</view>
+						<view class="">性别：{{v.sex == 1?"男":"女"}}</view>
+						<view class>年龄：{{v.age}}</view>
 					</view>
 					<view class="rightItemId">
-						<view class="id">编号：45678987654</view>
-						<view class="itemIdButton" @click="toPage('/pages/HuanzheDetail/huanZheInfo/huanZheInfo')">查看患者</view>
+						<view class="id">编号：{{v.idNo?v.idNo:''}}</view>
+						<view class="itemIdButton" @click="toPage('/pages/HuanzheDetail/huanZheInfo/huanZheInfo',k)">查看患者</view>
 					</view>
-					<view class="rightItemDate">诊疗周期：2020.09.10-2020-11.07</view>
+					<view class="rightItemDate">诊疗周期：{{v.createTime}}-{{v.endTime}}</view>
 				</view>
 			</view>
 		</view>
@@ -56,6 +56,17 @@
 		},
 		onLoad() {
 			this.init();
+		},
+		onReachBottom() {
+			if (this.isGetMoreHuanZheData) {
+				this.getHuanZheList();
+			} else {
+				uni.showToast({
+					title: "暂无更多数据",
+					duration: 1500,
+					icon:"none"
+				})
+			}
 		},
 		methods: {
 			init(){
@@ -99,25 +110,42 @@
 					this.huanZheInde = 1;
 					this.huanZheList = []
 				}
-				let id = this.illnessList[this.nowIllnessIndex].symptomList[this.nowSymptomIndex];
+				let id = this.illnessList[this.nowIllnessIndex].symptomList[this.nowSymptomIndex]?this.illnessList[this.nowIllnessIndex].symptomList[this.nowSymptomIndex].id:0;
 				let that = this;
 				if(id){
 					return request({
-						url:getApp().$api.huanzhe.getRecordList,
+						url:getApp().$api.work.getCompareList,
 						type:"GET",
 						data:{
 							condition:true,
 							pageNo:that.huanZheInde,
 							pageSize:that.huanZheSize,
-							symptomIds:id
+							symptomIds:`,${id},`
 						}
 					},true,true).then(data=>{
 						console.log(data);
-						// that.isGetMoreHuanZheData = 
+						if(data.records){
+							data.records.map((v,k)=>{
+								data.records[k].createTime = data.records[k].createTime?data.records[k].createTime.split(" ")[0]:'';
+								data.records[k].endTime = data.records[k].endTime?data.records[k].endTime.split(" ")[0]:''
+							})
+						}
+						if(data.records.length >= that.huanZheSize){
+							that.isGetMoreHuanZheData = true;
+						}else{
+							that.isGetMoreHuanZheData = false
+						}
+						that.huanZheList = that.huanZheList.concat(data.records);
+						that.huanZheInde++;
 					})
 				}
 			},
-			toPage(url) {
+			toPage(url,index) {
+				if(url == '/pages/HuanzheDetail/huanZheInfo/huanZheInfo'){
+					let item = this.huanZheList[index];
+					url = `/pages/HuanzheDetail/huanZheInfo/huanZheInfo?id=${item.id}`;
+					uni.setStorageSync('huanzhe',item)
+				}
 				uni.navigateTo({
 					url,
 					animationDuration: 300,
@@ -233,7 +261,6 @@
 		width:28rpx;
 		height: 28rpx;
 		border-radius: 50%;
-		background-color: red;
 		margin:4rpx;
 	}
 	.nameType .nametext{
@@ -242,6 +269,7 @@
 		font-family: PingFangSC-Semibold, PingFang SC;
 	}
 	.name{
+		max-width:100rpx;
 		padding-right: 24rpx;
 		font-size:32rpx;
 		color:#333333;
@@ -291,5 +319,7 @@
 		font-size:24rpx;
 		color: #333333;
 	}
-	
+	.typeText{
+		max-width: 200rpx;
+	}
 </style>

@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="contentview">
-			<view class="itemImageView">
+			<view class="itemImageView" @click="getImages()">
 				<image src="" mode="" class="usericon"></image>
 				<text class="title">设置头像</text>
 				<image src="../../../static/icon_jiantou.png" class="rightIcon"></image>
@@ -36,13 +36,39 @@
 </template>
 
 <script>
+	import request from "../../../utils/util.js"
+	import onloadImage from '../../../utils/loadImage.js'
 	export default {
 		data() {
 			return {
-				
+				imageList:[],
+				tempFile:[]
 			}
 		},
 		methods: {
+			getImages(){
+				let that = this;
+				uni.chooseImage({
+				    count: 1,
+				    sizeType: ['original', 'compressed'],
+				    sourceType: ['album'],
+				    success: function(res) {
+				        // 预览图片
+						console.log(res);
+				        that.imageList = (res.tempFilePaths);
+						that.tempFile = (res.tempFiles)
+				    }
+				    });
+			},
+			savePortrait(){
+				onloadImage.init({
+					tempFiles:that.tempFile,
+					tempFilePaths:that.imageList
+				},(data,str)=>{
+					console.log(data.imageUrl,str);
+					
+				}).upload();
+			},
 			resetPassword(){
 				uni.navigateTo({
 					url:'../ResetPassword/ResetPassword',
