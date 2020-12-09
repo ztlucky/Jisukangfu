@@ -1,5 +1,5 @@
- // let apiRoot = 'http://www.huaxiakangfu.com:8090/';
-let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
+  let apiRoot = 'http://www.huaxiakangfu.com:8090/';
+ //let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
 let api = {
 	common: {
 		aboutUs: apiRoot + 'common/aboutUs.html',
@@ -32,7 +32,16 @@ let api = {
 		//朋友在看
 		getPengyouzaikanList:apiRoot +"app/home_page/getFriendLook",
 		//轮播图
-		getBannerImageList:apiRoot +"app/home_page/queryList"
+		getBannerImageList:apiRoot +"app/home_page/queryList",
+		
+	},
+	zhibo:{
+		//直播详情
+		getLivecourseDetailInfo:apiRoot +"jeecg-boot/live/live/queryById",
+		//收藏直播 
+ 		favLivecourse:apiRoot +"user_live_bind/userLiveBind/add",
+		//取消收藏直播
+		unfavLivecourse:apiRoot +"user_live_bind/userLiveBind/delMyLive"
 	},
 	pingdingliangbiao:{
 		//获取评定列表List
@@ -122,6 +131,6 @@ let api = {
 	},
 	work:{
 		'getInfo':`${apiRoot}patient/patient/YSWorkbench`
-	}
+	},
 };
 export default api;

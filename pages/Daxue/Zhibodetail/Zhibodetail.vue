@@ -2,25 +2,24 @@
 	 <view  class="bgview" >
 	   <scroll-view scroll-y="true" :style="[{height:scrollviewHeight + 'px'}]">
 		   <view class="videoImageview"  :style="[{height:videoImageHeight + 'px'}]">
- 		   	<image  ></image>
-			<image class="playImageView"></image>
-		  </view>
+ 		   	<image :src="cover" ></image>
+ 		  </view>
 		  <view class="secondView">
 		  	<view class="priceview">
 				<text class="price1">¥</text>
-		  		<text class="price">156</text>
-				<text class="huiyuanprice">会员价：¥100</text>
+		  		<text class="price">{{detailInfo.cost}}</text>
+				<text class="huiyuanprice">会员价：¥ {{detailInfo.memberCost}}</text>
 		  	</view>
 			<view class="tipview">
-				<text class="tiptext">会员价¥100</text>
+				<text class="tiptext">会员价¥ {{detailInfo.memberCost}}</text>
 				<text class="tiptext">直播结束后可回放</text>
 			</view>
 			<view class="timeview">
 				<image src="../../../static/zhibo/icon_shijian.png"></image>
-				<text>2020-06-31（周五）21:00</text>
-				<text class="buynumber">286人购买</text>
+				<text>{{detailInfo.startTime}}</text>
+				<text class="buynumber">{{detailInfo.buyCount}}人购买</text>
 			</view>
-			<text class="livelessonTitle">华南地区较早开展种植诊疗业务规范化的医疗中心华南地区较早开展种植诊疗</text>
+			<text class="livelessonTitle">{{detailInfo.title}}</text>
 		  </view>
 		  <!-- //讲师 -->
 		  
@@ -89,9 +88,9 @@
 		  </view>
 	 </scroll-view>	
 	 <view class="bottomview">
-	 	<text class="price">原价100/会员价90</text>
-		<view class="favview">
-			<image src="../../../static/zhibo/icon_shoucang.png"></image>
+	 	<text class="price">原价 {{detailInfo.cost}}/会员价 {{detailInfo.memberCost}}</text>
+		<view class="favview" @click="favAction">
+			<image :src="isfav == true ?'../../../static/zhibo/icon_yishoucang.png':'../../../static/zhibo/icon_shoucang.png'" ></image>
 			<text >收藏本课</text>
 			
 		</view>
@@ -103,15 +102,21 @@
 
 <script>
 	    import zzxTabs from "@/components/zzx-tabs/zzx-tabs.vue"
+		import request from '../../../utils/util.js'
+		
 	export default {
 		components: {
 		            zzxTabs
 		        },
 		data() {
 			return {
+				courseID:'',
 				videoImageHeight:211,
 				scrollviewHeight:0,
 				items:["详情","学生"],
+				detailInfo:'',
+				isfav:false,
+				cover:"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2062091410,3517489587&fm=26&gp=0.jpg",//封面
 			activeColor:'#000000',
 			current:0,
 			line_width:"8%",
@@ -166,9 +171,9 @@
 			}
 		},
 		onLoad:function(e){
- 			uni.showToast({
-				title:"直播课id="+e.id
-			})
+			//获取直播详情
+			this.courseID = e.id;
+ 			this.getLivedetail();
 			},
 	   onShow:function(e){
 	   	this.videoImageHeight = this.$app.getwindowWidth()*0.563-44
@@ -176,16 +181,105 @@
 	   },	 
 			
 		methods: {
+			/*获取直播详情*/
+			getLivedetail() {
+				let that = this;
+				return request({
+					url: getApp().$api.zhibo.getLivecourseDetailInfo,
+					type: 'GET',
+					data:{
+						id:2,
+						user_id:24
+					}
+				},true,true).then(data=>{
+					that.detailInfo = data ;
+					
+ 					console.log(data)
+					uni.showToast({
+						title:data,
+						icon:null
+					})
+  				})
+				 
+			},
+			//添加收藏
+			 favAction(){
+				 let that = this;
+				 if(that.isfav == true){
+					 //取消收藏
+					 this.$app.request({
+					 	url:  getApp().$api.zhibo.unfavLivecourse,
+					 	method: 'POST',
+					 	data: {
+					 		userid:getApp().globalData.userId,
+					 		bindtype:1,
+					 		liveid:2,//that.courseID	
+					 	},
+					 	dataType: 'json',
+					 	success: res => {
+					 		if (res.code == 200) {
+					              that.isfav = false;
+					 							  uni.showToast({
+					 							  	title:res.message,
+					 								icon:'none'
+					 							  })
+					 		} else {
+					 			uni.showToast({
+					 				title:res.message,
+					 			    icon:'none'
+					 			})
+					 		}
+					 	},
+					 	complete: res => {}
+					 });
+					  
+				 }else{
+					 //添加收藏
+					 
+					this.$app.request({
+						url:  getApp().$api.zhibo.favLivecourse,
+						method: 'POST',
+						data: {
+							userid:getApp().globalData.userId,
+							bindtype:1,
+							liveid:2,//that.courseID	
+						},
+						dataType: 'json',
+						success: res => {
+							if (res.code == 200) {
+					             that.isfav = true;
+												  uni.showToast({
+												  	title:res.message,
+													icon:'none'
+												  })
+							} else {
+								uni.showToast({
+									title:res.message,
+								    icon:'none'
+								})
+							}
+						},
+						complete: res => {}
+					});
+					 
+				 }
+				 
+			 },
+			 
 			 onClickItem(e) {
 			            if (this.current !== e.currentIndex) {
 			                this.current = e.currentIndex;
 			            }
 			          },
-					  //确认订单
-				
+			//确认订单	传递所需的参数
 			comfirmOrder(){
+				//const item = {courseID:2,cover:this.cover,cost:this.detailInfo.cost,title:this.detailInfo.title,time:this.detailInfo.beginTime}
+				
+			const item = {courseID:2,cover:this.cover,cost:25,title:"测试购买课程",time:"2020-12-20 06:25:30"}
 				uni.navigateTo({
-					url:'../../Order/ConfirmOrder/ConfirmOrder'
+				     url:'../../Order/ConfirmOrder/ConfirmOrder?item='+ encodeURIComponent(JSON.stringify(item)),
+					animationType:'slide-in-right',
+					animationDuration:300
 				})
 			}	
 		}

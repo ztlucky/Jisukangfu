@@ -39,7 +39,7 @@
 			second:{
 				type:Boolean,
 				default:true
-			}
+			},
 		},
 		watch:{
 			value(val){
@@ -67,7 +67,8 @@
 				let curHour=curDate.curHour;
 				let curMinute=curDate.curMinute;
 				let curSecond=curDate.curSecond;
-				for(let hour=0;hour<24;hour++){
+				 
+ 				for(let hour=0;hour<24;hour++){
 					hours.push(this.formatNum(hour));
 				}
 				for(let minute=0;minute<60;minute++){

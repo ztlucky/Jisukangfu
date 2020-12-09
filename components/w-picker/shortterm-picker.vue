@@ -101,13 +101,13 @@
 					let label=year+"-"+this.formatNum(month)+"-"+this.formatNum(day);
 					switch(i){
 						case 0:
-							label="今天";
+							//label="今天";
 							break;
 						case 1:
-							label="明天";
+							//label="明天";
 							break;
 						case 2:
-							label="后天";
+							//label="后天";
 							break
 					}
 					dates.push({
@@ -228,7 +228,7 @@
 				date=(arr[0]||arr[0]==0)?data.dates[arr[0]]||data.dates[data.dates.length-1]:"";
 				hour=(arr[1]||arr[1]==0)?data.hours[arr[1]]||data.hours[data.hours.length-1]:"";
 				minute=(arr[2]||arr[2]==0)?data.minutes[arr[2]]||data.minutes[data.minutes.length-1]:"";
-				result=full=`${date.label+' '+hour.label+':'+minute.label+':00'}`;
+				result=full=`${date.label+' '+hour.label+':'+minute.label+''}`;
 				obj={
 					date,
 					hour,

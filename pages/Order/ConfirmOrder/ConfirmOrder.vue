@@ -3,17 +3,17 @@
 		<scroll-view scroll-y="true" :style="[{height:scrollviewHeight + 'px'}]">
 				 
 				<view class="orderLessonview">
-					<image  class="lessonImage" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1603357169774&di=0a278af01c174d7a9fb8da2c368bd1c1&imgtype=0&src=http%3A%2F%2Fwww.ceopx.cn%2Fuploadfile%2F2018%2F0511%2F20180511025611243.jpg"></image>
+					<image  class="lessonImage"  :src="cover"></image>
 					
 					<view class="lessonTextView">
-						<text class="lessonTitle">失语症初步诊疗</text>
+						<text class="lessonTitle">{{title}}</text>
 						<view class="middleview">
-							<text class="timeview">2020-06-21 08:00</text>
+							<text class="timeview">{{beginTime}}</text>
 							<text class="stautusview">可回放</text>
 						</view>
 						<view class="priceview">
 							<text class="price1">¥</text>
-							<text class="price">356</text>
+							<text class="price">{{cost}}</text>
 						</view>
 					</view>
 					
@@ -21,7 +21,7 @@
 				 <view class="secondPriceView">
 				 	<view class="secondItemview">
 				 		<text class="lefttext">课程价格</text>
-						<text class="righttext">¥400</text>
+						<text class="righttext">¥ {{cost}}</text>
 				 	</view>
 					<view class="secondItemview">
 						<text class="lefttext">优惠价格</text>
@@ -110,59 +110,37 @@
 				couponviewheight:0,
 				couponscrollviewHeight :0,
 				currentCouponindex:null,
-				ischoosePay:false,//判断是否勾选支付方式
+				ischoosePay:true,//判断是否勾选支付方式
 				items:["优惠券","邀请码"],
 				invitecode:'',
 				activeColor:'#000000',
 				current:0,
 				line_width:"8%",
 				line_color:'#31D880',
-				info:[{
-					name:'车新颖',
-										colorClass: 'uni-bg-red',
-										url: 'http://39.99.215.169:8090/sys/common/static/temp/aa_1598422546786.jpg',
-										content: '内容 A',
-										id:"1"
-									},
-									{
-										name:'车新颖',
-										colorClass: 'uni-bg-green',
-										url: 'https://img-cdn-qiniu.dcloud.net.cn/uniapp/images/muwu.jpg',
-										content: '内容 B',
-										id:"2"
-									},
-									{
-										name:'车新颖',
-										colorClass: 'uni-bg-blue',
-										url: 'https://img-cdn-qiniu.dcloud.net.cn/uniapp/images/cbd.jpg',
-										content: '内容 C',
-										id:"3"
-									},
-									{
-										name:'车新颖',
-															colorClass: 'uni-bg-red',
-															url: 'https://img-cdn-qiniu.dcloud.net.cn/uniapp/images/shuijiao.jpg',
-															content: '内容 A',
-															id:"4"
-														},
-														{
-															name:'车新颖',
-															colorClass: 'uni-bg-green',
-															url: 'https://img-cdn-qiniu.dcloud.net.cn/uniapp/images/muwu.jpg',
-															content: '内容 B',
-															id:"5"
-														},
-														{
-															name:'车新颖',
-															colorClass: 'uni-bg-blue',
-															url: 'https://img-cdn-qiniu.dcloud.net.cn/uniapp/images/cbd.jpg',
-															content: '内容 C',
-															id:"6"
-														}
-													
-								]
+				info:[],
+				courseId:'',
+				title:'',
+				cost:'0',
+				beginTime:'',
+				cover:"",//封面
+				info:["ddd","ddd"]
+				
 			}
 		},
+		onLoad:function(option){
+   if(option.item !=null){
+	   // const item = {courseID:2,cover:this.cover,cost:this.detailInfo.cost,title:this.detailInfo.title,time:this.detailInfo.beginTime}
+	   
+	 let objClone=  JSON.parse(decodeURIComponent(option.item))
+	 this.cover = objClone.cover
+	 this.courseId = objClone.courseID
+	 this.cost = objClone.cost;
+	 this.title = objClone.title;
+	 this.beginTime = objClone.time;
+	 
+   }
+   
+ 		},
 		onShow:function(e){
  				this.scrollviewHeight = this.$app.getwindowHeight()-44;
 				this.couponviewheight = this.$app.getwindowHeight()*0.87;

@@ -171,18 +171,22 @@ export default {
 		},
 
 		/*获取子类别数据*/
+		/*获取子类别数据*/
 		getCategory() {
+			var that = this;
 			this.$app.request({
-				url: this.$api.article.category,
-				method: 'POST',
+				url: this.$api.shouye.getcourseCategoryList,
+				method: 'GET',
 				dataType: 'json',
 				success: res => {
-					if (res.code == 0) {
-						this.category = res.data;
-						if (this.category_index > -1) {
-							let nextIndex = this.category_index - 1;
+ 					console.log(res)
+					if (res.code == 200) {
+						console.log(res)
+						that.category = res.result.records;
+						if (that.category_index > -1) {
+							let nextIndex = that.category_index - 1;
 							nextIndex = nextIndex <= 0 ? 0 : nextIndex;
-							this.scroll_category_id = `category_id-${nextIndex}`; //动画滚动,滚动至中心位置
+							that.scroll_category_id = `category_id-${nextIndex}`; //动画滚动,滚动至中心位置
 						}
 					} else {
 						this.$alert(res.msg);
@@ -191,7 +195,7 @@ export default {
 				complete: res => {}
 			});
 		},
-
+		
 		/*获取数据*/
 		getData() {
 			this.$app.request({

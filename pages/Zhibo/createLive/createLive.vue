@@ -4,20 +4,30 @@
 			<view class="item">
 				<view class="itemLeft">
 					<image src="../../../static/zhibo/icon_biaoti.png"></image>
-					<view class="hidden">直播标题直播标题直播标题直播标题直播标题直播标题</view>
+					<view class="hidden">直播标题</view>
 				</view>
 				<view class="itemRight">
-					<view class="hidden2">直播标题直播</view>
+					<input class="input" placeholder="请输入直播标题" v-model="zhiboTitle"></input>
+					 
+				</view>
+			</view>
+			<view class="item">
+				<view class="itemLeft">
+					<image src="../../../static/zhibo/icon_time.png"></image>
+					<view class="hidden">开始时间</view>
+				</view>
+				<view class="itemRight" @click="showTimeChoose">
+					<view class="hidden2">{{starttime}}</view>
 					<image src="../../../static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
 			<view class="item">
 				<view class="itemLeft">
 					<image src="../../../static/zhibo/icon_time.png"></image>
-					<view class="hidden">直播时间</view>
+					<view class="hidden">结束时间</view>
 				</view>
-				<view class="itemRight">
-					<view class="hidden2">2020-16-21 08:00-09:00</view>
+				<view class="itemRight" @click="showendTimeChoose">
+					<view class="hidden2">{{endtime}}</view>
 					<image src="../../../static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
@@ -25,9 +35,12 @@
 				<view class="itemLeft">
 					<image src="../../../static/zhibo/icon_fenlei.png"></image>
 					<view class="hidden">选择分类</view>
+					  
 				</view>
 				<view class="itemRight">
-					<view class="hidden2">心脏病</view>
+					<picker @change="bindPickerChange" :value="index" :range="category">
+					                 <view class="hidden">{{category[index]}}</view> 
+					                  </picker>
 					<image src="../../../static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
@@ -75,14 +88,14 @@
 			<view class="priceItem">
 				<view class="priceItemLeft">价格</view>
 				<view class="priceItemRight">
-					<view>56.00元</view>
+					<input class="priceItemInput"  placeholder="输入价格" v-model="cost"></input>
 					<image src="../../../static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
 			<view class="priceItem">
 				<view class="priceItemLeft">会员价格</view>
 				<view class="priceItemRight">
-					<view>56.00元</view>
+					<input class="priceItemInput" placeholder="输入会员价格" v-model="memberCost"> </input>
 					<image src="../../../static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
@@ -94,8 +107,9 @@
 					<view class="hidden">课程可见性</view>
 				</view>
 				<view class="itemRight">
-					<view class="hidden2">全部可见</view>
-					<image src="../../../static/icon/me_lise_more.png"></image>
+					<view class="hidden2">{{isvisiable}}</view>
+					<switch  color="#09BB07" style="transform:scale(0.7,0.7) ;"  @change="switchChange" checked="true"  ></switch>
+					 
 				</view>
 			</view>
 			<view class="item">
@@ -104,7 +118,9 @@
 					<view class="hidden">如何查看</view>
 				</view>
 				<view class="itemRight">
-					<view class="hidden2">无限查看</view>
+					<picker @change="bindPickerChangeChakan" :value="chakanIndex" :range="chakanType">
+					                 <view class="hidden2">{{chakanType[chakanIndex]}}</view>
+					                  </picker>
 					<image src="../../../static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
@@ -112,18 +128,67 @@
 		<view class="save">提交申请</view>	
 		<l-file ref="lFile"></l-file>
 		<choose ref="chooesFile" :image="isAddImage" :count="count" :video="isAddVideo" :pdf="isAddPDF"></choose>
+		<w-picker
+		         :visible.sync="visibleTime"
+		         mode="shortTerm" 
+		         startYear="2017" 
+		         endYear="2030"
+		         :value="rangeVal"
+		         :current="true"
+				  fields="day"
+			     :second="false"
+ 		         @confirm="confirmtime"
+		         @cancel="onCancel"
+		         ref="starttimeTerm" 
+		     ></w-picker>
+			  
+			 
+				 <w-picker
+				        :visible.sync="visble"
+				        mode="time"
+  				        :current="false"
+						:second="false"
+				        :disabledAfter="false"
+				        @confirm="confirmEndtime"
+				        @cancel="onEndtimeCancel"
+				        ref="endtimeTerm" 
+				    ></w-picker>
 	</view>
 </template>
 
 <script>
 	import lFile from "@/components/l-file/l-file.vue"
 	import choose from "@/components/chooes-file/chooes-file.vue"
+	import wPicker from "@/components/w-picker/w-picker.vue";
+	
 	export default {
 		data() {
 			return {
+				zhiboTitle:'',
 				imageList:[],
 				tempFile:[],
+				rangeVal:'',
 				value:'',
+				visble:false,
+				starttime:"",
+				endtime:"",
+				year:0,
+				month:0,
+				day:0,
+				hour:0,
+				minte:0,
+				endHour:0,
+				endMinute:0,
+				index:0,
+				category:["内科","医疗","外科"],
+				cost:"",//价格
+				memberCost:"",
+				isvisiable:"全部可见",//是否全部可见
+				ischeck:true,//默认全部可见
+				chakanType:["无限查看","验证码查看","收费查看"],
+				chakanIndex:0,
+ 				currentDay:"",
+				visibleTime:false,
 				isAddImage:true,
 				isAddVideo:false,
 				isAddPDF:false,
@@ -151,7 +216,121 @@
 			uni.$off();
 		},
 		methods: {
-			addEvent(){
+			showTimeChoose(){
+				this.visibleTime = !this.visibleTime
+			},
+			showendTimeChoose(){
+				if(this.starttime.length == 0){
+					uni.showToast({
+						title:"请先选择开始时间",
+						icon:'none'
+					})
+				}else{
+					this.visble = !this.visble
+					
+				}
+				
+			},
+			confirmtime(e){
+				this.starttime = e.result
+			 	this.year = this.starttime.substring(0,4)
+				this.month = this.starttime.substring(5,7)
+				this.day = this.starttime.substring(8,10)
+				this.hour = this.starttime.substring(11,13)
+				this.minte = this.starttime.substring(14,16)
+				
+ 				console.log(this.month)
+				console.log(this.year)
+				console.log(this.day)
+				console.log(this.hour)
+				console.log(this.minte)
+				
+ 			},
+			onCancel(){
+				
+			},
+			confirmEndtime(e){
+ 				console.log(e.result)
+ 				var time = new Date(this.year+"-"+this.month+"-"+this.day+" "+e.result);
+  				console.log("fffff")
+				console.log(this.year)
+				this.endHour = e.result.substring(0,2);
+				this.endMinute = e.result.substring(3,5);
+				console.log(parseInt(this.endHour))
+  				if(parseInt(this.endHour) <parseInt(this.hour)){
+					uni.showToast({
+						title:"结束时间必须大于开始时间",
+						icon:'none'
+					})
+				}else if(parseInt(this.endHour) ==parseInt(this.hour)){
+					if(parseInt(this.endMinute)<=parseInt(this.minte)){
+						uni.showToast({
+							title:"结束时间必须大于开始时间",
+							icon:'none'
+						})
+							
+						 
+					}else{ 
+						this.endtime = this.year+"-"+this.month+"-"+this.day+" "+e.result
+						
+					}
+				}else{
+					this.endtime = this.year+"-"+this.month+"-"+this.day+" "+e.result
+					
+				}
+ 			},
+			getCategory() {
+				var that = this;
+				this.$app.request({
+					url: this.$api.shouye.getcourseCategoryList,
+					method: 'GET',
+					dataType: 'json',
+					success: res => {
+						console.log(res)
+						if (res.code == 200) {
+							console.log(res)
+							that.category = res.result.records;
+							if (that.category_index > -1) {
+								let nextIndex = that.category_index - 1;
+								nextIndex = nextIndex <= 0 ? 0 : nextIndex;
+								that.scroll_category_id = `category_id-${nextIndex}`; //动画滚动,滚动至中心位置
+							}
+						} else {
+							this.$alert(res.msg);
+						}
+					},
+					complete: res => {}
+				});
+			},
+			  bindPickerChange: function(e) {
+			            console.log('picker发送选择改变，携带值为', e.target.value)
+			            this.index = e.target.value
+			        },
+					//可见按钮点击
+					switchChange(){
+						this.ischeck = !this.ischeck
+						if(this.ischeck){
+							this.isvisiable = "全部可见"
+							
+						}else{
+							this.isvisiable = "部分可见"
+						}
+					},
+					bindPickerChangeChakan: function(e) {
+					          console.log('picker发送选择改变，携带值为', e.target.value)
+					          this.chakanIndex = e.target.value
+					      },
+										//可见按钮点击
+										switchChange(){
+											this.ischeck = !this.ischeck
+											if(this.ischeck){
+												this.isvisiable = "全部可见"
+												
+											}else{
+												this.isvisiable = "部分可见"
+											}
+										},
+  			addEvent(){
 				let that = this;
 				uni.$on("getImage",res=>{
 					switch (that.fileType){
@@ -219,6 +398,7 @@
 				console.log("1111")
 				this.showChoose();
 			}
+			
 		}
 	}
 </script>
@@ -260,17 +440,26 @@
 		margin-right: 12rpx;
 	}
 	.item .itemLeft view{
-		width: 280rpx;
+		width: 160rpx;
 		font-size: 28rpx;
 		font-family: PingFangSC-Regular, PingFang SC;
 		font-weight: 400;
 		color: #666666;
 		line-height: 28rpx;
 	}
+	 
 	.itemRight{
 		display: flex;
 		align-items: center;
+		 
 	}
+	 
+	.input{
+		width:470rpx ;
+ 		font-size:26rpx;
+ 		margin-right: 40rpx;
+		text-align: right;
+ 	}
 	.itemRight view{
 		width:300rpx;
 		font-size: 24rpx;
@@ -434,6 +623,11 @@
 	.priceItemRight{
 		display: flex;
 		align-items: center;
+	}
+	.priceItemInput{
+		text-align: right;
+		font-size: 24rpx;
+		margin-right: 30rpx;
 	}
 	.priceItemRight view{
 		font-size: 24rpx;
