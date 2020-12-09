@@ -130,7 +130,10 @@ let api = {
 		"getInfo":`${apiRoot}study_notes/studyNotes/queryById`
 	},
 	work:{
-		'getInfo':`${apiRoot}patient/patient/YSWorkbench`
-	},
+ 
+		'getInfo':`${apiRoot}patient/patient/YSWorkbench`,
+		'getCompareList':`${apiRoot}patient/patient/queryAKeyToCompare`
+	}
+ 
 };
 export default api;

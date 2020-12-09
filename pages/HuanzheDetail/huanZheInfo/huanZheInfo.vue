@@ -2,16 +2,16 @@
 	<view class="viewPage">
 		<view class="huanzheview">
 			<view class="huanzheTopview">
-				<image src="/static/gongzuotai/icon_nv.png"></image>
+				<image :src="info.sex == 1?'/static/gongzuotai/icon_nan.png':'/static/gongzuotai/icon_nv.png'"></image>
 				<view class="huanzherightview">
 					<view class="firstView">
-						<text class="name">刘胡兰 <text class="num">5床</text></text>
-						<text class="detail">性别：女 年龄：56</text>
+						<text class="name">{{info.name}} <text class="num">{{info.bunk}}床</text></text>
+						<text class="detail">性别：{{info.sex == 1?'男':'女'}} 年龄：{{info.age}}</text>
 					</view>
 					<view class="secodview">
 						<view class="zhenduanview">
 							<image class="zhenduanimage" src="/static/gongzuotai/icon_zhenduan1.png"></image>
-							<text>诊断：心脏病</text>
+							<text class="hidden">诊断：{{info.illnessName}}</text>
 						</view>
 						<text class="timetext">时间:2020-05-22 06:52</text>
 					</view>
@@ -26,36 +26,95 @@
 				<image src="../../../static/Huanzhexiangqing/icon_jilu.png"></image>
 				<view class="topText">患者记录</view>
 			</view>
-			<view class="item" @click="toPage('/pages/HuanzheDetail/recordInfo/recordInfo')"  v-for="(v,k) in [1,2,3,4]" :key="k">
+			<view class="item" @click="toPage('/pages/HuanzheDetail/recordInfo/recordInfo?recordid='+v.id)"  v-for="(v,k) in huanZheList" :key="k">
 				<view class="itemLeft"></view>
 				<view class="itemRight">
 					<view class="text">
-						<view class="title hidden">患者记录患者记录患者记录患者记录患者记录患者记录患者记录1</view>
-						<view class="time">2020-06-30 06:00</view>
+						<view class="title hidden">{{v.content}}</view>
+						<view class="time">{{v.createTime}}</view>
 					</view>
 					<image src="../../../static/f_my_kecheng_arrow.png"></image>
 				</view>
 			</view>
+			
 		</view>
 		
 	</view>
 </template>
 
 <script>
+	import request from '../../../utils/util.js';
+	import tool from '../../../utils/tool.js'
 	export default {
 		data() {
 			return {
-				
+				huanZheList:[],
+				huanZheInde:1,
+				huanZheSize:20
+			}
+		},
+		onLoad(options) {
+			this.id = options.id?options.id:0;
+			this.getList();
+			this.getInfo();
+		},
+		onReachBottom() {
+			// 触底的时候请求数据，即为上拉加载更多
+			if (this.isGetMoreHuanZheData) {
+				this.getList();
+			} else {
+				uni.showToast({
+					title: "暂无更多数据",
+					duration: 1500,
+					icon:"none"
+				})
 			}
 		},
 		methods: {
-			
+			getInfo(){
+				this.info = uni.getStorageSync('huanzhe');
+				if(this.info.name.length >= 10){
+					this.info.name = (this.info.name.substring(0,9) + '...')
+				}
+			},
 			toPage(url) {
 				uni.navigateTo({
 					url,
 					animationDuration: 300,
 					animationType: 'slide-in-right'
 				})
+			},
+			getList(f = false){
+				if(f){
+					this.isGetMoreHuanZheData = true;
+					this.huanZheInde = 1;
+					this.huanZheList = []
+				}
+				let that = this;
+					return request({
+						url:getApp().$api.huanzhe.getRecordList,
+						type:"GET",
+						data:{
+							condition:true,
+							pageNo:that.huanZheInde,
+							pageSize:that.huanZheSize,
+							patientId:that.id
+						}
+					},true,true).then(data=>{
+						if(data.records.length >= 1){
+							data.records.map((v,k)=>{
+								console.log(data.records[k].createTime,new tool())
+								data.records[k].createTime =new tool().formDate(new Date(data.records[k].createTime),'3')
+							})
+						}
+						if(data.records.length >= that.huanZheSize){
+							that.isGetMoreHuanZheData = true;
+						}else{
+							that.isGetMoreHuanZheData = false
+						}
+						that.huanZheList = that.huanZheList.concat(data.records);
+						that.huanZheSize++;
+					})
 			}
 		}
 	}
@@ -222,6 +281,7 @@
 						}
 	
 						text {
+							max-width: 200rpx;
 							font-size: 20rpx;
 							font-family: PingFangSC-Medium, PingFang SC;
 							font-weight: 500;

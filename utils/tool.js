@@ -20,10 +20,14 @@ class tool{
 			case '2':
 				timer = year + ':' + month + ':' + day + ' ' + hour + ':' + minute;
 			break;
+			case '3':
+				timer = year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
+			break;
 			default:
 				timer = year + ':' + month + ':' + day + ' ' + hour + ':' + minute + ':' + second;
 			break;
 		}
+		console.log(type,timer)
 		return timer;
 	}
 }

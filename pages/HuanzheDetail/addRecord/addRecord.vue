@@ -90,9 +90,12 @@
 				let that = this;
 				return request({
 					url:getApp().$api.huanzhe.getSymptomsList,
-					pageNo:1,
-					pageSize:200,
-					illnessId:that.illnessId
+					type:"GET",
+					data:{
+						pageNo:1,
+						pageSize:200,
+						illnessId:that.illnessId
+					}
 				},true,true).then(data=>{
 					let list = data.records;
 					let list1 = [];
