@@ -738,6 +738,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/Wode/orderInfo/orderInfo",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "订单详情",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

@@ -13,7 +13,7 @@
 							<image class="zhenduanimage" src="/static/gongzuotai/icon_zhenduan1.png"></image>
 							<text class="hidden">诊断：{{info.illnessName}}</text>
 						</view>
-						<text class="timetext">时间:2020-05-22 06:52</text>
+						<text class="timetext">时间:{{info.createTime}}</text>
 					</view>
 		
 				</view>

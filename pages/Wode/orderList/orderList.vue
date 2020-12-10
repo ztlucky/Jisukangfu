@@ -1,17 +1,17 @@
 <template>
 	<view class="viewPage">
 		<view class="headerNav">
-			<view class="navItem">
+			<view :class="nowIndex == 0?'navItem':'navItem navItem1'" @click="setNowStatus(0)">
 				<view class="text">未支付</view>
 				<view class="border"></view>
 			</view>
-			<view class="navItem navItem1">
+			<view :class="nowIndex == 1?'navItem':'navItem navItem1'" @click="setNowStatus(1)">
 				<view class="text">已支付</view>
 				<view class="border"></view>
 			</view>
 		</view>
 		<view class="orderList">
-			<view class="item">
+			<view class="item" @click="toPage('/pages/Wode/orderInfo/orderInfo')">
 				<image class="itemLeft" src=""></image>
 				<view class="itemRight">
 					<view class="itemRightName hidden2">发哈短发看风景警方快速减肥发课时费就开始发课时费健康发哈短发看风景警方快速减肥发课时费就开始发课时费健康</view>
@@ -21,7 +21,7 @@
 							<view class="">¥</view>
 							<view class="">356</view>
 						</view>
-						<view class="pay">付款</view>
+						<view class="pay" v-if="nowIndex == 0">付款</view>
 					</view>
 				</view>
 			</view>
@@ -30,14 +30,54 @@
 </template>
 
 <script>
+	import request from "../../../utils/util.js"
 	export default {
 		data() {
 			return {
-				
+				nowIndex:0,
+				index:1,
+				size:10,
+				isGetMoreDataList:true
 			}
 		},
+		onReachBottom() {
+			if (this.isGetMoreDataList) {
+				this.getList();
+			} else {
+				uni.showToast({
+					title: "暂无更多数据",
+					duration: 1500,
+					icon:"none"
+				})
+			}
+		},
+		onLoad() {
+			this.getList();
+		},
 		methods: {
-			
+			setNowStatus(index){
+				this.nowIndex = index;
+			},
+			getList(){
+				let that = this;
+				return request({
+					url:getApp().$api.user.getOrderList,
+					type:"GET",
+					data:{
+						pageNo:that.index,
+						pageSize:that.size
+					}
+				}).then(data=>{
+					console.log(data);
+				})
+			},
+			toPage(url) {
+					uni.navigateTo({
+						url,
+						animationDuration: 300,
+						animationType: 'slide-in-right'
+					})
+				}
 		}
 	}
 </script>

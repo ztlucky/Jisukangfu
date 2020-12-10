@@ -118,18 +118,19 @@
 				<view class="lineview">
 
 				</view>
-				<view class="xiangmuList">
-					<view class="xiangmuItem"  v-for="(v,k) in [1,2,3]" :key="k">
+				<view class="xiangmuList" v-if="info.treatmentList">
+					<view class="xiangmuItem"  v-for="(v,k) in info.treatmentList[0].subproject" :key="k">
 						<view class="dot"></view>
 						<view class="xiangmuItemRight">
 							<view style="display: flex;align-items: center;">
-								<view class="itemRightTitle hidden">治疗项目双方就开始</view>
-								<view class="itemRightTime">17:00 - 19:00</view>
+								<view class="itemRightTitle hidden">{{v.name}}</view>
+								<view class="itemRightTime">{{v.start}} - {{v.end}}</view>
 							</view>
-							<view class="itemRightRun" @click="toPage('/pages/HuanzheDetail/kangfuxiangmu/kangfuxiangmu')">执行</view>
+							<view class="itemRightRun" @click="runXiangMu(k)">执行</view>
 						</view>
 					</view>
 				</view>
+				<view class="notData" v-if="info.treatmentList.length == 0">暂无数据</view>
 				<!-- <view class="hview">
 					<text>时间</text>
 					<view class="v_lineView">
@@ -250,15 +251,28 @@
 			<text class="huanzhepingding" @click="toPage('/pages/KangfuPingdingListPage/KangfuPingdingListPage')">患者评定</text>
 			<text class="kangfujilu" @click="toPage('/pages/HuanzheDetail/record/record')">康复记录</text>
 		</view>
+		<xiangmu v-if="isShowPerformWindow" :short="short" :long="long" :number="number" @setNumber="setNumber" @setShowPerformWindowStatus="stopProgress" @setShowFinishWindowStatus="setShowFinishWindowStatus"></xiangmu>
+		<complete-target v-if="isShowFinishWindow" @confirmFinish="confirmFinish" :number="number"></complete-target>
 	</view>
 </template>
 
 <script>
 	import request from '../../utils/util.js'
 	import tool from "../../utils/tool.js"
+	import	xiangmu from "@/components/confirmTarget/confirmTarget.vue"
+	import completeTarget from "@/components/completeTarget/completeTarget.vue"
 	export default {
+		components:{
+			xiangmu,
+			completeTarget
+		},
 		data() {
 			return {
+				isShowPerformWindow:false,
+				number:1,
+				isShowFinishWindow:false,
+				short:'',
+				long:'',
 				switchColor: '#4CD964',
 				viewHeight: 0,
 				kangfuxiangmu: [{
@@ -281,6 +295,7 @@
 				],
 				bgColor: "rgba(49, 216, 128, 1)",
 				id:0,
+				nowIndex:0,
 				info:{}
 			}
 		},
@@ -299,6 +314,14 @@
 			init(){
 				this.getInfo();
 			},
+			runXiangMu(k){
+				let item = this.info.treatmentList[0];
+				this.short = item.shortGoals;
+				this.long = item.longGoals;
+				this.nowIndex = k;
+				this.number = 1;
+				this.setShowPerformWindowStatus();
+			},
 			getInfo(){
 				let that = this;
 				return request({
@@ -310,6 +333,16 @@
 				},true,true).then(data=>{
 					if(data.file){
 						data.file = JSON.parse(data.file);
+					}
+					if(data.treatmentList){
+						data.treatmentList[0].subproject = JSON.parse(data.treatmentList[0].subproject);
+						data.treatmentList[0].subproject.map((v,k)=>{
+							let time = new Date(v.value).getTime() + v.time * 60*1000;
+							let start = new tool().formDate(new Date(v.value),4);
+							let end = new tool().formDate(new Date(time),4);
+							data.treatmentList[0].subproject[k].start = start;
+							data.treatmentList[0].subproject[k].end = end;
+						})
 					}
 					// if(data.patientRecords.length >=1){
 						// data.patientRecords.map((v,k)=>{
@@ -347,7 +380,8 @@
 							name:that.info.name,
 							sex:that.info.sex,
 							age:that.info.age,
-							illnessName:that.info.illnessName
+							illnessName:that.info.illnessName,
+							userId:that.info.userId
 						};
 							uni.setStorageSync("huanZheInfo",{
 								huanZheInfo:data1
@@ -375,6 +409,55 @@
 				})
 				}
 				
+			},
+			setShowPerformWindowStatus(){
+				this.isShowPerformWindow = !this.isShowPerformWindow;
+			},
+			endXiangMu(index){
+				this.nowIndex = index;
+				this.number = 1;
+				this.setShowPerformWindowStatus();
+				this.short = this.list[index].shortGoals;
+				this.long = this.list[index].longGoals
+			},
+			setNumber(data){
+				this.number = data.num;
+			},
+			confirmProgress(){
+				this.setShowPerformWindowStatus();
+				this.setShowFinishWindowStatus();
+			},
+			stopProgress(){
+				this.completeXiangMu(false).then(()=>{
+					this.setShowPerformWindowStatus();
+				})
+			},
+			setShowFinishWindowStatus(){
+				this.completeXiangMu().then(()=>{
+					this.isShowFinishWindow = !this.isShowFinishWindow;
+				})
+				
+			},
+			confirmFinish(){
+				this.isShowFinishWindow = !this.isShowFinishWindow;
+				// this.setShowFinishWindowStatus();
+			},
+			completeXiangMu(f = true){
+				let that = this;
+				let id = this.info.treatmentList[0].subproject[this.nowIndex].id;
+				return request({
+					url:getApp().$api.huanzhe.runXiangMu,
+					type:"POST",
+					data:{
+						doctorId:that.info.userId,
+						patientId:that.info.id,
+						treatmentId:id,
+						tscore:that.number,
+						result:f?1:2
+					}
+				}).then(data=>{
+					console.log(data);
+				})
 			}
 		}
 	}
@@ -857,7 +940,7 @@
 			color: #333;
 
 			.itemRightTitle {
-				width: 164rpx;
+				max-width: 164rpx;
 				margin-right: 22rpx;
 			}
 

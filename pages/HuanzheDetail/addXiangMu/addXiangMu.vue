@@ -89,7 +89,7 @@
 		 fields="day" @confirm="onConfirm" @cancel="onCancel" :disabled-after="false" ref="date"></w-picker>
 
 		<w-picker :visible.sync="visibleTime" mode="date" :second="false" startYear="2017" endYear="2029" :value="`${xiangMuTimeList.length>=1?xiangMuTimeList[nowIndex].value:''}`"
-		 :current="false" fields="day" @confirm="onConfirmTime" @cancel="onCancelTime" :disabled-after="false" ref="time"></w-picker>
+		 :current="false" fields="minute" @confirm="onConfirmTime" @cancel="onCancelTime" :disabled-after="false" ref="time"></w-picker>
 	</view>
 </template>
 
@@ -381,7 +381,12 @@
 							v.treatmentProgramItemList.map((v,i)=>{
 								item_.push({
 									name:v.title,
-									value:''
+									value:'',
+									time:v.time,
+									score:v.score,
+									id:v.id,
+									createTime:v.createTime,
+									tpId:v.tpId
 								})
 								that.xiangMuTimeList.push({
 									id:0,
@@ -477,10 +482,17 @@
 						type:0,
 						shortGoals:that.duanqimubiao,
 						longGoals:that.changqimubiao,
-						endTime
+						subproject:endTime
 					}
 				}).then(data=>{
-					console.log(data);
+					uni.showToast({
+						title:"添加成功",
+						duration:1500,
+						mask:true
+					})
+					setTimeout(()=>{
+						uni.navigateBack();
+					},1500)
 				})
 			},
 			getAllItem(){
@@ -514,7 +526,7 @@
 						this.xiangMuTimeList.push(v)
 					}
 				})
-				console.log(this.listValue.list)
+				console.log(this.xiangMuTimeList)
 				if (!this.listValue.id) {
 					str = '请选择项目名称'
 				} else if (!this.listValue1.id) {

@@ -42,12 +42,11 @@ class loadImage {
 	}
 
 	upload() {
-		// if(this.nowCount == 0){
-			uni.showLoading({
-				title:`文件上传中（${this.nowCount}/${this.imageList.length}）`,
-				mask:true
-			})
-		// }
+
+			// uni.showLoading({
+			// 	title:`文件上传中（${this.nowCount}/${this.imageList.length}）`,
+			// 	mask:true
+			// })
 		if (this.imageList.length == this.nowCount) {
 			let file = [];
 			this.imageList.map((v,k)=>{
@@ -88,7 +87,7 @@ class loadImage {
 				author: that.author
 			}
 		}, false).then(data => {
-			console.log('上传成功')
+			console.log('获取上传连接成功')
 			that.getFile(data.result);
 		}).catch(err=>{
 			console.log(err);
@@ -97,7 +96,8 @@ class loadImage {
 	}
 	getFile(obj) {
 		console.log(obj)
-		let file = this.imageList[this.nowCount].value?this.imageList[this.nowCount].value:this.imageList[this.nowCount]; //注意：直接上传file文件，不要用FormData对象的形式传
+		// let file = this.imageList[this.nowCount].value?this.imageList[this.nowCount].value:this.imageList[this.nowCount]; 
+		let file = this.imagePathList[this.nowCount]; //注意：直接上传file文件，不要用FormData对象的形式传
 		let that = this;
 		let config = {
 			headers: {
@@ -105,28 +105,84 @@ class loadImage {
 				"x-oss-meta-author":that.author
 			}
 		};
-		let reader = new FileReader();
-		    reader.readAsArrayBuffer(file);
-		    reader.onload = function(e){
-		      let buffer = e.target.result  //此时是arraybuffer类型
-		      // let hex = that.buf2hex(buffer);
-			  axios.put(obj.add_url, buffer, config)
-			  	.then(res => {
-			  		if (res.status == 200) {
-			  			that.imageUrl.push(obj.get_url);
-			  			that.nowCount++;
-			  			that.upload();
-			  		}
-			  	}).catch(
-			  		err => {
-			  			console.log(err.response)
-			  			console.log(err)
-			  		}
-			  	)
-		    }
+		// #ifdef APP-PLUS
+			plus.io.requestFileSystem( plus.io.PRIVATE_WWW, function(fs){
+					fs.root.getFile(file,{create:true}, function(fileEntry){
+						fileEntry.file( function(file){
+							var fileReader = new plus.io.FileReader();
+							console.log("getFile:" + JSON.stringify(file))
+							fileReader.readAsDataURL(file, 'utf-8');
+							fileReader.onloadend = function(evt) {
+								var buffer = uni.base64ToArrayBuffer(evt.target.result);
+								// let hex = that.buf2hex(buffer);
+								// console.log(hex);
+								axios.put(obj.add_url,buffer, config)
+									.then(res => {
+										if (res.status == 200) {
+											that.imageUrl.push(obj.get_url);
+											that.nowCount++;
+											that.upload();
+										}
+									}).catch(
+										err => {
+											console.log(err.response)
+											console.log(err)
+										}
+									)
+							}
+						} );
+					});
+				} );
+			// var arrayBuffer = uni.base64ToArrayBuffer(base64)
+		// #endif
+		// #ifdef H5
+		 //h5可以使用
+		 let reader = new FileReader();
+		     reader.readAsArrayBuffer(file);
+		     reader.onload = function(e){
+		       let buffer = e.target.result  //此时是arraybuffer类型
+		       // let hex = that.buf2hex(buffer);
+			   console.log(buffer);
+		 	  axios.put(obj.add_url, buffer, config)
+		 	  	.then(res => {
+					console.log(res);
+		 	  		if (res.status == 200) {
+		 	  			// that.imageUrl.push(obj.get_url);
+		 	  			// that.nowCount++;
+		 	  			// that.upload();
+		 	  		}
+		 	  	}).catch(
+		 	  		err => {
+		 	  			console.log(err.response)
+		 	  			console.log(err)
+		 	  		}
+		 	  	)
+		     }
+		// #endif
+		// console.log(file);
+		// uni.uploadFile({
+		// 	url:obj.add_url ,
+		// 	filePath:file,
+		// 	name: 'file',
+		// 	success: (res) => {
+		// 		console.log(res)
+		// 		 res = JSON.parse(res.data);
+		// 		console.log(res)
+		// 		if (res.status == 200) {
+		// 			that.imageUrl.push(obj.get_url);
+		// 			that.nowCount++;
+		// 			that.upload();
+		// 		}
+		// 	},
+		// 	fail:(err) =>{
+		// 		console.log(err)
+		// 		that.showToast("图片上传失败，请联系开发！")
+		// 	}
+		// });
+	
 		
 	}
-
+	
 }
 
 module.exports = new loadImage()

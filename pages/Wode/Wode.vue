@@ -79,7 +79,7 @@
 		<view class="lineview">
 			
 		</view>
-		<view class="iconview">
+		<view class="iconview" @click="toPage('/pages/Wode/orderList/orderList')">
 			<image class="iconimage" src="../../static/Me/icon_dingdan.png" mode=""></image>
 			<text class="icontitle">全部订单</text>
 			<image src="../../static/icon_jiantou.png" mode="" class="rightIcon"></image>

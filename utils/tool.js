@@ -23,6 +23,9 @@ class tool{
 			case '3':
 				timer = year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
 			break;
+			case 4:
+				timer =  hour + ':' + minute;
+			break;
 			default:
 				timer = year + ':' + month + ':' + day + ' ' + hour + ':' + minute + ':' + second;
 			break;

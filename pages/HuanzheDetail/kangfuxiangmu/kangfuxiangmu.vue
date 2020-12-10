@@ -17,72 +17,49 @@
 				<view class="">得分</view>
 			</view>
 		</view>
-		<view class="list">
-			<view class="item" v-for="(v,k) in [1,2,3]" :key="k">
+		<view class="list" >
+			<view class="item" v-for="(v,k) in list" :key="k">
 				<view class="itemTitle">
-					<view class="">康复项目1</view>
-					<view class="">开始时间：2020-06-31</view>
+					<view class="hidden" style="max-width: 300rpx;">{{v.treatmentProgramName}}</view>
+					<view class="">开始时间：{{v.createTime}}</view>
 				</view>
 				<view class="itemText">
-					<text>短期目标：站立平衡达到三级，十天达到三级，十天达到三级，十天达到三级，十天达到三级，十天达到三级，十天达到三级，十天。</text>
+					<text>短期目标：{{v.shortGoals}}</text>
 				</view>
 				<view class="itemText">
-					<text>短期目标：站立平衡达到三级，十天。</text>
+					<text>长期目标：{{v.longGoals}}</text>
 				</view>
 				<view class="itemBottom">
-					<view class="">剩余时间：5天</view>
+					<view class="">剩余时间：{{v.days}}天</view>
 					<view class="" @click="endXiangMu(k)">结束</view>
 				</view>
 			</view>
 		</view>
-		<view class="bottom" @click="toPage('/pages/HuanzheDetail/addXiangMu/addXiangMu')">添加项目</view>
-		<view class="muBiaoView" v-if="isShowPerformWindow">
-			<view class="muBiaoViewBack" @click="setShowPerformWindowStatus"></view>
-			<view class="muBiaoViewContent">
-				<view class="title">短期目标</view>
-				<view class="contentText">
-					<view class="text">脑卒中又称脑血管意外（CVA），主要是指脑动脉系统病变引起的血管痉挛。</view>
-					<view class="contentCenter">
-						<view class="title"> 请为本次治疗打分</view>
-						<view class="setNumber">
-							<view class="numberBotton" @click="setNumber(-1)">-</view>
-							<input :disabled="true" :value="number" />
-							<view class="numberBotton" @click="setNumber(1)">+</view>
-						</view>
-						<view class="confirm" @click="confirmProgress">确认进度</view>
-						<view class="stop" @click="stopProgress">停止进度</view>
-					</view>
-					<view class="title">长期目标</view>
-				</view>
-				<view class="text">脑卒中又称脑血管意外（CVA），主要是指脑动脉系统病变引起的血管痉挛。</view>
-			</view>
-		</view>
-		<view class="finishView" v-if="isShowFinishWindow">
-			<view class="finishViewBack" @click="setShowFinishWindowStatus"></view>
-			<view class="finisViewContent">
-				<image src="" class="finisViewContentImage"></image>
-				<view class="finisViewScore">
-					<image src="" class="scoreImage"></image>
-					<view class="scoreText">80</view>
-				</view>
-				<view class="title">您的本次项目得分为</view>
-				<view class="text">恭喜您完成本次项目</view>
-				<view class="finishConfirm" @click="confirmFinish">确定</view>
-			</view>
-		</view>
+		<view class="bottom" @click="toPage('/pages/HuanzheDetail/addXiangMu/addXiangMu?id='+id)">添加项目</view>
+		<xiangmu v-if="isShowPerformWindow" :short="short" :long="long" :number="number" @setNumber="setNumber" @setShowPerformWindowStatus="setShowPerformWindowStatus" @setShowFinishWindowStatus="setShowFinishWindowStatus"></xiangmu>
+		<complete-target v-if="isShowFinishWindow" @confirmFinish="confirmFinish" :number="number"></complete-target>
 	</view>
 </template>
 <script>
 	import request from "../../../utils/util.js"
+	import	xiangmu from "@/components/confirmTarget/confirmTarget.vue"
+	import completeTarget from "@/components/completeTarget/completeTarget.vue"
 	export default {
+		components:{
+			xiangmu,
+			completeTarget
+		},
 		data() {
 			return {
 				isShowPerformWindow:false,
 				number:1,
+				list:[],
 				isShowFinishWindow:false,
 				isGetMoreList:true,
 				index:1,
-				size:10
+				size:10,
+				short:'',
+				long:''
 			}
 		},
 		onReachBottom() {
@@ -101,13 +78,19 @@
 			this.id = options.id?options.id:0;
 			this.init();
 		},
+		onShow() {
+			this.getList(true);
+		},
 		methods: {
 			init(){
-				this.getList();
 				this.info = uni.getStorageSync("huanZheInfo");
-				console.log(this.info);
 			},
-			getList(){
+			getList(f = false){
+				if(f){
+					this.index = 1;
+					this.isGetMoreList = true;
+					this.list = [];
+				}
 				let that = this;
 				return request({
 					url:getApp().$api.huanzhe.getRehabilitationList,
@@ -118,22 +101,40 @@
 						patientId:that.id
 					}
 				},true,true).then(data=>{
-					console.log(data);
+					if(data.records.length >=that.size){
+						that.isGetMoreList = true;
+					}else{
+						that.isGetMoreList = false
+					}
+					that.list = that.list.concat(data.records);
+					that.index++;
+					console.log(that.list);
 				})
 			},
 			setShowPerformWindowStatus(){
 				this.isShowPerformWindow = !this.isShowPerformWindow;
 			},
 			endXiangMu(index){
-				this.nowIndex = index;
-				this.setShowPerformWindowStatus();
+				uni.showModal({
+					title:'温馨提示',
+					content:'是否结束该项目',
+					cancelText:'我在想想',
+					confirmText:'确认结束',
+					confirmColor:"#31D880",
+					success(res) {
+						if(res.confirm){
+							console.log('结束')
+						}
+					}
+				})
+				// this.nowIndex = index;
+				// this.number = 1;
+				// this.setShowPerformWindowStatus();
+				// this.short = this.list[index].shortGoals;
+				// this.long = this.list[index].longGoals
 			},
 			setNumber(data){
-				let num = this.number;
-				num+=data;
-				if(num>=1 && num<=10){
-					this.number = num;
-				}
+				this.number = data.num;
 			},
 			confirmProgress(){
 				this.setShowPerformWindowStatus();
@@ -143,16 +144,36 @@
 				this.setShowPerformWindowStatus();
 			},
 			setShowFinishWindowStatus(){
-				this.isShowFinishWindow = !this.isShowFinishWindow;
+				this.completeXiangMu().then(()=>{
+					this.isShowFinishWindow = !this.isShowFinishWindow;
+				})
+				
 			},
 			confirmFinish(){
-				this.setShowFinishWindowStatus();
+				this.isShowFinishWindow = !this.isShowFinishWindow;
+				// this.setShowFinishWindowStatus();
 			},
 			toPage(url) {
 				uni.navigateTo({
 					url,
 					animationDuration: 300,
 					animationType: 'slide-in-right'
+				})
+			},
+			completeXiangMu(){
+				let that = this;
+				let id = this.list[this.nowIndex].id;
+				return request({
+					url:getApp().$api.huanzhe.runXiangMu,
+					type:"POST",
+					data:{
+						doctorId:that.info.userId,
+						patientId:that.id,
+						treatmentId:id,
+						tscore:that.number
+					}
+				}).then(data=>{
+					console.log(data);
 				})
 			}
 		}
@@ -376,121 +397,7 @@
 		font-family: PingFangSC-Medium, PingFang SC;
 		font-weight: 500;
 	}
-	.muBiaoView{
-		position: fixed;
-		top:0;
-		left: 0;
-		width:100vw;
-		height:100vh;
-	}
-	.muBiaoView .muBiaoViewBack{
-		width:100vw;
-		height: 100vh;
-		background-color: rgba(0,0,0,.6);
-		position: absolute;
-		top:0;
-		left: 0;
-	}
-	.muBiaoView .muBiaoViewContent{
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		background-color: #FFFFFF;
-		width:612rpx;
-		position: absolute;
-		top:50%;
-		left: 50%;
-		transform: translate(-50%,-50%);
-		border-radius: 26rpx;
-		padding-bottom: 48rpx;
-	}
-	.title{
-		font-size: 28rpx;
-		font-family: PingFangSC-Medium, PingFang SC;
-		font-weight: 500;
-		color: #333333;
-		line-height: 40rpx;
-		text-align: center;
-	}
-	.title:nth-child(1){
-		margin-top:46rpx;
-		margin-bottom: 18rpx;
-	}
-	.muBiaoViewContent .text{
-		width:482rpx;
-		padding-left: 64rpx;
-		padding-right: 66rpx;
-		font-size: 24rpx;
-		font-family: PingFangSC-Regular, PingFang SC;
-		font-weight: 400;
-		color: #666666;
-		line-height: 40rpx;
-		border-top:2rpx solid #EAEAEA;
-		padding-top:14rpx;
-	}
-	.contentText{
-		width:612rpx;
-		display: flex;
-		min-height: 608rpx;
-		flex-direction: column;
-		justify-content: space-between;
-		align-items: center;
-	}
-	.setNumber{
-		width:266rpx;
-		margin-top: 38rpx;
-		margin-bottom: 34rpx;
-		height: 60rpx;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		border-radius: 8rpx;
-		border:2rpx solid #EAEAEA;
-		margin-left: 16rpx;
-	}
-	.setNumber >view{
-		width: 62rpx;
-		height: 60rpx;
-		text-align: center;
-		line-height: 60rpx;
-		border-radius: 8rpx;
-		font-size:34rpx;
-	}
-	.setNumber >view:nth-child(1){
-		font-size:50rpx;
-		color:#EAEAEA;
-		border-right: 2rpx solid #EAEAEA;
-	}
-	.setNumber >view:nth-child(3){
-		color:#FFFFFF;
-		background-color: #31D880;
-	}
-	.setNumber input{
-		flex: 1;
-		text-align: center;
-		line-height: 60rpx;
-		fobnt-size:36rpx;
-		color:#31D880;
-	}
-	.confirm , .stop{
-		width: 296rpx;
-		height: 60rpx;
-		background-color: #31D880;
-		border-radius: 32rpx;
-		margin-bottom: 20rpx;
-		line-height: 60rpx;
-		font-size: 28rpx;
-		font-family: PingFangSC-Medium, PingFang SC;
-		font-weight: 500;
-		color: #FFFFFF;
-		text-align: center;
-		border:2rpx solid #31D880;
-	}
-	.stop{
-		background-color: #FFFFFF;
-		color: #31D880;
-	}
+	
 	.finishView{
 		width: 100vw;
 		height: 100vh;
