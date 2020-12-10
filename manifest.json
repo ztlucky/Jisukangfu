@@ -94,6 +94,14 @@
                 "speech" : {
                     "ifly" : {}
                 }
+            },
+            "icons" : {
+                "android" : {
+                    "hdpi" : "/Users/ios/Desktop/pic_hd.png",
+                    "xhdpi" : "/Users/ios/Desktop/pic_xhd.png",
+                    "xxhdpi" : "/Users/ios/Desktop/pic_xxhd.png",
+                    "xxxhdpi" : "/Users/ios/Desktop/pic_xxxhd.png"
+                }
             }
         }
     },

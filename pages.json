@@ -739,6 +739,14 @@
             
         }
         ,{
+            "path" : "pages/Zhibo/ChooseHost/ChooseHost",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "增加主讲人",
+                "enablePullDownRefresh": false
+            }
+            
+        },{
             "path" : "pages/Wode/orderInfo/orderInfo",
             "style" :                                                                                    
             {

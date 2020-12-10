@@ -2,7 +2,9 @@
 	<view class="list" v-if="list.length > 0">
 		<navigator :url="'/pages/Daxue/Zhibodetail/Zhibodetail?id=' + item.id" class="item" v-for="(item, index) in list" :key="index" hover-class="none">
 	 <view  class="topview">
-		 <image class="newimage" :src="item.photo_url"  ></image>
+ 		 <image class="newimage" :src="item.cover" v-if='item.cover.length>0' ></image>
+		 <image class="newimage" :src="item.photo_url" v-if='item.photo_url!=null' ></image>
+		 
 		 <text class="liveview">· 直播中</text>
  				 <view class="newrightText">
 					 <view class="newtitle">{{ item.title }}</view> 
