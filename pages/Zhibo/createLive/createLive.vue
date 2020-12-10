@@ -426,49 +426,49 @@
 			//创建直播
 			creatLiveAction(){
  				
-				// if(this.zhiboTitle.length==0){
-				// 	uni.showToast({
-				// 		title:'请输入直播标题',
-				// 		icon:'none'
-				// 	})
-				// }else if(this.starttime.length == 0){
-				// 	uni.showToast({
-				// 		title:'请输入直播开始时间',
-				// 		icon:'none'
-				// 	})
-				// }else if(this.endtime.length == 0){
-				// 	uni.showToast({
-				// 		title:'请输入直播结束时间',
-				// 		icon:'none'
-				// 	})
-				// }else if (this.selectCategroy == "分类"){
-				// 	uni.showToast({
-				// 		title:'请选择直播分类',
-				// 		icon:'none'
-				// 	})
-				// }else if(this.cover.imageList.length == 0){
-    //               uni.showToast({
-				// 		title:'请设置该直播封面',
-				// 		icon:'none'
-				// 	})
-				// }else if(this.hostList.length == 0){
-    //               uni.showToast({
-				// 		title:'请选择主持人',
-				// 		icon:'none'
-				// 	})
-				// }else if(this.cost.length==0){
-    //               uni.showToast({
-				// 		title:'请输入课程价格',
-				// 		icon:'none'
-				// 	})
-				// }else if(this.memberCost.length==0){
-    //               uni.showToast({
-				// 		title:'请输入会员价格',
-				// 		icon:'none'
-				// 	})
-				// }else{
+				if(this.zhiboTitle.length==0){
+					uni.showToast({
+						title:'请输入直播标题',
+						icon:'none'
+					})
+				}else if(this.starttime.length == 0){
+					uni.showToast({
+						title:'请输入直播开始时间',
+						icon:'none'
+					})
+				}else if(this.endtime.length == 0){
+					uni.showToast({
+						title:'请输入直播结束时间',
+						icon:'none'
+					})
+				}else if (this.selectCategroy == "分类"){
+					uni.showToast({
+						title:'请选择直播分类',
+						icon:'none'
+					})
+				}else if(this.cover.imageList.length == 0){
+                  uni.showToast({
+						title:'请设置该直播封面',
+						icon:'none'
+					})
+				}else if(this.hostList.length == 0){
+                  uni.showToast({
+						title:'请选择主持人',
+						icon:'none'
+					})
+				}else if(this.cost.length==0){
+                  uni.showToast({
+						title:'请输入课程价格',
+						icon:'none'
+					})
+				}else if(this.memberCost.length==0){
+                  uni.showToast({
+						title:'请输入会员价格',
+						icon:'none'
+					})
+				}else{
 					this.creatLive();
-				  // }
+				  }
  			},
 			async creatLive(){
 				let that = this;
@@ -490,7 +490,7 @@
 			   	data: {
 			   		cost:that.cost,
 			   		memberCost:that.memberCost,
-			   		cover:'https://kang-fu-yun-picture.oss-cn-zhangjiakou.aliyuncs.com/1336949957202046978.png',//cover:that.uploadImageUrls[0],
+			   		cover:that.uploadImageUrls[0],
 			   		startTime:that.starttime,
 			   		endTime:that.endtime,
 			   		lecturerIds: lecIds,//主持人
