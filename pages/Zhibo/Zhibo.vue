@@ -29,16 +29,36 @@
 		
  	<view class="mainscrollview"  >
  		 
- 	 <scroller  class="scroll" @init="initScroller" @down="refreshData" @up="getData" :up="optUp" @scroll="navFloatShow(scroller)" :fixed="false">
- 			 
-
- 					 		
- 		<articleList   class="mainlist" :list="list"   />
+  			 
+ 		<!-- <navigator :url="'/pages/Daxue/Zhibodetail/Zhibodetail?id=' + item.id" class="item" v-for="(item, index) in list" :key="index" hover-class="none">
+	 <view  class="topview">
+ 		 <image class="newimage" :src="item.cover" v-if='item.cover.length>0' ></image>
+		 <image class="newimage" :src="item.photo_url" v-if='item.photo_url!=null' ></image>
+		 
+		 <text class="liveview">· 直播中</text>
+ 				 <view class="newrightText">
+					 <view class="newtitle">{{ item.title }}</view> 
+					 	<view class="newSubtitle" v-if="item.source">{{ item.source }}</view>
+						<view class="newBottomView">
+							<text class="newprice">¥20/会员价¥15元 </text>
+							<text class="newpeopleCount">{{ item.read }}人观看</text>
+							
+							
+						</view>
+					 <text class="enterview">
+					 	进入
+					 </text>
+				 </view>
+				 </view>
+ 				 	
+					 
+		</navigator> -->
+  					 		
+ 		<!-- <articleList   class="mainlist" :list="list"   /> -->
  					                             				
  						 
   	
- 		</scroller>
-  </view> 
+   </view> 
 	 
 		
 		 
@@ -48,10 +68,9 @@
 </template>
 
 <script>
-import scroller from '@/components/scroller/scroller.vue';
-  import articleList from '@/components/article/list.vue';
+   import articleList from '@/components/article/list.vue';
   import banjiList  from '@/components/article/banji.vue';
-
+ 
 import pageLoading from '@/components/loading/pageLoading.vue';
 import iconfont from '@/components/iconfont/iconfont.vue';
 import util from '@/common/util.js';
@@ -63,22 +82,18 @@ export default {
 	components: {
 		  articleList,
 		pageLoading,
-		scroller,
-		iconfont,
-		banjiList
-	},
+ 		iconfont,
+		banjiList,
+ 	},
 	data() {
 		return {  
  			statusBarHeight:20,
- 			scroller: {},
-			optUp: { auto: true, onScroll: true, page: { size:10 }, empty: { tip: '暂无文章~' } },
-			category_id: 1,
+ 			 
+			category_id: 0,
 			category_index: 0,
 			scroll_category_id: 'scroll_category_id_0',
 			currentSliderIndex: 0,
 			category: [],
-			 
-			
 			showMenu: false,
 			slider: [],
 			list: [],
@@ -115,20 +130,9 @@ export default {
  	
 
 
-		/*来源是登录时更新*/
-		let source = uni.getStorageSync('source');
-		if (source == 'login') {
-			uni.removeStorageSync('source');
-			this.loadData();
-		}
+		 
 	},
-	onShareAppMessage() {
-		return {
-			path: '/pages/article/index',
-			success: function(e) {},
-			title: '开心品生活'
-		};
-	},
+ 
 	onLoad(e) {
 		// #ifdef H5
 		if (e.category_id > 0) {
@@ -139,36 +143,20 @@ export default {
 		}
 		// #endif
 		this.getCategory();
+		this.getData();
+		
 	},
-	onPullDownRefresh() {
-		uni.showLoading({
-			title: '刷新中'
-		});
-		this.loadData();
-	},
+	 
 	methods: {
-		/*初始化滚动*/
-		initScroller(scroller) {
-			this.scroller = scroller;
-		},
-        change(e) {
-				this.current = e.detail.current
-			},        
-		/*刷新数据*/
-		refreshData() {
-			uni.showLoading({
-				title: '刷新中'
-			});
-			this.scroller.resetUpScroll();
-		},
+		 
+        
 
 		/*加载数据*/
 		loadData() {
 			this.slider = [];
 			this.list = [];
 			this.currentSliderIndex = 0;
- 			this.scroller.resetUpScroll();
-		},
+ 		},
 
 		/*获取子类别数据*/
 		/*获取子类别数据*/
@@ -200,131 +188,48 @@ export default {
 		getData() {
 			this.$app.request({
 				
-				url: this.$api.article.index,
+				url: this.$api.zhibo.livelist,
 				data: {
-					category_id: this.category_id,
-					page_index:this.scroller.num,
-					page_size: this.scroller.size
+					type: 0,//this.category_id
+					pageNo:1,
+					pageSize: 500
 				},
-				method: 'POST',
+				method: 'GET',
 				dataType: 'json',
 				success: res => {
-					if (res.code == 0) {
-						if (this.scroller.num == 1) {
-							this.list = [];
-						}
-						if (this.slider.length == 0) {
-							this.slider = res.data.slider;
-						}
-						console.log(res.data.list);
-					   this.list = this.list.concat(res.data.list);
+					if (res.code ==200) {
+						 
+						 
+					   this.list =res.result.records;
 						  // this.list =  res.data.list ;
 						
-						this.scroller.endByPage(res.data.list.length, res.data.page);
-						this.showPageLoading = false;
-					} else {
-						this.scroller.endSuccess();
-						this.$alert(res.msg);
+					 
 					}
 				},
 				fail: res => {
-					this.scroller.endErr();
-				},
+ 				},
 				complete: res => {
-					uni.stopPullDownRefresh();
-					uni.hideLoading();
-				}
+ 				}
 			});
 		},
 
 		/*切换导航*/
 		categoryChange(category_id, index) {
-			this.showMenu = false;
-			this.category_index = index;
+ 			this.category_index = index;
 			this.category_id = category_id;
 			var nextIndex = index - 1;
-			nextIndex = nextIndex <= 0 ? 0 : nextIndex;
-			this.scroll_category_id = `category_id-${nextIndex}`; //动画滚动,滚动至中心位置
-			this.loadData();
+			 
+			this.getData();
  			// #ifdef H5
 			// uni.navigateTo({
 			// 	url: '/pages/article/list?category_id=' + this.category_id + '&category_index=' + this.category_index
 			// });
 			// #endif
 		},
-	//点击考试/直播/课程/学习班
-secondCategroy:function(e){
-	 switch(e.detail.index){
-		 case 0:{
-				
-			uni.navigateTo({
-				url:'Kaoshi/Kaoshi',
-				animationType:"slide-in-right",
-				animationDuration:300
-			})			
-			 
-		 }
-		 break;
-		 case 1:{
-		 				
-		 	uni.navigateTo({
-		 		url:'../Zhibo/Zhibo',
-				animationType:"slide-in-right",
-				animationDuration:300
-		 	})			
-		 			 
-		 }
-		 break;
-		 case 2:{
-		 		uni.navigateTo({
-		 			url:'Kecheng/Kecheng',
-		 			animationType:"slide-in-right",
-		 			animationDuration:300
-		 		})				
-		 				
-		 			 
-		 }
-		 break;
-		 case 3:{
-		 				
-		 		uni.navigateTo({
-		 			url:'XuexiBan/XuexiBan',
-		 			animationType:"slide-in-right",
-		 			animationDuration:300
-		 		})				
-		 			 
-		 }
-		 break;
-		 
-	 }
-},
-//点击 朋友在看item
-		
-        goDetail(index){
-			// url:'../../goods/gooddetail/gooddetail?id='+this.zhibokeArray[e.detail.index].id,
-			console.log(index)
-			
-			uni.navigateTo({
-				url:'TeacherDetail/TeacherDetail?id='+index,
-				animationType:"slide-in-right",
-				animationDuration:300
-			})	
-		},
-		//点击推荐课程
-			
-		kechengItemClick: function(e){
-			uni.navigateTo({
-				url:'KechengDetail/KechengDetail?id='+e.detail.index,
-				animationType:"slide-in-right",
-				animationDuration:300
-			})	
-		},
-		
-		/*广告切换*/
-		sliderChange: function(e) {
-			this.currentSliderIndex = e.detail.current;
-		},
-
+	 
+ 		
+      
+	 
 		/*滚动时导航栏浮动*/
 		navFloatShow(scroller) {
 			if (scroller) {
@@ -815,5 +720,110 @@ justify-content: space-between;
 	 height: 8upx;
 	 background-color: #F9F9F9;
 	 margin-top: 30rpx;
+ }
+ //
+ .list {
+  	.item {
+ 		width: 100%;
+ 		margin-left: 30upx;
+  		display: flex;
+ 		flex-direction: column;
+  		.topview{
+ 			margin-top: 20upx;
+ 			display: flex;
+ 			flex-direction: row;
+ 			position: relative;
+ 			padding-right: 30upx;
+ 			
+ 				.newimage{
+    				height: 160rpx;
+ 				width: 240rpx;
+ 				border-radius: 8rpx;
+  			
+ 				
+ 			}
+ 			.liveview{
+ 				position: absolute;
+ 				font-size: 18upx;
+ 				width: 94upx;
+ 				height: 28upx;
+ 				border-radius:4upx;
+ 				background-color: #31D880;
+ 				color: #FFFFFF;
+ 				top: 16upx;
+ 				left: 12upx;
+ 				text-align: center;
+ 				font-weight: 600;
+ 			}	
+ 			.newrightText{
+ 				
+ 				position: relative;
+ 				width: 60%;
+ 				display: flex;
+ 				flex-direction: column;
+ 				justify-content:space-around ;
+ 				 margin-left: 30upx;
+ 					margin-right: 30upx;	
+ 					.newtitle{
+ 						font-size: 28rpx;
+ 						font-weight: 500;
+ 						color: #000000;
+  					}
+ 						
+ 					.newSubtitle{
+  						color:#999 ;
+ 						font-size: 24upx;
+ 						font-weight:400 ;
+ 					}
+ 						
+ 					.newBottomView{
+ 						display: flex;
+                         flex-direction: row;
+ 						.newpeopleCount{
+ 							color:#999999 ;
+ 							font-size: 18upx;
+ 							margin-left: 46upx;
+ 						}
+ 							
+ 						.newprice{
+   							font-size: 18rpx;
+ 							font-family: PingFangSC-Medium, PingFang SC;
+ 							font-weight: 500;
+ 							color: #FF2828;
+  						}
+ 					}	
+ 					
+ 						
+ 					.enterview{
+ 						position: absolute;
+ 						right: 0upx;
+ 						bottom: 0upx;
+ 						width: 74upx;
+ 						height: 36upx;
+ 						border-radius: 18upx;
+ 						background-color: #EBEBEB;
+                          color: #000000;
+                  font-size: 20upx;
+                 font-weight: bold;
+ 				text-align: center;
+ 				line-height: 36upx;
+  					}
+ 			}
+ 		}
+ 		 
+ 		.line {
+ 			display: bock;
+ 			width: 100%;
+ 			height: 1rpx;
+ 			margin-top: 22rpx;
+ 			background: #e8e8e8;
+ 		}
+ 		&:last-child {
+ 			.line {
+ 				//display: none;
+ 			}
+ 			//padding-bottom: 30rpx;
+ 		}
+ 	}
  }
 </style>

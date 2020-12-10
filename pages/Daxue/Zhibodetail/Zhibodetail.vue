@@ -2,7 +2,7 @@
 	 <view  class="bgview" >
 	   <scroll-view scroll-y="true" :style="[{height:scrollviewHeight + 'px'}]">
 		   <view class="videoImageview"  :style="[{height:videoImageHeight + 'px'}]">
- 		   	<image :src="cover" ></image>
+ 		   	<image :src="detailInfo.cover" ></image>
  		  </view>
 		  <view class="secondView">
 		  	<view class="priceview">
@@ -31,9 +31,9 @@
 				<text>讲师</text>
 		 	</view>
 			<scroll-view  scroll-x="true" class="teacherscrollview" >
-			  <block v-for="(item, index) in info" :key="index">
-			    <view class="item" @tap="goDetail(item.id)">
- 			        <image class="teacherImage" :src="item.url" mode="">	
+			  <block v-for="(item, index) in detailInfo.lecturerList" :key="index">
+			    <view class="item" >
+ 			        <image class="teacherImage" :src="item.headUrl" mode="">	
 					</image>
  			      <text  >{{item.name}}</text>
  			    </view>
@@ -71,13 +71,13 @@
 		  <zzx-tabs   :items="items" :current="current" @clickItem="onClickItem" ref="mytabs" :activeColor="activeColor" 
 		  :lineWidth="line_width" :lineColor="line_color">
 		             </zzx-tabs>
-		  	 <view class="detailText" v-show="current === 0">{{largetext}}
+		  	 <view class="detailText" v-show="current === 0">{{detailInfo.presentation}}
 		  	           
 		  	            </view>
 		  	            <view v-show="current === 1">
-		  	               <view class="studentBgview" v-for="(item,index) in info " :key = "index" >
+		  	               <view class="studentBgview" v-for="(item,index) in detailInfo.studentList" :key = "index" >
 		  	                	
-		  	               <image :src="item.url"></image>
+		  	               <image :src="item.headUrl"></image>
 		  	               
 		  	                	<text  >{{item.name}}</text>
 		  	                 
@@ -116,58 +116,14 @@
 				items:["详情","学生"],
 				detailInfo:'',
 				isfav:false,
-				cover:"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2062091410,3517489587&fm=26&gp=0.jpg",//封面
-			activeColor:'#000000',
+				cover:"",//封面
+			    activeColor:'#000000',
 			current:0,
 			line_width:"8%",
 			line_color:'#31D880',
 				isbuy:false,
 				
-				largetext:"自20世纪中期兴起的，与预防医学、保健医学、临床医学并称“四大医学”。其通过理疗、作业、运动等疗法减轻、弥补和重建人的功能障碍。按病种分，康复医疗包括：神经系统疾病康复（脑卒中等）、骨关节肌肉疾病和伤残康复（截肢骨折等）、心血管及呼吸系统疾病康复、老年康复、儿童疾病康复、精神残疾康复等六大类。与临床医学最大的重点区别在于，治疗对象与目的不同。临床医学以治愈疾病为主要目的，而康复主要针对功能障碍辅以对应的治疗训练，使得群体得以回归社会正常生活。治疗方式主要通过康复治疗组，含物理医学与康复医师（Physiatrist）,物理治疗师/士（PT）、作业治疗师/士（OT）、言语矫正师（ST）、心理治疗师、假肢与矫形器师（P&O）、文体治疗师（RT）、社会工作者（SW）。而在我国的康复治疗体系中，还引入了有我国特色的中医疗法。康复工作从业者的工作内容需要协同配合，由康复医师给予康复方案后，与康复治疗师等康复治疗组的其他人共同执行。目前通常将需要康复治疗的群体按照病情发展分为急性期、后急性期及长期照料期。因而与之对应的三级康复医疗网是目前较为健全的发达国家级地区康复体系的共有模式。",
-				info: [{
-					name:'车新颖',
-										colorClass: 'uni-bg-red',
-										url: 'http://39.99.215.169:8090/sys/common/static/temp/aa_1598422546786.jpg',
-										content: '内容 A',
-										id:"1"
-									},
-									{
-										name:'车新颖',
-										colorClass: 'uni-bg-green',
-										url: 'https://img-cdn-qiniu.dcloud.net.cn/uniapp/images/muwu.jpg',
-										content: '内容 B',
-										id:"2"
-									},
-									{
-										name:'车新颖',
-										colorClass: 'uni-bg-blue',
-										url: 'https://img-cdn-qiniu.dcloud.net.cn/uniapp/images/cbd.jpg',
-										content: '内容 C',
-										id:"3"
-									},
-									{
-										name:'车新颖',
-															colorClass: 'uni-bg-red',
-															url: 'https://img-cdn-qiniu.dcloud.net.cn/uniapp/images/shuijiao.jpg',
-															content: '内容 A',
-															id:"4"
-														},
-														{
-															name:'车新颖',
-															colorClass: 'uni-bg-green',
-															url: 'https://img-cdn-qiniu.dcloud.net.cn/uniapp/images/muwu.jpg',
-															content: '内容 B',
-															id:"5"
-														},
-														{
-															name:'车新颖',
-															colorClass: 'uni-bg-blue',
-															url: 'https://img-cdn-qiniu.dcloud.net.cn/uniapp/images/cbd.jpg',
-															content: '内容 C',
-															id:"6"
-														}
-													
-								],
+				 
 			}
 		},
 		onLoad:function(e){
@@ -192,10 +148,10 @@
 						user_id:24
 					}
 				},true,true).then(data=>{
-					that.detailInfo = data ;
-					
- 					console.log(data)
-					uni.showToast({
+ 					that.detailInfo = data.data;
+					that.isbuy = data.isBuy;
+					that.isfav = data.isCollect;
+ 					uni.showToast({
 						title:data,
 						icon:null
 					})

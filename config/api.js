@@ -1,5 +1,5 @@
-  let apiRoot = 'http://www.huaxiakangfu.com:8090/';
- //let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
+  //let apiRoot = 'http://www.huaxiakangfu.com:8090/';
+ let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
 let api = {
 	common: {
 		aboutUs: apiRoot + 'common/aboutUs.html',
@@ -37,11 +37,15 @@ let api = {
 	},
 	zhibo:{
 		//直播详情
-		getLivecourseDetailInfo:apiRoot +"jeecg-boot/live/live/queryById",
+		getLivecourseDetailInfo:apiRoot +"live/live/queryById",
 		//收藏直播 
  		favLivecourse:apiRoot +"user_live_bind/userLiveBind/add",
 		//取消收藏直播
-		unfavLivecourse:apiRoot +"user_live_bind/userLiveBind/delMyLive"
+		unfavLivecourse:apiRoot +"user_live_bind/userLiveBind/delMyLive",
+		//添加创建直播
+		addlive:apiRoot +"live/live/add",
+		//获取直播列表
+		livelist:apiRoot +"live/live/list"
 	},
 	pingdingliangbiao:{
 		//获取评定列表List
@@ -76,8 +80,8 @@ let api = {
 		resetPwd: apiRoot + "app/user/updateByPhoneCode",
 		//设置密码
 		setPwd:apiRoot + "app/user/setPasswd",
-		
-		
+		//获取 用户-康复师列表
+		hostList:apiRoot + "user/user/list",
 		login: apiRoot + "user/login.html",
 		register: apiRoot + "user/register.html",
 		index: apiRoot + "user/index.html",
@@ -90,6 +94,7 @@ let api = {
 		updatePasswordByMobile: apiRoot + "user/updatePasswordByMobile.html",
 		feedback: apiRoot + "user/feedback.html",
 		logout: apiRoot + "user/logout.html",
+		
 	},
 	huanzhe:{
 		//获取病症

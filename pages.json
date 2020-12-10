@@ -738,6 +738,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/Zhibo/ChooseHost/ChooseHost",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "增加主讲人",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

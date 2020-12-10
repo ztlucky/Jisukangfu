@@ -38,8 +38,8 @@
 					  
 				</view>
 				<view class="itemRight">
-					<picker @change="bindPickerChange" :value="index" :range="category">
-					                 <view class="hidden">{{category[index]}}</view> 
+					<picker @change="bindPickerChange" :value="index" :range="category" range-key="name">
+					                 <view class="hidden">{{selectCategroy}}</view> 
 					                  </picker>
 					<image src="../../../static/icon/me_lise_more.png"></image>
 				</view>
@@ -65,8 +65,15 @@
 					<image src="/static/zhibo/icon_zhuchiren.png"></image>
 					<view class="">选择主持人</view>
 				</view>
-				<view class="selectedFile">
+				<view class="selectedFile" @click="chooseHost">
+					 
+				  <view  v-for="(item,index) in hostList" :key= "index" class="hostview">
+					  <image :src="item.sex == 1 ?'../../../static/gongzuotai/icon_nan.png':'../../../static/gongzuotai/icon_nv.png'" ></image>
+ 					<text>{{item.name}}</text>
+				  	
+				  </view>
 					<image src="/static/zhibo/img_tianjia.png"></image>
+					
 				</view>
 			</view>
 			<view class="selectedItem">
@@ -107,7 +114,9 @@
 					<view class="hidden">课程可见性</view>
 				</view>
 				<view class="itemRight">
-					<view class="hidden2">{{isvisiable}}</view>
+					<view class="hidden2" v-if="isvisiable == 1"> 全部可见</view>
+					<view class="hidden2" v-if="isvisiable !=1"> 部分可见</view>
+					
 					<switch  color="#09BB07" style="transform:scale(0.7,0.7) ;"  @change="switchChange" checked="true"  ></switch>
 					 
 				</view>
@@ -125,7 +134,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="save">提交申请</view>	
+		<view class="save" @click="creatLiveAction">提交申请</view>	
 		<l-file ref="lFile"></l-file>
 		<choose ref="chooesFile" :image="isAddImage" :count="count" :video="isAddVideo" :pdf="isAddPDF"></choose>
 		<w-picker
@@ -160,7 +169,9 @@
 	import lFile from "@/components/l-file/l-file.vue"
 	import choose from "@/components/chooes-file/chooes-file.vue"
 	import wPicker from "@/components/w-picker/w-picker.vue";
-	
+    import onloadImage from "../../../utils/loadImage.js"
+ import request from 'utils/util.js'
+ 
 	export default {
 		data() {
 			return {
@@ -180,13 +191,15 @@
 				endHour:0,
 				endMinute:0,
 				index:0,
-				category:["内科","医疗","外科"],
+				selectCategroy:"分类",
+				category:[],
 				cost:"",//价格
 				memberCost:"",
-				isvisiable:"全部可见",//是否全部可见
+				isvisiable:1,//是否全部可见
 				ischeck:true,//默认全部可见
 				chakanType:["无限查看","验证码查看","收费查看"],
-				chakanIndex:0,
+				hostList:[],//主持人列表
+ 				chakanIndex:0,
  				currentDay:"",
 				visibleTime:false,
 				isAddImage:true,
@@ -202,15 +215,21 @@
 					videoFile:[],
 					pdfList:[],
 					pdfFile:[]
-				}
+				},
+				uploadImageUrls:[]//获取的最终的图片链接
 			}
 		},
 		components:{
 				lFile,
 				choose
 		},
+		onShow() {
+			 
+			 
+ 		},
 		onLoad() {
 			this.addEvent();
+			this.getCategory();
 		},
 		onUnload(){
 			uni.$off();
@@ -233,31 +252,25 @@
 			},
 			confirmtime(e){
 				this.starttime = e.result
-			 	this.year = this.starttime.substring(0,4)
-				this.month = this.starttime.substring(5,7)
-				this.day = this.starttime.substring(8,10)
-				this.hour = this.starttime.substring(11,13)
-				this.minte = this.starttime.substring(14,16)
-				
- 				console.log(this.month)
-				console.log(this.year)
-				console.log(this.day)
-				console.log(this.hour)
-				console.log(this.minte)
-				
+				  var date = new Date(Date.parse(e.result.replace(/-/g, "/"))); 
+				    this.month = date.getMonth() + 1; 
+					this.day = date.getDate(); 
+                     this.year = date.getFullYear(); 
+                   this.hour = date.getHours()
+				   this.minte = date.getMinutes()	
  			},
 			onCancel(){
 				
 			},
+			onEndtimeCancel(){
+				
+			},
 			confirmEndtime(e){
- 				console.log(e.result)
- 				var time = new Date(this.year+"-"+this.month+"-"+this.day+" "+e.result);
-  				console.log("fffff")
-				console.log(this.year)
-				this.endHour = e.result.substring(0,2);
+ 				this.endHour = e.result.substring(0,2);
 				this.endMinute = e.result.substring(3,5);
 				console.log(parseInt(this.endHour))
   				if(parseInt(this.endHour) <parseInt(this.hour)){
+					this.endtime = "";
 					uni.showToast({
 						title:"结束时间必须大于开始时间",
 						icon:'none'
@@ -268,6 +281,7 @@
 							title:"结束时间必须大于开始时间",
 							icon:'none'
 						})
+						this.endtime = "";
 							
 						 
 					}else{ 
@@ -279,6 +293,7 @@
 					
 				}
  			},
+			//获取分类
 			getCategory() {
 				var that = this;
 				this.$app.request({
@@ -286,15 +301,13 @@
 					method: 'GET',
 					dataType: 'json',
 					success: res => {
-						console.log(res)
-						if (res.code == 200) {
+ 						if (res.code == 200) {
+							console.log("sss")
+							
 							console.log(res)
 							that.category = res.result.records;
-							if (that.category_index > -1) {
-								let nextIndex = that.category_index - 1;
-								nextIndex = nextIndex <= 0 ? 0 : nextIndex;
-								that.scroll_category_id = `category_id-${nextIndex}`; //动画滚动,滚动至中心位置
-							}
+							console.log(that.category[0].name)
+							 
 						} else {
 							this.$alert(res.msg);
 						}
@@ -302,9 +315,20 @@
 					complete: res => {}
 				});
 			},
+			//选择主讲人
+			chooseHost(){
+				let testStr = encodeURIComponent(JSON.stringify(this.hostList));//JSON.stringify(数组)来把这个数组变成一个字符串
+
+				uni.navigateTo({
+					url:'../ChooseHost/ChooseHost?hostlist='+testStr,
+					animationDuration:300,
+					animationType:'slide-in-right'
+				})
+			},
 			  bindPickerChange: function(e) {
 			            console.log('picker发送选择改变，携带值为', e.target.value)
 			            this.index = e.target.value
+						this.selectCategroy = this.category[this.index].name
 			        },
 					//可见按钮点击
 					switchChange(){
@@ -324,10 +348,10 @@
 										switchChange(){
 											this.ischeck = !this.ischeck
 											if(this.ischeck){
-												this.isvisiable = "全部可见"
+												this.isvisiable =1
 												
 											}else{
-												this.isvisiable = "部分可见"
+												this.isvisiable =2
 											}
 										},
   			addEvent(){
@@ -337,8 +361,7 @@
 						case 'cover':
 						that.cover.imageList = res.res.tempFilePaths;
 						that.cover.tempFile = res.res.tempFiles;
-							
-							console.log(res.res);
+						console.log(res.res);
 						break;
 					}
 				})
@@ -352,6 +375,12 @@
 						break;
 					}
 				})
+				//选择主持人
+ 				 uni.$on("chooseHost",(options)=>{
+				         that.hostList =  JSON.parse(options.selectList)
+						 console.log( that.hostList)
+				          uni.$off('chooseHost')
+				     })
 				
 			},
 			showChoose(){
@@ -394,10 +423,118 @@
 			input(e){
 				this.value = e.detail.value
 			},
+			//创建直播
+			creatLiveAction(){
+ 				
+				// if(this.zhiboTitle.length==0){
+				// 	uni.showToast({
+				// 		title:'请输入直播标题',
+				// 		icon:'none'
+				// 	})
+				// }else if(this.starttime.length == 0){
+				// 	uni.showToast({
+				// 		title:'请输入直播开始时间',
+				// 		icon:'none'
+				// 	})
+				// }else if(this.endtime.length == 0){
+				// 	uni.showToast({
+				// 		title:'请输入直播结束时间',
+				// 		icon:'none'
+				// 	})
+				// }else if (this.selectCategroy == "分类"){
+				// 	uni.showToast({
+				// 		title:'请选择直播分类',
+				// 		icon:'none'
+				// 	})
+				// }else if(this.cover.imageList.length == 0){
+    //               uni.showToast({
+				// 		title:'请设置该直播封面',
+				// 		icon:'none'
+				// 	})
+				// }else if(this.hostList.length == 0){
+    //               uni.showToast({
+				// 		title:'请选择主持人',
+				// 		icon:'none'
+				// 	})
+				// }else if(this.cost.length==0){
+    //               uni.showToast({
+				// 		title:'请输入课程价格',
+				// 		icon:'none'
+				// 	})
+				// }else if(this.memberCost.length==0){
+    //               uni.showToast({
+				// 		title:'请输入会员价格',
+				// 		icon:'none'
+				// 	})
+				// }else{
+					this.creatLive();
+				  // }
+ 			},
+			async creatLive(){
+				let that = this;
+				
+				// await this.getHostList(); 
+ 				let type = this.category[this.index].id
+				var lecIds="";
+				for (var i = 0; i < this.hostList.length; i++) {
+					let item = this.hostList[i]
+					
+				  lecIds+=item.id+",";	
+				}
+	            console.log(lecIds)
+ 				
+ 					//调用创建直播的接口
+			   this.$app.request({
+			   	url: this.$api.zhibo.addlive,
+			   	method: 'POST',
+			   	data: {
+			   		cost:that.cost,
+			   		memberCost:that.memberCost,
+			   		cover:'https://kang-fu-yun-picture.oss-cn-zhangjiakou.aliyuncs.com/1336949957202046978.png',//cover:that.uploadImageUrls[0],
+			   		startTime:that.starttime,
+			   		endTime:that.endtime,
+			   		lecturerIds: lecIds,//主持人
+			   		title:that.zhiboTitle,
+			   		userId:getApp().globalData.userId,
+			   		presentation:that.value,
+			   		type:type,
+			   		isVisible:that.isvisiable
+			   	},
+			   	dataType: 'json',
+			   	success: res => {
+ 			   		if (res.code == 200) {
+ 			         uni.showToast({
+			   	       title:res.message,
+                        icon:"none"
+			              })
+			   		} else {
+			   			this.$alert(res.msg);
+			   		}
+			   	},
+			   	complete: res => {}
+			   });
+	           
+  
+ 			},
+			 
+			//上传图片
+			uploadCover(){
+ 				
+  				let that = this;
+ 				
+ 				onloadImage.init({
+ 					tempFiles:that.cover.tempFile.concat(that.tempFile),
+ 					tempFilePaths:that.cover.imageList.concat(that.imageList)
+ 				},(data,str)=>{
+ 					console.log(data.imageUrl,str);
+ 				 
+ 				}).upload();
+			},
 			selectedFilePDF(){
 				console.log("1111")
 				this.showChoose();
 			}
+			
 			
 		}
 	}
@@ -597,6 +734,25 @@
 		display: flex;
 		padding-bottom: 34rpx;
 	}
+	.hostview{
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding-right: 10rpx;
+	}
+	.hostview image{
+		width:88rpx;
+		height: 88rpx;
+		border-radius: 50%;
+		
+		
+	} 
+	.hostview text{
+		 font-size: 20rpx;
+		 margin-top: 10rpx;
+		 color: #000000;
+		
+	} 
 	.selectedFile image{
 		width:88rpx;
 		height: 88rpx;
@@ -628,7 +784,7 @@
 		text-align: right;
 		font-size: 24rpx;
 		margin-right: 30rpx;
-	}
+ 	}
 	.priceItemRight view{
 		font-size: 24rpx;
 		font-family: PingFangSC-Regular, PingFang SC;
@@ -638,9 +794,9 @@
 		margin-right: 26rpx;
 	}
 	.priceItemRight image{
-		width:20rpx;
+		width:16rpx;
 		height: 30rpx;
-	}
+ 	}
 	.save {
 		position: fixed;
 		bottom: 38rpx;
