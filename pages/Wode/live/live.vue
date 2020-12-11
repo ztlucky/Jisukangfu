@@ -1,7 +1,7 @@
 <template>
 	<view class="viewPage">
 		<view class="list">
-			<live v-for="(v,k) in [1,2,3,4,1,2,3,4,5,6,7,8]" :key="k"></live>
+			<live  :list="list" ></live>
 		</view>
 		<view class="save" @click="create">新建直播课程</view>
 	</view>
@@ -12,10 +12,38 @@
 	export default {
 		data() {
 			return {
-				
+				list:[]
 			}
 		},
+		onLoad() {
+			this.getData()
+		},
 		methods: {
+			//获取直播数据
+ 			getData() {
+				this.$app.request({
+					
+					url: this.$api.zhibo.livelist,
+					data: {
+						userId: 1
+					},
+					method: 'GET',
+					dataType: 'json',
+					success: res => {
+						if (res.code ==200) {
+							 
+							 
+						   this.list =  res.result.records;
+ 							
+						 
+						}
+					},
+					fail: res => {
+					},
+					complete: res => {
+					}
+				});
+			},
 			create(){
 				uni.navigateTo({
 					url:"/pages/Zhibo/createLive/createLive",

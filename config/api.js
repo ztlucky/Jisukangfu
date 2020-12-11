@@ -45,7 +45,16 @@ let api = {
 		//添加创建直播
 		addlive:apiRoot +"live/live/add",
 		//获取直播列表
-		livelist:apiRoot +"live/live/list"
+		livelist:apiRoot +"live/live/list",
+		//获取直播推流地址
+		livePushurl:apiRoot +"live/live/getPushUrl",
+		//获取直播拉流地址
+		livePullurl:apiRoot +"live/live/getPullUrl",
+		//开始直播，修改直播状态
+		startLive:apiRoot +"live/live/startLive",
+		//结束直播
+		endLive:apiRoot +"live/live/startLive"
+		
 	},
 	pingdingliangbiao:{
 		//获取评定列表List

@@ -33,7 +33,8 @@
 			<scroll-view  scroll-x="true" class="teacherscrollview" >
 			  <block v-for="(item, index) in detailInfo.lecturerList" :key="index">
 			    <view class="item" >
- 			        <image class="teacherImage" :src="item.headUrl" mode="">	
+ 					
+ 			        <image class="teacherImage" :src="item.sex == 1 ?'../../../static/gongzuotai/icon_nan.png':'../../../static/gongzuotai/icon_nv.png'" mode="">	
 					</image>
  			      <text  >{{item.name}}</text>
  			    </view>
@@ -42,7 +43,7 @@
 		 </view>
 		  
 		  <!-- 下载课件 -->
-		  <view class="downloadView">
+		  <!-- <view class="downloadView">
 			  <view class="sectionview">
 			  	<view class="iconview">
 			  		
@@ -65,7 +66,7 @@
 			  				<text class="downtitle">华南地区较早开展.mp4</text>
 			  				<image class="rightimage" src="../../../static/zhibo/icon_jiantou1.png"></image>
 			  </view>
-		  </view>
+		  </view> -->
 		  <!-- 选择 -->
 		  <view class="lastview">
 		  <zzx-tabs   :items="items" :current="current" @clickItem="onClickItem" ref="mytabs" :activeColor="activeColor" 
@@ -88,14 +89,15 @@
 		  </view>
 	 </scroll-view>	
 	 <view class="bottomview">
-	 	<text class="price">原价 {{detailInfo.cost}}/会员价 {{detailInfo.memberCost}}</text>
+	 	<text class="price">原价 ¥ {{detailInfo.cost}}/会员价 ¥ {{detailInfo.memberCost}}</text>
 		<view class="favview" @click="favAction">
 			<image :src="isfav == true ?'../../../static/zhibo/icon_yishoucang.png':'../../../static/zhibo/icon_shoucang.png'" ></image>
 			<text >收藏本课</text>
 			
 		</view>
-		<text class="buy" :style="{background:isbuy?'#D0D0D0':'#FF0000'}" @click="comfirmOrder">立即购买</text>
+		<text class="buy" :style="{background:buyBackColor}" @click="comfirmOrder">{{buyBtnText}}</text>
 	 </view>
+ 
 	 </view>
 	
 </template>
@@ -118,11 +120,15 @@
 				isfav:false,
 				cover:"",//封面
 			    activeColor:'#000000',
-			current:0,
-			line_width:"8%",
-			line_color:'#31D880',
+			    current:0,
+			   line_width:"8%",
+			   line_color:'#31D880',
 				isbuy:false,
-				
+				buyBtnText:'立即购买',
+				buyBackColor:'#ff0000',
+ 				enableCamera: false,
+				context: null
+
 				 
 			}
 		},
@@ -144,13 +150,42 @@
 					url: getApp().$api.zhibo.getLivecourseDetailInfo,
 					type: 'GET',
 					data:{
-						id:2,
-						user_id:24
+						id:this.courseID,
+						user_id:getApp().globalData.userId
 					}
 				},true,true).then(data=>{
  					that.detailInfo = data.data;
 					that.isbuy = data.isBuy;
 					that.isfav = data.isCollect;
+					if(data.data.userId == getApp().globalData.userId){
+						if(data.data.status == 0){
+							this.buyBtnText = "开始直播"
+							this.buyBackColor = '#ff0000'
+							
+						}else  if(data.data.status == 1){
+							
+							this.buyBtnText = "直播中"
+							this.buyBackColor = '#999999'
+							
+						}else{
+							this.buyBtnText = "已结束"
+							this.buyBackColor = '#999999'
+							
+						}
+						
+						//判断时间
+ 					}else{
+						if(data.isBuy == true){
+							this.buyBtnText = "已购买"
+							this.buyBackColor = '#999999'
+							
+						}else{
+							this.buyBtnText = "立即购买"
+							this.buyBackColor = '#ff0000'
+							
+							
+						}
+					}
  					uni.showToast({
 						title:data,
 						icon:null
@@ -169,7 +204,7 @@
 					 	data: {
 					 		userid:getApp().globalData.userId,
 					 		bindtype:1,
-					 		liveid:2,//that.courseID	
+					 		liveid:that.courseID	
 					 	},
 					 	dataType: 'json',
 					 	success: res => {
@@ -198,7 +233,7 @@
 						data: {
 							userid:getApp().globalData.userId,
 							bindtype:1,
-							liveid:2,//that.courseID	
+							liveid:that.courseID	
 						},
 						dataType: 'json',
 						success: res => {
@@ -229,14 +264,41 @@
 			          },
 			//确认订单	传递所需的参数
 			comfirmOrder(){
-				//const item = {courseID:2,cover:this.cover,cost:this.detailInfo.cost,title:this.detailInfo.title,time:this.detailInfo.beginTime}
+				console.log(this.$api.zhibo.livePushurl)
+ 				if(this.buyBtnText == "开始直播"){
+					console.log(this.courseID)
+					 uni.navigateTo({
+					     url:'../../Zhibo/StarLive/StarLive?streamName='+this.detailInfo.streamName+'&liveid='+this.courseID,
+					 	animationType:'slide-in-right',
+					 	animationDuration:300
+					 })
+					 
+				}else if(this.buyBtnText == "立即购买"){
+					
+					// const item = {courseID:this.courseID,cover:this.detailInfo.cover,cost:this.detailInfo.cost,title:this.detailInfo.title,time:this.detailInfo.beginTime}
+					// 	uni.navigateTo({
+					// 	     url:'../../Order/ConfirmOrder/ConfirmOrder?item='+ encodeURIComponent(JSON.stringify(item)),
+					// 		animationType:'slide-in-right',
+					// 		animationDuration:300
+					// 	})
+				 uni.navigateTo({
+				      url:'../../Zhibo/WatchLive/WatchLive' ,
+				 	animationType:'slide-in-right',
+				 	animationDuration:300
+				 })
+					
+				}else if(this.buyBtnText.text == '已购买' && this.detailInfo.status == 1){
+					//观看直播
+					uni.navigateTo({
+ 					     url:'../../Zhibo/WatchLive/WatchLive?streamName='+this.detailInfo.streamName,
+						animationType:'slide-in-right',
+						animationDuration:300
+					})
+					
+				}
 				
-			const item = {courseID:2,cover:this.cover,cost:25,title:"测试购买课程",time:"2020-12-20 06:25:30"}
-				uni.navigateTo({
-				     url:'../../Order/ConfirmOrder/ConfirmOrder?item='+ encodeURIComponent(JSON.stringify(item)),
-					animationType:'slide-in-right',
-					animationDuration:300
-				})
+				
+			
 			}	
 		}
 	}
@@ -623,8 +685,7 @@
  	image{
 			width: 100%;
 			height: 100%;
-			background-color: #FF0000;
-		} 
+ 		} 
 	 .playImageView{
 		 
 		 position: absolute;

@@ -25,7 +25,7 @@
 				 	</view>
 					<view class="secondItemview">
 						<text class="lefttext">优惠价格</text>
-										<text class="righttext">-¥44</text>
+										<text class="righttext">-0</text>
 					</view>
 					<view class="secondlineview">
 						
@@ -47,7 +47,7 @@
 			<text class="totalprice">合计</text>
 			<text class="price1">¥</text>
 			
-			<text class="price">356</text>
+			<text class="price">{{cost}}</text>
 			<view class="paynowview">立即支付
 				
 			</view>
