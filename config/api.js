@@ -1,5 +1,5 @@
-  // let apiRoot = 'http://www.huaxiakangfu.com:8090/';
- let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
+  let apiRoot = 'http://www.huaxiakangfu.com:8090/';
+ // let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
 let api = {
 	common: {
 		aboutUs: apiRoot + 'common/aboutUs.html',
@@ -119,7 +119,8 @@ let api = {
 		getProgramList:`${apiRoot}treatment_program/treatmentProgram/list`,//获取治疗项目列表
 		deleteProgram:`${apiRoot}treatment_program/treatmentProgram/deleteBatch`,
 		addTreatment:`${apiRoot}treatment/treatment/add`,
-		runXiangMu:`${apiRoot}treatment_record/treatmentRecord/add`,//执行项目
+		endXiangMu:`${apiRoot}treatment_record/treatmentRecord/add`,//结束项目
+		editProgram:`${apiRoot}treatment/treatment/edit`,//编辑治疗项目
  	},
 	wechat: {
 		miniAppLogin: apiRoot + 'wechat/miniAppLogin',

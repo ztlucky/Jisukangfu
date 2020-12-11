@@ -110,6 +110,40 @@
 	 			<image class="rightIcon" src="../../static/icon_jiantou.png" mode=""></image>
 	 		</view>
 	 </view>
+	 <view class="bgview">
+	 	 
+	 	<view class="iconview iconview1" @click="toPage('')">
+	 		<image class="iconimage" src="../../static/Me/icon_zhibo.png" mode=""></image>
+	 			<text class="icontitle">我的创建直播</text>
+	 				<image src="../../static/icon_jiantou.png" mode="" class="rightIcon"></image>
+	 				
+	 	</view>	
+	 	 
+	 		<view class="lineview">
+	 		</view>
+	 		<view class="iconview iconview1" @click="toPage('')">
+	 			<image class="iconimage" src="../../static/Me/icon_kecheng.png" mode=""></image>
+	 			<text class="icontitle">我的创建课程</text>
+	 			<image src="../../static/icon_jiantou.png" mode="" class="rightIcon"></image>
+	 		</view>
+	 		<view class="lineview">
+	 			
+	 		</view>
+	 		<view class="iconview iconview1" @click="toPage('')">
+	 			<image class="iconimage" src="../../static/Me/icon_banji.png" mode=""></image>
+	 			<text class="icontitle">我的创建班级</text>
+	 			<image class="rightIcon" src="../../static/icon_jiantou.png" mode=""></image>
+	 		</view>
+			<view class="lineview">
+				
+			</view>
+			<view class="iconview iconview1" @click="toPage('/pages/Wode/plan/plan')">
+				<image class="iconimage" src="/static/plan.png" mode=""></image>
+				<text class="icontitle">我的方案</text>
+				<image class="rightIcon" src="../../static/icon_jiantou.png" mode=""></image>
+			</view>
+	 </view>
+	 <view style="width:100%;height:30rpx"></view>
  </view>
 
  	</view>
@@ -378,7 +412,7 @@
 			display: flex;
 			flex-direction: row;
 			position: relative;
- 			 
+ 		
 			.iconimage{
 				width:32rpx;
 				height: 32rpx;
@@ -413,6 +447,16 @@
 				top: 30rpx;
 			}
 		} 
+		.iconview1{
+			.icontitle{
+				font-size: 32rpx;
+				font-family: PingFangSC-Regular, PingFang SC;
+				font-weight: 400;
+				color: #999999;
+				margin-left: 20rpx;
+				margin-top: 30rpx;
+			}
+		}
 		.qianbaoview{
 			 display:flex ;
 			 flex-direction: row;

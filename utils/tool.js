@@ -1,12 +1,8 @@
 class tool{
-	formDate(date, type = 1){
-		console.log(date);
+	formDate(date, type = 1){;
 		var year = date.getFullYear();
-		console.log(year);
 		var month = date.getMonth() + 1;
-		console.log(month);
 		var day = date.getDate();
-		console.log(day);
 		var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours()
 		var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()
 		var second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
@@ -33,6 +29,7 @@ class tool{
 		console.log(type,timer)
 		return timer;
 	}
+	
 }
 
 export default tool;

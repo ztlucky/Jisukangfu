@@ -27,7 +27,7 @@
 				<text class="title">修改密码</text>
  				<image src="../../../static/icon_jiantou.png" mode="" class="rightIcon"></image>
 			</view>
-			<view class="itemView" style="margin-top: 15px;">
+			<view class="itemView" style="margin-top: 15px;" @click="toPage('/pages/Wode/certification/certification')">
 				<text class="title">资质认证</text>
 				<image src="../../../static/icon_jiantou.png" mode="" class="rightIcon"></image>
 			</view>
@@ -79,6 +79,14 @@
 			editinfo(edittype){
 				uni.navigateTo({
 					url:'../EditInfo/EditInfo?type='+edittype,
+					animationDuration:300,
+					animationType:'slide-in-right'
+				})
+			},
+			toPage(url){
+				console.log(url)
+				uni.navigateTo({
+					url,
 					animationDuration:300,
 					animationType:'slide-in-right'
 				})

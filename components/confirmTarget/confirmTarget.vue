@@ -23,6 +23,7 @@
 </template>
 
 <script>
+	import request from "../../utils/util.js"
 	export default {
 		props:{
 			short:{
@@ -30,6 +31,14 @@
 			},
 			long:{
 				type:String
+			},
+			subproject:{//确认
+				type:String,
+				default:''
+			},
+			subproject_:{//停止
+				type:String,
+				default:''
 			}
 		},
 		data() {
@@ -50,12 +59,11 @@
 				this.$emit('setShowPerformWindowStatus',{})
 			},
 			confirmProgress(){
-				this.$emit('setShowPerformWindowStatus',{})
-				this.$emit('setShowFinishWindowStatus',{});
+					this.$emit('setShowPerformWindowStatus',{});
+					this.$emit('setShowFinishWindowStatus',{});
 			},
 			stopProgress(){
-				this.$emit('setShowPerformWindowStatus',{})
-				
+					this.$emit('stopProgress',{})
 			}
 		}
 	}
@@ -66,6 +74,7 @@
 		position: fixed;
 		top:0;
 		left: 0;
+		z-index: 5;
 		width:100vw;
 		height:100vh;
 	}

@@ -5,7 +5,7 @@
 				<course ></course>
 			</view>
 		</view>
-		<view class="save" @click="save()">新建课程</view>
+		<view class="save" @click="toPage('/pages/Wode/createCourse/createCourse')">新建课程</view>
 	</view>
 </template>
 
@@ -21,7 +21,13 @@
 				course
 		},
 		methods: {
-			
+			toPage(url){
+				uni.navigateTo({
+					url,
+					animationDuration: 300,
+					animationType: 'slide-in-right'
+				})	
+			}
 		}
 	}
 </script>

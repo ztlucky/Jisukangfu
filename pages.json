@@ -203,6 +203,29 @@
 			}
 		},
 		{
+			"path": "pages/Wode/createBanJi/createBanJi",
+			"style": {
+				"navigationBarTitleText": "创建班级",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/work/addOtherCertification/addOtherCertification",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/Wode/certification/certification",
+			"style": {
+				"navigationBarTitleText": "资质认证",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black"
+
+			}
+		},
+		{
 			"path": "pages/Wode/plan/plan",
 			"style": {
 				"navigationBarTitleText": "我的方案",
@@ -751,6 +774,15 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "订单详情",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/Wode/createCourse/createCourse",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "创建课程",
                 "enablePullDownRefresh": false
             }
             

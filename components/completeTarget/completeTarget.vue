@@ -37,6 +37,7 @@
 		width: 100vw;
 		height: 100vh;
 		position: fixed;
+		z-index: 5;
 		top: 0rpx;
 		left: 0rpx;
 	}

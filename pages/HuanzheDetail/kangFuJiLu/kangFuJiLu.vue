@@ -1,6 +1,6 @@
 <template>
 	<view class="viewPage">
-		<view class="list">
+		<view class="list" v-if="list.length>=1">
 			<view class="item" @click="toPage('/pages/HuanzheDetail/evaluation/evaluation?assessid='+v.id)" v-for="(v,k) in list" :key="k">
 				<view class="itemLeft"></view>
 				<view class="itemRight">

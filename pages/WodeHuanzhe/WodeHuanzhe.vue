@@ -72,12 +72,17 @@
 					<view class="Hlinew">
 
 					</view>
-					<uni-grid :column="2" :square="false" :showBorder="false" @change="" :highlight="false">
-						<uni-grid-item v-for="(Item ,Index) in item.treatmentList" :key="Index" :index="Index">
+					<uni-grid v-if="item.treatmentList.length >=1&&item.treatmentList[0].subproject" :column="2" :square="false" :showBorder="false" @change="" :highlight="false">
+						<uni-grid-item v-for="(Item ,Index) in item.treatmentList[0].subproject" :key="Index" :index="Index">
 							<view class="huanzheBottomItem">
 								<view class="greendot"></view>
-								<text class="title">PT 10:00-11:00 </text>
-								<view class="zhixing">执行</view>
+								<view class="title">
+									<view class="hidden">{{Item.name}}</view>
+									<view>{{Item.start}}-{{Item.end}}</view>
+								</view>
+								<view class="zhixing zhixing1" v-if="Item.type == 1">完成</view>
+								<view class="zhixing zhixing2" v-else-if="Item.type == 2">暂停</view>
+								<view class="zhixing" v-else @click="runXiangMu(index,Index)">执行</view>
 							</view>
 						</uni-grid-item>
 					</uni-grid>
@@ -86,14 +91,28 @@
 			</view>
 
 		</scroll-view>
+		<xiangmu v-if="isShowPerformWindow" :short="short" :long="long" :number="number" @setNumber="setNumber" @setShowPerformWindowStatus="setShowPerformWindowStatus" @stopProgress="stopProgress" @setShowFinishWindowStatus="setShowFinishWindowStatus"></xiangmu>
+		<complete-target v-if="isShowFinishWindow" @confirmFinish="confirmFinish" :number="number"></complete-target>
 	</view>
 </template>
 
 <script>
 	import request from "../../utils/util.js";
+	import tool from "../../utils/tool.js"
+	import	xiangmu from "@/components/confirmTarget/confirmTarget.vue"
+	import completeTarget from "@/components/completeTarget/completeTarget.vue"
 	export default {
+		components:{
+			xiangmu,
+			completeTarget
+		},
 		data() {
 			return {
+				isShowPerformWindow:false,
+				number:1,
+				isShowFinishWindow:false,
+				short:'',
+				long:'',
 				viewHeight: 0,
 				currentHuanzhetongji: [],
 				zhixing: ["1", "2", "3", "4"],
@@ -102,7 +121,9 @@
 				huanzhelist: [],
 				index: 1,
 				size: 10,
-				isGetMoreHuanZheList: true
+				isGetMoreHuanZheList: true,
+				nowIndex:0,
+				nowIndex1:0
 			}
 		},
 		onShow: function() {
@@ -130,6 +151,59 @@
 			init() {
 				this.getMyPatientsList();
 			},
+			setShowPerformWindowStatus(){
+				this.isShowPerformWindow = !this.isShowPerformWindow;
+			},
+			setNumber(data){
+				this.number = data.num;
+			},
+			confirmProgress(){
+				this.setShowPerformWindowStatus();
+				this.setShowFinishWindowStatus();
+			},
+			stopProgress(){
+					this.setProgress(false).then(()=>{
+						this.getMyPatientsList(true);
+					})
+					this.setShowPerformWindowStatus();
+			},
+			setShowFinishWindowStatus(){
+					this.setProgress().then(()=>{
+						this.isShowFinishWindow = !this.isShowFinishWindow;
+						
+						this.getMyPatientsList(true);
+					})
+				
+			},
+			confirmFinish(){
+				this.isShowFinishWindow = !this.isShowFinishWindow;
+				// this.setShowFinishWindowStatus();
+			},
+			setProgress(f = true){
+				let that = this;
+				this.huanzhelist[this.nowIndex].treatmentList[0].subproject[this.nowIndex1].type = f?1:2
+				let id = this.huanzhelist[this.nowIndex].treatmentList[0].id;
+				let subproject = JSON.stringify(this.huanzhelist[this.nowIndex].treatmentList[0].subproject);
+				return request({
+					url:getApp().$api.huanzhe.editProgram,
+					type:"PUT",
+					data:{
+						id,
+						subproject
+					}
+				},false).then(()=>{
+					
+				})
+			},
+			runXiangMu(k,kk){
+				let item = this.huanzhelist[k].treatmentList[0];
+				this.short = item.shortGoals;
+				this.long = item.longGoals;
+				this.nowIndex = k;
+				this.nowIndex1 = kk;
+				this.number = 1;
+				this.setShowPerformWindowStatus();
+			},
 			addMoreData() {
 				if (this.isGetMoreHuanZheList) {
 					this.getMyPatientsList();
@@ -141,8 +215,13 @@
 					})
 				}
 			},
-			getMyPatientsList() {
+			getMyPatientsList(f = false) {
 				let that = this;
+				if(f){
+					this.isGetMoreHuanZheList = true;
+					this.huanzhelist = [];
+					this.index = 1;
+				}
 				return request({
 					url: that.$api.huanzhe.getMyPatientsList,
 					data: {
@@ -152,7 +231,23 @@
 					},
 					type: 'GET'
 				}, true, true).then(data => {
-					let list = that.huanzhelist;
+					if(data.records){
+						data.records.map((vv,kk)=>{
+							if(vv.treatmentList.length>=1){
+								if(vv.treatmentList[0].subproject){
+									data.records[kk].treatmentList[0].subproject = JSON.parse(data.records[kk].treatmentList[0].subproject);
+									vv.treatmentList[0].subproject.map((v,k)=>{
+									let time = new Date(v.value).getTime() + v.time * 60*1000;
+									let start = new tool().formDate(new Date(v.value),4);
+									let end = new tool().formDate(new Date(time),4);
+									data.records[kk].treatmentList[0].subproject[k].start = start;
+									data.records[kk].treatmentList[0].subproject[k].end = end;
+								})
+								}
+								
+							}
+						})
+					}
 					if (data.records && (data.records.length) >= that.size) {
 						that.isGetMoreHuanZheList = true;
 					} else {
@@ -183,7 +278,6 @@
 							timingFunc: 'easeIn'
 						}
 					});
-					console.log(e.detail.scrollTop)
 
 				} else {
 					uni.setNavigationBarColor({
@@ -565,29 +659,24 @@
 				}
 
 				.title {
-
+					width:240rpx;
+					display: flex;
 					font-size: 16rpx;
 					font-family: PingFangSC-Regular, PingFang SC;
 					font-weight: 400;
 					color: #333333;
 					margin-left: 10rpx;
 					margin-right: 90rpx;
-					overflow: hidden;
-					text-overflow: ellipsis;
-					/* 超出部分省略号 */
-					display: -webkit-box;
-					/** 对象作为伸缩盒子模型显示 **/
-					-webkit-line-clamp: 1;
-					/** 显示的行数 **/
-					-webkit-box-orient: vertical;
-					/** 设置或检索伸缩盒对象的子元素的排列方式 **/
 
 				}
-
+				.title >view:nth-child(1){
+					max-width: 100rpx;
+					margin-right: 10rpx;
+				}
 				.zhixing {
 					width: 72rpx;
 					height: 24rpx;
-					background: #28D165;
+					background-color: #28D165;
 					border-radius: 16rpx;
 					font-size: 18rpx;
 					font-family: PingFangSC-Medium, PingFang SC;
@@ -597,6 +686,14 @@
 					text-align: center;
 					position: absolute;
 					right: 15rpx;
+				}
+				.zhixing1 {
+					background-color: #FFFFFF;
+					color: #28D165;
+				}
+				.zhixing2 {
+					background-color: #CCCCCC;
+					color: #FFFFFF;
 				}
 			}
 

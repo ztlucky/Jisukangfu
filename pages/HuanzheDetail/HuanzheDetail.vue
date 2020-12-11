@@ -118,7 +118,7 @@
 				<view class="lineview">
 
 				</view>
-				<view class="xiangmuList" v-if="info.treatmentList">
+				<view class="xiangmuList" v-if="info.treatmentList.length>=1 && info.treatmentList[0].subproject">
 					<view class="xiangmuItem"  v-for="(v,k) in info.treatmentList[0].subproject" :key="k">
 						<view class="dot"></view>
 						<view class="xiangmuItemRight">
@@ -126,7 +126,9 @@
 								<view class="itemRightTitle hidden">{{v.name}}</view>
 								<view class="itemRightTime">{{v.start}} - {{v.end}}</view>
 							</view>
-							<view class="itemRightRun" @click="runXiangMu(k)">执行</view>
+							<view class="itemRightRun itemRightRun1" v-if="v.type == 1" @click="runXiangMu(k,1)">完成</view>
+							<view class="itemRightRun itemRightRun2" v-else-if="v.type == 2" @click="runXiangMu(k,2)">暂停</view>
+							<view class="itemRightRun" v-else @click="runXiangMu(k,0)">执行</view>
 						</view>
 					</view>
 				</view>
@@ -251,7 +253,7 @@
 			<text class="huanzhepingding" @click="toPage('/pages/KangfuPingdingListPage/KangfuPingdingListPage')">患者评定</text>
 			<text class="kangfujilu" @click="toPage('/pages/HuanzheDetail/record/record')">康复记录</text>
 		</view>
-		<xiangmu v-if="isShowPerformWindow" :short="short" :long="long" :number="number" @setNumber="setNumber" @setShowPerformWindowStatus="stopProgress" @setShowFinishWindowStatus="setShowFinishWindowStatus"></xiangmu>
+		<xiangmu v-if="isShowPerformWindow" :short="short" :long="long" :number="number" @setNumber="setNumber" @setShowPerformWindowStatus="setShowPerformWindowStatus" @stopProgress="stopProgress" @setShowFinishWindowStatus="setShowFinishWindowStatus"></xiangmu>
 		<complete-target v-if="isShowFinishWindow" @confirmFinish="confirmFinish" :number="number"></complete-target>
 	</view>
 </template>
@@ -334,15 +336,18 @@
 					if(data.file){
 						data.file = JSON.parse(data.file);
 					}
-					if(data.treatmentList){
-						data.treatmentList[0].subproject = JSON.parse(data.treatmentList[0].subproject);
-						data.treatmentList[0].subproject.map((v,k)=>{
+					if(data.treatmentList.length>=1){
+						if(data.treatmentList[0].subproject){
+							data.treatmentList[0].subproject = JSON.parse(data.treatmentList[0].subproject);
+							data.treatmentList[0].subproject.map((v,k)=>{
 							let time = new Date(v.value).getTime() + v.time * 60*1000;
 							let start = new tool().formDate(new Date(v.value),4);
 							let end = new tool().formDate(new Date(time),4);
 							data.treatmentList[0].subproject[k].start = start;
 							data.treatmentList[0].subproject[k].end = end;
 						})
+						}
+						
 					}
 					// if(data.patientRecords.length >=1){
 						// data.patientRecords.map((v,k)=>{
@@ -418,7 +423,8 @@
 				this.number = 1;
 				this.setShowPerformWindowStatus();
 				this.short = this.list[index].shortGoals;
-				this.long = this.list[index].longGoals
+				this.long = this.list[index].longGoals;
+				console.log(this.list[index]);
 			},
 			setNumber(data){
 				this.number = data.num;
@@ -428,12 +434,14 @@
 				this.setShowFinishWindowStatus();
 			},
 			stopProgress(){
-				this.completeXiangMu(false).then(()=>{
+					this.setProgress(false).then(()=>{
+						this.getInfo();
+					})
 					this.setShowPerformWindowStatus();
-				})
 			},
 			setShowFinishWindowStatus(){
-				this.completeXiangMu().then(()=>{
+					this.setProgress().then(()=>{
+						this.getInfo();
 					this.isShowFinishWindow = !this.isShowFinishWindow;
 				})
 				
@@ -446,8 +454,8 @@
 				let that = this;
 				let id = this.info.treatmentList[0].subproject[this.nowIndex].id;
 				return request({
-					url:getApp().$api.huanzhe.runXiangMu,
-					type:"POST",
+					url:getApp().$api.huanzhe.editProgram,
+					type:"PUT",
 					data:{
 						doctorId:that.info.userId,
 						patientId:that.info.id,
@@ -458,6 +466,20 @@
 				}).then(data=>{
 					console.log(data);
 				})
+			},
+			setProgress(f = true){
+				let that = this;
+				this.info.treatmentList[0].subproject[this.nowIndex].type = f?1:2
+				let id = this.info.treatmentList[0].id;
+				let subproject = JSON.stringify(this.info.treatmentList[0].subproject);
+				return request({
+					url:getApp().$api.huanzhe.editProgram,
+					type:"PUT",
+					data:{
+						id,
+						subproject
+					}
+				},false)
 			}
 		}
 	}
@@ -964,6 +986,28 @@
 				width: 80rpx;
 				height: 40rpx;
 				background-color: #31D880;
+				border-radius: 20rpx;
+				margin-right: 30rpx;
+				text-align: center;
+				line-height: 40rpx;
+				color: #FFFFFF;
+				font-size: 24rpx;
+			}
+			.itemRightRun1 {
+				width: 80rpx;
+				height: 40rpx;
+				background-color: #FFFFFF;
+				border-radius: 20rpx;
+				margin-right: 30rpx;
+				text-align: center;
+				line-height: 40rpx;
+				color: #31D880;
+				font-size: 24rpx;
+			}
+			.itemRightRun2 {
+				width: 80rpx;
+				height: 40rpx;
+				background-color: #CCCCCC;
 				border-radius: 20rpx;
 				margin-right: 30rpx;
 				text-align: center;

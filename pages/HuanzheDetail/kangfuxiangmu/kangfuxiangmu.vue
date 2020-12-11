@@ -30,7 +30,8 @@
 					<text>长期目标：{{v.longGoals}}</text>
 				</view>
 				<view class="itemBottom">
-					<view class="">剩余时间：{{v.days}}天</view>
+					<view class="" v-if="v.doctorAdviceType == '短嘱'">剩余时间：{{v.days<=0?0:v.days}}天</view>
+					<view class="" v-if="v.doctorAdviceType == '长嘱'">长期</view>
 					<view class="" @click="endXiangMu(k)">结束</view>
 				</view>
 			</view>
@@ -115,6 +116,8 @@
 				this.isShowPerformWindow = !this.isShowPerformWindow;
 			},
 			endXiangMu(index){
+				let that = this;
+				this.nowIndex = index;
 				uni.showModal({
 					title:'温馨提示',
 					content:'是否结束该项目',
@@ -123,11 +126,13 @@
 					confirmColor:"#31D880",
 					success(res) {
 						if(res.confirm){
-							console.log('结束')
+							that.completeXiangMu().then(()=>{
+								that.getList(true);
+							});
 						}
 					}
 				})
-				// this.nowIndex = index;
+				
 				// this.number = 1;
 				// this.setShowPerformWindowStatus();
 				// this.short = this.list[index].shortGoals;
@@ -164,13 +169,12 @@
 				let that = this;
 				let id = this.list[this.nowIndex].id;
 				return request({
-					url:getApp().$api.huanzhe.runXiangMu,
+					url:getApp().$api.huanzhe.endXiangMu,
 					type:"POST",
 					data:{
-						doctorId:that.info.userId,
+						doctorId:that.info.huanZheInfo.userId,
 						patientId:that.id,
-						treatmentId:id,
-						tscore:that.number
+						treatmentId:id
 					}
 				}).then(data=>{
 					console.log(data);
@@ -358,8 +362,9 @@
 	}
 
 	.itemBottom>view:nth-child(1) {
-		min-width: 224rpx;
-		padding: 0 10rpx;
+		max-width: 224rpx;
+		/* padding:0 20rpx; */
+		padding: 0 20rpx;
 		height: 42rpx;
 		background: #2AD36A;
 		line-height: 42rpx;
