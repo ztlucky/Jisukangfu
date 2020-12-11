@@ -27,38 +27,40 @@
 				</view>
 			</view>
 		
- 	<view class="mainscrollview"  >
+ 	<scroll-view :scroll-y="true" class="mainscrollview"  >
  		 
   			 
- 		<!-- <navigator :url="'/pages/Daxue/Zhibodetail/Zhibodetail?id=' + item.id" class="item" v-for="(item, index) in list" :key="index" hover-class="none">
-	 <view  class="topview">
- 		 <image class="newimage" :src="item.cover" v-if='item.cover.length>0' ></image>
-		 <image class="newimage" :src="item.photo_url" v-if='item.photo_url!=null' ></image>
-		 
-		 <text class="liveview">· 直播中</text>
+ 		<navigator :url="'/pages/Daxue/Zhibodetail/Zhibodetail?id=' + item.id" class="zhiboitem" v-for="(item, index) in list" :key="index" hover-class="none">
+	<view  class="topview" v-if='item.cover.length>0'>
+ 		  <image class="newimage" :src="item.cover"  ></image>
+ 		 
+		<text class="liveview" v-if="item.status == 0">· 未开始</text>
+		<text class="liveview" v-if="item.status == 1">· 直播中</text>
+		<text class="liveview" v-if="item.status == 2">· 已结束</text>
+		
  				 <view class="newrightText">
-					 <view class="newtitle">{{ item.title }}</view> 
+					<view class="newtitle">{{ item.title }}</view> 
 					 	<view class="newSubtitle" v-if="item.source">{{ item.source }}</view>
 						<view class="newBottomView">
-							<text class="newprice">¥20/会员价¥15元 </text>
-							<text class="newpeopleCount">{{ item.read }}人观看</text>
+							<text class="newprice">¥{{item.cost}}/会员价¥{{item.memberCost}}元 </text>
+							<text class="newpeopleCount" v-if="item.viewerCount >0">{{item.viewerCount}}人观看</text>
 							
 							
 						</view>
 					 <text class="enterview">
 					 	进入
 					 </text>
-				 </view>
+				 </view> 
 				 </view>
  				 	
 					 
-		</navigator> -->
+		</navigator>
   					 		
  		<!-- <articleList   class="mainlist" :list="list"   /> -->
  					                             				
  						 
   	
-   </view> 
+   </scroll-view> 
 	 
 		
 		 
@@ -200,7 +202,7 @@ export default {
 					if (res.code ==200) {
 						 
 						 
-					   this.list =res.result.records;
+					   this.list =  res.result.records;
 						  // this.list =  res.data.list ;
 						
 					 
@@ -447,7 +449,7 @@ page {
 .mainscrollview{
  	 
 	height: 95%;
-  	
+   	
 }
 .scroll {
       }
@@ -722,8 +724,8 @@ justify-content: space-between;
 	 margin-top: 30rpx;
  }
  //
- .list {
-  	.item {
+ 
+  	.zhiboitem {
  		width: 100%;
  		margin-left: 30upx;
   		display: flex;
@@ -824,6 +826,6 @@ justify-content: space-between;
  			}
  			//padding-bottom: 30rpx;
  		}
- 	}
+ 	 
  }
 </style>

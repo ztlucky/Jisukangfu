@@ -52,13 +52,13 @@
 		<view class="course border">
 			<view class="top">
 				<textarea placeholder="请输入课程的文字内容（选填）…" @input="input"></textarea>
-				<view class="topImageList">
+				<!-- <view class="topImageList" >
 					<view v-for="(v,k) in imageList" :key="k" :class="'imageItem '+((k)%3 == 1?'imageItem1':'imageItem')" >
 						<image mode="aspectFill" :src="v"></image>
 						<image src="/static/icon_delete.png" class="delete" @click="deleteImage(k)"></image>
 					</view>
 					<image  src="/static/zhibo/img_tupian.png" :class="'imageItem imageAdd '+((imageList.length)%3 == 1?'imageItem1':'imageItem')" @click="getImages"></image>
-				</view>
+				</view> -->
 			</view>
 			<view class="selectedItem">
 				<view class="selectedTitle">

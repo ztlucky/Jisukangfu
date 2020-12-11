@@ -1,28 +1,42 @@
 <template>
-	<view class="item" @click="toPage()">
-		<view class="itemLeft">
-			<image mode="aspectFill" src="/static/gongzuotai/bg_zhibo.png"></image>
-			<view class="tips">
-				<view class="dot"></view>
-				<view class="tipsText">直播中</view>
-			</view>
+	<view class="list" v-if="list.length > 0">
+		<navigator :url="'/pages/Daxue/Zhibodetail/Zhibodetail?id=' + item.id" class="item" v-for="(item, index) in list" :key="index" hover-class="none">
+	<view class="itemLeft">
+		<image mode="aspectFill" :src="item.cover"></image>
+		<view class="tips">
+			<view class="dot"></view>
+ 			<text class="tipsText" v-if="item.status == 0">未开始</text>
+		  	<text class="tipsText" v-if="item.status == 1">直播中</text>
+			<text class="tipsText" v-if="item.status == 2">已结束</text>  
 		</view>
-		<view class="itemRight">
-			<view class="title hidden2">华南地区较早开展种植诊疗业务规范化的医疗中心华南地区较早开展种植诊疗业务规范化的医疗中心。</view>
-			<view class="itemAddress">华南地区</view>
-			<view class="itemInfo">
-				<view>¥20元/会员价¥15元</view>
-				<view class="">
-					<view>201581人观看</view>
-					<view>进入</view>
-				</view>
+	</view>
+	<view class="itemRight">
+		<view class="title hidden2">{{item.title}}</view>
+		<!-- <view class="itemAddress">华南地区</view> -->
+		<view class="itemInfo">
+			<view>¥ {{item.cost}}元/会员价¥{{item.memberCost}}元</view>
+			<view class="">
+				<view> {{item.viewerCount}}人观看</view>
+				<view>进入</view>
 			</view>
 		</view>
 	</view>
+					 
+		</navigator>
+	</view>
+	 
 </template>
 
 <script>
 	export default {
+		props: {
+			list: {
+				type: Array,
+				default: function(e) {
+					return [];
+				}
+			}
+		},
 		data() {
 			return {
 
@@ -96,6 +110,7 @@
 
 	.itemRight {
 		flex: 1;
+		position: relative;
 	}
 
 	.itemRight .title {
@@ -120,6 +135,8 @@
 		justify-content: space-between;
 		height: 36rpx;
 		align-items: center;
+		position: absolute;
+		bottom: 10rpx;
 	}
 
 	.itemInfo>view:nth-child(1) {
@@ -143,6 +160,7 @@
 		font-weight: 400;
 		color: #999999;
 		line-height: 26rpx;
+		margin-left: 20rpx;
 	}
 
 	.itemInfo>view:nth-child(2)>view:nth-child(2) {

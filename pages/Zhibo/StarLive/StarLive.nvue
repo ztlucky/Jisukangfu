@@ -1,0 +1,315 @@
+<template>
+	<view class="viewPage">
+		 
+			 
+			     <live-pusher id='livePusher' ref="livePusher"  :style="[{height:viewHeight + 'px'}]" :url="liveurl"
+			      mode="HD":enable-camera="true" :auto-focus="true" :beauty="5" whiteness="3" 
+			       @statechange="statechange" @netstatus="netstatus" @error = "error"
+ 			      ></live-pusher>
+			 <image class="returnBtn" src="../../../static/zhibo/guanbi.png" @click="returnAction"></image>
+ 		            
+		   <view class="playbtn" :style="[{width:viewWidth +'px'}]"  @click="clickplayBtn" >
+			   <image src="../../../static/zhibo/bofang.png" class="playbtnimage"   ></image>
+			   <text class="playbtntext" v-if="isplay == false">开始直播</text>
+			   <text class="playbtntext" v-if="isplay == true">结束直播</text>
+			   
+		   </view>
+		   <image class="cameraBtn" src="../../../static/zhibo/qiehuan.png" @click="switchCamera"></image>
+		   
+		      
+	</view>
+ 
+</template>
+
+<script>
+	import request from '../../../utils/util.js'
+ 	
+	export default {
+		data() {
+			return {
+				liveId:'',//直播的ID
+				streamName:'',//流名称，根据流名称获取直播推流地址
+				liveurl:'',
+				 viewHeight:'0',
+				 viewWidth:'0',
+				 isplay:false,//是否开始直播
+				 
+			}
+		},
+		onLoad:function(e){
+			this.streamName = e.streamName;
+			this.liveId = e.liveid;
+			console.log(e.streamName)
+			console.log(e.liveid)
+			
+			this.loadLiveurl()
+ 			
+			
+		},
+		onShow() { 			
+		},
+		 onReady() {
+		            // 注意：需要在onReady中 或 onLoad 延时
+		            this.context = uni.createLivePusherContext("livePusher", this);
+					var that = this;
+					uni.getSystemInfo({
+					    success: function (res) {
+					    that.viewHeight = res.windowHeight; 
+						that.viewWidth = res.windowWidth
+					    }
+					});
+		        },
+		methods: {
+			//返回
+						returnAction(){
+							 //退出直播
+							 this.stopLive()
+							 
+						},
+						clickplayBtn(){
+							if(this.isplay == false){
+								this.start()
+							}else{
+								this.stopLive()
+							}
+						},
+						//获取推流地址
+					loadLiveurl(){
+ 										var that = this;
+										uni.request({
+											url: 'http://www.huaxiakangfu.com:8090/live/live/getPushUrl',
+											data: {
+												'流名称': this.streamName
+												 
+											},
+											method: 'GET',
+											dataType: 'json',
+											success: res => {
+												console.log(res.data)
+												
+												if (res.data.code ==200) {
+												   that.liveurl =  res.data.result;
+												   
+													console.log(that.liveurl)
+												 
+												}
+											},
+											fail: res => {
+											},
+											complete: res => {
+											}
+										})
+										 
+									},
+									//修改直播状态开始直播
+									startLiveStatus(){
+										console.log("直播已开始")
+										var that = this;
+										uni.request({
+											url: "http://www.huaxiakangfu.com:8090/live/live/startLive",
+											data: {
+												live_id: that.liveId
+												 
+											},
+											method: 'GET',
+											dataType: 'json',
+											success: res => {
+												
+												if (res.data.code ==200) {
+												   that.isplay =  true;
+ 												 uni.showToast({
+												 	title:'直播已开始',
+													icon:'none'
+												 })
+												}
+											},
+											fail: res => {
+ 												
+											},
+											complete: res => {
+												
+											}
+										});
+									},
+									//修改直播状态结束直播
+									endLiveStatus(){
+										console.log('stop')
+										var that = this;
+										uni.request({
+											url: "http://www.huaxiakangfu.com:8090/live/live/stopLive",
+											data: {
+												live_id: that.liveId
+												 
+											},
+											method: 'GET',
+											dataType: 'json',
+											success: res => {
+												console.log(res)
+												
+												if (res.data.code ==200) {
+						 						
+												  uni.navigateBack({
+												  	
+												  })
+												  uni.showToast({
+												  	title:'直播已结束',
+												  	icon:'none',
+												  													
+												  })
+												}
+											},
+											fail: res => {
+											},
+											complete: res => {
+											}
+										});
+									},
+			
+			 statechange(e) {
+			                //console.log("statechange:" + JSON.stringify(e));
+			            },
+			            netstatus(e) {
+			               // console.log("netstatus:" + JSON.stringify(e));
+			            },
+			            error(e) {
+			                //console.log("error:" + JSON.stringify(e));
+			            },
+			            start: function() {
+							var that = this;
+			                this.context.start({
+			                    success: (a) => {
+									console.log("start")
+									that.startLiveStatus();
+									that.isplay = true;
+  
+ 			                    }
+			                });
+			            },
+			            close: function() {
+			                this.context.close({
+			                    success: (a) => {
+			                       // console.log("livePusher.close:" + JSON.stringify(a));
+			                    }
+			                });
+			            },
+			            snapshot: function() {
+			                this.context.snapshot({
+			                    success: (e) => {
+			                       // console.log(JSON.stringify(e));
+			                    }
+			                });
+			            },
+			            resume: function() {
+			                this.context.resume({
+			                    success: (a) => {
+			                      //  console.log("livePusher.resume:" + JSON.stringify(a));
+			                    }
+			                });
+			            },
+			            pause: function() {
+			                this.context.pause({
+			                    success: (a) => {
+			                       // console.log("livePusher.pause:" + JSON.stringify(a));
+			                    }
+			                });
+			            },
+			         	//结束直播
+						stopLive(){
+							if(this.isplay == true){
+								var that = this;
+								uni.showModal({
+									title: "提示",
+									content: '确认结束该直播？',
+									success: function(e) {
+										if (e.confirm) {
+											console.log("queren")
+											
+								          that.stop()
+										} else if (e.cancel) {
+ 								
+										}
+									}
+								})
+							}else{
+								uni.navigateBack({
+									
+								})
+								uni.showToast({
+									title:'直播已结束',
+									icon:'none',
+																					
+								})
+							}
+						},
+			         stop: function() {
+						 console.log("stop")
+						 var that = this;
+ 						this.context.stop({
+						    success: (a) => {
+								  that.endLiveStatus();
+						    console.log(JSON.stringify(a));
+						    }
+						     });
+			       },
+
+			            switchCamera: function() {
+			                this.context.switchCamera({
+			                    success: (a) => {
+			                        console.log("livePusher.switchCamera:" + JSON.stringify(a));
+			                    }
+			                });
+			            },
+			            startPreview: function() {
+			                this.context.startPreview({
+			                    success: (a) => {
+			                        console.log("livePusher.startPreview:" + JSON.stringify(a));
+			                    }
+			                });
+			            },
+			            stopPreview: function() {
+			                this.context.stopPreview({
+			                    success: (a) => {
+			                        console.log("livePusher.stopPreview:" + JSON.stringify(a));
+			                    }
+			                });
+			            }
+		}
+	}
+</script>
+
+<style scoped >
+ .returnBtn{
+	 position: fixed;
+	 top: 80rpx;
+	 left: 40rpx;
+	 width: 40rpx;
+	 height: 40rpx;
+  }
+		.playbtn{
+			width: 360px;
+  			position: fixed;
+ 			z-index: 1000000;
+			display:flex;
+			bottom: 50rpx;
+			flex-direction:column;
+			align-items:center;
+		}
+		.playbtnimage{
+			width: 80rpx;
+			height: 80rpx;
+ 		}
+		.playbtntext{
+			font-size: 28rpx;
+			color: #FFFFFF;
+			margin-top: 10rpx;
+		}
+	 	 
+  .cameraBtn{
+	  width: 80rpx;
+	  height: 80rpx;
+ 	  position: fixed;
+	  top: 180rpx;
+	  right: 60rpx;
+  }
+	
+</style>

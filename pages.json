@@ -755,6 +755,42 @@
             }
             
         }
+        ,{
+           "path": "pages/Zhibo/StarLive/StarLive",
+           "style": {
+           	"app-plus": {
+           		"titleNView": "false",
+           		"scrollIndicator": "none",
+           		"bounce": "none",
+           		"safearea": {
+           			"bottom": {
+           				"offset": "auto"
+           			}
+           		}
+           	}
+           
+           }
+           
+            
+        }
+        ,{
+            "path" : "pages/Zhibo/StarLive/test/test",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/Zhibo/WatchLive/WatchLive",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "直播详情",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
