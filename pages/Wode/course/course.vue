@@ -1,8 +1,8 @@
 <template>
 	<view class="viewPage">
 		<view class="list">
-			<view class="item" v-for="(v,k) in [1,2,3,4,5,6,7,8,9]">
-				<course ></course>
+			<view class="item" v-for="(v,k) in list">
+				<course :info="v"></course>
 			</view>
 		</view>
 		<view class="save" @click="toPage('/pages/Wode/createCourse/createCourse')">新建课程</view>
@@ -10,12 +10,30 @@
 </template>
 
 <script>
-	import course from "../../../components/course/course.vue"
+	import course from "../../../components/course/course.vue";
+	import request from "../../../utils/util.js"
 	export default {
 		data() {
 			return {
-				
+				index:1,
+				size:20,
+				isGetMoreDataList:true,
+				list:[]
 			}
+		},
+		onReachBottom() {
+			if (this.isGetMoreDataList) {
+				this.getList();
+			} else {
+				uni.showToast({
+					title: "暂无更多数据",
+					duration: 1500,
+					icon:"none"
+				})
+			}
+		},
+		onShow() {
+			this.getList(true);
 		},
 		components:{
 				course
@@ -27,6 +45,31 @@
 					animationDuration: 300,
 					animationType: 'slide-in-right'
 				})	
+			},
+			getList(f = false){
+				if(f){
+					this.index = 1;
+					this.list = [];
+					this.isGetMoreData = true;
+				}
+				let that = this;
+				return request({
+					url:getApp().$api.course.getList,
+					type:"GET",
+					data:{
+						pageNo:that.index,
+						pageSize:that.size
+					}
+				},true,true).then(data=>{
+					console.log(data.records);
+					if (data.records.length >= that.size) {
+						this.isGetMoreDataList = true;
+					} else {
+						this.isGetMoreDataList = false;
+					}
+					that.list = that.list.concat(data.records);
+					that.page++;
+				})
 			}
 		}
 	}

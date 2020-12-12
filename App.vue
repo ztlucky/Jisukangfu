@@ -31,7 +31,7 @@
 	/*每个页面公共css */
 	/* 	//控制滚动条
  */
-/* #ifdef APP-PLUS  */
+
 	::-webkit-scrollbar {
 		display: none;
 	}
@@ -53,6 +53,6 @@
 	.uni-radio-input:hover {
 		border-color: #31D880 !important;
 	}
-/* #endif */
+
 
 </style>

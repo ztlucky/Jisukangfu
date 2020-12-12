@@ -1,5 +1,5 @@
-  let apiRoot = 'http://www.huaxiakangfu.com:8090/';
- // let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
+  // let apiRoot = 'http://www.huaxiakangfu.com:8090/';
+ let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
 let api = {
 	common: {
 		aboutUs: apiRoot + 'common/aboutUs.html',
@@ -84,11 +84,11 @@ let api = {
 		//手机验证码登陆
 		loginCode: apiRoot + "app/user/loginByPhoneCode",
 		//手机密码登陆
-		loginPwd: apiRoot + "app/user/loginByPasswd",
+		loginPwd: apiRoot + "user/user/loginByAccount",
 		//密码重置
 		resetPwd: apiRoot + "app/user/updateByPhoneCode",
 		//设置密码
-		setPwd:apiRoot + "app/user/setPasswd",
+		setPwd:apiRoot + "user/user/updatePWD",
 		//获取 用户-康复师列表
 		hostList:apiRoot + "user/user/list",
 		login: apiRoot + "user/login.html",
@@ -104,6 +104,10 @@ let api = {
 		feedback: apiRoot + "user/feedback.html",
 		logout: apiRoot + "user/logout.html",
 		getOrderList:`${apiRoot}order/appOrder/list`,//获取用户订单列表
+		getUserInfo:`${apiRoot}user/user/queryById`,
+		editUserInfo:`${apiRoot}user/user/edit`,
+		setUserPhone:`${apiRoot}user/user/updatePhone`,
+		login:`${apiRoot}user/user/loginByPhoneCode`,//手机号登陆 注册以及短信验证
 	},
 	huanzhe:{
 		//获取病症
@@ -149,6 +153,10 @@ let api = {
  
 		'getInfo':`${apiRoot}patient/patient/YSWorkbench`,
 		'getCompareList':`${apiRoot}patient/patient/queryAKeyToCompare`
+	},
+	course:{
+		"addCourse":`${apiRoot}course/course/add`,
+		"getList":`${apiRoot}course/course/list`
 	}
  
 };

@@ -28,6 +28,7 @@
 </template>
 
 <script>
+	let md5 = require('md5');
 	export default {
 		data() {
 			return {
@@ -55,28 +56,29 @@
 			 uni.showLoading({
 			 	
 			 })
+			 let passwd = md5(this.password + 'JSKF1234');
 				this.$app.request({
 						url: this.$api.user.loginPwd,
 						data: {
-							phone: this.mobile,
-							passwd: this.password
+							account: this.mobile,
+							pwd:passwd
 						},
-						method: 'POST',
+						method: 'GET',
 						success: res => {
 							uni.hideLoading()
 							uni.showToast({
-								title:res.msg,
+								title:res.message,
 								icon:"none"
 							})
 								//登陆成功
 							if(res.code == '200'){
- 								                             uni.setStorageSync('userid',res.data.userid)
-															 uni.setStorageSync('name',res.data.name)
-															 uni.setStorageSync('roletype',res.data.roletype)
-															 uni.setStorageSync('headurl',res.data.name)
-															 uni.setStorageSync('phone',res.data.phone)
-								getApp().globalData.userId = res.data.userid;
-								getApp().globalData.userName = res.data.name; 
+								 uni.setStorageSync('userid',res.result.id)
+								 uni.setStorageSync('name',res.result.name)
+								 uni.setStorageSync('roletype',res.result.roletype)
+								 uni.setStorageSync('headurl',res.result.headUrl)
+								 uni.setStorageSync('phone',res.result.phone)
+								getApp().globalData.userId = res.result.id;
+								getApp().globalData.userName = res.result.name; 
 								
  								setTimeout(function(){
 								      // 登录成功

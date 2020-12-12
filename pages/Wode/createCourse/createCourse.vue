@@ -4,10 +4,10 @@
 			<view class="item">
 				<view class="itemLeft">
 					<image src="../../../static/zhibo/icon_biaoti.png"></image>
-					<view class="hidden">直播标题</view>
+					<view class="hidden">课程标题</view>
 				</view>
 				<view class="itemRight">
-					<input class="input" placeholder="请输入直播标题" v-model="zhiboTitle"></input>
+					<input class="input" placeholder="请输入课程标题" v-model="zhiboTitle"></input>
 					 <image src="../../../static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
@@ -26,7 +26,7 @@
 			</view>
 		</view>
 		<view class="onLoadCover border" @click="getCover">
-			<image :src="cover.imageList.length!=0?cover.imageList[0]:'../../../static/zhibo/img_fengmian.png'"></image>
+			<image mode="aspectFill" :src="cover.imageList.length!=0?cover.imageList[0]:'../../../static/zhibo/img_fengmian.png'"></image>
 			<view >上传封面</view>
 		</view>
 		<view class="course border">
@@ -135,7 +135,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="save" @click="creatLiveAction">提交申请</view>	
+		<view class="save" @click="creatCourseAction">提交申请</view>	
 		<l-file ref="lFile"></l-file>
 		<choose ref="chooesFile" :image="isAddImage" :count="count" :video="isAddVideo" :pdf="isAddPDF"></choose>
 		<w-picker
@@ -426,8 +426,8 @@
 			input(e){
 				this.value = e.detail.value
 			},
-			//创建直播
-			creatLiveAction(){
+			//创建课程
+			creatCourseAction(){
  				
 				if(this.zhiboTitle.length==0){
 					uni.showToast({
@@ -465,10 +465,10 @@
 						icon:'none'
 					})
 				}else{
-					this.creatLive();
+					this.creatCourse();
 				  }
  			},
-			async creatLive(){
+			async creatCourse(){
 				let that = this;
 				
 				// await this.getHostList(); 
@@ -481,9 +481,9 @@
 				}
 	            console.log(lecIds)
  				
- 					//调用创建直播的接口
+ 					//调用创建课程的接口
 			   this.$app.request({
-			   	url: this.$api.zhibo.addlive,
+			   	url: this.$api.course.addCourse,
 			   	method: 'POST',
 			   	data: {
 			   		cost:that.cost,
@@ -492,11 +492,12 @@
 			   		startTime:that.starttime,
 			   		endTime:that.endtime,
 			   		lecturerIds: lecIds,//主持人
-			   		title:that.zhiboTitle,
+			   		name:that.zhiboTitle,
 			   		userId:getApp().globalData.userId,
 			   		presentation:that.value,
 			   		type:type,
-			   		isVisible:that.isvisiable
+			   		isVisible:that.isvisiable,
+					invitationCode:that.code
 			   	},
 			   	dataType: 'json',
 			   	success: res => {

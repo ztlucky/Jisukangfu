@@ -43,10 +43,10 @@ class loadImage {
 
 	upload() {
 
-			// uni.showLoading({
-			// 	title:`文件上传中（${this.nowCount}/${this.imageList.length}）`,
-			// 	mask:true
-			// })
+			uni.showLoading({
+				title:`文件上传中（${this.nowCount}/${this.imageList.length}）`,
+				mask:true
+			})
 		if (this.imageList.length == this.nowCount) {
 			let file = [];
 			this.imageList.map((v,k)=>{
@@ -95,9 +95,9 @@ class loadImage {
 		})
 	}
 	getFile(obj) {
-		console.log(obj)
-		// let file = this.imageList[this.nowCount].value?this.imageList[this.nowCount].value:this.imageList[this.nowCount]; 
-		let file = this.imagePathList[this.nowCount]; //注意：直接上传file文件，不要用FormData对象的形式传
+		// console.log(obj)
+		let file = this.imageList[this.nowCount].value?this.imageList[this.nowCount].value:this.imageList[this.nowCount]; 
+		// let file = this.imagePathList[this.nowCount]; //注意：直接上传file文件，不要用FormData对象的形式传
 		let that = this;
 		let config = {
 			headers: {
@@ -147,9 +147,9 @@ class loadImage {
 		 	  	.then(res => {
 					console.log(res);
 		 	  		if (res.status == 200) {
-		 	  			// that.imageUrl.push(obj.get_url);
-		 	  			// that.nowCount++;
-		 	  			// that.upload();
+		 	  			that.imageUrl.push(obj.get_url);
+		 	  			that.nowCount++;
+		 	  			that.upload();
 		 	  		}
 		 	  	}).catch(
 		 	  		err => {

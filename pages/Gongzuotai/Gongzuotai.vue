@@ -70,21 +70,21 @@
 				</view>
 				<view class="listtipview">
 					<text class="listtitle">患者列表</text>
-					<text class="listrighttitle">查看更多 > </text>
+					<text class="listrighttitle" @click="toPage('/pages/work/patientsList/patientsList')">查看更多 > </text>
 				</view>
 
 
-				<view class="huanzheview" @click="huanzheXiangqing()">
+				<view class="huanzheview" v-for="(item,index) in list" :key="index" @click="huanzheXiangqing(item.id)">
 					<view class="huanzheTopview">
-						<image src="../../static/gongzuotai/icon_nv.png"></image>
+						<image :src="item.sex == 1?'../../static/gongzuotai/icon_nan.png':'../../static/gongzuotai/icon_nv.png'"></image>
 						<view class="huanzherightview">
 							<view class="firstView">
-								<text class="name">刘胡兰</text>
-								<text class="detail">性别：女 年龄：56</text>
+								<text class="name">{{item.name}}</text>
+								<text class="detail">性别：{{item.sex == 1?'男':'女'}} 年龄：{{item.age?item.age:''}}</text>
 							</view>
 							<view class="zhenduanview">
 								<image class="zhenduanimage" src="../../static/gongzuotai/icon_zhenduan1.png"></image>
-								<text>诊断：心脏病</text>
+								<text>诊断：{{item.illnessName}}</text>
 							</view>
 						</view>
 					</view>
@@ -95,9 +95,9 @@
 
 						<view class="timeview">
 							<image src="../../static/gongzuotai/icon_shijian_hong.png" mode=""></image>
-							<text>输入时间：2020-05-32 06:52</text>
+							<text>输入时间：{{item.createTime}}</text>
 						</view>
-						<text class="bianhao">编号：68554513</text>
+						<text class="bianhao">编号：{{item.idNo}}</text>
 					</view>
 
 				</view>
@@ -148,7 +148,8 @@
 				topImageHeight: '',
 				zhiboimagewidth: '',
 				zhiboimageheight: '',
-				info:{}
+				info:{},
+				list:[]
 
 			}
 		},
@@ -297,9 +298,9 @@
 			},
 			//患者详情
 
-			huanzheXiangqing() {
+			huanzheXiangqing(id) {
 				uni.navigateTo({
-					url: '../HuanzheDetail/HuanzheDetail',
+					url: '../HuanzheDetail/HuanzheDetail?id='+id,
 					animationDuration: 300,
 					animationType: 'slide-in-right'
 				})
@@ -318,8 +319,16 @@
 						pageSize: 6
 					},
 					userId: getApp().globalData.userId
-				}).then(data => {
-					console.log(data);
+				},true,true).then(data => {
+					that.list = data.records;
+					console.log(that.list);
+				})
+			},
+			toPage(url){
+				uni.navigateTo({
+					url,
+					animationDuration: 300,
+					animationType: 'slide-in-right'
 				})
 			}
 		}

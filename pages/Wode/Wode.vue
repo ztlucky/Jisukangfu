@@ -3,11 +3,11 @@
  <view class="contentview">
  	<view class="topview">
  		<view class="topHview" @click="jumptoPersonal">
- 			<image  class="userIcon"></image>
+ 			<image mode="aspectFill"  class="userIcon" :src="info.headUrl?info.headUrl:info.sex == 1?'/static/gongzuotai/icon_nan.png':'/static/gongzuotai/icon_nv.png'"></image>
 			<view class="toprightV">
 				<view class="up">
-					<text class="name">刘医生</text>
-					<text class="huiyuan">普通会员</text>
+					<text class="name">{{info.name?info.name:''}}</text>
+					<text class="huiyuan">{{info.role == 2?'康复师':'普通会员'}}</text>
 				</view>
 				<text class="bianji">编辑个人资料</text>
 			</view>
@@ -150,6 +150,7 @@
 </template>
 
 <script>
+	import request from "../../utils/util.js"
 	export default {
 		data() {
 			return {
@@ -170,12 +171,13 @@
 				}
 				],
 				ismoneySecret:false,
-				money:"193.00"
+				money:"193.00",
+				info:{}
 			}
 		},
 		onShow:function(){
 			if(getApp().globalData.userId){
-				
+				this.getUserInfo();
 				
 			}else{
 				//未登陆
@@ -218,6 +220,24 @@
 					animationDuration: 300,
 					animationType: 'slide-in-right'
 				})	
+			},
+			getUserInfo(){
+				let that = this;
+				return request({
+					url:getApp().$api.user.getUserInfo,
+					type:"GET",
+					data:{
+						id:getApp().globalData.userId
+					}
+				},true,true).then(data=>{
+					that.info = data;
+					// that.tongjidata[0].number = data.concernCount?data.concernCount:0;
+					// that.tongjidata[1].number = data.concernCount?data.concernCount:0;
+					that.tongjidata[2].number = data.fansCount?data.fansCount:0;
+					that.tongjidata[3].number = data.concernCount?data.concernCount:0;
+					that.money = data.wallet?data.wallet:0;
+					console.log(data);
+				})
 			}
 		}
 	}
@@ -251,7 +271,6 @@
 			 border-radius: 46rpx;
 			 margin-top:30rpx ;
 			 margin-left: 30rpx;
-			 background-color: red;
 		 }
 			 
 		 .toprightV{

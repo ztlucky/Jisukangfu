@@ -480,6 +480,9 @@
 						subproject
 					}
 				},false)
+			},
+			save(){
+				console.log('治疗结束')
 			}
 		}
 	}

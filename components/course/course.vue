@@ -1,14 +1,19 @@
 <template>
 	<view class="courseItem" @click="toPage()">
 		<image mode="aspectFill" src="/static/gongzuotai/bg_zhibo.png"></image>
-		<view class="title hidden2">数字化种牙是全球公认的先进种植技术数字化种牙是全球公认的先进种植技术</view>
+		<view class="title hidden2">{{info.name?info.name:''}}</view>
 		<view class="tips">课程</view>
-		<view class="price">¥20元/会员价¥15元</view>
+		<view class="price">¥{{info.cost}}元/会员价¥{{info.memberCost}}元</view>
 	</view>
 </template>
 
 <script>
 	export default {
+		props:{
+			info:{
+				type:Object
+			}
+		},
 		data() {
 			return {
 				

@@ -35,6 +35,18 @@
 			}
 		},
 		{
+			"path": "pages/Wode/resetPhone/resetPhone",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/Wode/resetUserInfo/resetUserInfo",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
 			"path": "pages/work/pingDingLiangBiao/pingDingLiangBiao",
 			"style": {
 				"navigationStyle": "custom"
@@ -74,6 +86,14 @@
 			"path": "pages/work/addNotes/addNotes",
 			"style": {
 				"navigationBarTitleText": "学习笔记",
+				"navigationBarBackgroundColor": "#31D880",
+				"navigationBarTextStyle": "white"
+
+			}
+		},{
+			"path": "pages/work/patientsList/patientsList",
+			"style": {
+				"navigationBarTitleText": "患者列表",
 				"navigationBarBackgroundColor": "#31D880",
 				"navigationBarTextStyle": "white"
 
