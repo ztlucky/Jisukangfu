@@ -80,7 +80,7 @@
 // 主页使用场景：小程序分享出去的页面，用户点击开是分享页面，很多情况下是没有返回首页按钮的
 const mainPagePath = ['pages/home/home', 'pages/my/my', 'pages/demo/common', 'pages/template/common', 'pages/apiDemo/common'];
 //返回首页的地址
-const homePath = '/';
+const homePath = '/pages/demo/common';
 //白色表达值
 const whiteList = ['#FFF', '#fff', '#FFFFFF', '#ffffff', 'white', 'rgb(255,255,255)', 'rgba(255,255,255,1)'];
 export default {
@@ -168,7 +168,7 @@ export default {
 		shadow: {
 			type: Boolean,
 			default: function() {
-				return false;
+				return true;
 			}
 		}
 	},
@@ -304,11 +304,11 @@ export default {
 			if (typeof val == 'string') {
 				if (this.type == 'transparent') {
 					this.navBgColor = '';
-				} else if (/^#||[rgb(]||[rgba(]/.test(val)) {
-                    this.navBgColor = 'linear-gradient(90deg,' + val + ',' + val + ')';
+				} else if (val.indexOf('#') === -1) {
+					this.themeBgColorName = val;
+					this.navBgColor = '';
 				} else {
-                    this.themeBgColorName = val;
-                    this.navBgColor = '';
+					this.navBgColor = 'linear-gradient(90deg,' + val + ',' + val + ')';
 				}
 			} else if (Array.isArray(val) && val.length >= 2) {
 				let navBgColor = 'linear-gradient(' + this.bgColorAngle + 'deg';

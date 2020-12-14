@@ -4,7 +4,7 @@
 			<view slot="right" @click="save" class="navRight">保存</view>
 		</nav-bar>
 		<view class="input">
-			<input type="text" :value="text" v-model="text" placeholder="请输入内容"  />
+			<input type="text" :value="value" v-model="value" placeholder="请输入内容"  />
 		</view>
 	</view>
 </template>
@@ -16,7 +16,7 @@
 		data() {
 			return {
 				bgColor:'#FFFFFF',
-				text:''
+				value:''
 			}
 		},
 		components:{
@@ -24,13 +24,13 @@
 		},
 		onLoad(options) {
 			this.key = options.key?options.key:'';
-			this.text = options.value?options.value:'';
+			this.value = options.value?options.value:'';
 		},
 		methods: {
 			save(){
 				uni.$emit("addInfoText",{
 					key:this.key,
-					value:this.text
+					value:this.value
 				});
 				uni.navigateBack();
 			}

@@ -44,7 +44,7 @@
 			this.setTime();
 		},
 		onUnload() {
-
+			this.time = 0;
 		},
 		methods: {
 			sendCode() {
@@ -73,6 +73,7 @@
 				})
 			},
 			setTime() {
+				console.log(this.time)
 				if (this.time >= 1) {
 					setTimeout(() => {
 						this.time--;

@@ -2,14 +2,13 @@
 	<view class="contentview">
 		<view class="header header1" :style="'padding-top:'+topheight+'px'">
 			<view class="title">咨询</view>
-			<view class="sousuo">
+			<view class="sousuo" @click="toPage('/pages/WodeKangfu/searchDoctor/searchDoctor')">
 				<image src="../../static/homesearch.png"></image>
-				<input placeholder="搜索医生" />
+				<input placeholder="搜索医生" :disabled="true"/>
 			</view>
 		</view>
 		<view class="header header2" :style="'padding-top:'+topheight+'px'">
 			<view class="title">咨询</view>
-
 		</view>
 		<view class="topNav">
 			<view class="navItem" v-for="(v,k) in topNav" :key="k" @click="toPage(v.url)">
@@ -20,15 +19,15 @@
 		<view class="hot">
 			<view class="hotTitle">热门专家</view>
 			<view class="hotList" >
-				<view class="hotItem" v-for="(v,k) in [1,2,3,4,5,6,7,8,9]" :key="k">
-					<image mode="aspectFill" src="../../static/gongzuotai/bg_zhibo.png"></image>
-					<view class="hotName hidden">车新颖</view>
-					<view class="hotType hidden">肿瘤科主治医师</view>
+				<view class="hotItem" v-for="(v,k) in hot" :key="k" @click="toPage('/pages/WodeKangfu/doctorInfo/doctorInfo?id='+v.id)">
+					<image mode="aspectFill" :src="v.headUrl" ></image>
+					<view class="hotName hidden">{{v.name}}</view>
+					<view class="hotType hidden">{{v.jobTitle?v.jobTitle:' '}}</view>
 				</view>
 			</view>
 		</view>
 		<view class="recommended">
-			<view class="recommendedTitle">热门专家</view>
+			<view class="recommendedTitle">推荐专家</view>
 			<view class="recommendedList" >
 				<expert :isshow="(k == expertList.length-1)" v-for="(v,k) in expertList" :key="k"></expert>
 			</view>
@@ -39,7 +38,8 @@
 
 <script>
 	import uniRichtext from '../../components/uni-richtext.vue';
-	import expert from "../../components/experts/experts.vue"
+	import expert from "../../components/experts/experts.vue";
+	import request from '../../utils/util.js';
 	export default {
 		components: {
 			uniRichtext,
@@ -49,6 +49,7 @@
 			return {
 				content: '',
 				richList: [],
+				hot:[],
 				uploadUrl: "http://120.78.87.84:8080/conduit/file/uploadFile",
 				topheight:0,
 				topNav:[
@@ -73,15 +74,21 @@
 						icon:'/static/zixun/icon_quanbu.png'
 					}
 				],
-				expertList:[1,2,3,4,5,6,7,8,9]
+				expertList:[],
+				phone:''
 			}
 		},
 		onLoad() {
+			
 			this.init();
 		},
 		methods: {
 			init() {
 				this.initHeight();
+				this.phone = uni.getStorageSync('phone');
+				if(this.phone !=''){
+					this.getInfo();
+				}
 			},
 			initHeight() {
 				let systemInfo = uni.getSystemInfoSync();
@@ -95,6 +102,20 @@
 					url,
 					animationDuration: 300,
 					animationType: 'slide-in-right'
+				})
+			},
+			getInfo(){
+				let that = this;
+				return request({
+					url:getApp().$api.huanzhe.getHomeInfo,
+					type:"GET",
+					data:{
+						phone:that.phone
+					}
+				},true,true).then(data=>{
+					that.hot = data.hot;
+					that.expertList = data.recommend;
+					
 				})
 			}
 		},

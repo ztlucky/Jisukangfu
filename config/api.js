@@ -121,6 +121,7 @@ let api = {
 		editUserInfo:`${apiRoot}user/user/edit`,
 		setUserPhone:`${apiRoot}user/user/updatePhone`,
 		login:`${apiRoot}user/user/loginByPhoneCode`,//手机号登陆 注册以及短信验证
+		addQualification:`${apiRoot}qualification_audit/qualificationAudit/add`,//资质审核
 	},
 	huanzhe:{
 		//获取病症
@@ -147,6 +148,8 @@ let api = {
 		addTreatment:`${apiRoot}treatment/treatment/add`,
 		endXiangMu:`${apiRoot}treatment_record/treatmentRecord/add`,//结束项目
 		editProgram:`${apiRoot}treatment/treatment/edit`,//编辑治疗项目
+		getHomeInfo:`${apiRoot}user/user/hzHomePageData`,//获取咨询首页数据
+		getDoctorList:`${apiRoot}user/user/queryYS`,
  	},
 	wechat: {
 		miniAppLogin: apiRoot + 'wechat/miniAppLogin',
