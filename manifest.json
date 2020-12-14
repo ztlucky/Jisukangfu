@@ -1,5 +1,5 @@
 {
-    "name" : "JisuKangfu",
+    "name" : "极速康复",
     "appid" : "__UNI__BEE7B8D",
     "description" : "",
     "versionName" : "1.0.0",
@@ -102,6 +102,10 @@
                     "xxhdpi" : "/Users/ios/Desktop/pic_xxhd.png",
                     "xxxhdpi" : "/Users/ios/Desktop/pic_xxxhd.png"
                 }
+            },
+            "splashscreen" : {
+                "androidStyle" : "common",
+                "iosStyle" : "common"
             }
         }
     },

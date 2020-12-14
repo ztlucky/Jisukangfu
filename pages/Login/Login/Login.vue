@@ -70,7 +70,6 @@
 		},
 		methods: {
 			//返回
-			
 			returnBack() {
 				uni.switchTab({
 					url:'/pages/Daxue/Daxue'
@@ -194,8 +193,7 @@
 								 									 uni.setStorageSync('phone',res.data.data.phone)
 								 		getApp().globalData.userId = res.data.data.userid;
 								 		getApp().globalData.userName = res.data.data.name; 
-								 		console.log(getApp().globalData.userId);
-								 	 
+ 								 	 
 								 			
 								 			setTimeout(function(){
 								 			      // 登录成功

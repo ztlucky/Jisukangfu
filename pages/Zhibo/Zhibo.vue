@@ -91,7 +91,7 @@ export default {
 		return {  
  			statusBarHeight:20,
  			 
-			category_id: 0,
+			category_id: 1,
 			category_index: 0,
 			scroll_category_id: 'scroll_category_id_0',
 			currentSliderIndex: 0,
@@ -192,7 +192,7 @@ export default {
 				
 				url: this.$api.zhibo.livelist,
 				data: {
-					type: 0,//this.category_id
+					type: this.category_id,
 					pageNo:1,
 					pageSize: 500
 				},
