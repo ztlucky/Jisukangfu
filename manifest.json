@@ -97,10 +97,10 @@
             },
             "icons" : {
                 "android" : {
-                    "hdpi" : "/Users/ios/Desktop/pic_hd.png",
-                    "xhdpi" : "/Users/ios/Desktop/pic_xhd.png",
-                    "xxhdpi" : "/Users/ios/Desktop/pic_xxhd.png",
-                    "xxxhdpi" : "/Users/ios/Desktop/pic_xxxhd.png"
+                    "hdpi" : "/Users/ios/Desktop/万里桐花图片/pic_hd.png",
+                    "xhdpi" : "/Users/ios/Desktop/万里桐花图片/pic_xhd.png",
+                    "xxhdpi" : "/Users/ios/Desktop/万里桐花图片/pic_xxhd.png",
+                    "xxxhdpi" : "/Users/ios/Desktop/万里桐花图片/pic_xxxhd.png"
                 }
             },
             "splashscreen" : {

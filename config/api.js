@@ -64,9 +64,12 @@ let api = {
 	},
 	dingdan:{
 		//获取优惠券
-		getcoupon:apiRoot +"order/appOrder/add",
+		getcoupon:apiRoot +"ticket/appTicket/list",
 		//创建订单
-		creatOrder:apiRoot +"/ticket/appTicket/list",
+		creatOrder:apiRoot +"order/appOrder/add",
+		//微信充值
+		weixinChongzhi:apiRoot +"app/recharge",
+		
 		
 	},
 	pingdingliangbiao:{
