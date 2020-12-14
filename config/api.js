@@ -53,7 +53,20 @@ let api = {
 		//开始直播，修改直播状态
 		startLive:apiRoot +"live/live/startLive",
 		//结束直播
-		endLive:apiRoot +"live/live/startLive"
+		endLive:apiRoot +"live/live/startLive",
+		//发送消息
+		sendMessage:apiRoot +"message/message/add",
+		//获取消息列表
+		getMessageList:apiRoot +"message/message/list",
+		
+		
+		
+	},
+	dingdan:{
+		//获取优惠券
+		getcoupon:apiRoot +"order/appOrder/add",
+		//创建订单
+		creatOrder:apiRoot +"/ticket/appTicket/list",
 		
 	},
 	pingdingliangbiao:{

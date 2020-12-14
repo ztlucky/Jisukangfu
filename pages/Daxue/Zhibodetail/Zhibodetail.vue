@@ -146,6 +146,7 @@
 			/*获取直播详情*/
 			getLivedetail() {
 				let that = this;
+				console.log(this.courseID)
 				return request({
 					url: getApp().$api.zhibo.getLivecourseDetailInfo,
 					type: 'GET',
@@ -154,6 +155,8 @@
 						user_id:getApp().globalData.userId
 					}
 				},true,true).then(data=>{
+					console.log("dddddd")
+					console.log(data)
  					that.detailInfo = data.data;
 					that.isbuy = data.isBuy;
 					that.isfav = data.isCollect;
@@ -281,8 +284,10 @@
 					// 		animationType:'slide-in-right',
 					// 		animationDuration:300
 					// 	})
+					  const item = {liveid:this.courseID,streamName:this.detailInfo.streamName, title:this.detailInfo.title}
+					  console.log(item)
 				 uni.navigateTo({
-				      url:'../../Zhibo/WatchLive/WatchLive' ,
+				      url:'../../Zhibo/WatchLive/WatchLive?item='+encodeURIComponent(JSON.stringify(item)) ,
 				 	animationType:'slide-in-right',
 				 	animationDuration:300
 				 })

@@ -32,7 +32,7 @@
 					</view>
 					<view class="secondItemview" @click="showCouponview">
 						<text class="lefttext">优惠券</text>
-										<text class="righttext1">暂无可用 ></text>
+										<text class="righttext1">{{couponTip}} ></text>
 					</view>
 					 
 				 </view>
@@ -123,8 +123,8 @@
 				cost:'0',
 				beginTime:'',
 				cover:"",//封面
-				info:["ddd","ddd"]
-				
+ 				couponList:[],//优惠券列表
+				couponTip:"暂无可用"
 			}
 		},
 		onLoad:function(option){
@@ -148,16 +148,45 @@
 				
 		},
 		methods: {
+			//获取优惠券列表
+			getcouponlist(){
+				var that = this;
+				this.$app.request({
+					url: this.$api.order.getcoupon,
+					data: {
+						'goodsId':this.courseId ,
+						'moneyStatus':10
+					},
+					method: 'GET',
+					dataType: 'json',
+					success: res => {
+						if (res.code ==200) {
+						   that.couponList =  res.result.records;
+						   if(that.couponList.length>0){
+							   that.couponTip  ="选择优惠券"
+						   }
+							console.log(res.result)
+						 
+						}
+					},
+					fail: res => {
+					},
+					complete: res => {
+					}
+				});
+			},
 				//勾选支付方式
 			choosePayaction(){
-				this.ischoosePay = !this.ischoosePay;
+				//this.ischoosePay = !this.ischoosePay;
 				
 			},
 			//弹出优惠券选择界面
 			showCouponview(){
 				var that = this
+				if(that.couponList.length>0){
 				
 				that.$refs.popup.open()
+				}
 			},
 			//选择优惠券bar切换
 			onClickItem(e) {
@@ -172,8 +201,9 @@
 					// 选好优惠券，点击确定
 					chooseCouponwithSure(){
 						var that = this
-						
-						that.$refs.popup.close()
+							that.$refs.popup.close()
+							
+						 
 						
 					},
 						
