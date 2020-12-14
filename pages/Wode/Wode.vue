@@ -44,7 +44,7 @@
 				<image :src="ismoneySecret?'../../static/Me/icon_yanjing.png':'../../static/Me/kejian.png'" mode="" ></image>
 				
 			</view>
-			<text class="chongzhi">充值</text>
+			<text class="chongzhi" @click="chongzhi">充值</text>
 			<text class="tixian">提现</text>
 	 	</view>
 		<view class="lineview">
@@ -145,16 +145,23 @@
 	 </view>
 	 <view style="width:100%;height:30rpx"></view>
  </view>
-
+<prompt :visible.sync="promptVisible" title="提示"  placeholder="请输入充值金额" @confirm="clickPromptConfirm" mainColor="#0ED482">
+ 		</prompt>
  	</view>
 </template>
 
 <script>
 	import request from "../../utils/util.js"
+	import Prompt from '@/components/zz-prompt/index.vue'
+	
 	export default {
+		components: {
+			Prompt
+		
+		},
 		data() {
 			return {
-					
+					promptVisible:false,
 				tongjidata:[{
 					number:0,
 					title:"得分"
@@ -172,7 +179,8 @@
 				],
 				ismoneySecret:false,
 				money:"193.00",
-				info:{}
+				info:{},
+				chongzhiMoney:'',
 			}
 		},
 		onShow:function(){
@@ -196,6 +204,167 @@
 			
 		},
 		methods: {
+			//
+			chongzhi(){
+				
+				//判断是否存储Wxid
+				 // if(getApp().globalData.wxid !=null ){
+					 this.promptVisible = true;
+ 					 
+				 // }else{
+					 // var that=this
+					 
+					 // uni.showModal({
+					 // 	title: "提示",
+					 // 	content: '您需要先绑定微信',
+					 // 	success: function(e) {
+					 
+					 // 		if (e.confirm) {
+						// 		uni.getProvider({
+						// 		    service: 'oauth',
+						// 		    success: function(res) {
+						// 		        console.log(res.provider);	
+						// 		        if (~res.provider.indexOf('weixin')) {
+						// 		            uni.login({
+						// 		              provider: 'weixin',
+						// 		              success: function (loginRes) {
+						// 		                   that.refreshweixinId(loginRes.authResult.openid)
+								                   							
+						// 		              },
+								
+						// 		              fail:function(res){
+						// 			     uni.showToast({
+						// 				title:"授权失败",
+						// 				icon:'none'
+						// 			})							
+						// 		    }								
+						// 		   })							
+						// 		  }								
+						// 		    }								
+						// 		});
+ 					 
+					 // 		} else if (e.cancel) {
+					 // 			console.log('用户点击取消');
+					 
+					 // 		}
+					 // 	}
+					 // })
+				   // }
+			},
+			//更新用户的微信ID
+			refreshweixinId(wxid){
+				uni.showLoading({
+					title:"绑定中..."
+				})
+				var that = this;
+				this.$app.request({
+					url: this.$api.user.editUserInfo,	
+					data: {
+						id:getApp().globalData.userId,
+						wxId: wxid,
+ 					},
+					method: 'PUT',
+					dataType: 'json',
+					success: res => {
+						uni.hideLoading()
+ 						console.log(res)
+						if (res.code ==200) {
+							  //绑定成功后
+							  刷新本地wxid数据
+							  //getApp().globalData.wxid = wxid;
+							  
+							  uni.showToast({
+							  	title:res.message,
+							  	 icon:'none'
+							  })
+							  
+						}else{
+							uni.showToast({
+								title:res.message,
+								 icon:'none'
+							})
+							
+						}
+					},
+					fail: res => {
+						uni.hideLoading()
+						
+					},
+					complete: res => {
+						uni.hideLoading()
+						
+					}
+				});
+			},
+			clickPromptConfirm(val) {
+				if(val.length == 0){
+					uni.showToast({
+						title:'请输入充值金额',
+						icon:'none'
+					})
+					return;
+				}
+				this.chongzhiMoney = val;
+				
+ 				 
+ 			 var that = this;
+				this.$app.request({
+					url: this.$api.dingdan.weixinChongzhi,	
+					data: {
+						user_id:getApp().globalData.userId,
+ 						money:parseFloat(this.chongzhiMoney),
+						remark:''
+					},
+					method: 'GET',
+					dataType: 'json',
+					success: res => {
+						that.promptVisible = false
+						if (res.code ==200) {
+						 uni.requestPayment({
+						                        provider:"wxpay",
+						                        orderInfo:{
+													partnerid:res.result.partnerId,
+						                            appid:res.result.appId,
+						                            noncestr:res.result.nonceStr,
+						                            package:res.result.packageValue ,
+						                            prepayid:res.result.prepayId,
+                                                    sign: res.result.sign,
+						                           	timestamp:res.result.timeStamp 
+						                        },
+						                        success: function(res) {
+ 											          	setTimeout(function(){
+ 											          				uni.showToast({
+ 											          					title:"充值失败",
+																		icon:'none'
+ 											          				}) 
+ 											          			},2000)
+												 
+						                        },
+						                        fail: function(err) {
+ 													setTimeout(function(){
+                                                        uni.showToast({
+						                                title: "充值失败",
+						                                icon: 'none',
+ 						                            },1000);																},2000)
+						                          
+ 						                        }
+						                    });
+							  
+						}else{
+							uni.showToast({
+								title:res.message,
+								 icon:'none'
+							})
+							
+						}
+					},
+					fail: res => {
+					},
+					complete: res => {
+					}
+				});
+				
+				},
 			//跳转个人信息
 			jumptoPersonal(){
 				uni.navigateTo({

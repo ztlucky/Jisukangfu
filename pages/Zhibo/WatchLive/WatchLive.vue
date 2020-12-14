@@ -133,47 +133,34 @@
 					return
 				}
 				this.dashangMoney = val;
-				
-				console.log(parseFloat(this.dashangMoney))
-				console.log(getApp().globalData.userId)
-				console.log(this.liveid)
-				console.log(getApp().globalData.livesku)
-				
-				this.dashangMoney = val;
 				var that = this;
 				this.$app.request({
-					url: this.$api.dingdan.creatOrder,
-					
+					url: this.$api.dingdan.creatOrder,	
 					data: {
-						actuallyPaid:parseFloat(that.dashangMoney),
-						customerId:getApp().globalData.userId,
-						goodsId:that.liveid,
-						goodsName:that.livetitle,
- 						goodsSku:getApp().globalData.reword,
+ 						customerId:getApp().globalData.userId,
+						goodsId:this.liveid,
+  						goodsSku:getApp().globalData.reword,
+						originalPrice:parseFloat(this.dashangMoney)
 					},
 					method: 'POST',
 					dataType: 'json',
 					success: res => {
-						console.log("gggg")
-						console.log(res)
+						this.promptVisible = false
+ 						console.log(res)
 						if (res.code ==200) {
-							 uni.requestPayment({
-							 	nonceStr:res.data.result.nonceStr,
-								package:res.data.result.package,
-								paySign:res.data.result.paySign,
-								signType:res.data.result.signType,
-								timeStamp:res.data.result.timeStamp,
-								success:function(res){
-									
-								},
-								fail:function(err){
-									
-								},
-								complete:function(res){
-									
-								}
-							 });
- 						}
+							  uni.showToast({
+							  	title:'打赏成功',
+								icon:'none'
+							  })
+							  
+							  
+ 						}else{
+							uni.showToast({
+								title:res.message,
+								 icon:'none'
+							})
+							
+						}
 					},
 					fail: res => {
 					},

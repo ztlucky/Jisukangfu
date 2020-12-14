@@ -10,6 +10,9 @@
         "usingComponents" : true,
         "nvueCompiler" : "uni-app",
         "compilerVersion" : 3,
+		"compatible": {  
+			    "ignoreVersion": true //true表示忽略版本检查提示框，HBuilderX1.9.0及以上版本支持  
+			},  
         "splashscreen" : {
             "alwaysShowBeforeRender" : true,
             "waiting" : true,
@@ -97,10 +100,10 @@
             },
             "icons" : {
                 "android" : {
-                    "hdpi" : "/Users/ios/Desktop/pic_hd.png",
-                    "xhdpi" : "/Users/ios/Desktop/pic_xhd.png",
-                    "xxhdpi" : "/Users/ios/Desktop/pic_xxhd.png",
-                    "xxxhdpi" : "/Users/ios/Desktop/pic_xxxhd.png"
+                    "hdpi" : "/Users/ios/Desktop/万里桐花图片/pic_hd.png",
+                    "xhdpi" : "/Users/ios/Desktop/万里桐花图片/pic_xhd.png",
+                    "xxhdpi" : "/Users/ios/Desktop/万里桐花图片/pic_xxhd.png",
+                    "xxxhdpi" : "/Users/ios/Desktop/万里桐花图片/pic_xxxhd.png"
                 }
             },
             "splashscreen" : {
