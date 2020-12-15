@@ -5,7 +5,7 @@ class AndroidChooseFile {
 	init(callback, acceptType) {
 		console.log('开始');	
 		console.log(plus.os.name.toLowerCase());	
-		if (plus.os.name.toLowerCase() != "android") {
+		if (plus.os.name.toLowerCase() == "android") {
 			this._openFile(callback, acceptType)
 		} else {
 
@@ -25,14 +25,15 @@ class AndroidChooseFile {
 			var Intent = plus.android.importClass('android.content.Intent');
 			var intent = new Intent(Intent.ACTION_GET_CONTENT);
 			intent.addCategory(Intent.CATEGORY_OPENABLE);
-			plus.console.log(acceptType);
-			if (acceptType) {
+ 			if (acceptType) {
 				intent.setType(acceptType);
 			} else {
 				intent.setType("*/*");
 			}
 			main.onActivityResult = function(requestCode, resultCode, data) {
+				console.log(requestCode)
 				if (requestCode == CODE_REQUEST) {
+					
 					var uri = data.getData();
 					plus.android.importClass(uri);
 					var Build = plus.android.importClass('android.os.Build');
@@ -75,12 +76,16 @@ class AndroidChooseFile {
 							var type = split[0];
 
 							var MediaStore = plus.android.importClass('android.provider.MediaStore');
+							console.log(type)
 							if ("image" == type) {
 								contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 							} else if ("video" == type) {
 								contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
 							} else if ("audio" == type) {
 								contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+							}else {
+								contentUri = MediaStore.Files.Media.EXTERNAL_CONTENT_URI;
+								
 							}
 
 							var selection = "_id=?";
@@ -92,10 +97,25 @@ class AndroidChooseFile {
 					}
 					// MediaStore (and general)
 					else if ("content" == uri.getScheme()) {
-						callback(getDataColumn(main, uri, null, null));
+					console.log("oooo000000")
+ 					 plus.android.importClass(main.getContentResolver());
+ 					 let cursor = main.getContentResolver().query(uri, ['_data'], selection, selectionArgs,
+ 					 null);
+ 					 plus.android.importClass(cursor);
+ 					 if(cursor != null && cursor.moveToFirst()) {
+ 					 var column_index = cursor.getColumnIndexOrThrow('_data');
+ 					 var result = cursor.getString(column_index)
+ 					 cursor.close();
+ 					 console.log("oooo000000")
+ 					 
+						 callback(result);
+ 					 }
+  						
+						// callback(uri.getPath());
 					}
 					// File
 					else if ("file" == uri.getScheme()) {
+						console.log("oooo")
 						callback(uri.getPath());
 					}
 				}
@@ -104,7 +124,10 @@ class AndroidChooseFile {
 		}
 	}
 	 getDataColumn(main, uri, selection, selectionArgs) {
-	        plus.android.importClass(main.getContentResolver());
+		 console.log('dddddd')
+		 console.log(uri)
+		 
+ 	        plus.android.importClass(main.getContentResolver());
 	        let cursor = main.getContentResolver().query(uri, ['_data'], selection, selectionArgs,
 	        null);
 	        plus.android.importClass(cursor);
@@ -112,6 +135,7 @@ class AndroidChooseFile {
 	        var column_index = cursor.getColumnIndexOrThrow('_data');
 	        var result = cursor.getString(column_index)
 	        cursor.close();
+			
 	        return result;
 	        }
 	        return null;

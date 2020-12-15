@@ -334,7 +334,7 @@
 						                        success: function(res) {
  											          	setTimeout(function(){
  											          				uni.showToast({
- 											          					title:"充值失败",
+ 											          					title:"充值成功",
 																		icon:'none'
  											          				}) 
  											          			},2000)

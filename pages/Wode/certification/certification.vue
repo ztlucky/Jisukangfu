@@ -243,8 +243,10 @@
 			},
 			chooseFile(){
 				new choose().init((data)=>{
+					console.log("999999")
+					
 					console.log(data)
-				},'"video/*;image/*"');
+				},'pdf/*');
 			},
 			showSelectView(){
 				this.visible = true;
