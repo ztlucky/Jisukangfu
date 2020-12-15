@@ -646,8 +646,7 @@
 		background-color: #FFFFFF;
 		position: fixed;
 		width: 100%;
-
-		/*页面标题*/
+ 		/*页面标题*/
 		.page-title {
 			display: flex;
 			justify-content: center;
