@@ -15,7 +15,7 @@
 		},
 		data() {
 			return {
-				expertList:[1,2,3,4,5,6,7,8,9],
+				expertList:[],
 				index:1,
 				size:10,
 				isGetMoreDataList:true
@@ -27,6 +27,18 @@
 				this.init();
 			}
 			
+		},
+		onReachBottom() {
+			// 触底的时候请求数据，即为上拉加载更多
+			if (this.isGetMoreDataList) {
+				this.getList();
+			} else {
+				uni.showToast({
+					title: "暂无更多数据",
+					duration: 1500,
+					icon:"none"
+				})
+			}
 		},
 		methods: {
 			init(){
@@ -42,8 +54,14 @@
 						pageSize:that.size,
 						phone:that.phone
 					}
-				}).then(data=>{
-					console.log(data);
+				},true,true).then(data=>{
+					if(data.records && data.records.length>=that.size){
+						that.isGetMoreDataList = true;
+					}else{
+						that.isGetMoreDataList = false;
+					}
+					that.expertList = that.expertList.concat(data.records);
+					that.index++;
 				})
 			}
 		}

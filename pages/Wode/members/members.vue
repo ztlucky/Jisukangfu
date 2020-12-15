@@ -5,9 +5,9 @@
 			<view class="bgView">
 				<image class="bgViewLeft" src="../../../static/gongzuotai/icon_nan.png"></image>
 				<view class="bgViewRight">
-					<view class="">王医生</view>
-					<view class="">超级会员 SVIP</view>
-					<view class="">2020-09-15 到期</view>
+					<view class="">{{info.name}}</view>
+					<view class="">{{info.userType == 2?'会员 VIP':info.userType == 3?'超级会员 SVIP':'普通用户'}}</view>
+					<view class="">{{info.userType == 2||info.userType == 3?info.membershipDue + ' 到期':''}}</view>
 				</view>
 			</view>
 		</view>
@@ -66,9 +66,11 @@
 </template>
 
 <script>
+	import request from "../../../utils/util.js"
 	export default {
 		data() {
 			return {
+				info:{},
 				cardList: [{
 					id: 1,
 					name: "1个月",
@@ -147,9 +149,23 @@
 		},
 		onLoad() {
 				this.list = this.cardList;
+				this.getUserInfo();
 		},
 		methods: {
-			
+			getUserInfo(){
+				let that = this;
+				return request({
+					url:getApp().$api.user.getUserInfo,
+					type:"GET",
+					data:{
+						condition:true,
+						id:getApp().globalData.userId
+					}
+				},true,true).then(data=>{
+					console.log(data.data);
+					that.info = data.data;
+				})
+			},
 			setVipType(type){
 				if(this.type == type )return false;
 				this.type = type;

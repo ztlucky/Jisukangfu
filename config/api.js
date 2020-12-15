@@ -125,6 +125,7 @@ let api = {
 		setUserPhone:`${apiRoot}user/user/updatePhone`,
 		login:`${apiRoot}user/user/loginByPhoneCode`,//手机号登陆 注册以及短信验证
 		addQualification:`${apiRoot}qualification_audit/qualificationAudit/add`,//资质审核
+		getMemberList:`${apiRoot}member/member/list`
 	},
 	huanzhe:{
 		//获取病症

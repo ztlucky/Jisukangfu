@@ -1,14 +1,8 @@
 <template>
 	<view class="viewPage">
-		<view class="header">
-			<view>心脏病</view>
-			<view>心脏病心脏病</view>
-			<view>心脏</view>
-			<view>心脏病心脏病</view>
-			<view>心脏病</view>
-			<view class="view">心脏病心脏病</view>
-			<view>心脏</view>
-			<view>心脏病心脏病</view>
+		<view class="header" :style="nowShowStatus?'height:auto':'height:120rpx'">
+			<view :class="item.isSelected?'view':''" @click="setStatus(index)" v-for="(item , index ) in illnessList">{{item.name}}</view>
+			<view class="setShowStatus" @click="setShowStatus()">{{nowShowStatus?'收起':'展开'}}</view>
 		</view>
 		<view class="list">
 			<expert :isshow="(k == expertList.length-1)" v-for="(v,k) in expertList" :key="k"></expert>
@@ -18,13 +12,17 @@
 
 <script>
 	import expert from "../../../components/experts/experts.vue"
+	import request from "../../../utils/util.js"
 	export default {
 		components:{
 			expert
 		},
 		data() {
 			return {
-				expertList:[1,2,3,4,5,6,7,8,9]
+				expertList:[1,2,3,4,5,6,7,8,9],
+				illnessList:[],
+				nowIndex:0,
+				nowShowStatus:false
 			}
 		},
 		onLoad() {
@@ -32,10 +30,33 @@
 		},
 		methods: {
 			init(){
-				this.getNavHdight();
+				this.getNavList();
 			},
-			getNavHdight(){
-				
+			setStatus(index){
+				if(index == this.nowIndex) return false;
+				this.illnessList[index].isSelected = true;
+				this.illnessList[this.nowIndex].isSelected = false;
+				this.$set(this.illnessList,index,this.illnessList[index]);
+				this.$set(this.illnessList,this.nowIndex,this.illnessList[this.nowIndex]);
+				this.nowIndex = index;
+			},
+			setShowStatus(){
+				this.nowShowStatus = !this.nowShowStatus;
+			},
+			getNavList(){
+				let that = this;
+				return request({
+					url:getApp().$api.huanzhe.getillnessList,
+					type:"GET",
+					data:{
+						pageNo:1,
+						pageSize:200
+					}
+				},true,true).then(data=>{
+					data.records[0].isSelected = true;
+					that.illnessList = data.records;
+					console.log(data);
+				})
 			}
 		}
 	}
@@ -58,6 +79,9 @@
 		top:0;
 		left: 0;
 		z-index: 2; */
+		 /* transition: height 2s; */
+		position: relative;
+		/* zoom:1; */
 		background-color: #FFFFFF;
 		width:690rpx;
 		padding:30rpx;
@@ -65,6 +89,8 @@
 		display: flex;
 		flex-wrap: wrap;
 		padding-bottom: 0;
+		overflow: hidden;
+		
 	}
 	.header view{
 		font-size: 24rpx;
@@ -76,6 +102,12 @@
 		margin-right: 30rpx;
 	}
 	.header .view{
+		color:#31D880;
+	}
+	.header .setShowStatus{
+		position: absolute;
+		bottom: -10rpx;
+		right: -10rpx;
 		color:#31D880;
 	}
 </style>
