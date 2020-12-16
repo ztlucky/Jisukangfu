@@ -21,24 +21,24 @@
 				<view class="border"></view>
 			</view>
 		</view>
-		<view class="tips">
+		<!-- <view class="tips">
 			<image mode="aspectFill" src="../../../static/Me/icon_gonggao.png"></image>
 			<view class="tipsText">购买超级连续包年/包季/包月，分别立减10元/38元/89元</view>
-		</view>
+		</view> -->
 		<view class="cardList">
 			<view :class="v.isSelected?'cardItem cardItem1':'cardItem'" v-for="(v,k) in list" :key="k" @click="setItemStatus(k)">
-				<view class="cardTips">{{v.tips}}</view>
+				<!-- <view class="cardTips">{{v.tips}}</view> -->
 				<view class="cardName">{{v.name}}</view>
 				<view class="cardPrice">
 					<view class="priceTips">¥</view>
 					<view class="priceText">{{v.price}}</view>
 				</view>
-				<view class="text">{{v.text}}</view>
+				<view class="text">{{v.remark}}</view>
 			</view>
 			<view class="borderView"></view>
 		</view>
-		<view class="tipsView">选择连续包月可省10元/月，连续包月可随时取消；取消后不再享受优惠资格以实际支付金额为准。</view>
-		<view class="pay">以99元的价格支付</view>
+		<!-- <view class="tipsView">选择连续包月可省10元/月，连续包月可随时取消；取消后不再享受优惠资格以实际支付金额为准。</view> -->
+		<view class="pay" @click="pay">以{{list[nowMemberIndex]?list[nowMemberIndex].price:''}}元的价格支付</view>
 		<view class="bottomBorder"></view>
 		<view class="title">会员权益</view>
 		<view class="interestsList">
@@ -71,85 +71,17 @@
 		data() {
 			return {
 				info:{},
-				cardList: [{
-					id: 1,
-					name: "1个月",
-					price: "99",
-					text: "50G免费空间",
-					tips: "推荐立剩20元",
-					isSelected: false
-				}, {
-					id: 1,
-					name: "1个月",
-					price: "99",
-					text: "50G免费空间",
-					tips: "推荐立剩20元",
-					isSelected: true
-				}, {
-					id: 1,
-					name: "1个月",
-					price: "99",
-					text: "50G免费空间",
-					tips: "推荐立剩20元",
-					isSelected: false
-				}, {
-					id: 1,
-					name: "1个月",
-					price: "99",
-					text: "50G免费空间",
-					tips: "推荐立剩20元",
-					isSelected: false
-				}, {
-					id: 1,
-					name: "1个月",
-					price: "99",
-					text: "50G免费空间",
-					tips: "推荐立剩20元",
-					isSelected: false
-				}],
-				otherCardList: [{
-					id: 1,
-					name: "1个月",
-					price: "99",
-					text: "50G免费空间",
-					tips: "推荐立剩20元",
-					isSelected: false
-				}, {
-					id: 1,
-					name: "1个月",
-					price: "99",
-					text: "50G免费空间",
-					tips: "推荐立剩20元",
-					isSelected: true
-				}, {
-					id: 1,
-					name: "1个月",
-					price: "99",
-					text: "50G免费空间",
-					tips: "推荐立剩20元",
-					isSelected: false
-				}, {
-					id: 1,
-					name: "1个月",
-					price: "99",
-					text: "50G免费空间",
-					tips: "推荐立剩20元",
-					isSelected: false
-				}, {
-					id: 1,
-					name: "1个月",
-					price: "99",
-					text: "50G免费空间",
-					tips: "推荐立剩20元",
-					isSelected: false
-				}],
+				cardList: [],
+				otherCardList: [],
 				list:[],
-				type:1
+				type:1,
+				nowMemberIndex:0,
 			}
 		},
 		onLoad() {
-				this.list = this.cardList;
-				this.getUserInfo();
+				this.getUserInfo().then((data)=>{
+					this.getMemberList();
+				});
 		},
 		methods: {
 			getUserInfo(){
@@ -162,10 +94,39 @@
 						id:getApp().globalData.userId
 					}
 				},true,true).then(data=>{
-					console.log(data.data);
 					that.info = data.data;
 				})
 			},
+			getMemberList(){
+				let that = this;
+				return request({
+					url:getApp().$api.user.getMemberList,
+					type:"GET",
+					data:{
+						pageNo:1,
+						pageSize:50
+					}
+				},true,true).then(data=>{
+					let cardList = [];
+					let otherCardList = [];
+					if(data.records){
+						data.records.map(v=>{
+							if(v.type == 1){
+								cardList.push(v);
+							}else if(v.type == 2){
+								otherCardList.push(v);
+							}
+						});
+						cardList[0].isSelected = true;
+						otherCardList[0].isSelected = true;
+						that.cardList = cardList;
+						that.otherCardList = otherCardList;
+						that.list = cardList;
+						
+					}
+				})
+			},
+			
 			setVipType(type){
 				if(this.type == type )return false;
 				this.type = type;
@@ -174,19 +135,46 @@
 				}else{
 					this.list = this.otherCardList;
 				}
+				console.log(this.list);
 			},
 			setItemStatus(index){
 				if(this.type == 1){
 					this.cardList.map((v,k)=>{
 						this.cardList[k].isSelected = false;
+						this.$set(this.list,k,this.cardList[k])
 					});
 					this.cardList[index].isSelected = true;
+					this.list[index].isSelected = true;
+					this.$set(this.list,index,this.cardList[index])
 				}else{
 					this.otherCardList.map((v,k)=>{
 						this.otherCardList[k].isSelected = false;
+						this.list[k].isSelected = false;
+						this.$set(this.list,k,this.otherCardList[k])
 					});
 					this.otherCardList[index].isSelected = true;
+					this.list[index].isSelected = true;
+					this.$set(this.list,index,this.otherCardList[index])
 				}
+				this.nowMemberIndex = index;
+			},
+			pay(){
+				// customerId:getApp().globalData.userId,
+				// goodsId:this.liveid,
+				// goodsSku:getApp().globalData.reword,
+				// originalPrice:parseFloat(this.dashangMoney)
+				let that = this;
+				return request({
+					url:getApp().$api.dingdan.creatOrder,
+					type:"POST",
+					data:{
+						customerId:getApp().globalData.userId,
+						goodsId:that.list[that.nowMemberIndex].id,
+						goodsSku:getApp().globalData.member
+					}
+				},true,true,false).then(data=>{
+					that.getUserInfo();
+				})
 			}
 		}
 	}
@@ -419,6 +407,7 @@
 
 	.pay {
 		margin: 0 auto;
+		margin-top:30rpx;
 		width: 602rpx;
 		height: 80rpx;
 		background: linear-gradient(90deg, #EEC987 0%, #D3A45E 100%);

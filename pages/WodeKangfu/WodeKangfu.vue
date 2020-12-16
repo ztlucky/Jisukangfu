@@ -58,11 +58,11 @@
 						url:'/pages/HuanzheDetail/HuanzheDetail?is_edit=0',
 						icon:'/static/zixun/icon_anli.png'
 					},
-					{
-						name:'我的方案',
-						url:'/pages/Wode/plan/plan',
-						icon:'/static/zixun/icon_fangan.png'
-					},
+					// {
+					// 	name:'我的方案',
+					// 	url:'/pages/Wode/plan/plan',
+					// 	icon:'/static/zixun/icon_fangan.png'
+					// },
 					{
 						name:'我的医生',
 						url:'/pages/WodeKangfu/myDoctor/myDoctor',

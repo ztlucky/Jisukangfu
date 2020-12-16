@@ -1,13 +1,13 @@
 
 
-function request(options = {},isShowLoading = true,isBackData = false) {
+function request(options = {},isShowLoading = true,isBackData = false,isAddUserId = true) {
 	if(isShowLoading){
 		uni.showLoading({
 		    title: '加载中...',
 			mask:true
 		});
 	}
-	options = filterUrl(options);
+	options = filterUrl(options,isAddUserId);
 	return new Promise((resolved, rejected) => {
 			uni.request({
 				url: options.url,
@@ -45,15 +45,15 @@ function request(options = {},isShowLoading = true,isBackData = false) {
 		
 		
 	}
-	function filterUrl(config){
+	function filterUrl(config,isAddUserId){
 		switch(config.type){
 			case 'GET':
-				if(!config.data.userId){
+				if(!config.data.userId && isAddUserId){
 					config.data.userId  = getApp().globalData.userId
 				}
 			break;
 			case 'POST':
-				if(!config.data.userId){
+				if(!config.data.userId && isAddUserId){
 					config.data.userId  = getApp().globalData.userId
 				}
 			break;
