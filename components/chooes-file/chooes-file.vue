@@ -11,7 +11,8 @@
 
 <script>
 	import onloadImage from "../../utils/loadImage.js"
-	import request from "../../utils/util.js"
+	import request from "../../utils/util.js";
+	import AndroidChooseFile from "../../utils/androidChooseFile.js"
 	export default {
 		data() {
 			return {
@@ -74,6 +75,8 @@
 					count: 1,	
 					sourceType: ['album'],
 					success:function(res){
+						console.log(res);
+						console.log('完成')
 					that.cancel(false);
 					uni.$emit("getVideo",{res});
 				},
@@ -83,7 +86,12 @@
 				})
 			},
 			chooesFile(){
-				
+				let that = this;
+				new AndroidChooseFile().init((res)=>{
+					console.log(res);
+					that.cancel(false);
+					uni.$emit("getFile",{res});
+				})
 			}
 		}
 	}

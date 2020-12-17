@@ -377,6 +377,16 @@
 						break;
 					}
 				})
+				uni.$on("getFile",res=>{
+					console.log(res);
+					switch (that.fileType){
+						case 'material':
+							that.material.pdfList.push(res.res.tempFilePath);
+							that.material.pdfFile.push(res.res.tempFile);
+							console.log(res.res,res.res)
+						break;
+					}
+				})
 				//选择主持人
  				 uni.$on("chooseHost",(options)=>{
 				         that.hostList = JSON.parse(options.selectList)

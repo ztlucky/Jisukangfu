@@ -65,7 +65,7 @@
 								<text>诊断：{{item.illnessName?item.illnessName:''}}</text>
 
 							</view>
-							<text class="bianhao">编号：{{item.idNo}}</text>
+							<text class="bianhao">编号：{{item.num}}</text>
 							<text class="chakanhuanzheview" @click="huanzheXiangqing(index)">查看患者</text>
 						</view>
 					</view>

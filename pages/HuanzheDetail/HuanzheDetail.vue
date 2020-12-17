@@ -1,6 +1,6 @@
 <template>
 	<view class="contentView" >
-	 <view class="navview" :style="[{paddingTop: statusBarHeight+5 + 'px'}]">
+	 <view class="navview" :style="[{paddingTop: statusBarHeight+5 + 'px',paddingBottom: statusBarHeight+5 + 'px'}]">
 	 	<image class="imageview" src="../../static/Huanzhexiangqing/fanhui.png" mode="" @click="returnBack"></image>
 		<text class="title">患者详情</text>
 		<view class="navRight" @click="endZhiliao" v-if="zhiliaoStaut == 0">
@@ -139,7 +139,7 @@
 					</view>
 				</view>
 				<view class="notData" v-if="info.treatmentList.length == 0">暂无数据</view>
-				  <view class="hview">
+				  <!-- <view class="hview">
 					<text>时间</text>
 					<view class="v_lineView">
 					</view>
@@ -148,8 +148,8 @@
 
 					</view>
 					<text>状态</text>
-				</view>  
-				  <view v-for='(item,index) in kangfuxiangmu' :key='index'>
+				</view> -->  
+				  <!-- <view v-for='(item,index) in kangfuxiangmu' :key='index'>
 					<view class="zhiliaoxiangmu">
 						<text class="time">{{item.time}}</text>
 						<view class="v_lineView1">
@@ -168,7 +168,7 @@
 
 					</view>
 
-				</view>  
+				</view> -->  
 
 			</view>
 			<!-- //康复评定 -->
@@ -198,7 +198,7 @@
 					</view>
 				</view>
 				<view class="notData" v-if="info.assessResults.length == 0">暂无数据</view>
-				<view class="mubiaoview">
+				<!-- <view class="mubiaoview">
 					<view class="upview">
 						<view class="dot">
 
@@ -206,8 +206,8 @@
 						<text class="dotTitle">评定结果1</text>
 					</view>
 					<text class="mubiaodetail">患者身体比较虚弱，需要谨慎治疗。</text>
-				</view>
-				<view class="mubiaoview">
+				</view> -->
+				<!-- <view class="mubiaoview">
 					<view class="upview">
 						<view class="dot">
 
@@ -215,7 +215,7 @@
 						<text class="dotTitle">评定结果2</text>
 					</view>
 					<text class="mubiaodetail">患者身体比较虚弱，需要谨慎治疗。。</text>
-				</view>
+				</view> -->
 			
 			</view>
 			<!-- //患者记录-->
@@ -554,18 +554,24 @@
 		
 	}
 	.navview{
-		background-color: #4CD964;
+		position: relative;
+		background-color:#31D880;
 		display: flex;
-		flex-direction: row;
+		// flex-direction: row;
+		align-items: center;
 		justify-content: space-between;
 		height:68rpx;
  		.imageview{
-			width:50rpx;
-			height:50rpx ;
-			margin-top: 10rpx;
+			width:36rpx;
+			height:36rpx ;
+			// margin-top: 10rpx;
 			margin-left: 30rpx;
 		}
 		.title{
+			position: absolute;
+			top:50%;
+			transform: translate(-50%,-50%);
+			left: 50%;
 			font-size: 36rpx;
 			color: #FFFFFF;
 		}

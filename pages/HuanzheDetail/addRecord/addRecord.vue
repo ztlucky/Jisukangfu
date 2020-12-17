@@ -4,15 +4,14 @@
 			<yealuo placeholder="请选择标签" checkType="checkbox" @getBackVal1="getBackVal" width="690" :binData="listText" padding="20rpx" :isShowAllBack="true" :selectIco="true"></yealuo>
 		</view>
 		<input placeholder="请输入内容..." v-model="text" />
-		<view class="list">
-			<view :class="((k)%3 == 1?'imageItem imageItem1':'imageItem')" v-for="(v,k) in list" :key="k">
+		<view class="list" >
+			<view :class="((k)%3 == 1?'imageItem imageItem1':'imageItem')" v-if="list.length >=1" v-for="(v,k) in list" :key="k">
 				<image class="deleteImage" @click="deleteImage(k)" src="../../../static/close.png"></image>
-
 				<image mode="aspectFill" :src="v" v-if="tempFile[k].type == 'image'" class=""></image>
 				<video object-fit="cover" :src="v" v-else class=""></video>
 			</view>
 			<view :class="'addImage '+((list.length)%3 == 1?'imageItem1':'addImage')" @click="getValue">
-				<image src="../../../static/img_icon.png"></image>
+				<image src="/static/img_icon.png"></image>
 			</view>
 		</view>
 		<view class="save" @click="save()">保存</view>
@@ -45,10 +44,16 @@
 			this.addEvent();
 			this.getList();
 		},
+		onUnload() {
+			uni.$off();
+		},
 		methods: {
 			addEvent(){
 				let that = this;
 				uni.$on("getImage",res=>{
+					console.log("----------------------------")
+					console.log(res);
+					console.log("----------------------------")
 					that.list = that.list.concat(res.res.tempFilePaths);
 					let tempFile = [];
 					res.res.tempFiles.map(v=>{
@@ -61,15 +66,11 @@
 					console.log(that.tempFile);
 				})
 				uni.$on("getVideo",res=>{
-					that.list = that.list.concat(res.res.tempFilePaths);
-					let tempFile = [];
-					res.res.tempFiles.map(v=>{
-						tempFile.push({
-							type:'video',
-							value:v
-						})
-					})
-					that.tempFile = that.tempFile.concat(tempFile);
+					that.list.push(res.res.tempFilePath);
+					that.tempFile.push({
+						type:'video',
+						value:res.res.tempFile
+					});
 				})
 				
 			},
@@ -133,7 +134,8 @@
 								type: "image",
 								value: v
 							})
-						})
+						});
+						console.log(list);
 						that.list = that.list.concat(list);
 						that.tempFile = that.tempFile.concat(res.tempFiles)
 					}
@@ -216,10 +218,10 @@
 
 	.addImage,
 	.imageItem {
-		width: 210rpx;
-		height: 210rpx;
+		width: 200rpx;
+		height: 200rpx;
 		position: relative;
-		margin: 30rpx 0;
+		margin: 40rpx 0;
 		margin-bottom: 0rpx;
 	}
 
@@ -238,19 +240,19 @@
 	}
 
 	.imageItem>image:nth-child(2) {
-		width: 210rpx;
-		height: 210rpx;
+		width: 200rpx;
+		height: 200rpx;
 		object-fit: cover;
 		/* background-color: red; */
 	}
 
 	.imageItem>video {
-		width: 210rpx;
-		height: 210rpx;
+		width: 200rpx;
+		height: 200rpx;
 	}
 
 	.imageItem1 {
-		margin: 30rpx;
+		margin: 40rpx;
 		margin-bottom: 0rpx;
 	}
 
