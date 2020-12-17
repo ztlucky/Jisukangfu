@@ -168,12 +168,12 @@
  						title:res.message,
 						icon:'none'
  					   })
- 						if (res.code ==200) {
-						   uni.navigateBack({
-						   	
-						   })
+					    setTimeout(function() {
+					         uni.navigateBack({
+					            	
+					            })
+					         }, 1000);
  						 
-						}
 					},
 					fail: res => {
 					},

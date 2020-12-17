@@ -1,5 +1,5 @@
 <template>
-	<view class="courseItem" @click="toPage()">
+	<view class="courseItem" @click="toPage(info.id)">
 		<image mode="aspectFill" src="/static/gongzuotai/bg_zhibo.png"></image>
 		<view class="title hidden2">{{info.name?info.name:''}}</view>
 		<view class="tips">课程</view>
@@ -20,9 +20,9 @@
 			}
 		},
 		methods: {
-			toPage() {
+			toPage(id) {
 				uni.navigateTo({
-					url: "/pages/Daxue/Zhibodetail/Zhibodetail",
+					url: "/pages/Daxue/KechengDetail/KechengDetail?id="+id,
 					animationDuration: 300,
 					animationType: 'slide-in-right'
 				})

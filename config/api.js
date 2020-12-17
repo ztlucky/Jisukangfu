@@ -69,6 +69,8 @@ let api = {
 		creatOrder:apiRoot +"order/appOrder/add",
 		//微信充值
 		weixinChongzhi:apiRoot +"app/recharge",
+		//微信提现
+		weixinentPay :apiRoot+"app/entPay"
 		
 		
 	},
@@ -179,12 +181,16 @@ let api = {
 	course:{
 		"addCourse":`${apiRoot}course/course/add`,
 		"getList":`${apiRoot}course/course/list`,
-		
+		//获取课程详情
+		"getCoursedetail":`${apiRoot}course/course/queryById`,
+		//课程关联
+		"favCourse":`${apiRoot}user_course_bind/userCourseBind/add`,
+		///取消关联
+		"unfavCourse":`${apiRoot}user_course_bind/userCourseBind/delete`
 	},
 	banji:{
 		"getbanjiList":`${apiRoot}class/class/list`,
-		"creatbanjiList":`${apiRoot}class/class/list`,
-		
+		"creatbanjiList":`${apiRoot}class/class/add`,
 	},
  
 };
