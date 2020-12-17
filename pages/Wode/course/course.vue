@@ -2,7 +2,7 @@
 	<view class="viewPage">
 		<view class="list">
 			<view class="item" v-for="(v,k) in list">
-				<course :info="v"></course>
+				<course :info="v"  ></course>
 			</view>
 		</view>
 		<view class="save" @click="toPage('/pages/Wode/createCourse/createCourse')">新建课程</view>

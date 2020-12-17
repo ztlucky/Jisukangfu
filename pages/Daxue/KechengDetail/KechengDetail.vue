@@ -1,27 +1,693 @@
 <template>
-	<view>
-		
-	</view>
+	 <view  class="bgview" >
+	   <scroll-view scroll-y="true" :style="[{height:scrollviewHeight + 'px'}]">
+		   <view class="videoImageview"  :style="[{height:videoImageHeight + 'px'}]">
+ 		   	<image :src="detailInfo.cover" ></image>
+ 		  </view>
+		  <view class="secondView">
+		  	<view class="priceview">
+				<text class="price1">¥</text>
+		  		<text class="price">{{detailInfo.cost}}</text>
+				<text class="huiyuanprice">会员价：¥ {{detailInfo.memberCost}}</text>
+		  	</view>
+			<view class="tipview">
+				<text class="tiptext">会员价¥ {{detailInfo.memberCost}}</text>
+ 			</view>
+			 
+			<text class="livelessonTitle">{{detailInfo.name}}</text>
+		  </view>
+		  <!-- //讲师 -->
+		  
+		 <view class="teacherView" v-if="detailInfo.lecturerList !=null">
+		 	<view class="sectionview">
+		 		<view class="iconview">
+		 			
+		 		</view>
+				<text>讲师</text>
+		 	</view>
+			<scroll-view  scroll-x="true" class="teacherscrollview" >
+			  <block v-for="(item, index) in detailInfo.lecturerList" :key="index">
+			    <view class="item" >
+ 					
+ 			        <image class="teacherImage" :src="item.sex == 1 ?'../../../static/gongzuotai/icon_nan.png':'../../../static/gongzuotai/icon_nv.png'" mode="">	
+					</image>
+ 			      <text  >{{item.name}}</text>
+ 			    </view>
+			  </block>
+			</scroll-view>
+		 </view>
+		  
+		  <!-- 下载课件 -->
+		  <!-- <view class="downloadView">
+			  <view class="sectionview">
+			  	<view class="iconview">
+			  		
+			  	</view>
+			  	<text>课件</text>
+				</view>
+		  	  <view class="lineview">
+		  	  	
+		  	  </view>
+			  <view class="downLoadItemView">
+			  	<image src="../../../static/zhibo/icon_pdf.png" class="downImage"></image>
+				<text class="downtitle">华南地区较早开展种植诊疗业.pdf</text>
+				<image class="rightimage" src="../../../static/zhibo/icon_jiantou1.png"></image>
+			  </view>
+			  <view class="middleLineview">
+			  	
+			  </view>
+			  <view class="downLoadItemView">
+			  	<image src="../../../static/zhibo/icon-shipin.png" class="downImage"></image>
+			  				<text class="downtitle">华南地区较早开展.mp4</text>
+			  				<image class="rightimage" src="../../../static/zhibo/icon_jiantou1.png"></image>
+			  </view>
+		  </view> -->
+		  <!-- 选择 -->
+		  <view class="lastview">
+		  <zzx-tabs   :items="items" :current="current" @clickItem="onClickItem" ref="mytabs" :activeColor="activeColor" 
+		  :lineWidth="line_width" :lineColor="line_color">
+		             </zzx-tabs>
+		  	 <view class="detailText" v-show="current === 0">{{detailInfo.presentation}}
+		  	           
+		  	            </view>
+		  	            <view v-show="current === 1">
+		  	               <view class="studentBgview" v-for="(item,index) in detailInfo.studentList" :key = "index" >
+		  	                	
+		  	               <image :src="item.headUrl"></image>
+		  	               
+		  	                	<text  >{{item.name}}</text>
+		  	                 
+ 		  	              
+		  	                </view>
+		  	            </view>
+		  	            
+		  </view>
+	 </scroll-view>	
+	 <view class="bottomview">
+	 	<text class="price">原价 ¥ {{detailInfo.cost}}/会员价 ¥ {{detailInfo.memberCost}}</text>
+		<view class="favview" @click="favAction">
+			<image :src="isfav == true ?'../../../static/zhibo/icon_yishoucang.png':'../../../static/zhibo/icon_shoucang.png'" ></image>
+			<text >收藏本课</text>
+			
+		</view>
+		<text class="buy" :style="{background:buyBackColor}" @click="comfirmOrder">{{buyBtnText}}</text>
+	 </view>
+ 
+	 </view>
+	
 </template>
 
 <script>
+	    import zzxTabs from "@/components/zzx-tabs/zzx-tabs.vue"
+		import request from '../../../utils/util.js'
+		
 	export default {
+		components: {
+		            zzxTabs
+		        },
 		data() {
 			return {
-				
+				courseID:'',
+				videoImageHeight:211,
+				scrollviewHeight:0,
+				items:["详情","学生"],
+				detailInfo:'',
+				isfav:false,
+				cover:"",//封面
+			    activeColor:'#000000',
+			    current:0,
+			   line_width:"8%",
+			   line_color:'#31D880',
+				isbuy:false,
+				buyBtnText:'立即购买',
+				buyBackColor:'#ff0000',
+ 				enableCamera: false,
+				context: null
+
+				 
 			}
 		},
 		onLoad:function(e){
- 			uni.showToast({
-				title:"课程id="+e.id
-			})
+			//获取直播详情
+			this.courseID = e.id;
+			console.log(this.courseID)
 			},
-		methods: {
+	   onShow:function(e){
+	   	this.videoImageHeight = this.$app.getwindowWidth()*0.563-44
+		this.scrollviewHeight = this.$app.getwindowHeight()-44;
+		this.getCoursedetail();
+		
+	   },	 
 			
+		methods: {
+			/*获取课程详情*/
+			getCoursedetail() {
+				let that = this;
+				return request({
+					url: getApp().$api.course.getCoursedetail,
+					type: 'GET',
+					data:{
+						id:this.courseID,
+						user_id:getApp().globalData.userId
+					}
+				},true,true).then(data=>{
+					console.log("dddddd")
+					console.log(data)
+ 					that.detailInfo = data;
+					that.isbuy = data.isBuy;
+					that.isfav = data.isCollect;
+				 
+						if(data.isBuy == true){
+							this.buyBtnText = "已购买"
+							this.buyBackColor = '#999999'
+							
+						}else{
+							this.buyBtnText = "立即购买"
+							this.buyBackColor = '#ff0000'
+							
+							
+						}
+					 
+ 					uni.showToast({
+						title:data,
+						icon:null
+					})
+  				})
+				 
+			},
+			//添加收藏
+			 favAction(){
+				 let that = this;
+				 if(that.isfav == true){
+					 //取消收藏
+					 this.$app.request({
+					 	url:  getApp().$api.course.unfavCourse,
+					 	method: 'DELETE',
+					 	data: {
+					 		userid:getApp().globalData.userId,
+					 		bindtype:1,
+					 		courseid:that.courseID	
+					 	},
+					 	dataType: 'json',
+					 	success: res => {
+					 		if (res.code == 200) {
+					              that.isfav = false;
+					 							  uni.showToast({
+					 							  	title:res.message,
+					 								icon:'none'
+					 							  })
+					 		} else {
+					 			uni.showToast({
+					 				title:res.message,
+					 			    icon:'none'
+					 			})
+					 		}
+					 	},
+					 	complete: res => {}
+					 });
+					  
+				 }else{
+					 //添加收藏
+					 
+					this.$app.request({
+						url:  getApp().$api.course.favCourse,
+						method: 'POST',
+						data: {
+							userid:getApp().globalData.userId,
+							bindtype:1,
+							courseid:that.courseID	
+						},
+						dataType: 'json',
+						success: res => {
+							if (res.code == 200) {
+					             that.isfav = true;
+												  uni.showToast({
+												  	title:res.message,
+													icon:'none'
+												  })
+							} else {
+								uni.showToast({
+									title:res.message,
+								    icon:'none'
+								})
+							}
+						},
+						complete: res => {}
+					});
+					 
+				 }
+				 
+			 },
+			 
+			 onClickItem(e) {
+			            if (this.current !== e.currentIndex) {
+			                this.current = e.currentIndex;
+			            }
+			          },
+			//确认订单	传递所需的参数
+			comfirmOrder(){
+				console.log(this.$api.zhibo.livePushurl)
+ 				if(this.buyBtnText == "开始直播"){
+					console.log(this.courseID)
+					 uni.navigateTo({
+					     url:'../../Zhibo/StarLive/StarLive?streamName='+this.detailInfo.streamName+'&liveid='+this.courseID,
+					 	animationType:'slide-in-right',
+					 	animationDuration:300
+					 })
+					 
+				}else if(this.buyBtnText == "立即购买"){
+					
+					const item = {sku:getApp().globalData.course, courseID:this.courseID,cover:this.detailInfo.coverUrl,cost:this.detailInfo.cost,title:this.detailInfo.name,time:this.detailInfo.createTime}
+						uni.navigateTo({
+						     url:'../../Order/ConfirmOrder/ConfirmOrder?item='+ encodeURIComponent(JSON.stringify(item)),
+							animationType:'slide-in-right',
+							animationDuration:300
+						})
+			
+					
+				}else if(this.buyBtnText.text == '已购买'  ){
+					// if(this.detailInfo.status == 1){
+					// 	const item = {liveid:this.courseID,streamName:this.detailInfo.streamName, title:this.detailInfo.title}
+					// 	 uni.navigateTo({
+					// 	     url:'../../Zhibo/WatchLive/WatchLive?item='+encodeURIComponent(JSON.stringify(item)) ,
+					// 		animationType:'slide-in-right',
+					// 		animationDuration:300
+					// 	})
+					// }else{
+					// 	uni.showToast({
+					// 		title:'直播未开始',
+					// 		icon:'none'
+					// 	})
+					// }
+ 				
+					
+				}
+				
+				
+			
+			}	
 		}
 	}
 </script>
-
 <style>
+	page{
+		 background-color:#F7F7F7 ;
+	}
+	</style>
+<style scoped lang="scss">
+	 
+ 
+		
+	.bgview{
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+  	} 	
+		.secondView{
+			 
+			background: #FFFFFF;
+			border-radius: 4rpx;
+			margin-left: 30rpx;
+			margin-right: 30rpx;
+			margin-top:30rpx;
+			display: flex;
+			flex-direction: column;
+				
+			.priceview{
+				display: flex;
+				flex-direction: row;
+ 				align-items: center;
+				padding-top: 30rpx;
+				.price1{
+					font-size: 20rpx;
+					font-weight: 500;
+					color: #E02020;
+					margin-left: 20rpx;
+  				}
+ 				.price{
+					
+					font-size: 36rpx;
+ 					font-weight: 700;
+					color: #E02020;
+					margin-left: 5rpx;
+    				}
+				.huiyuanprice{
+					
+					height: 38rpx;
+					background: #E02020;
+					border-radius: 20rpx;
+					padding-left:20rpx ;
+					padding-right: 20rpx;
+					
+					font-size: 18rpx;
+ 					font-weight: 500;
+					color: #FFFFFF;
+					line-height: 38rpx;
+					text-align: center;
+					margin-left: 16rpx;
+ 				}
+				
+			}
+			.tipview{
+				display: flex;
+				flex-direction: row;
+				margin-top: 12rpx;
+				.tiptext{
+ 					height:36rpx;
+					background: #FFF7F7;
+					border-radius: 4rpx;
+					padding-left: 12rpx;
+					padding-right: 12rpx;
+			        text-align: center;
+					font-size: 18rpx;
+ 					font-weight: 500;
+					color: #E02020;
+					line-height: 36rpx;
+					margin-left: 20rpx;
+					
+				}
+					
+				 
+			}
+			.timeview{
+				display: flex;
+				flex-direction: row;
+				margin-top: 12rpx;
+				align-items: center;
+				position: relative;
+				image{
+					width: 22rpx;
+					height: 22rpx;
+ 					margin-left: 28rpx;
+				}
+				text{
+					
+ 					font-size: 20rpx;
+ 					font-weight: 400;
+					color: #666666;
+					margin-left: 10rpx;
+ 				}
+				.buynumber{
+					position: absolute;
+ 					height: 34rpx;
+					background: #F2F2F2;
+					border-radius: 4rpx;
+				text-align: center;
+				font-size: 20rpx;
+ 				font-weight: 400;
+				color: #999999;
+				line-height: 34rpx;
+				padding-left:16rpx ;
+				padding-right: 16rpx;
+				right: 10rpx;
+				}
+				 
+			}	
+			.livelessonTitle{
+				margin-top: 12rpx;
+				margin-left: 22rpx;
+				margin-right: 22rpx;
+				font-size: 28rpx;
+				font-family: PingFangSC-Medium, PingFang SC;
+				font-weight: 500;
+				color: #333333;
+				  overflow: hidden;
+				    text-overflow: ellipsis;  /* 超出部分省略号 */
+				   display: -webkit-box; /** 对象作为伸缩盒子模型显示 **/
+				    -webkit-line-clamp: 2; /** 显示的行数 **/
+				     -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+					 margin-bottom: 30rpx;
 
+ 			}
+		}
+		.teacherView{
+			
+			background: #FFFFFF;
+			border-radius: 4rpx;
+			margin-left: 30rpx;
+			margin-right: 30rpx;
+			margin-top: 30rpx;
+			display: flex;
+			flex-direction: column;
+				
+			.sectionview{
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+					margin-top: 14rpx;
+				.iconview{
+					
+					width: 4rpx;
+					height: 27rpx;
+					background: #E02020;
+					border-radius: 4rpx;
+					margin-left: 20rpx;
+				}
+				text{
+					font-size: 28rpx;
+					font-family: PingFangSC-Medium, PingFang SC;
+					font-weight: bold;
+					color: #333333;
+					line-height: 40rpx;
+					margin-left: 10rpx;
+				}
+			}
+			.teacherscrollview{
+				white-space: nowrap; // 滚动必须加的属性
+				width: 100%;
+				padding-top: 20upx;
+				margin-bottom: 22rpx;	
+				.item{
+ 					display: flex;
+					flex-direction: column;
+					align-items: center;
+					margin-top: 20upx;
+					margin-left: 24rpx;
+            display: inline-block;
+            vertical-align: top;
+ 					.teacherImage{
+						display: inline-block;
+						
+						width: 100rpx;
+						height: 100rpx;
+                       border-radius: 50rpx;
+					}
+						
+					text{
+						display: block;
+						
+						font-size: 24rpx;
+ 						font-weight: 400;
+						color: #333333;
+						text-align: center;
+  					}
+				}
+			}
+			
+		}
+		.downloadView{
+			display: flex;
+			margin-left: 30rpx;
+			margin-right: 30rpx;
+			margin-top: 30rpx;
+			background: #FFFFFF;
+			border-radius: 4px;
+			flex-direction: column;
+ 			position: relative;
+			.sectionview{
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+					margin-top: 14rpx;
+				.iconview{
+					
+					width: 4rpx;
+					height: 24rpx;
+					background: #E02020;
+					border-radius: 4rpx;
+					margin-left: 20rpx;
+				}
+				text{
+					font-size: 28rpx;
+					font-family: PingFangSC-Medium, PingFang SC;
+					font-weight: bold;
+					color: #333333;
+					line-height: 40rpx;
+					margin-left: 10rpx;
+				}
+			}
+				
+			.lineview{
+				width: 100%;
+				height: 2rpx;
+				background:#F9F9F9 ;
+				margin-top: 20rpx;
+			}	
+			.downLoadItemView{
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				position: relative;
+				.downImage{
+					width: 22rpx;
+					height: 22rpx;
+					margin-left:20rpx ;
+					margin-top: 46rpx;
+					margin-bottom: 46rpx;
+ 				}
+				.rightimage{
+					width: 14rpx;
+					height: 27rpx;
+					position: absolute;
+                   right: 26rpx;
+ 				}
+				.downtitle{
+ 					font-size: 24rpx;
+					font-weight: bold;
+					color: #666666;
+					margin-right: 100rpx;
+					    text-overflow: ellipsis;  /* 超出部分省略号 */
+					   display: -webkit-box; /** 对象作为伸缩盒子模型显示 **/
+					    -webkit-line-clamp: 1; /** 显示的行数 **/
+					     -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+						 margin-left:12rpx ;
+				
+				}
+					
+				
+			}
+			.middleLineview{
+				width: 100%;
+				height: 2rpx;
+				background:#F9F9F9 ;
+				margin-left: 20rpx;
+				margin-right: 20rpx;
+			}
+				
+			 
+				
+			 
+		}
+			
+		.lastview{
+			margin-left: 30rpx;
+			margin-right: 30rpx;
+			margin-bottom: 30rpx;
+			margin-top: 30rpx;
+			background: #FFFFFF;
+			border-radius: 4rpx;
+			padding-top: 20rpx; 
+			padding-bottom: 30rpx;
+			 .detailText{
+				 margin-left: 24rpx;
+				 margin-right: 24rpx;
+				 margin-top: 20rpx;
+				 font-size: 24rpx;
+ 				 color: #666666;
+ 			 }
+				 
+			 .studentBgview{
+				 display: flex;
+				 flex-direction: row;
+					align-items: center;
+					 margin-top: 30rpx;
+					 margin-bottom: 30rpx;
+				 image{
+					 width: 68rpx;
+					 height: 68rpx;
+					 border-radius: 34rpx;
+					 margin-left:38rpx ;
+					 
+				 }
+				 text{
+					 
+					 font-size: 24rpx;
+ 					 font-weight: 400;
+					 color: #000000;
+					 margin-left:20rpx ;
+ 				 }
+				 
+			 }
+		}
+	.bottomview{
+		height: 88rpx;
+		width:100%;
+ 		 bottom: 0px;
+		 right: 0px;
+		 position: absolute;
+		background-color: #FFFFFF;
+		display: flex;
+		flex-direction: row;
+      justify-content: space-around;
+	  align-items: center;
+		  
+	  .price{
+		  font-size: 28rpx;
+ 		  font-weight: 600;
+		  color: #E02020;
+		  line-height: 40rpx;
+	  }
+			
+		.favview{
+			display: flex;
+			align-items: center;
+			flex-direction: row;
+			image{
+				width: 44rpx;
+				height: 44rpx;
+ 				border-radius: 8rpx;
+			}
+			text{
+				font-size: 28rpx;
+				font-weight: 400;
+				color: #666666;
+				line-height: 40rpx;
+				margin-left: 10upx;
+			}
+				
+			
+			
+		} 
+	   
+		  
+	  .buy{
+		  width: 214rpx;
+		  height: 54rpx;
+		  background: #D0D0D0;
+		  border-radius: 28rpx;
+		  font-size: 28rpx;
+ 		  font-weight: 400;
+		  color: #FFFFFF;
+		  line-height: 54rpx;
+		  text-align: center;
+	  }
+	}
+ .videoImageview{
+	 display: flex;
+	 flex-direction: row;
+	 width: 100%;
+ 	align-items: center;
+	position: relative;
+ 	image{
+			width: 100%;
+			height: 100%;
+ 		} 
+	 .playImageView{
+		 
+		 position: absolute;
+  		 width: 100rpx;
+		 height: 100rpx;
+		 top: 50%;
+		 left: 50%;
+		 margin-top: -50rpx;
+		 margin-left: -50rpx;
+   		 background: #09BB07;
+		 image{
+			 width: 100rpx;
+			 height: 100rpx;
+			
+		 }
+
+	 }
+ }
 </style>

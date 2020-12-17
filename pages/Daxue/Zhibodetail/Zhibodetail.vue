@@ -135,18 +135,18 @@
 		onLoad:function(e){
 			//获取直播详情
 			this.courseID = e.id;
+ 			this.getLivedetail();
 			},
 	   onShow:function(e){
 	   	this.videoImageHeight = this.$app.getwindowWidth()*0.563-44
 		this.scrollviewHeight = this.$app.getwindowHeight()-44;
-		this.getLivedetail();
-		
 	   },	 
 			
 		methods: {
 			/*获取直播详情*/
 			getLivedetail() {
 				let that = this;
+				console.log(this.courseID)
 				return request({
 					url: getApp().$api.zhibo.getLivecourseDetailInfo,
 					type: 'GET',
@@ -281,7 +281,7 @@
 					 
 				}else if(this.buyBtnText == "立即购买"){
 					
-					const item = {sku:getApp().globalData.livesku, courseID:this.courseID,cover:this.detailInfo.cover,cost:this.detailInfo.cost,title:this.detailInfo.title,time:this.detailInfo.beginTime}
+					const item = {sku:getApp().livesku, courseID:this.courseID,cover:this.detailInfo.cover,cost:this.detailInfo.cost,title:this.detailInfo.title,time:this.detailInfo.beginTime}
 						uni.navigateTo({
 						     url:'../../Order/ConfirmOrder/ConfirmOrder?item='+ encodeURIComponent(JSON.stringify(item)),
 							animationType:'slide-in-right',

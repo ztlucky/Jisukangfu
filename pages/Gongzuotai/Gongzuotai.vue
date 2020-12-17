@@ -159,6 +159,17 @@
 			this.topImageHeight = this.$app.getwindowWidth() * 0.73
 			this.zhiboimagewidth = this.$app.getwindowWidth() * 0.4;
 			this.zhiboimageheight = this.zhiboimagewidth * 0.5
+			if (getApp().globalData.userId) {
+			 
+			
+			} else {
+				//未登陆
+				uni.navigateTo({
+					url: '../Login/Login/Login',
+					animationType: 'slide-in-bottom',
+					animationDuration: 300
+				});
+			}
 
 		},
 		onLoad() {
@@ -176,7 +187,13 @@
 					success: function(e) {
 
 						if (e.confirm) {
-							console.log('用户点击确定');
+ 							uni.setStorageSync('userid', null)
+							uni.setStorageSync('name', null)
+							uni.setStorageSync('roletype',null)
+							uni.setStorageSync('headurl', null)
+							uni.setStorageSync('phone', null)
+							uni.setStorageSync("wxid",null);
+							 
 
 						} else if (e.cancel) {
 							console.log('用户点击取消');
@@ -245,9 +262,10 @@
 						animationDuration: 300
 					})
 				} else {
-					uni.showToast({
-						title: '你点击了' + index,
-						icon: 'none'
+					uni.navigateTo({
+						url: '../Wode/Wode',
+						animationType: 'slide-in-right',
+						animationDuration: 300
 					})
 				}
 

@@ -107,8 +107,7 @@ class AndroidChooseFile {
  					 var result = cursor.getString(column_index)
  					 cursor.close();
  					 console.log("oooo000000")
- 					 
-						 callback(result);
+					 callback(result);
  					 }
   						
 						// callback(uri.getPath());

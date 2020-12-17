@@ -45,7 +45,7 @@
 
 					</view>
 					<text class="chongzhi" @click="chongzhi">充值</text>
-					<text class="tixian">提现</text>
+					<text class="tixian" @click= "tixian">提现 </text>
 				</view>
 				<view class="lineview">
 				</view>
@@ -147,10 +147,13 @@
 		</view>
 		<prompt :visible.sync="promptVisible" title="提示" placeholder="请输入充值金额" @confirm="clickPromptConfirm" mainColor="#0ED482">
 		</prompt>
+		<prompt :visible.sync="tixianVisble" title="提示" placeholder="请输入提现金额" @confirm="clicktixianPromptConfirm" mainColor="#0ED482">
+		</prompt>
 	</view>
 </template>
 
 <script>
+	
 	import request from "../../utils/util.js"
 	import Prompt from '@/components/zz-prompt/index.vue'
 
@@ -181,9 +184,12 @@
 				money: "",
 				info: {},
 				chongzhiMoney: '',
+				tixianVisble:false,
+				tixianMoney:''
 			}
 		},
 		onShow: function() {
+			console.log()
 			if (getApp().globalData.userId) {
 				this.getUserInfo();
 
@@ -204,51 +210,63 @@
 			
 		},
 		methods: {
+				 
+			 tixian(){
+				 if(this.money>0 ){
+				    this.tixianVisble = true;
+				 
+				   }else{
+					   uni.showToast({
+					   	title:"没有可提现余额",
+						icon:'none'
+					   })
+ 				 }
+			 },
+			//充值
 			chongzhi() {
-
 				//判断是否存储Wxid
-				// if(getApp().globalData.wxid !=null ){
+				  if(uni.getStorageSync('wxid') !=null ){
 				this.promptVisible = true;
 
-				// }else{
-				// var that=this
+				  }else{
+				var that=this
 
-				// uni.showModal({
-				// 	title: "提示",
-				// 	content: '您需要先绑定微信',
-				// 	success: function(e) {
+				uni.showModal({
+					title: "提示",
+					content: '您需要先绑定微信',
+					success: function(e) {
 
-				// 		if (e.confirm) {
-				// 		uni.getProvider({
-				// 		    service: 'oauth',
-				// 		    success: function(res) {
-				// 		        console.log(res.provider);	
-				// 		        if (~res.provider.indexOf('weixin')) {
-				// 		            uni.login({
-				// 		              provider: 'weixin',
-				// 		              success: function (loginRes) {
-				// 		                   that.refreshweixinId(loginRes.authResult.openid)
+						if (e.confirm) {
+						uni.getProvider({
+						    service: 'oauth',
+						    success: function(res) {
+						        console.log(res.provider);	
+						        if (~res.provider.indexOf('weixin')) {
+						            uni.login({
+						              provider: 'weixin',
+						              success: function (loginRes) {
+						                   that.refreshweixinId(loginRes.authResult.openid)
 
-				// 		              },
+						              },
 
-				// 		              fail:function(res){
-				// 			     uni.showToast({
-				// 				title:"授权失败",
-				// 				icon:'none'
-				// 			})							
-				// 		    }								
-				// 		   })							
-				// 		  }								
-				// 		    }								
-				// 		});
+						              fail:function(res){
+							     uni.showToast({
+								title:"授权失败",
+								icon:'none'
+							})							
+						    }								
+						   })							
+						  }								
+						    }								
+						});
 
-				// 		} else if (e.cancel) {
-				// 			console.log('用户点击取消');
+						} else if (e.cancel) {
+							console.log('用户点击取消');
 
-				// 		}
-				// 	}
-				// })
-				// }
+						}
+					}
+				})
+				}
 			},
 			//更新用户的微信ID
 			refreshweixinId(wxid) {
@@ -270,7 +288,7 @@
 						if (res.code == 200) {
 							//绑定成功后
 							刷新本地wxid数据
-							//getApp().globalData.wxid = wxid;
+ 							uni.setStorageSync("wxid",wxid);
 
 							uni.showToast({
 								title: res.message,
@@ -293,6 +311,41 @@
 						uni.hideLoading()
 
 					}
+				});
+			},
+			//提现
+			
+			clicktixianPromptConfirm(val){
+				if (val.length == 0) {
+					uni.showToast({
+						title: '请输入提现金额',
+						icon: 'none'
+					})
+					return;
+				}
+				this.tixianMoney = val;
+				console.log(this.tixianMoney )
+				var that = this;
+				this.$app.request({
+					url: this.$api.dingdan.weixinentPay,
+					data: {
+						ueer_id: getApp().globalData.userId,
+						amount: that.tixianMoney,
+					},
+					method: 'GET',
+					dataType: 'json',
+					success: res => {
+						that.tixianVisble = false
+						 
+							uni.showToast({
+								title: res.message,
+								icon: 'none'
+							})
+				
+						 
+					},
+					fail: res => {},
+					complete: res => {}
 				});
 			},
 			clickPromptConfirm(val) {
