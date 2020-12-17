@@ -26,7 +26,7 @@
 			return {
 				isGetMoreList: true,
 				isOnLoad: false,
-				index: 0,
+				index: 1,
 				size: 10,
 				list:[]
 			}
