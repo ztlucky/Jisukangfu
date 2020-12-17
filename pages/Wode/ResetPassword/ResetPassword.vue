@@ -10,19 +10,19 @@
 		</view> -->
 		<!-- <view class="" v-if="nowStatus == 1"> -->
 			<view class="input border">
-				<input type="number" :disabled="true" maxlength="11" :value="phone" v-model="phone" placeholder="请输入手机号" />
+				<input type="number" :disabled="true" maxlength="11" :name="phone"  placeholder="请输入手机号"  v-model="phone"/>
 				<view class="sendCode" @click="sendCode">{{time<= 0?'发送验证码':time+'s'}}</view>
 			</view>
 			<view class="input input1">
-				<input type="number" :value="code" v-model="code" placeholder="请输入验证码" />
+				<input type="number"  v-model="code"   placeholder="请输入验证码" />
 			</view>
 		<!-- </view> -->
 		<!-- <view class="" v-if="nowStatus == 2"> -->
 			<view class="input input1">
-				<input type="password" :value="password" v-model="password" placeholder="请输入新密码" />
+				<input type="password"   v-model="password" placeholder="请输入新密码" />
 			</view>
 			<view class="input input1">
-				<input type="password" :value="password1" v-model="password1" placeholder="请确认新密码" />
+				<input type="password"   v-model="password1" placeholder="请确认新密码" />
 			</view>
 		<!-- </view> -->
 	</view>

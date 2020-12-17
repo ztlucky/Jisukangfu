@@ -1,9 +1,15 @@
 <template>
-	<view class="contentView">
-		<nav-bar :bgColor="bgColor" fontColor="#fff" title="患者详情">
-			<view slot="right" @click="save" class="navRight">治疗结束</view>
-		</nav-bar>
-		
+	<view class="contentView" >
+	 <view class="navview" :style="[{paddingTop: statusBarHeight+5 + 'px'}]">
+	 	<image class="imageview" src="../../static/Huanzhexiangqing/fanhui.png" mode="" @click="returnBack"></image>
+		<text class="title">患者详情</text>
+		<view class="navRight" @click="endZhiliao" v-if="zhiliaoStaut == 0">
+			结束治疗
+		</view>
+		<view class="navRight" @click="endZhiliao" v-if="zhiliaoStaut == 1">
+			治疗已结束
+		</view>
+	 </view>
 		<scroll-view scroll-y="true" @scroll="scroll" :style="[{height:viewHeight + 'px'}]">
 			<view class="huanzheview">
 				<view class="huanzheTopview">
@@ -133,7 +139,7 @@
 					</view>
 				</view>
 				<view class="notData" v-if="info.treatmentList.length == 0">暂无数据</view>
-				<!-- <view class="hview">
+				  <view class="hview">
 					<text>时间</text>
 					<view class="v_lineView">
 					</view>
@@ -142,8 +148,8 @@
 
 					</view>
 					<text>状态</text>
-				</view> -->
-				<!-- <view v-for='(item,index) in kangfuxiangmu' :key='index'>
+				</view>  
+				  <view v-for='(item,index) in kangfuxiangmu' :key='index'>
 					<view class="zhiliaoxiangmu">
 						<text class="time">{{item.time}}</text>
 						<view class="v_lineView1">
@@ -162,7 +168,7 @@
 
 					</view>
 
-				</view> -->
+				</view>  
 
 			</view>
 			<!-- //康复评定 -->
@@ -192,7 +198,7 @@
 					</view>
 				</view>
 				<view class="notData" v-if="info.assessResults.length == 0">暂无数据</view>
-				<!-- <view class="mubiaoview">
+				<view class="mubiaoview">
 					<view class="upview">
 						<view class="dot">
 
@@ -210,7 +216,7 @@
 					</view>
 					<text class="mubiaodetail">患者身体比较虚弱，需要谨慎治疗。。</text>
 				</view>
-			 -->
+			
 			</view>
 			<!-- //患者记录-->
 			<view class="kangfubgview">
@@ -255,6 +261,9 @@
 		</view>
 		<xiangmu v-if="isShowPerformWindow" :short="short" :long="long" :number="number" @setNumber="setNumber" @setShowPerformWindowStatus="setShowPerformWindowStatus" @stopProgress="stopProgress" @setShowFinishWindowStatus="setShowFinishWindowStatus"></xiangmu>
 		<complete-target v-if="isShowFinishWindow" @confirmFinish="confirmFinish" :number="number"></complete-target>
+	<view class="controlview"  :style="[{height:viewHeight + 'px'},{top:navheight+statusBarHeight+ 'px'}]"  v-show="zhiliaoStaut == 1">
+		
+	</view>
 	</view>
 </template>
 
@@ -270,6 +279,8 @@
 		},
 		data() {
 			return {
+				statusBarHeight:20,
+				navheight:34,
 				isShowPerformWindow:false,
 				number:1,
 				isShowFinishWindow:false,
@@ -298,11 +309,15 @@
 				bgColor: "rgba(49, 216, 128, 1)",
 				id:0,
 				nowIndex:0,
-				info:{}
+				info:{},
+				zhiliaoStaut:0,
+				
 			}
 		},
 		onShow: function() {
 			this.viewHeight = this.$app.getwindowHeight() - 69;
+			this.statusBarHeight = uni.getSystemInfoSync()['statusBarHeight'];
+			//this.navheight = this.navheight+this.statusBarHeight;
 			if(this.id){
 				this.init();
 			}
@@ -316,6 +331,11 @@
 			init(){
 				this.getInfo();
 			},
+			returnBack(){
+				uni.navigateBack({
+					
+				});
+			},
 			runXiangMu(k){
 				let item = this.info.treatmentList[0];
 				this.short = item.shortGoals;
@@ -323,6 +343,26 @@
 				this.nowIndex = k;
 				this.number = 1;
 				this.setShowPerformWindowStatus();
+			},
+				//结束治疗
+			endZhiliao(){
+				console.log(this.id);
+				let that = this;
+				return request({
+					url:that.$api.huanzhe.editHuanZhe,
+					type:"PUT",
+					data:{
+						id:that.id,
+						status:1,
+						
+					}
+				},true,true).then(data=>{
+					 uni.showToast({
+					 	title:'编辑成功',
+						icon:'none'
+					 })
+				    that.zhiliaoStaut  = 1;
+					});
 			},
 			getInfo(){
 				let that = this;
@@ -333,7 +373,14 @@
 						id:that.id
 					}
 				},true,true).then(data=>{
-					if(data.file){
+					console.log(data.status)
+					if(data.status !=null){
+						that.zhiliaoStaut = data.status;
+						
+					}
+					console.log(that.zhiliaoStaut)
+					
+ 					if(data.file){
 						data.file = JSON.parse(data.file);
 					}
 					if(data.treatmentList.length>=1){
@@ -496,6 +543,45 @@
 	.contentView {
 		display: flex;
 		flex-direction: column;
+	}
+	.controlview{
+		z-index: 999;
+		width: 100%;
+		background-color:rgba(1,1,1,0.5);
+		position: absolute;
+		 
+		
+		
+	}
+	.navview{
+		background-color: #4CD964;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		height:68rpx;
+ 		.imageview{
+			width:50rpx;
+			height:50rpx ;
+			margin-top: 10rpx;
+			margin-left: 30rpx;
+		}
+		.title{
+			font-size: 36rpx;
+			color: #FFFFFF;
+		}
+		.navRight {
+			width: 134rpx;
+			height: 48rpx;
+			text-align: center;
+			line-height: 48rpx;
+			font-size: 26rpx;
+			color: #2CD571;
+			background-color: #FFFFFF;
+			border-radius: 8rpx;
+			margin-right: 30rpx;
+		}
+		
+		
 	}
 	.notData{
 		text-align: center;
@@ -923,17 +1009,6 @@
 
 	}
 
-	.navRight {
-		width: 134rpx;
-		height: 48rpx;
-		text-align: center;
-		line-height: 48rpx;
-		font-size: 26rpx;
-		color: #2CD571;
-		background-color: #FFFFFF;
-		border-radius: 8rpx;
-		margin-right: 30rpx;
-	}
 
 	.xiangmuList {
 		padding-bottom: 8rpx;

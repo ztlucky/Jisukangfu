@@ -301,10 +301,15 @@
 		{
 			"path": "pages/HuanzheDetail/huanZheInfo/huanZheInfo",
 			"style": {
-				"navigationBarTitleText": "患者详情",
-				"navigationBarBackgroundColor": "#31D880",
-				"navigationBarTextStyle": "white"
-
+				"app-plus": {
+					"titleNView": "false",
+					"scrollIndicator": "none",
+					"safearea": {
+						"bottom": {
+							"offset": "auto"
+						}
+					}
+				}
 			}
 		},
 		{
