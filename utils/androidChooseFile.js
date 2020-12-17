@@ -11,7 +11,7 @@ class AndroidChooseFile {
 
 		}
 	}
-	getDataColumn(main, uri, selection, selectionArgs) {
+	getDataColumn(main, uri, selection, selectionArgs,callback) {
 	 
 	        plus.android.importClass(main.getContentResolver());
 	        let cursor = main.getContentResolver().query(uri, ['_data'], selection, selectionArgs,
@@ -25,17 +25,15 @@ class AndroidChooseFile {
 			    result,
 			    function(entry){
 			         entry.file( function(file){
-					  console.log(file)
-                        return file			 							 		
-                         } );
+						 callback(file);
+                          } );
  
 			    },
 			    function(e){
 			    }
 			);
  	        }
-	        return null;
-	}
+ 	}
 	_openFile(callback, acceptType) {
 
 		//acceptType为你要查的文件类型"image/*"，"audio/*"，"video/*;image/*"  
@@ -93,7 +91,7 @@ class AndroidChooseFile {
 							var contentUri = ContentUris.withAppendedId(
 								//    Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
 								Uri.parse("content://downloads/public_downloads"), id);
-							callback(getDataColumn(main, contentUri, null, null));
+							 that.getDataColumn(main, contentUri, null, null,callback);
 						}
 						// MediaProvider
 						else if ("com.android.providers.media.documents" == uri.getAuthority()) {
@@ -117,7 +115,8 @@ class AndroidChooseFile {
 							var selection = "_id=?";
 							var selectionArgs = new Array();
 							selectionArgs[0] = split[1];
- 							callback(that.getDataColumn(main, contentUri, selection, selectionArgs));
+ 							that.getDataColumn(main, contentUri, selection, selectionArgs,callback);
+							
 						}
 					}
 					// MediaStore (and general)

@@ -182,11 +182,11 @@
 				this.$app.request({
 					url: this.$api.zhibo.sendMessage,
 					data: {
-						receiveId:that.liveid,
-						type:getApp().globalData.livesku,
+ 						type:getApp().globalData.livesku,
 						content:that.inputvalue,
 						sendId:getApp().globalData.userId,
 						createBy:getApp().globalData.userName,
+						objectId:that.liveid,
 					},
 					method: 'POST',
 					dataType: 'json',
