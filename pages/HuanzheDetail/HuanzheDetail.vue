@@ -261,7 +261,7 @@
 		</view>
 		<xiangmu v-if="isShowPerformWindow" :short="short" :long="long" :number="number" @setNumber="setNumber" @setShowPerformWindowStatus="setShowPerformWindowStatus" @stopProgress="stopProgress" @setShowFinishWindowStatus="setShowFinishWindowStatus"></xiangmu>
 		<complete-target v-if="isShowFinishWindow" @confirmFinish="confirmFinish" :number="number"></complete-target>
-	<view class="controlview"  :style="[{height:viewHeight + 'px'},{top:navheight+statusBarHeight+ 'px'}]"  v-show="zhiliaoStaut == 1">
+	<view class="controlview"  :style="[{top:navheight+statusBarHeight+ 'px'}]"  v-show="zhiliaoStaut == 1">
 		
 	</view>
 	</view>
@@ -548,8 +548,8 @@
 		z-index: 999;
 		width: 100%;
 		background-color:rgba(1,1,1,0.5);
-		position: absolute;
-		 
+		position: fixed;
+		height: 100vh;
 		
 		
 	}

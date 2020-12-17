@@ -125,7 +125,8 @@ let api = {
 		setUserPhone:`${apiRoot}user/user/updatePhone`,
 		login:`${apiRoot}user/user/loginByPhoneCode`,//手机号登陆 注册以及短信验证
 		addQualification:`${apiRoot}qualification_audit/qualificationAudit/add`,//资质审核
-		getMemberList:`${apiRoot}member/member/list`
+		getMemberList:`${apiRoot}member/member/list`,
+		getNowMemory:`${apiRoot}user/user/updateMemoryUsedQuantity`,//获取当前储量
 	},
 	huanzhe:{
 		//获取病症
@@ -162,7 +163,8 @@ let api = {
 		mpConfig: apiRoot + 'wechat/mpConfig',
 	},
 	oss:{
-		'getPictureUrl':`${apiRoot}app/ali_oss/getPictureUrl`
+		'getPictureUrl':`${apiRoot}app/ali_oss/getPictureUrl`,
+		'onLoadFile':`${apiRoot}app/ali_oss/uploadfile`
 	},
 	notes:{
 		"addNotes":`${apiRoot}study_notes/studyNotes/add`,

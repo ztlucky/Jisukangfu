@@ -42,8 +42,8 @@ class loadImage {
 	}
 
 	upload() {
-
-		uni.showLoading({
+		// this.checkFileSize().then(()=>{
+			uni.showLoading({
 			title: `文件上传中（${this.nowCount}/${this.imageList.length}）`,
 			mask: true
 		})
@@ -70,6 +70,25 @@ class loadImage {
 				this.uploadImage(this.imageList[this.nowCount]);
 			}
 		}
+		// });
+		
+	}
+	checkFileSize(){
+		//查看文件大小
+		let size = '';
+		this.imageList.map((v,i)=>{
+			size+=v.value?v.value.size:v.size
+		});
+		size = (size/1024).toFixed(2)
+		return request({
+			url:getApp().$api.user.getNowMemory,
+			type:"GET",
+			data:{
+				user_id:getApp().globalData.userId,
+				condition:false,
+				size
+			}
+		},false)
 	}
 	buf2hex(buffer) { // buffer is an ArrayBuffer
 		return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
@@ -96,98 +115,64 @@ class loadImage {
 	}
 	getFile(obj) {
 		// console.log(obj)
+		
 		let file = this.imageList[this.nowCount].value ? this.imageList[this.nowCount].value : this.imageList[this.nowCount];
-		// let file = this.imagePathList[this.nowCount]; //注意：直接上传file文件，不要用FormData对象的形式传
+		let filePath = this.imagePathList[this.nowCount]; //注意：直接上传file文件，不要用FormData对象的形式传
+		let fileName = '';
+		fileName = filePath.split('/')[filePath.split('/').length-1]
 		let that = this;
 		let config = {
 			headers: {
-				'Content-Type': 'application/octet-stream',
-				"x-oss-meta-author": that.author
+				'Content-Type': 'multipart/form-data'
 			}
 		};
-		
-		// uniCloud.uploadFile({
-		// 	filePath: file,
-		// 	cloudPath: obj.add_file,
-		// 	onUploadProgress: function(progressEvent) {
-		// 		console.log(progressEvent);
-		// 		var percentCompleted = Math.round(
-		// 			(progressEvent.loaded * 100) / progressEvent.total
-		// 		);
-		// 	},
-		// 	success(err) {
-		// 		console.log(err);
-		// 	},
-		// 	fail() {},
-		// 	complete() {}
-		// });
-		// return false
-		// #ifdef APP-PLUS
-		plus.io.requestFileSystem(plus.io.PRIVATE_WWW, function(fs) {
-			fs.root.getFile(file, {
-				create: true
-			}, function(fileEntry) {
-				fileEntry.file(function(file) {
-					var fileReader = new plus.io.FileReader();
-					console.log("getFile:" + JSON.stringify(file))
-					fileReader.readAsDataURL(file, 'utf-8');
-					fileReader.onloadend = function(evt) {
-						var buffer = uni.base64ToArrayBuffer(evt.target.result);
-						// let hex = that.buf2hex(buffer);
-						// console.log(hex);
-						
-					}
-				});
-			});
-		});
-		// var arrayBuffer = uni.base64ToArrayBuffer(base64)
-		// #endif
-		// #ifdef H5
+		console.log(file);
+		console.log(filePath);
+		console.log(getApp().globalData.userId);
+		uni.uploadFile({
+			url:getApp().$api.oss.onLoadFile,
+			file,
+			filePath,
+			name:'file',
+			formData:{
+				user_id:getApp().globalData.userId?getApp().globalData.userId:1
+			},
+			success:function(res){
+				console.log(res);
+				if (res.statusCode == 200) {
+					res.data = JSON.parse(res.data)
+					
+					that.imageUrl.push(res.data.result[0].get_url);
+					that.nowCount++;
+					that.upload();
+				}
+			},
+			complete:function(res){
+				console.log(res);
+			}
+		})
 		//h5可以使用
-		let reader = new FileReader();
-		reader.readAsArrayBuffer(file);
-		reader.onload = function(e) {
-			let buffer = e.target.result //此时是arraybuffer类型
-			// let hex = that.buf2hex(buffer);
-			console.log(buffer);
-			axios.put(obj.add_url, buffer, config)
-				.then(res => {
-					console.log(res);
-					if (res.status == 200) {
-						that.imageUrl.push(obj.get_url);
-						that.nowCount++;
-						that.upload();
-					}
-				}).catch(
-					err => {
-						console.log(err.response)
-						console.log(err)
-					}
-				)
-		}
-		// #endif
-		// console.log(file);
-		// uni.uploadFile({
-		// 	url:obj.add_url ,
-		// 	filePath:file,
-		// 	name: 'file',
-		// 	success: (res) => {
-		// 		console.log(res)
-		// 		 res = JSON.parse(res.data);
-		// 		console.log(res)
-		// 		if (res.status == 200) {
-		// 			that.imageUrl.push(obj.get_url);
-		// 			that.nowCount++;
-		// 			that.upload();
-		// 		}
-		// 	},
-		// 	fail:(err) =>{
-		// 		console.log(err)
-		// 		that.showToast("图片上传失败，请联系开发！")
-		// 	}
-		// });
-
-
+		// let reader = new FileReader();
+		// reader.readAsArrayBuffer(file);
+		// reader.onload = function(e) {
+		// 	let buffer = e.target.result //此时是arraybuffer类型
+		// 	// let hex = that.buf2hex(buffer);
+		// 	console.log(buffer);
+		// 	axios.put(obj.add_url, buffer, config)
+		// 		.then(res => {
+		// 			console.log(res);
+		// 			if (res.status == 200) {
+		// 				that.imageUrl.push(obj.get_url);
+		// 				that.nowCount++;
+		// 				that.upload();
+		// 			}
+		// 		}).catch(
+		// 			err => {
+		// 				console.log(err.response)
+		// 				console.log(err)
+		// 			}
+		// 		)
+		// }
 	}
 
 }
