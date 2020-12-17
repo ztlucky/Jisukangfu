@@ -11,6 +11,31 @@ class AndroidChooseFile {
 
 		}
 	}
+	getDataColumn(main, uri, selection, selectionArgs) {
+	 
+	        plus.android.importClass(main.getContentResolver());
+	        let cursor = main.getContentResolver().query(uri, ['_data'], selection, selectionArgs,
+	        null);
+	        plus.android.importClass(cursor);
+	        if(cursor != null && cursor.moveToFirst()) {
+	        var column_index = cursor.getColumnIndexOrThrow('_data');
+	        var result = cursor.getString(column_index)
+	        cursor.close();
+			plus.io.resolveLocalFileSystemURL(
+			    result,
+			    function(entry){
+			         entry.file( function(file){
+					  console.log(file)
+                        return file			 							 		
+                         } );
+ 
+			    },
+			    function(e){
+			    }
+			);
+ 	        }
+	        return null;
+	}
 	_openFile(callback, acceptType) {
 
 		//acceptType为你要查的文件类型"image/*"，"audio/*"，"video/*;image/*"  
@@ -19,6 +44,7 @@ class AndroidChooseFile {
 		//选择音频
 		//intent.setType("video/*;image/*"); 
 		//选择视频 （mp4 3gp 是android支持的视频格式）
+		var that = this;
 		var CODE_REQUEST = 1000;
 		var main = plus.android.runtimeMainActivity();
 		if (plus.os.name == 'Android') {
@@ -91,14 +117,12 @@ class AndroidChooseFile {
 							var selection = "_id=?";
 							var selectionArgs = new Array();
 							selectionArgs[0] = split[1];
-
-							callback(getDataColumn(main, contentUri, selection, selectionArgs));
+ 							callback(that.getDataColumn(main, contentUri, selection, selectionArgs));
 						}
 					}
 					// MediaStore (and general)
 					else if ("content" == uri.getScheme()) {
-					console.log("oooo000000")
- 					 plus.android.importClass(main.getContentResolver());
+  					 plus.android.importClass(main.getContentResolver());
  					 let cursor = main.getContentResolver().query(uri, ['_data'], selection, selectionArgs,
  					 null);
  					 plus.android.importClass(cursor);
@@ -106,12 +130,21 @@ class AndroidChooseFile {
  					 var column_index = cursor.getColumnIndexOrThrow('_data');
  					 var result = cursor.getString(column_index)
  					 cursor.close();
- 					 console.log("oooo000000")
-					 callback(result);
+					 plus.io.resolveLocalFileSystemURL(
+					     result,
+					     function(entry){
+							 entry.file( function(file){
+							 		 console.log(file)
+ 							 		 callback(file);
+ 							 		} );
+	 
+					     },
+					     function(e){
+ 					     }
+					 );
  					 }
   						
-						// callback(uri.getPath());
-					}
+  					}
 					// File
 					else if ("file" == uri.getScheme()) {
 						console.log("oooo")
@@ -122,23 +155,7 @@ class AndroidChooseFile {
 			main.startActivityForResult(intent, CODE_REQUEST);
 		}
 	}
-	 getDataColumn(main, uri, selection, selectionArgs) {
-		 console.log('dddddd')
-		 console.log(uri)
-		 
- 	        plus.android.importClass(main.getContentResolver());
-	        let cursor = main.getContentResolver().query(uri, ['_data'], selection, selectionArgs,
-	        null);
-	        plus.android.importClass(cursor);
-	        if(cursor != null && cursor.moveToFirst()) {
-	        var column_index = cursor.getColumnIndexOrThrow('_data');
-	        var result = cursor.getString(column_index)
-	        cursor.close();
-			
-	        return result;
-	        }
-	        return null;
-	}
+
 
 }
 export default AndroidChooseFile;

@@ -246,7 +246,7 @@
 					console.log("999999")
 					
 					console.log(data)
-				},'pdf/*');
+				});
 			},
 			showSelectView(){
 				this.visible = true;
