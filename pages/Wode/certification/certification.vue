@@ -4,7 +4,7 @@
 			<view class="item" @click="toPage('work')">
 				<view class="itemTitle">工作单位</view>
 				<view class="itemRight" >
-					<view class="itemRightText">{{work}}</view>
+					<view class="itemRightText hidden">{{work}}</view>
 					<image src="/static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
@@ -39,17 +39,17 @@
 					<image src="/static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
-			<view class="item" @click="chooseFile">
+			<view class="item" @click="chooseFile('qualificationFile')">
 				<view class="itemTitle">资质证书</view>
 				<view class="itemRight">
-					<view class="itemRightText"></view>
+					<view class="itemRightText hidden">{{qualificationFile?qualificationFile.name:''}}</view>
 					<image src="/static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
-			<view class="item">
+			<view class="item" @click="chooseFile('workFile')">
 				<view class="itemTitle">工作证书</view>
 				<view class="itemRight">
-					<view class="itemRightText"></view>
+					<view class="itemRightText hidden">{{workFile?workFile.name:''}}</view>
 					<image src="/static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
@@ -66,7 +66,7 @@
 			<view class="item" @click="toPage('remark')">
 				<view class="itemTitle">备注</view>
 				<view class="itemRight" >
-					<view class="itemRightText">{{remark}}</view>
+					<view class="itemRightText hidden">{{remark}}</view>
 					<image src="/static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
@@ -138,7 +138,9 @@
 				positionItem:null,
 				xueLi:null,
 				shanChangLingYu:null,
-				binData1:[]
+				binData1:[],
+				qualificationFile:null,
+				workFile:null
 			}
 		},
 		onLoad() {
@@ -241,11 +243,12 @@
 					this.shanChangLingYu = []
 				}
 			},
-			chooseFile(){
+			chooseFile(str){
+				let that = this;
 				new choose().init((data)=>{
-					console.log("999999")
+					let type = data.type;
 					
-					console.log(data)
+					that[str] = data;
 				});
 			},
 			showSelectView(){
