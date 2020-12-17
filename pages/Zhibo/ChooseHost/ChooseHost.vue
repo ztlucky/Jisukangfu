@@ -52,15 +52,13 @@
 			},
 			selectItem(index) {
 				var item = this.mainlist[index];
-				item.checked = !item.checked;
+ 				item.checked = !item.checked;
 				if (item.checked == true) {
 					this.selectList.push(item)
 				} else {
-					this.selectList.splice(item)
-
-				}
-
-			},
+                 this.selectList.splice(this.selectList.indexOf(item),1);
+ 				}
+ 			},
 			//获取主持人列表
 			getHostList() {
 				let that = this;
@@ -76,23 +74,26 @@
 					that.mainlist = data.records;
 					for (var i = 0; i < that.mainlist.length; i++) {
 						var item = that.mainlist[i];
+						
 						if (that.originArray.length > 0) {
-							for (var j = 0; j < that.originArray.length; i++) {
-								var itemj = that.originArray[i];
+							for (var j = 0; j < that.originArray.length; j++) {
+								var itemj = that.originArray[j];
 								if (itemj.name == item.name) {
-									this.$set(item, 'checked', true)
-									this.selectList.push(item)
-								} else {
-									this.$set(item, 'checked', false)
-
+									that.$set(item, 'checked', true)
+									that.selectList.push(item)
+									break
+  								} else {
+                                   that.$set(item, 'checked', false)
+ 
 								}
 							}
 						} else {
-							this.$set(item, 'checked', false)
+							that.$set(item, 'checked', false)
 
 						}
 
 					}
+					console.log(that.selectList.length)
 
 				})
 			},
@@ -103,7 +104,7 @@
 					let nowPage = pages[pages.length - 1]; //当前页页面实例
 					let prevPage = pages[pages.length - 2];
 					var select_List = JSON.stringify(this.selectList)
-
+                  console.log(this.selectList.length)
 					uni.$emit("chooseHost", {
 						selectList: select_List,
 					})

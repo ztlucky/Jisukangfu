@@ -1,5 +1,5 @@
-  // let apiRoot = 'http://www.huaxiakangfu.com:8090/';
- let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
+  let apiRoot = 'http://www.huaxiakangfu.com:8090/';
+ // let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
 let api = {
 	common: {
 		aboutUs: apiRoot + 'common/aboutUs.html',
@@ -176,8 +176,14 @@ let api = {
 	},
 	course:{
 		"addCourse":`${apiRoot}course/course/add`,
-		"getList":`${apiRoot}course/course/list`
-	}
+		"getList":`${apiRoot}course/course/list`,
+		
+	},
+	banji:{
+		"getbanjiList":`${apiRoot}class/class/list`,
+		"creatbanjiList":`${apiRoot}class/class/list`,
+		
+	},
  
 };
 export default api;

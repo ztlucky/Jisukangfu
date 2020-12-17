@@ -317,8 +317,10 @@
 			},
 			//选择主讲人
 			chooseHost(){
+				console.log(this.hostList)
+				
 				let testStr = encodeURIComponent(JSON.stringify(this.hostList));//JSON.stringify(数组)来把这个数组变成一个字符串
-
+				console.log(testStr)
 				uni.navigateTo({
 					url:'../ChooseHost/ChooseHost?hostlist='+testStr,
 					animationDuration:300,
@@ -377,10 +379,9 @@
 				})
 				//选择主持人
  				 uni.$on("chooseHost",(options)=>{
-				         that.hostList =  JSON.parse(options.selectList)
-						 console.log( that.hostList)
-				          uni.$off('chooseHost')
-				     })
+				         that.hostList = JSON.parse(options.selectList)
+						 console.log( that.hostList.length)
+ 				     })
 				
 			},
 			showChoose(){

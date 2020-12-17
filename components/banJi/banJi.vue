@@ -4,17 +4,16 @@
 			<image class="infoIcon" src="/static/gongzuotai/bg_huiyuan.png"></image>
 			<view class="banJiInfoTips">课程</view>
 			<view class="banJiInfoText">
-				<view class="textTitle hidden">医学美肤班级医学美肤班级医学美肤班级医学美肤班级</view>
-				<view class="textPrice">¥20元/会员价¥15元</view>
+				<view class="textTitle hidden">{{itemObject.name}}</view>
+				<view class="textPrice">¥{{itemObject.cost}}元/会员价¥{{itemObject.memberCost}}元</view>
 				<view class="textView">
-					<view>2654人收藏</view>
-					<view>共15节课</view>
-				</view>
+					<view v-if="itemObject.collectCount!=null">{{itemObject.collectCount}}人收藏</view>
+<!-- 					<view>共15节课</view>
+ -->				</view>
 			</view>
 		</view>
-		<view class="banJiDesc hidden2">
-			【班级简介】医学护肤是目前国际上非常   【班级简介】医学护肤是目前国际上非常   【班级简介】医学护肤是目前国际上非常   【班级简介】医学护肤是目前国际上非常   
-		</view>
+		<view class="banJiDesc hidden2">{{itemObject.presentation}}
+ 		</view>
 	</view>
 </template>
 
@@ -23,6 +22,14 @@
 		data() {
 			return {
 				
+			}
+		},
+		props: {
+			itemObject: {
+				type: Object,
+				default: function(e) {
+					return {};
+				}
 			}
 		},
 		methods: {

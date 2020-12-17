@@ -382,8 +382,7 @@
  				 uni.$on("chooseHost",(options)=>{
 				         that.hostList =  JSON.parse(options.selectList)
 						 console.log( that.hostList)
-				          uni.$off('chooseHost')
-				     })
+ 				     })
 				
 			},
 			showChoose(){
@@ -479,8 +478,7 @@
 					
 				  lecIds+=item.id+",";	
 				}
-	            console.log(lecIds)
- 				
+  				
  					//调用创建课程的接口
 			   this.$app.request({
 			   	url: this.$api.course.addCourse,

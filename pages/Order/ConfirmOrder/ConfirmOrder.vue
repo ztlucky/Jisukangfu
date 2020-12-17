@@ -36,11 +36,11 @@
 					</view>
 					 
 				 </view>
-				  <view class="payview" @click="choosePayaction">
+				  <!-- <view class="payview" @click="choosePayaction">
 					  <image class="payIcon" src="../../../static/weixin.png" ></image>
 				  	<text class="paytitle">微信支付</text>
 					<image  :src="ischoosePay? '../../../static/order/icon_xuanzhong.png':'../../../static/order/icon-weixuanzhong.png'" class="chooseicon"></image>
-				  </view>
+				  </view> -->
 				 
 		</scroll-view>
 		<view class="bottomView">
@@ -48,7 +48,7 @@
 			<text class="price1">¥</text>
 			
 			<text class="price">{{cost}}</text>
-			<view class="paynowview">立即支付
+			<view class="paynowview" @click="paynow">立即支付
 				
 			</view>
 			
@@ -124,7 +124,9 @@
 				beginTime:'',
 				cover:"",//封面
  				couponList:[],//优惠券列表
-				couponTip:"暂无可用"
+				couponTip:"暂无可用",
+				sku:"",
+				
 			}
 		},
 		onLoad:function(option){
@@ -137,7 +139,7 @@
 	 this.cost = objClone.cost;
 	 this.title = objClone.title;
 	 this.beginTime = objClone.time;
-	 
+	 this.sku = objClone.sku;
    }
    
  		},
@@ -148,6 +150,37 @@
 				
 		},
 		methods: {
+			//立即支付
+			paynow(){
+				var that = this;
+				console.log(that.courseId)
+				this.$app.request({
+					url: this.$api.dingdan.creatOrder,
+					data: {
+						customerId:getApp().globalData.userId,
+						goodsId:that.courseId,
+						goodsSku:that.sku
+ 					},
+					method: 'POST',
+					dataType: 'json',
+					success: res => {
+ 					   uni.showToast({
+ 						title:res.message,
+						icon:'none'
+ 					   })
+ 						if (res.code ==200) {
+						   uni.navigateBack({
+						   	
+						   })
+ 						 
+						}
+					},
+					fail: res => {
+					},
+					complete: res => {
+					}
+				});
+			},
 			//获取优惠券列表
 			getcouponlist(){
 				var that = this;

@@ -135,18 +135,18 @@
 		onLoad:function(e){
 			//获取直播详情
 			this.courseID = e.id;
- 			this.getLivedetail();
 			},
 	   onShow:function(e){
 	   	this.videoImageHeight = this.$app.getwindowWidth()*0.563-44
 		this.scrollviewHeight = this.$app.getwindowHeight()-44;
+		this.getLivedetail();
+		
 	   },	 
 			
 		methods: {
 			/*获取直播详情*/
 			getLivedetail() {
 				let that = this;
-				console.log(this.courseID)
 				return request({
 					url: getApp().$api.zhibo.getLivecourseDetailInfo,
 					type: 'GET',
@@ -160,6 +160,9 @@
  					that.detailInfo = data.data;
 					that.isbuy = data.isBuy;
 					that.isfav = data.isCollect;
+					console.log(data.data.userId)
+					console.log(getApp().globalData.userId)
+					
 					if(data.data.userId == getApp().globalData.userId){
 						if(data.data.status == 0){
 							this.buyBtnText = "开始直播"
@@ -278,27 +281,29 @@
 					 
 				}else if(this.buyBtnText == "立即购买"){
 					
-					// const item = {courseID:this.courseID,cover:this.detailInfo.cover,cost:this.detailInfo.cost,title:this.detailInfo.title,time:this.detailInfo.beginTime}
-					// 	uni.navigateTo({
-					// 	     url:'../../Order/ConfirmOrder/ConfirmOrder?item='+ encodeURIComponent(JSON.stringify(item)),
-					// 		animationType:'slide-in-right',
-					// 		animationDuration:300
-					// 	})
-					  const item = {liveid:this.courseID,streamName:this.detailInfo.streamName, title:this.detailInfo.title}
-					  console.log(item)
-				 uni.navigateTo({
-				      url:'../../Zhibo/WatchLive/WatchLive?item='+encodeURIComponent(JSON.stringify(item)) ,
-				 	animationType:'slide-in-right',
-				 	animationDuration:300
-				 })
+					const item = {sku:getApp().globalData.livesku, courseID:this.courseID,cover:this.detailInfo.cover,cost:this.detailInfo.cost,title:this.detailInfo.title,time:this.detailInfo.beginTime}
+						uni.navigateTo({
+						     url:'../../Order/ConfirmOrder/ConfirmOrder?item='+ encodeURIComponent(JSON.stringify(item)),
+							animationType:'slide-in-right',
+							animationDuration:300
+						})
+			
 					
-				}else if(this.buyBtnText.text == '已购买' && this.detailInfo.status == 1){
-					//观看直播
-					uni.navigateTo({
- 					     url:'../../Zhibo/WatchLive/WatchLive?streamName='+this.detailInfo.streamName,
-						animationType:'slide-in-right',
-						animationDuration:300
-					})
+				}else if(this.buyBtnText.text == '已购买'  ){
+					if(this.detailInfo.status == 1){
+						const item = {liveid:this.courseID,streamName:this.detailInfo.streamName, title:this.detailInfo.title}
+						 uni.navigateTo({
+						     url:'../../Zhibo/WatchLive/WatchLive?item='+encodeURIComponent(JSON.stringify(item)) ,
+							animationType:'slide-in-right',
+							animationDuration:300
+						})
+					}else{
+						uni.showToast({
+							title:'直播未开始',
+							icon:'none'
+						})
+					}
+ 				
 					
 				}
 				

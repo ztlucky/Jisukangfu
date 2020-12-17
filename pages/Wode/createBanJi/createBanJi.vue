@@ -4,7 +4,7 @@
 			<view class="item">
 				<view class="itemLeft">
 					<image src="../../../static/zhibo/icon_biaoti.png"></image>
-					<view class="hidden">直播标题</view>
+					<view class="hidden">班级标题</view>
 				</view>
 				<view class="itemRight">
 					<input class="input" placeholder="请输入直播标题" v-model="zhiboTitle"></input>
@@ -425,8 +425,7 @@
  				 uni.$on("chooseHost",(options)=>{
 				         that.hostList =  JSON.parse(options.selectList)
 						 console.log( that.hostList)
-				          uni.$off('chooseHost')
-				     })
+ 				     })
 				
 			},
 			showChoose(){

@@ -1,25 +1,54 @@
 <template>
 	<view class="viewPage">
 		<view class="list">
-			<ban-ji v-for="(v,k) in [1,2,3,4,5,6,7,8,9]"></ban-ji>
+			<ban-ji v-for="(v,k) in banjiList" :itemObject="v"></ban-ji>
 		</view>
-		<view class="save" >新建班级</view>
+		<view class="save"  @click="creatBanji">新建班级</view>
 	</view>
 </template>
 
 <script>
 	import banJi from "../../../components/banJi/banJi.vue"
+	import request from '../../../utils/util.js'
+	
 	export default {
 		data() {
 			return {
-				
+				banjiList:[ 
+				],
 			}
 		},
 		components:{
-				banJi
+				banJi,
+				
 		},
+		onLoad:function(e){
+			this.getList()
+		},
+		 
 		methods: {
-			
+			creatBanji(){
+				uni.navigateTo({
+					url:'../createBanJi/createBanJi',
+					animationDuration:300,
+					animationType:'slide-in-right'
+				})
+			},
+			getList(){
+				let that = this;
+				return request({
+					url: getApp().$api.banji.getbanjiList,
+					type: 'GET',
+					data:{
+						 createUserId:getApp().globalData.userId,
+						 
+					}
+				},true,true).then(data=>{
+ 					console.log(data)
+     					that.banjiList = data.records
+				 
+				});
+			},
 		}
 	}
 </script>
