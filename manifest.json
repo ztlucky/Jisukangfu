@@ -10,9 +10,9 @@
         "usingComponents" : true,
         "nvueCompiler" : "uni-app",
         "compilerVersion" : 3,
-		"compatible": {  
-			    "ignoreVersion": true //true表示忽略版本检查提示框，HBuilderX1.9.0及以上版本支持  
-			},  
+        "compatible" : {
+            "ignoreVersion" : true //true表示忽略版本检查提示框，HBuilderX1.9.0及以上版本支持  
+        },
         "splashscreen" : {
             "alwaysShowBeforeRender" : true,
             "waiting" : true,
@@ -22,11 +22,10 @@
         /* 模块配置 */
         "modules" : {
             "Payment" : {},
-            "Maps" : {},
             "Push" : {},
             "Share" : {},
-            "Speech" : {},
-            "OAuth" : {}
+            "OAuth" : {},
+            "VideoPlayer" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -51,12 +50,15 @@
                     "<uses-permission android:name=\"android.permission.READ_CONTACTS\"/>",
                     "<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
                     "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.READ_SMS\"/>",
                     "<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>",
+                    "<uses-permission android:name=\"android.permission.SEND_SMS\"/>",
                     "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
                     "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
                     "<uses-permission android:name=\"android.permission.WRITE_CONTACTS\"/>",
                     "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>",
-                    "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
+                    "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>",
+                    "<uses-permission android:name=\"android.permission.WRITE_SMS\"/>"
                 ],
                 "schemes" : [ "jisukangfu" ]
             },
@@ -86,14 +88,11 @@
                         "UniversalLinks" : ""
                     }
                 },
-                "share" : {
-                    "weixin" : {
-                        "appid" : "wx646e9d2c8699d4b8",
-                        "UniversalLinks" : ""
-                    }
-                },
+                "share" : {},
                 "maps" : {},
-                "push" : {},
+                "push" : {
+                    "unipush" : {}
+                },
                 "speech" : {
                     "ifly" : {}
                 }

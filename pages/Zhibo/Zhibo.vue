@@ -29,7 +29,7 @@
 		
  	<scroll-view :scroll-y="true" class="mainscrollview"  >
  		 
-  			 
+
  		<navigator :url="'/pages/Daxue/Zhibodetail/Zhibodetail?id=' + item.id" class="zhiboitem" v-for="(item, index) in list" :key="index" hover-class="none">
 	<view  class="topview" v-if='item.cover.length>0'>
  		  <image class="newimage" :src="item.cover"  ></image>
@@ -289,6 +289,7 @@ page {
 	height: 200upx;
 	background-color: #FF0000;
  }
+
 /*头部*/
  
 	 

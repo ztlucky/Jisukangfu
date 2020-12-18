@@ -121,32 +121,17 @@
  							url: this.$api.shouye.getRecommendClassList,
  							data: {
  								classtype: this.category_id,
- 								costtype:1,
- 								pagenum:this.page,
- 								pagesize:10,
- 								sorttype:1
- 							},
- 							method: 'POST',
+   							},
+ 							method: 'GET',
  							dataType: 'json',
- 							success: res => {
- 								
+ 							success: res => { 								
  			 					if (res.code == 200) {
- 									 
- 										
- 									 
- 										
- 								 
- 										this.banjiList = this.banjiList.concat(res.data.records);
- 										
- 									 
- 			 						
- 			 						
+ 										this.banjiList = this.banjiList.concat(res.data.records);										 						
  								} else {
  			 						this.$alert(res.msg);
  								}
  							},
- 							fail: res => {
- 			  					
+ 							fail: res => {			  					
  							},
  							complete: res => {
  			 					this.$refs.hrPullLoad.reSet();

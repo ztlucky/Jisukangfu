@@ -14,9 +14,8 @@
 		},
 		onLoad:function(e){
 			this.teacherId = e.id;
- 			uni.showToast({
-				title:"老师id="+e.id
-			})
+ 			// uni.showToast({
+ 			// })
 			},
 		methods: {
 			
