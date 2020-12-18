@@ -857,6 +857,15 @@
 			}
             
         }
+        ,{
+            "path" : "pages/Login/Protocol/Protocol",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "隐私协议",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

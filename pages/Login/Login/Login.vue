@@ -22,9 +22,9 @@
 		</view>
 		<view class="lasttext">
 			<text class="text1">继续下一步代表同意</text>
-			<text class="text2">用户协议</text>
+			<text class="text2" @click="protolpage">用户协议</text>
 			<text class="text1">和</text>
-			<text class="text2">隐私政策</text>
+			<text class="text2" @click="privicypage">隐私政策</text>
 
 		</view>
 		<view class="">
@@ -72,6 +72,31 @@
 			clearInterval(this.timer);
 		},
 		methods: {
+			//协议
+			 protolpage(){
+				  const item = {url:"https://www.baidu.com",
+				                title: "用户协议"
+				                     }
+
+				 uni.navigateTo({
+				 	url:'../Protocol/Protocol?item='+encodeURIComponent(JSON.stringify(item)),
+					animationDuration:300,
+					animationType:'slide-in-right'
+				 })
+			 },
+			 //隐私政策
+			 
+			 privicypage(){
+				const item = {url:"https://www.baidu.com",
+				               title: "隐私政策"
+				                 }
+				
+				uni.navigateTo({
+					url:'../Protocol/Protocol?item='+encodeURIComponent(JSON.stringify(item)),
+									animationDuration:300,
+									animationType:'slide-in-right'
+				})
+			 },
 			//返回
 			returnBack() {
 				uni.switchTab({

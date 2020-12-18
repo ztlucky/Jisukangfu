@@ -1,9 +1,11 @@
-  let apiRoot = 'http://www.huaxiakangfu.com:8090/';
- // let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
+ // let apiRoot = 'http://www.huaxiakangfu.com:8090/';
+  let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
 let api = {
 	common: {
 		aboutUs: apiRoot + 'common/aboutUs.html',
 		verify: apiRoot + "common/verify.html",
+		//检测版本更新
+		checkVersion:apiRoot+'app_update/appUpdate/list',
 	},
 	article: {
 		index:  'https://life.weisite.org/api/article/index.html',
@@ -129,6 +131,9 @@ let api = {
 		addQualification:`${apiRoot}qualification_audit/qualificationAudit/add`,//资质审核
 		getMemberList:`${apiRoot}member/member/list`,
 		getNowMemory:`${apiRoot}user/user/updateMemoryUsedQuantity`,//获取当前储量
+		//移除消息
+		 removeuserFormessage:`${apiRoot}message/message/delNeedPushOfUser`
+		
 	},
 	huanzhe:{
 		//获取病症

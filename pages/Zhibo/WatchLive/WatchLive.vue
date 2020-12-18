@@ -90,11 +90,36 @@
 				
 			}
 		},
+		onHide:function(option){
+			var that = this;
+			this.$app.request({
+				url: this.$api.user.removeuserFormessage,
+				data: {
+					object_id:that.liveid ,
+					receive_id:getApp().globalData.userId,
+					type:getApp().globalData.livesku
+					
+				},
+				method: 'GET',
+				dataType: 'json',
+				success: res => {
+					if (res.code ==200) {
+					   
+					 
+					}
+				},
+				fail: res => {
+				},
+				complete: res => {
+				}
+			});
+			
+		},
 		onLoad:function(option){
 			// const item = {courseID:2,cover:this.cover,cost:this.detailInfo.cost,title:this.detailInfo.title,time:this.detailInfo.beginTime}
 			  
 			let objClone=  JSON.parse(decodeURIComponent(option.item))
- 			this.liveid = 7;// objClone.liveid
+ 			this.liveid =   objClone.liveid
  			this.livetitle = objClone.title;
  			this.streamName = objClone.streamName;
  			this.userID = getApp().globalData.userId
@@ -213,7 +238,8 @@
 					url: this.$api.zhibo.getMessageList,
 					data: {
 						receiveId:that.liveid,
-						type:getApp().globalData.livesku
+						type:getApp().globalData.livesku,
+						sendId:getApp().globalData.userId
 					},
 					method: 'GET',
 					dataType: 'json',
