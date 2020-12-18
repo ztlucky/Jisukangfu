@@ -128,6 +128,7 @@ let api = {
 		login:`${apiRoot}user/user/loginByPhoneCode`,//手机号登陆 注册以及短信验证
 		addQualification:`${apiRoot}qualification_audit/qualificationAudit/add`,//资质审核
 		getMemberList:`${apiRoot}member/member/list`,
+		getQualificationList:`${apiRoot}qualification_audit/qualificationAudit/list`,
 		getNowMemory:`${apiRoot}user/user/updateMemoryUsedQuantity`,//获取当前储量
 	},
 	huanzhe:{
@@ -193,6 +194,9 @@ let api = {
 		"getbanjiList":`${apiRoot}class/class/list`,
 		"creatbanjiList":`${apiRoot}class/class/add`,
 	},
+	sys:{
+		"onloadFile":`${apiRoot}sys/common/upload`
+	}
  
 };
 export default api;

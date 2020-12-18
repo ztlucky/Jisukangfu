@@ -547,7 +547,7 @@
 	.controlview{
 		z-index: 999;
 		width: 100%;
-		background-color:rgba(1,1,1,0.5);
+		background-color:rgba(1,1,1,0);
 		position: fixed;
 		height: 100vh;
 		

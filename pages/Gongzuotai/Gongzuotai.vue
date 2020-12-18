@@ -7,8 +7,8 @@
 				<!-- <image class="bgimage" src="../../static/gongzuotai/bg_gongzuotai.png" :style="[{height:topImageHeight + 'px'}]"></image> -->
 				<view class="bgimage" :style="'width:100%;'+'height:'+topImageHeight +'px'"></view>
 				<text class="maintitle">工作台</text>
-				<text class="nametitle">刘胡兰 > </text>
-				<text class="time">2020-06-16</text>
+				<text class="nametitle">{{info.name}} > </text>
+				<text class="time">{{info.createTime}}</text>
 				<text class="loginout" @click="loginoutaction">退出</text>
 				<view class="hview">
 					<view class="v_view">
@@ -211,7 +211,8 @@
 						id:getApp().globalData.userId
 					}
 				},true,true).then(data=>{
-					that.info = data
+					that.info = data;
+					that.info.name = uni.getStorageSync('name')
 					console.log(data);
 				})
 			},
@@ -263,7 +264,7 @@
 					})
 				} else {
 					uni.navigateTo({
-						url: '../Wode/Wode',
+						url: '/pages/Wode/members/members',
 						animationType: 'slide-in-right',
 						animationDuration: 300
 					})
