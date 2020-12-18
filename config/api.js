@@ -4,6 +4,8 @@ let api = {
 	common: {
 		aboutUs: apiRoot + 'common/aboutUs.html',
 		verify: apiRoot + "common/verify.html",
+		//检测版本更新
+		checkVersion:apiRoot+'app_update/appUpdate/list',
 	},
 	article: {
 		index:  'https://life.weisite.org/api/article/index.html',
@@ -130,6 +132,9 @@ let api = {
 		getMemberList:`${apiRoot}member/member/list`,
 		getQualificationList:`${apiRoot}qualification_audit/qualificationAudit/list`,
 		getNowMemory:`${apiRoot}user/user/updateMemoryUsedQuantity`,//获取当前储量
+		//移除消息
+		 removeuserFormessage:`${apiRoot}message/message/delNeedPushOfUser`
+		
 	},
 	huanzhe:{
 		//获取病症

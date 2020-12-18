@@ -91,8 +91,8 @@
 					</view>
 
 					<!-- //直播 -->
-					<view v-show="list.length >0" class="sectiontitleview">
-						<text class="sectiontitle">直播</text>
+					<view v-show="list.length >0" cla0-ss="sectiontitleview">
+						<text class="sectiontitle">直播 </text>
 						<text class="sectionrighttitle">查看更多></text>
 
 					</view>
@@ -150,6 +150,7 @@
 	import uniSwiperDot from '@/components/uni-swiper-dot/uni-swiper-dot.vue';
 	import uniGrid from "@/components/uni-grid/uni-grid.vue";
 	import uniGridItem from "@/components/uni-grid-item/uni-grid-item.vue"
+ 
 	export default {
 		components: {
 			articleList,
@@ -258,6 +259,7 @@
 				}
 			};
 		},
+		 
 		onShow() {
 			//this.$initPageTitle(); //初始化页面标题
 			let systemInfo = uni.getSystemInfoSync();
