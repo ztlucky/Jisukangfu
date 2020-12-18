@@ -1,5 +1,5 @@
-  let apiRoot = 'http://www.huaxiakangfu.com:8090/';
- // let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
+  // let apiRoot = 'http://www.huaxiakangfu.com:8090/';
+ let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
 let api = {
 	common: {
 		aboutUs: apiRoot + 'common/aboutUs.html',
@@ -166,8 +166,9 @@ let api = {
 	},
 	oss:{
 		'getPictureUrl':`${apiRoot}app/ali_oss/getPictureUrl`,
-		'onLoadFile':`${apiRoot}app/ali_oss/uploadfile`
-	},
+		'onLoadFile':`${apiRoot}app/ali_oss/uploadFile`,
+		'onLoadVideo':`${apiRoot}app/ali_vod/uploadVideo`
+			},
 	notes:{
 		"addNotes":`${apiRoot}study_notes/studyNotes/add`,
 		"getList":`${apiRoot}study_notes/studyNotes/list`,

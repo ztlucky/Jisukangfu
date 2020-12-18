@@ -4,7 +4,7 @@
 			<view slot="right" @click="save" class="navRight">保存</view>
 		</nav-bar>
 		<view class="input">
-			<input type="text" :value="value" v-model="value" placeholder="请输入内容"  />
+			<input  :name="value" v-model="value" placeholder="请输入内容"  />
 		</view>
 	</view>
 </template>

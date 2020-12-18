@@ -86,7 +86,8 @@
 	import yealuo from "@/components/yealuo-select/yealuo-select.vue"
 	import request from "../../../utils/util.js";
 	import choose from "../../../utils/androidChooseFile.js";
-	import wPicker from "@/components/w-picker/w-picker.vue"
+	import wPicker from "@/components/w-picker/w-picker.vue";
+	import onloadImage from "../../../utils/loadImage.js"
 	export default {
 		components:{
 			yealuo,
@@ -174,6 +175,18 @@
 				console.log(this.idNo,'---',this.school,'----',this.remark,'------',this.work)
 				let str = '';
 				let that = this;
+				
+				let  tempFiles = [this.qualificationFile,this.workFile];
+				let tempFilePaths = [this.qualificationFile.fullPath,this.workFile.fullPath]
+				onloadImage.init({
+					tempFiles,
+					tempFilePaths
+				},(res)=>{
+					console.log(res);
+				}).upload()
+				return;
+				
+				
 				if(this.work == ''){
 					str = '请输入毕业院校'
 				}else if(this.xueLi == null){
@@ -194,6 +207,15 @@
 					});
 					return false;
 				}
+				// let  tempFiles = [this.qualificationFile,this.workFile];
+				// let tempFilePaths = [this.qualificationFile.fullPath,this.workFile.fullPath]
+				new onloadImage().init({
+					tempFiles,
+					tempFilePaths
+				},(res)=>{
+					console.log(res);
+				})
+				return;
 				return request({
 					url:getApp().$api.user.addQualification,
 					type:"POST",
@@ -202,7 +224,8 @@
 						idNo:that.idNo,
 						school:that.work,
 						education:that.xueLi.id,
-						remark:that.remark
+						remark:that.remark,
+						file
 					}
 				}).then(data=>{
 					uni.showToast({
@@ -246,9 +269,18 @@
 			chooseFile(str){
 				let that = this;
 				new choose().init((data)=>{
+					console.log(data)
 					let type = data.type;
+					if(type.indexOf('doc') != -1|| type.indexOf('image')!=-1 || type.indexOf('pdf') !=-1){
+						that[str] = data;
+					}else{
+						uni.showToast({
+							title:'只支持 .doc .pdf 和图片',
+							icon:'none',
+							duration:2000
+						})
+					}
 					
-					that[str] = data;
 				});
 			},
 			showSelectView(){
