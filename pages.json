@@ -850,10 +850,7 @@
         ,{
             "path" : "pages/WodeKangfu/searchDoctor/searchDoctor",
 			"style": {
-				"navigationBarTitleText": "搜索医生",
-				"enablePullDownRefresh": false,
-				"navigationBarBackgroundColor": "#31D880",
-				"navigationBarTextStyle": "white"
+				"navigationStyle": "custom"
 			}
             
         }

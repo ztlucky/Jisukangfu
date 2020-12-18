@@ -8,7 +8,7 @@
 			</view>
 		</view>
 		<view class="header header2" :style="'padding-top:'+topheight+'px'">
-			<!-- <view class="title">搜索</view> -->
+			<view class="title">搜索</view>
 		</view>
 		<view class="recommended">
 			<view class="recommendedList" >
@@ -93,7 +93,7 @@
 		font-weight: 600;
 		color: #FFFFFF;
 		line-height: 50rpx;
-		opacity: 0;
+		/* opacity: 0; */
 	}
 	.header .sousuo{
 		position: absolute;
@@ -122,9 +122,10 @@
 	}
 	.recommended{
 		background-color: #FFFFFF;
-		margin-top: 8rpx;
+		/* margin-top: 8rpx; */
 		width: 690rpx;
 		padding:10rpx 30rpx;
+		overflow: hidden;
 	}
 	.recommendedList{
 		padding-top:50rpx;

@@ -1,27 +1,27 @@
 <template>
 	<view class="viewPage">
 		<view class="headerNav">
-			<view :class="nowIndex == 0?'navItem':'navItem navItem1'" @click="setNowStatus(0)">
+			<!-- <view :class="nowIndex == 0?'navItem':'navItem navItem1'" @click="setNowStatus(0)">
 				<view class="text">未支付</view>
 				<view class="border"></view>
-			</view>
+			</view> -->
 			<view :class="nowIndex == 1?'navItem':'navItem navItem1'" @click="setNowStatus(1)">
 				<view class="text">已支付</view>
 				<view class="border"></view>
 			</view>
 		</view>
 		<view class="orderList">
-			<view class="item" @click="toPage('/pages/Wode/orderInfo/orderInfo')">
-				<image class="itemLeft" src=""></image>
+			<view class="item" @click="toPage('/pages/Wode/orderInfo/orderInfo',index)" v-for="(item , index) in list" :key="index">
+				<!-- <image class="itemLeft" src=""></image> -->
 				<view class="itemRight">
-					<view class="itemRightName hidden2">发哈短发看风景警方快速减肥发课时费就开始发课时费健康发哈短发看风景警方快速减肥发课时费就开始发课时费健康</view>
-					<view class="itemRightTime">2020-12-13 08:23</view>
+					<view class="itemRightName hidden2">{{item.goodsName}}</view>
+					<view class="itemRightTime">{{item.createTime}}</view>
 					<view class="itemPrice">
 						<view class="priceTips">
 							<view class="">¥</view>
-							<view class="">356</view>
+							<view class="">{{item.actuallyPaid}}</view>
 						</view>
-						<view class="pay" v-if="nowIndex == 0">付款</view>
+						<!-- <view class="pay" v-if="nowIndex == 0">付款</view> -->
 					</view>
 				</view>
 			</view>
@@ -34,10 +34,11 @@
 	export default {
 		data() {
 			return {
-				nowIndex:0,
+				nowIndex:1,
 				index:1,
 				size:10,
-				isGetMoreDataList:true
+				isGetMoreDataList:true,
+				list:[]
 			}
 		},
 		onReachBottom() {
@@ -67,11 +68,19 @@
 						pageNo:that.index,
 						pageSize:that.size
 					}
-				}).then(data=>{
+				},true,true).then(data=>{
+					if(data.records && data.records.length>= that.size){
+						that.isGetMoreDataList = true;
+					}else{
+						that.isGetMoreDataList = false;
+					}
+					that.list = that.list.concat(data.records);
+					that.index++;
 					console.log(data);
 				})
 			},
-			toPage(url) {
+			toPage(url,index) {
+					uni.setStorageSync('orderItem',this.list[index])
 					uni.navigateTo({
 						url,
 						animationDuration: 300,
@@ -87,6 +96,7 @@
 		width:750rpx;
 		min-height: 100vh;
 		background-color: #F6F6F6;
+		overflow: hidden;
 	}
 	.headerNav{
 		width: 100%;
@@ -136,6 +146,7 @@
 		border-radius: 16rpx;
 		display: flex;
 		justify-content: space-between;
+		margin-bottom: 20rpx;
 	}
 	.item image{
 		width:240rpx;
@@ -144,7 +155,7 @@
 		background-color: #D8D8D8;
 	}
 	.itemRight{
-		width:368rpx;
+		width:608rpx;
 	}
 	.itemRightName{
 		margin-top:4rpx;
@@ -154,6 +165,7 @@
 		font-weight: 400;
 		color: #000000;
 		line-height: 40rpx;
+		min-height: 80rpx;
 	}
 	.itemRightTime{
 		font-size: 20rpx;

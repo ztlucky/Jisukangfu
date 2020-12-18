@@ -39,6 +39,13 @@
 					<image src="/static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
+			<view class="item" @click="showSelectView_">
+				<view class="itemTitle">认证类型</view>
+				<view class="itemRight">
+					<view :class="positionItem_ && positionItem_.id?'itemRightText':'itemRightText itemRightText1'  ">{{positionItem_ && positionItem_.id?positionItem_.value:'请选择您的认证类型'}}</view>
+					<image src="/static/icon/me_lise_more.png"></image>
+				</view>
+			</view>
 			<view class="item" @click="chooseFile('qualificationFile')">
 				<view class="itemTitle">资质证书</view>
 				<view class="itemRight">
@@ -71,7 +78,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="save" @click="save()">提交审核</view>
+		<view class="save" @click="save()">{{info && info.result && info.result == 0?'未审核':info.result == 1?'审核成功':info.result == 2?'审核失败':'提交审核	'}}</view>
 		<w-picker mode="selector" :visible.sync="visible"
         value="住院医师"
         default-type="name"
@@ -79,6 +86,13 @@
         :options="position"
         @confirm="onConfirm($event,'selector')"
         ref="selector"></w-picker>
+		<w-picker mode="selector" :visible.sync="visible_"
+		value="直播"
+		default-type="name"
+		:default-props="defaultProps"
+		:options="typeList"
+		@confirm="onConfirm_($event,'selector')"
+		ref="selector"></w-picker>
 	</view>
 </template>
 
@@ -86,7 +100,8 @@
 	import yealuo from "@/components/yealuo-select/yealuo-select.vue"
 	import request from "../../../utils/util.js";
 	import choose from "../../../utils/androidChooseFile.js";
-	import wPicker from "@/components/w-picker/w-picker.vue"
+	import wPicker from "@/components/w-picker/w-picker.vue";
+	import onloadImage from "../../../utils/loadImage.js"
 	export default {
 		components:{
 			yealuo,
@@ -96,6 +111,7 @@
 			return {
 				defaultProps:{"label":"value","value":"id"},
 				visible:false,
+				visible_:false,
 				idNo:'',
 				school:'',
 				remark:'',
@@ -137,15 +153,26 @@
 				}],
 				positionItem:null,
 				xueLi:null,
+				info:{},
 				shanChangLingYu:null,
 				binData1:[],
 				qualificationFile:null,
-				workFile:null
+				workFile:null,
+				positionItem_:null,
+				typeList:[{
+					id:1,
+					value:'直播'
+				},
+				{
+					id:2,
+					value:'班级'
+				}]
 			}
 		},
 		onLoad() {
 			this.addEvent();
 			this.getIllnessList();
+			this.getInfo();
 		},
 		onUnload() {
 			uni.$off();
@@ -161,7 +188,19 @@
 				})
 			},
 			getInfo(){
-				
+				let that = this;
+				return request({
+					url:getApp().$api.user.getQualificationList,
+					type:"GET",
+					data:{
+						pageNo:1,
+						pageSize:200,
+						column:'createTime',
+						order:'desc'
+					}
+				},true,true).then(data=>{
+					that.info = data.records[0]
+				})
 			},
 			toPage(key){
 				uni.navigateTo({
@@ -171,7 +210,7 @@
 				})
 			},
 			save(){
-				console.log(this.idNo,'---',this.school,'----',this.remark,'------',this.work)
+				if(!this.info && this.info.result !== 2)return;
 				let str = '';
 				let that = this;
 				if(this.work == ''){
@@ -184,6 +223,8 @@
 					str = '您的身份证身份格式不正确'
 				}else if(this.positionItem = null){
 					str = '请选择您的职称'
+				}else if(this.positionItem_ = null){
+					str = '请选择您的认证类型'
 				}else if(this.shanChangLingYu == null){
 					str = '请选择您的擅长领域'
 				}
@@ -194,7 +235,14 @@
 					});
 					return false;
 				}
-				return request({
+				let  tempFiles = [this.qualificationFile,this.workFile];
+				let tempFilePaths = [this.qualificationFile.fullPath,this.workFile.fullPath]
+				onloadImage.init({
+					tempFiles,
+					tempFilePaths
+				},(res)=>{
+					let file = res.imageUrl.join(',');
+					return request({
 					url:getApp().$api.user.addQualification,
 					type:"POST",
 					data:{
@@ -202,7 +250,10 @@
 						idNo:that.idNo,
 						school:that.work,
 						education:that.xueLi.id,
-						remark:that.remark
+						remark:that.remark,
+						type:that.positionItem_.value,
+						jobTitle:that.positionItem.result,
+						file
 					}
 				}).then(data=>{
 					uni.showToast({
@@ -215,6 +266,8 @@
 					},1200)
 					console.log(data);
 				})
+				}).upload()
+				
 			},
 			check(id){
 				var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
@@ -246,16 +299,32 @@
 			chooseFile(str){
 				let that = this;
 				new choose().init((data)=>{
+					console.log(data)
 					let type = data.type;
+					if(type.indexOf('doc') != -1|| type.indexOf('image')!=-1 || type.indexOf('pdf') !=-1){
+						that[str] = data;
+					}else{
+						uni.showToast({
+							title:'只支持 .doc .pdf 和图片',
+							icon:'none',
+							duration:2000
+						})
+					}
 					
-					that[str] = data;
 				});
 			},
 			showSelectView(){
 				this.visible = true;
 			},
+			showSelectView_(){
+				this.visible_ = true;
+			},
 			onConfirm(data){
 				this.positionItem = data.obj;
+			},
+			onConfirm_(data){
+				console.log(data);
+				this.positionItem_ = data.obj;
 			},
 			getIllnessList(){
 				let that = this;

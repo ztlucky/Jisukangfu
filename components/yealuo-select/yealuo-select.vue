@@ -1,9 +1,9 @@
 <template>
 	<view class="yealuo-select" :style="getStyle">
 		<view class="yealuo-background" @tap="isShow=false" v-show="isShow"></view>
-		<view class="yealuo-con" :style="(isShowAllBack?'background-color:'+backColor+';':'')+(isShowIcon?'padding-right:20rpx;':'padding-right:0;')+('text-align:'+textAlign)">
+		<view class="yealuo-con" @tap='setShowStatus(true)' :style="(isShowAllBack?'background-color:'+backColor+';':'')+(isShowIcon?'padding-right:20rpx;':'padding-right:0;')+('text-align:'+textAlign)">
 			<slot name='left'></slot>
-			<input class="input" :style="{paddingLeft:padding,paddingRight:padding,backgroundColor:backColor}" :disabled="theDisabled" :placeholder="placeholder" v-model="theValue" @input="theInput" @tap='isShow=data.length' @focus="theFocus" @blur="theBlur" autocomplete="off" />
+			<input class="input" :style="{paddingLeft:padding,paddingRight:padding,backgroundColor:backColor}" :disabled="theDisabled" :placeholder="placeholder" v-model="theValue" @input="theInput"  @focus="theFocus" @blur="theBlur" autocomplete="off" />
 			<image v-if="isShowIcon" :src='!isShow? "/static/wodehuanzhe/below.png":"/static/wodehuanzhe/top.png"' class="rightImage"></image>
 			<!-- <slot name='right' v-if="selectIco">
 				<svg class="icon" v-if="!isShow" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="530"><path d="M512 714.666667c-8.533333 0-17.066667-2.133333-23.466667-8.533334l-341.333333-341.333333c-12.8-12.8-12.8-32 0-44.8 12.8-12.8 32-12.8 44.8 0l320 317.866667 317.866667-320c12.8-12.8 32-12.8 44.8 0 12.8 12.8 12.8 32 0 44.8L533.333333 704c-4.266667 8.533333-12.8 10.666667-21.333333 10.666667z" p-id="531"></path></svg>
@@ -82,7 +82,7 @@
 			},
 			disabled: {
 				type: Boolean,
-				default: false
+				default: true
 			},
 			theStyle: {
 				type: String,
@@ -141,7 +141,8 @@
 			}
 		},
 		created() {
-
+			this.data=this.binData;
+			console.log(this.data)
 		},
 		watch: {
 			value(val){
@@ -149,6 +150,7 @@
 			},
 			binData(data){
 				this.odData = data;
+				this.data = data;
 				this.theValue = '';
 			}
 			
@@ -164,6 +166,10 @@
 			},
 		},
 		methods: {
+			setShowStatus(f){
+				console.log(f,this.data,this.binData);
+				this.isShow = f;
+			},
 			//获取焦点
 			theFocus(e){
 				this.data=this.odData;

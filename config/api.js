@@ -1,5 +1,5 @@
- // let apiRoot = 'http://www.huaxiakangfu.com:8090/';
-  let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
+  // let apiRoot = 'http://www.huaxiakangfu.com:8090/';
+ let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
 let api = {
 	common: {
 		aboutUs: apiRoot + 'common/aboutUs.html',
@@ -130,6 +130,7 @@ let api = {
 		login:`${apiRoot}user/user/loginByPhoneCode`,//手机号登陆 注册以及短信验证
 		addQualification:`${apiRoot}qualification_audit/qualificationAudit/add`,//资质审核
 		getMemberList:`${apiRoot}member/member/list`,
+		getQualificationList:`${apiRoot}qualification_audit/qualificationAudit/list`,
 		getNowMemory:`${apiRoot}user/user/updateMemoryUsedQuantity`,//获取当前储量
 		//移除消息
 		 removeuserFormessage:`${apiRoot}message/message/delNeedPushOfUser`
@@ -171,8 +172,9 @@ let api = {
 	},
 	oss:{
 		'getPictureUrl':`${apiRoot}app/ali_oss/getPictureUrl`,
-		'onLoadFile':`${apiRoot}app/ali_oss/uploadfile`
-	},
+		'onLoadFile':`${apiRoot}app/ali_oss/uploadFile`,
+		'onLoadVideo':`${apiRoot}app/ali_vod/uploadVideo`
+			},
 	notes:{
 		"addNotes":`${apiRoot}study_notes/studyNotes/add`,
 		"getList":`${apiRoot}study_notes/studyNotes/list`,
@@ -197,6 +199,9 @@ let api = {
 		"getbanjiList":`${apiRoot}class/class/list`,
 		"creatbanjiList":`${apiRoot}class/class/add`,
 	},
+	sys:{
+		"onloadFile":`${apiRoot}sys/common/upload`
+	}
  
 };
 export default api;

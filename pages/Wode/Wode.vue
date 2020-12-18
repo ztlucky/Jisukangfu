@@ -137,11 +137,11 @@
 				<view class="lineview">
 
 				</view>
-				<view class="iconview iconview1" @click="toPage('/pages/Wode/plan/plan')">
+<!-- 				<view class="iconview iconview1" @click="toPage('/pages/Wode/plan/plan')">
 					<image class="iconimage" src="/static/plan.png" mode=""></image>
 					<text class="icontitle">我的方案</text>
 					<image class="rightIcon" src="../../static/icon_jiantou.png" mode=""></image>
-				</view>
+				</view> -->
 			</view>
 			<view style="width:100%;height:30rpx"></view>
 		</view>

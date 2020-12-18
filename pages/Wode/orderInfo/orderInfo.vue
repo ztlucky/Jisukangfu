@@ -1,31 +1,31 @@
 <template>
 	<view class="viewPage">
 		<view class="item">
-			<image class="itemLeft" src=""></image>
+			<!-- <image class="itemLeft" src=""></image> -->
 			<view class="itemRight">
-				<view class="itemRightName hidden2">发哈短发看风景警方快速减肥发课时费就开始发课时费健康发哈短发看风景警方快速减肥发课时费就开始发课时费健康</view>
-				<view class="itemRightTime">2020-12-13 08:23</view>
+				<view class="itemRightName hidden2">{{info.goodsName}}</view>
+				<view class="itemRightTime">{{info.createTime}}</view>
 				<view class="itemPrice">
 					<view class="priceTips">
 						<view class="">¥</view>
-						<view class="">356</view>
+						<view class="">{{info.actuallyPaid}}</view>
 					</view>
 				</view>
 			</view>
 		</view>
 		<view class="item1">
 			<view class="text">
-				<view class="title">课程价格</view>
-				<view >¥400</view>
+				<view class="title">{{info.goodsSku_dictText}}金额</view>
+				<view >¥{{info.originalPrice}}</view>
 			</view>
 			<view class="text">
 				<view class="title">优惠价格</view>
-				<view >-¥400</view>
+				<view >-¥{{info.originalPrice - info.actuallyPaid}}</view>
 			</view>
 			<view class="text">
-				<view class="title">优惠价格</view>
+				<view class="title">优惠券</view>
 				<view class="textRight">
-					<view class="">尊享会员优惠券</view>
+					<view class="">未使用</view>
 					<image src="/static/right.png"></image>
 				</view>
 			</view>
@@ -42,7 +42,8 @@
 			}
 		},
 		onLoad() {
-			
+			this.info = uni.getStorageSync('orderItem');
+			console.log(this.info)
 		},
 		methods: {
 			
@@ -135,11 +136,13 @@
 		background-color: #D8D8D8;
 	}
 	.itemRight{
-		width:368rpx;
+		width:608rpx;
+		
 	}
 	.itemRightName{
 		margin-top:4rpx;
-		width:368rpx;
+		width:608rpx;
+		min-height:80rpx;
 		font-size: 28rpx;
 		font-family: PingFangSC-Regular, PingFang SC;
 		font-weight: 400;

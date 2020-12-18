@@ -30,6 +30,9 @@ axios.defaults.adapter = function(config) {
 	})
 }
 class loadImage {
+	constructor() {
+	    
+	}
 	init(data, fn = () => {}) {
 		this.imageList = data.tempFiles;
 		this.imagePathList = data.tempFilePaths;
@@ -38,6 +41,7 @@ class loadImage {
 		this.imageUrl = []
 		this.nowCount = 0
 		this.fn = fn;
+		this.url = data.url?data.url:getApp().$api.oss.onLoadFile
 		return this;
 	}
 
@@ -47,6 +51,7 @@ class loadImage {
 			title: `文件上传中（${this.nowCount}/${this.imageList.length}）`,
 			mask: true
 		})
+		console.log(this.imageList.length == this.nowCount)
 		if (this.imageList.length == this.nowCount) {
 			let file = [];
 			this.imageList.map((v, k) => {
@@ -55,11 +60,12 @@ class loadImage {
 					url: this.imageUrl[k]
 				})
 			})
-			this.fn(this, JSON.stringify(file));
 			uni.hideLoading();
+			console.log(file);
+			this.fn(this, JSON.stringify(file));
 		} else {
 			if (this.imageList[this.nowCount].type && this.imageList[this.nowCount].type == 'video') {
-				this.uploadVideo(this.imageList[this.nowCount].value);
+				this.uploadVideo();
 			} else {
 				if (this.imagePathList[this.nowCount].substring(0, 5) == 'https') {
 					this.imageUrl.push(this.imagePathList[this.nowCount]);
@@ -67,7 +73,7 @@ class loadImage {
 					this.upload();
 					return false;
 				}
-				this.uploadImage(this.imageList[this.nowCount]);
+				this.uploadImage();
 			}
 		}
 		// });
@@ -94,28 +100,9 @@ class loadImage {
 		return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
 	}
 	uploadImage() {
-		let that = this;
-		// let file_type = '.' + (this.imagePathList[this.nowCount].split(".")[this.imagePathList[this.nowCount].split(".").length -1]);
-		//app图片选择异常
-		let file_type = '.png'
-		return request({
-			url: config.oss.getPictureUrl,
-			type: "GET",
-			data: {
-				file_type,
-				author: that.author
-			}
-		}, false).then(data => {
-			console.log('获取上传连接成功')
-			that.getFile(data.result);
-		}).catch(err => {
-			console.log(err);
-			console.log(err.response)
-		})
+		this.getFile();
 	}
-	getFile(obj) {
-		// console.log(obj)
-		
+	uploadVideo(){
 		let file = this.imageList[this.nowCount].value ? this.imageList[this.nowCount].value : this.imageList[this.nowCount];
 		let filePath = this.imagePathList[this.nowCount]; //注意：直接上传file文件，不要用FormData对象的形式传
 		let fileName = '';
@@ -126,11 +113,17 @@ class loadImage {
 				'Content-Type': 'multipart/form-data'
 			}
 		};
-		console.log(file);
-		console.log(filePath);
-		console.log(getApp().globalData.userId);
+		console.log({
+			url:getApp().$api.oss.onLoadVideo,
+			file,
+			filePath,
+			name:'file',
+			formData:{
+				user_id:getApp().globalData.userId?getApp().globalData.userId:1
+			}
+		})
 		uni.uploadFile({
-			url:getApp().$api.oss.onLoadFile,
+			url:getApp().$api.oss.onLoadVideo,
 			file,
 			filePath,
 			name:'file',
@@ -151,28 +144,88 @@ class loadImage {
 				console.log(res);
 			}
 		})
-		//h5可以使用
-		// let reader = new FileReader();
-		// reader.readAsArrayBuffer(file);
-		// reader.onload = function(e) {
-		// 	let buffer = e.target.result //此时是arraybuffer类型
-		// 	// let hex = that.buf2hex(buffer);
-		// 	console.log(buffer);
-		// 	axios.put(obj.add_url, buffer, config)
-		// 		.then(res => {
-		// 			console.log(res);
-		// 			if (res.status == 200) {
-		// 				that.imageUrl.push(obj.get_url);
-		// 				that.nowCount++;
-		// 				that.upload();
-		// 			}
-		// 		}).catch(
-		// 			err => {
-		// 				console.log(err.response)
-		// 				console.log(err)
-		// 			}
-		// 		)
-		// }
+	}
+	
+	getFile(obj) {
+		
+		let file = this.imageList[this.nowCount].value ? this.imageList[this.nowCount].value : this.imageList[this.nowCount];
+		let filePath = this.imagePathList[this.nowCount];
+		let fileName = '';
+		fileName = filePath.split('/')[filePath.split('/').length-1]
+		let that = this;
+		let config = {
+			header: {
+				'Content-Type': 'multipart/form-data'
+			}
+		};
+		this.sendFile(filePath);
+	}
+	// 发送文件方法
+	sendFile(path) {
+		let that = this;
+	    //filePath是文件的本地路径，调用plus.io.convertAbsoluteFileSystem方法可以将平台绝对路径转换成本地URL路径
+	    const filePath = plus.io.convertAbsoluteFileSystem(path)
+	    // 这是后端服务器的文件上传地址
+	    const url = this.url?this.url:getApp().$api.oss.onLoadFile
+	    // 这是创建上传任务时所需要到的配置参数
+	    const uploadOptions = {
+	        // 分块上传的大小单位kb，Android平台需设置分块上传才能准确触发statechanged返回上传进度，ios自动忽略
+	        chunkSize: 100,
+	        method: 'POST'
+	    }
+	    // 创建上传任务
+	    this.uploadTask = plus.uploader.createUpload(url,uploadOptions,(data)=>{
+			console.log(data);
+			let res = (data.responseText)
+			if(res){
+				res = JSON.parse(res);
+				console.log(res);
+
+				that.imageUrl.push(res.message);
+				that.nowCount++;
+				that.upload();
+			}
+			
+		})
+	    // 往上传任务里添加文件，第二个参数的字段有默认值，可以传空对象{}即可，但是不能不传
+	    this.uploadTask.addFile(filePath, {key:"file"})
+	    // 这里可以将添加文件的返回值打印出来，true表示添加文件成功，false表示添加失败
+	    // console.log('添加文件', this.uploadTask.addFile(filePath, {}))
+	    // 往接口里添加其他额外的请求参数,第一个参数是key，第二个参数是value
+	    // 这里可以将添加额外请求参数的返回值打印出来，true表示添加成功，false表示添加失败
+		this.uploadTask.addData('user_id', `${getApp().globalData.userId}`)
+		//this.uploadTask.addData('user_id', getApp().globalData.userId)  错误的  addData的value 要是String类型
+	    // this.uploadTask.addData('string_key2', 'string_value2')
+	    // 设置请求头信息,根据后端接口的要求设置
+	    this.uploadTask.setRequestHeader('Content-Type', 'multipart/form-data')
+	 
+	    // 注意：上面addFile、addData中但凡有一个返回false，都不能上传成功。请检查是否设置错了
+		console.log(this.uploadTask);
+	    // 添加事件监听器用于监听实时进度和完成情况，第一个参数为“statechanged”，第二个参数是回调方法
+	    this.uploadTask.addEventListener( "statechanged", (upload, status) =>{
+	        switch (upload.state) {
+	                case 1: // 上传任务开始请求
+	                    break
+	                case 2: // 上传任务请求已经建立
+	                    break
+	                case 3: // 上传任务提交数据,监听 statechanged 事件时可多次触发此状态。（重点）
+	                    // uploadedSize表示当前已经上传了的数据大小，totalSize表示文件总大小，单位是字节b
+	                    console.log('上传进度',parseInt(100 * upload.uploadedSize/upload.totalSize) )
+	                    break
+	                case 4: // 上传任务已完成, 无论成功或失败都会执行到 4 这里
+	                    if (status === 200) {
+	                        // 上传成功
+							console.log(upload,status)
+	                    } else {
+	                        // 上传失败
+	                    }
+	        }
+	    })
+		this.uploadTask.onCompleted(data=>{
+			console.log(data)
+		})
+	    // 开始执行上传任务
+	    this.uploadTask.start()
 	}
 
 }
