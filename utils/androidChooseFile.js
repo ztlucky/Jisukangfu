@@ -69,23 +69,50 @@ class AndroidChooseFile {
 						console.log("版本大于 4.4 ");
 						// ExternalStorageProvider
 						if ("com.android.externalstorage.documents" == uri.getAuthority()) {
+							console.log("sssss")
 							var docId = DocumentsContract.getDocumentId(uri);
 							var split = docId.split(":");
 							var type = split[0];
-
 							if ("primary" == type) {
 								var Environment = plus.android.importClass('android.os.Environment');
-								callback(Environment.getExternalStorageDirectory() + "/" + split[1]);
-							} else {
+								let surl = Environment.getExternalStorageDirectory() + "/" + split[1];
+								plus.io.resolveLocalFileSystemURL(
+								    surl,
+								    function(entry){
+															 entry.file( function(file){
+															 		 console.log(file)
+								 							 		 callback(file);
+								 							 		} );
+									 
+								    },
+								    function(e){
+								    }
+								);
+ 							} else {
 								var System = plus.android.importClass('java.lang.System');
 								var sdPath = System.getenv("SECONDARY_STORAGE");
 								if (sdPath) {
-									callback(sdPath + "/" + split[1]);
+									let surl = sdPath + "/" + split[1];
+									plus.io.resolveLocalFileSystemURL(
+									    surl,
+									    function(entry){
+																 entry.file( function(file){
+																 		 console.log(file)
+									 							 		 callback(file);
+									 							 		} );
+										 
+									    },
+									    function(e){
+									    }
+									);
+									//callback(sdPath + "/" + split[1]);
 								}
 							}
 						}
 						// DownloadsProvider
 						else if ("com.android.providers.downloads.documents" == uri.getAuthority()) {
+							console.log("sssss")
+							
 							var id = DocumentsContract.getDocumentId(uri);
 							var ContentUris = plus.android.importClass('android.content.ContentUris');
 							var contentUri = ContentUris.withAppendedId(
@@ -95,6 +122,8 @@ class AndroidChooseFile {
 						}
 						// MediaProvider
 						else if ("com.android.providers.media.documents" == uri.getAuthority()) {
+							console.log("sssss")
+							
 							var docId = DocumentsContract.getDocumentId(uri);
 							var split = docId.split(":");
 							var type = split[0];
@@ -121,6 +150,8 @@ class AndroidChooseFile {
 					}
 					// MediaStore (and general)
 					else if ("content" == uri.getScheme()) {
+						console.log("sssss")
+						
   					 plus.android.importClass(main.getContentResolver());
  					 let cursor = main.getContentResolver().query(uri, ['_data'], selection, selectionArgs,
  					 null);
@@ -146,8 +177,22 @@ class AndroidChooseFile {
   					}
 					// File
 					else if ("file" == uri.getScheme()) {
-						console.log("oooo")
-						callback(uri.getPath());
+ 						
+						//callback(uri.getPath());
+						
+						plus.io.resolveLocalFileSystemURL(
+						    uri.getPath(),
+						    function(entry){
+													 entry.file( function(file){
+													 		 console.log(file)
+						 							 		 callback(file);
+						 							 		} );
+							 
+						    },
+						    function(e){
+						    }
+						);
+						
 					}
 				}
 			}
