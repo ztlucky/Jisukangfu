@@ -518,6 +518,7 @@
 						tempFiles,
 						tempFilePaths
 					},(res,str)=>{
+						console.log("--------------------------------")
 						let coverUrl = res.imageUrl[0];
 						let file = [];
 						let pdfFile = [];
@@ -538,12 +539,14 @@
 								})
 							})
 						}
+						
 						file = pdfFile.concat(videoFile);
+						file = JSON.stringify(file);
 						this.creatLive(coverUrl,file);
 					}).upload();
 				  }
  			},
-			async creatLive(){
+			async creatLive(coverUrl,file){
 				let that = this;
 				
 				// await this.getHostList(); 
@@ -555,8 +558,24 @@
 				  lecIds+=item.id+",";	
 				}
 	            console.log(lecIds)
- 				
+ 				console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
  					//调用创建直播的接口
+					console.log({
+			   		cost:that.cost,
+			   		memberCost:that.memberCost,
+			   		cover:that.uploadImageUrls[0],
+			   		startTime:that.starttime+':00',
+			   		endTime:that.endtime+':00',
+			   		lecturerIds: lecIds,//主持人
+			   		title:that.zhiboTitle,
+			   		userId:getApp().globalData.userId,
+			   		presentation:that.value,
+			   		type:type,
+			   		isVisible:that.isvisiable,
+					invitationCodeCount:that.code,
+					cover:coverUrl,
+					file
+			   	})
 			   this.$app.request({
 			   	url: this.$api.zhibo.addlive,
 			   	method: 'POST',
@@ -564,8 +583,8 @@
 			   		cost:that.cost,
 			   		memberCost:that.memberCost,
 			   		cover:that.uploadImageUrls[0],
-			   		startTime:that.starttime,
-			   		endTime:that.endtime,
+			   		startTime:that.starttime+':00',
+			   		endTime:that.endtime+':00',
 			   		lecturerIds: lecIds,//主持人
 			   		title:that.zhiboTitle,
 			   		userId:getApp().globalData.userId,
@@ -578,16 +597,22 @@
 			   	},
 			   	dataType: 'json',
 			   	success: res => {
+					console.log(res);
  			   		if (res.code == 200) {
  			         uni.showToast({
 			   	       title:res.message,
                         icon:"none"
 			              })
+						  setTimeout(()=>{
+							  uni.navigateBack();
+						  },500)
 			   		} else {
 			   			this.$alert(res.msg);
 			   		}
 			   	},
-			   	complete: res => {}
+			   	complete: res => {
+					console.log(res);
+				}
 			   });
 	           
   

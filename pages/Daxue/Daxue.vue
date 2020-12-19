@@ -111,12 +111,12 @@
 						<uni-grid-item v-for="(item ,index) in recommendCourseList" :key="index" :index="index">
 							<view class="recomendbgview">
 								<view class="recomengimageview">
-									<image :src="item.coverurl" mode="scaleToFill"></image>
+									<image :src="item.coverUrl" mode="aspectFill"></image>
 									<text>课程</text>
 								</view>
 								<text class="recommendtitle_text">{{item.name}}</text>
 								<view class="recomendpricebottomView">
-									<text class="recommemdpricetext">¥{{item.cost}}元/会员价¥{{item.vipcost}}元</text>
+									<text class="recommemdpricetext">¥{{item.cost}}元/会员价¥{{item.memberCost}}元</text>
 									<!-- <text class="recommendbuynumtext">{{item.name}}人购买</text> -->
 								</view>
 							</view>

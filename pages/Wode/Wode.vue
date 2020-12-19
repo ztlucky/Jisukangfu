@@ -60,10 +60,10 @@
 						</view>
 
 					</view>
-					<view class="v_line">
+					<!-- <view class="v_line">
 
-					</view>
-					<view class="jifenview">
+					</view> -->
+					<!-- <view class="jifenview">
 						<view class="iconview">
 
 							<image class="iconimage" src="../../static/Me/jifen.png" mode=""></image>
@@ -72,7 +72,7 @@
 
 						</view>
 
-					</view>
+					</view> -->
 				</view>
 
 
@@ -657,7 +657,8 @@
 			.jifenview {
 				display: flex;
 				flex-direction: row;
-				width: 50%;
+				// width: 50%;
+				flex: 1;
 			}
 
 			.iconview {

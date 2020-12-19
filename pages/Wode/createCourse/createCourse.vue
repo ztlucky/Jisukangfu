@@ -543,6 +543,7 @@
 							})
 						}
 						file = pdfFile.concat(videoFile);
+						file = JSON.stringify(file);
 						this.creatCourse(coverUrl,file);
 					}).upload();
 					
