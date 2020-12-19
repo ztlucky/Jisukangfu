@@ -115,6 +115,16 @@
 					<image src="../../../static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
+			<view class="item" style="margin-left: 0;border-bottom: 0;">
+				<view class="itemLeft">
+					<image src="/static/zhibo/icon_biaoti.png"></image>
+					<view class="hidden">验证码人数</view>
+				</view>
+				<view class="itemRight">
+					<input class="input" placeholder="请输入验证码人数" v-model="code"></input>
+					 <image src="/static/icon/me_lise_more.png"></image>
+				</view>
+			</view>
 		</view>
 		<view class="list border">
 			<view class="item">
@@ -215,6 +225,7 @@
 				isAddVideo:false,
 				isAddPDF:false,
 				count:1,
+				code:'',
 				cover:{
 					imageList:[],
 					tempFile:[]
@@ -443,21 +454,7 @@
 			//创建直播
 			creatLiveAction(){
  				let that = this;
- 				let tempFiles = that.cover.tempFile;
- 				let tempFilePaths = that.cover.imageList;
- 				tempFiles = tempFiles.concat(that.material.pdfFile)
- 				tempFiles = tempFiles.concat(that.material.videoFile);
- 				tempFilePaths = tempFilePaths.concat(that.material.pdfList)
- 				tempFilePaths = tempFilePaths.concat(that.material.videoList)
- 				console.log(tempFiles,tempFilePaths);
- 				onloadImage.init({
- 					tempFiles,
- 					tempFilePaths
- 				},(res,srt)=>{
- 					console.log("....................")
- 					console.log(res,str);
- 					console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
- 				}).upload();
+ 				
 				if(this.zhiboTitle.length==0){
 					uni.showToast({
 						title:'请输入直播标题',
@@ -498,8 +495,52 @@
 						title:'请输入会员价格',
 						icon:'none'
 					})
+				}else if(this.code==''){
+                  uni.showToast({
+						title:'请输入验证码人数',
+						icon:'none'
+					})
+				}else if(this.material.pdfFile.length == 0&& this.material.videoFile.length == 0){
+					uni.showToast({
+						title:'请选择素材',
+						icon:'none'
+					})
 				}else{
-					this.creatLive();
+					
+					let tempFiles = that.cover.tempFile;
+					let tempFilePaths = that.cover.imageList;
+					tempFiles = tempFiles.concat(that.material.pdfFile)
+					tempFiles = tempFiles.concat(that.material.videoFile);
+					tempFilePaths = tempFilePaths.concat(that.material.pdfList)
+					tempFilePaths = tempFilePaths.concat(that.material.videoList)
+					console.log(tempFiles,tempFilePaths);
+					onloadImage.init({
+						tempFiles,
+						tempFilePaths
+					},(res,str)=>{
+						let coverUrl = res.imageUrl[0];
+						let file = [];
+						let pdfFile = [];
+						let videoFile = [];
+						if(that.material.pdfFile){
+							that.material.pdfFile.map((v,k)=>{
+								pdfFile.push({
+									type:'pdf',
+									value:res.imageUrl[k+1]
+								})
+							})
+						}
+						if(that.material.videoFile){
+							that.material.videoFile.map((v,k)=>{
+								videoFile.push({
+									type:'video',
+									value:res.imageUrl[k+1+pdfFile.length]
+								})
+							})
+						}
+						file = pdfFile.concat(videoFile);
+						this.creatLive(coverUrl,file);
+					}).upload();
 				  }
  			},
 			async creatLive(){
@@ -530,7 +571,10 @@
 			   		userId:getApp().globalData.userId,
 			   		presentation:that.value,
 			   		type:type,
-			   		isVisible:that.isvisiable
+			   		isVisible:that.isvisiable,
+					invitationCodeCount:that.code,
+					coverUrl,
+					file
 			   	},
 			   	dataType: 'json',
 			   	success: res => {
