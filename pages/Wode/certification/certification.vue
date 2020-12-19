@@ -1,6 +1,6 @@
 <template>
 	<view class="viewPage">
-		<view class="list">
+		<view class="list" >
 			<view class="item" @click="toPage('work')">
 				<view class="itemTitle">工作单位</view>
 				<view class="itemRight" >
@@ -78,7 +78,8 @@
 				</view>
 			</view>
 		</view>
-		<view class="save" @click="save()">{{info && info.result && info.result == 0?'未审核':info.result == 1?'审核成功':info.result == 2?'审核失败':'提交审核	'}}</view>
+		<view class="save" v-if="info && info.result == null" >审核中</view>
+		<view class="save" v-else @click="save()">{{info && info.result && info.result == 0?'未审核':info.result == 1?'审核成功':info.result == 2?'审核失败':'提交审核	'}}</view>
 		<w-picker mode="selector" :visible.sync="visible"
         value="住院医师"
         default-type="name"
@@ -199,7 +200,8 @@
 						order:'desc'
 					}
 				},true,true).then(data=>{
-					that.info = data.records[0]
+					that.info = data.records[0];
+					console.log(that.info);
 				})
 			},
 			toPage(key){
@@ -221,9 +223,9 @@
 					str = '请输入您的身份证号'
 				}else if(!this.check(this.idNo)){
 					str = '您的身份证身份格式不正确'
-				}else if(this.positionItem = null){
+				}else if(this.positionItem == null){
 					str = '请选择您的职称'
-				}else if(this.positionItem_ = null){
+				}else if(this.positionItem_ == null){
 					str = '请选择您的认证类型'
 				}else if(this.shanChangLingYu == null){
 					str = '请选择您的擅长领域'
@@ -251,8 +253,8 @@
 						school:that.work,
 						education:that.xueLi.id,
 						remark:that.remark,
-						type:that.positionItem_.value,
-						jobTitle:that.positionItem.result,
+						type:that.positionItem_.id,
+						jobTitle:that.positionItem.value,
 						file
 					}
 				}).then(data=>{
@@ -265,6 +267,8 @@
 						uni.navigateBack();
 					},1200)
 					console.log(data);
+				}).catch(err=>{
+					console.log(err);
 				})
 				}).upload()
 				

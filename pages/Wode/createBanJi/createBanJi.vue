@@ -100,7 +100,7 @@
 						<view class="courseItemTitle">课程一</view>
 						<image src="/static/live/icon_shanchu.png"></image>
 					</view>
-					<view class="selectedCourseAdd">添加课程</view>
+					<view class="selectedCourseAdd" @click="toPage('/pages/Wode/selectCourse/selectCourse')">添加课程</view>
 				</view>
 			</view>
 			<view class="selectedItem">
@@ -113,7 +113,7 @@
 						<view class="courseItemTitle">直播一</view>
 						<image src="/static/live/icon_shanchu.png"></image>
 					</view>
-					<view class="selectedCourseAdd">添加直播</view>
+					<view class="selectedCourseAdd" @click="toPage('/pages/Wode/selectLIve/selectLIve')">添加直播</view>
 				</view>
 			</view>
 		</view>
@@ -573,6 +573,13 @@
 			selectedFilePDF(){
 				console.log("1111")
 				this.showChoose();
+			},
+			toPage(url) {
+				uni.navigateTo({
+					url,
+					animationDuration: 300,
+					animationType: 'slide-in-right'
+				})
 			}
 			
 			

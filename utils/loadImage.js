@@ -3,7 +3,6 @@ import request from './util.js'
 import config from '../config/api.js';
 axios.defaults.adapter = function(config) {
 	return new Promise((resolve, reject) => {
-		console.log(config)
 		var settle = require('axios/lib/core/settle');
 		var buildURL = require('axios/lib/helpers/buildURL');
 		uni.request({
@@ -15,7 +14,6 @@ axios.defaults.adapter = function(config) {
 			responseType: config.responseType,
 			sslVerify: config.sslVerify,
 			complete: function complete(response) {
-				console.log(response)
 				response = {
 					data: response.data,
 					status: response.statusCode,
@@ -103,50 +101,10 @@ class loadImage {
 		this.getFile();
 	}
 	uploadVideo(){
-		let file = this.imageList[this.nowCount].value ? this.imageList[this.nowCount].value : this.imageList[this.nowCount];
-		let filePath = this.imagePathList[this.nowCount]; //注意：直接上传file文件，不要用FormData对象的形式传
-		let fileName = '';
-		fileName = filePath.split('/')[filePath.split('/').length-1]
-		let that = this;
-		let config = {
-			headers: {
-				'Content-Type': 'multipart/form-data'
-			}
-		};
-		console.log({
-			url:getApp().$api.oss.onLoadVideo,
-			file,
-			filePath,
-			name:'file',
-			formData:{
-				user_id:getApp().globalData.userId?getApp().globalData.userId:1
-			}
-		})
-		uni.uploadFile({
-			url:getApp().$api.oss.onLoadVideo,
-			file,
-			filePath,
-			name:'file',
-			formData:{
-				user_id:getApp().globalData.userId?getApp().globalData.userId:1
-			},
-			success:function(res){
-				console.log(res);
-				if (res.statusCode == 200) {
-					res.data = JSON.parse(res.data)
-					
-					that.imageUrl.push(res.data.result[0].get_url);
-					that.nowCount++;
-					that.upload();
-				}
-			},
-			complete:function(res){
-				console.log(res);
-			}
-		})
+		this.getFile(getApp().$api.oss.onLoadVideo)
 	}
 	
-	getFile(obj) {
+	getFile(url) {
 		
 		let file = this.imageList[this.nowCount].value ? this.imageList[this.nowCount].value : this.imageList[this.nowCount];
 		let filePath = this.imagePathList[this.nowCount];
@@ -158,15 +116,15 @@ class loadImage {
 				'Content-Type': 'multipart/form-data'
 			}
 		};
-		this.sendFile(filePath);
+		this.sendFile(filePath,url);
 	}
 	// 发送文件方法
-	sendFile(path) {
+	sendFile(path,url_) {
 		let that = this;
 	    //filePath是文件的本地路径，调用plus.io.convertAbsoluteFileSystem方法可以将平台绝对路径转换成本地URL路径
 	    const filePath = plus.io.convertAbsoluteFileSystem(path)
 	    // 这是后端服务器的文件上传地址
-	    const url = this.url?this.url:getApp().$api.oss.onLoadFile
+	    const url = url_?url_:getApp().$api.oss.onLoadFile
 	    // 这是创建上传任务时所需要到的配置参数
 	    const uploadOptions = {
 	        // 分块上传的大小单位kb，Android平台需设置分块上传才能准确触发statechanged返回上传进度，ios自动忽略
@@ -179,9 +137,7 @@ class loadImage {
 			let res = (data.responseText)
 			if(res){
 				res = JSON.parse(res);
-				console.log(res);
-
-				that.imageUrl.push(res.message);
+				that.imageUrl.push(res.result[0].get_url?res.result[0].get_url:res.result[0].v_id);
 				that.nowCount++;
 				that.upload();
 			}

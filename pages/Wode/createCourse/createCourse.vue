@@ -3,17 +3,17 @@
 		<view class="list border">
 			<view class="item">
 				<view class="itemLeft">
-					<image src="../../../static/zhibo/icon_biaoti.png"></image>
+					<image src="/static/zhibo/icon_biaoti.png"></image>
 					<view class="hidden">课程标题</view>
 				</view>
 				<view class="itemRight">
 					<input class="input" placeholder="请输入课程标题" v-model="zhiboTitle"></input>
-					 <image src="../../../static/icon/me_lise_more.png"></image>
+					 <image src="/static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
 			<view class="item">
 				<view class="itemLeft">
-					<image src="../../../static/zhibo/icon_fenlei.png"></image>
+					<image src="/static/zhibo/icon_fenlei.png"></image>
 					<view class="hidden">选择分类</view>
 					  
 				</view>
@@ -21,16 +21,16 @@
 					<picker @change="bindPickerChange" :value="index" :range="category" range-key="name">
 					                 <view class="hidden">{{selectCategroy}}</view> 
 					                  </picker>
-					<image src="../../../static/icon/me_lise_more.png"></image>
+					<image src="/static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
 		</view>
 		<view class="onLoadCover border" @click="getCover">
-			<image mode="aspectFill" :src="cover.imageList.length!=0?cover.imageList[0]:'../../../static/zhibo/img_fengmian.png'"></image>
+			<image mode="aspectFill" :src="cover.imageList.length!=0?cover.imageList[0]:'/static/zhibo/img_fengmian.png'"></image>
 			<view >上传封面</view>
 		</view>
 		<view class="course border">
-			<view class="selectedItem">
+			<!-- <view class="selectedItem">
 				<view class="selectedTitle" @click="selectedFilePDF">
 					<image src="/static/icon_shipin.png"></image>
 					<view class="">上传课程视频</view>
@@ -39,16 +39,16 @@
 					<video :src="item" v-for="(item , index) in material.videoList"></video>
 					<image src="/static/zhibo/img_tianjia.png" @click="getMaterial"></image>
 				</view>
-			</view>
+			</view> -->
 			<view class="top">
 				<textarea placeholder="请输入课程的文字内容（选填）…" @input="input"></textarea>
-				<view class="topImageList">
+				<!-- <view class="topImageList">
 					<view v-for="(v,k) in imageList" :key="k" :class="'imageItem '+((k)%3 == 1?'imageItem1':'imageItem')" >
 						<image mode="aspectFill" :src="v"></image>
 						<image src="/static/icon_delete.png" class="delete" @click="deleteImage(k)"></image>
 					</view>
 					<image  src="/static/zhibo/img_tupian.png" :class="'imageItem imageAdd '+((imageList.length)%3 == 1?'imageItem1':'imageItem')" @click="getImages"></image>
-				</view>
+				</view> -->
 			</view>
 			<view class="selectedItem">
 				<view class="selectedTitle">
@@ -58,7 +58,7 @@
 				<view class="selectedFile" @click="chooseHost">
 					 
 				  <view  v-for="(item,index) in hostList" :key= "index" class="hostview">
-					  <image :src="item.sex == 1 ?'../../../static/gongzuotai/icon_nan.png':'../../../static/gongzuotai/icon_nv.png'" ></image>
+					  <image :src="item.sex == 1 ?'/static/gongzuotai/icon_nan.png':'/static/gongzuotai/icon_nv.png'" ></image>
  					<text>{{item.name}}</text>
 				  	
 				  </view>
@@ -67,13 +67,22 @@
 				</view>
 			</view>
 			<view class="selectedItem">
-				<view class="selectedTitle" @click="selectedFilePDF">
+				<view class="selectedTitle">
 					<image src="/static/zhibo/icon_sucai.png"></image>
 					<view class="">选择素材（仅限MP4和PDF文件）</view>
 				</view>
 				<view class="selectedFile">
-					<video :src="item" v-for="(item , index) in material.videoList"></video>
-					<image src="/static/zhibo/img_tianjia.png" @click="getMaterial"></image>
+					<view  v-for="(item,index) in material.videoFile" @click="lookFileInfo('video',index)" :key= "index" class="hostview">
+						 <image  src="/static/icon_wenjian@2x.png"></image>
+						<view class="fileName hidden">{{item.name}}</view>
+					</view>
+					<view  v-for="(item,index) in material.pdfFile" @click="lookFileInfo('pdf',index)" :key= "index + 1568" class="hostview">
+						 <image  src="/static/icon_wenjian@2x.png"></image>
+						<view class="fileName hidden">{{item.name}}</view>
+					</view>
+
+					<image class="addFile" src="/static/zhibo/img_tianjia.png" @click="getMaterial"></image>
+					<view style="width:20rpx;height: 10rpx;"></view>
 				</view>
 			</view>
 		</view>
@@ -86,24 +95,24 @@
 				<view class="priceItemLeft">价格</view>
 				<view class="priceItemRight">
 					<input class="priceItemInput"  placeholder="输入价格" v-model="cost"></input>
-					<image src="../../../static/icon/me_lise_more.png"></image>
+					<image src="/static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
 			<view class="priceItem">
 				<view class="priceItemLeft">会员价格</view>
 				<view class="priceItemRight">
 					<input class="priceItemInput" placeholder="输入会员价格" v-model="memberCost"> </input>
-					<image src="../../../static/icon/me_lise_more.png"></image>
+					<image src="/static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
 			<view class="item" style="margin-left: 0;border-bottom: 0;">
 				<view class="itemLeft">
-					<image src="../../../static/zhibo/icon_biaoti.png"></image>
+					<image src="/static/zhibo/icon_biaoti.png"></image>
 					<view class="hidden">验证码人数</view>
 				</view>
 				<view class="itemRight">
 					<input class="input" placeholder="请输入验证码人数" v-model="code"></input>
-					 <image src="../../../static/icon/me_lise_more.png"></image>
+					 <image src="/static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
 		</view>
@@ -111,7 +120,7 @@
 		<view class="list border">
 			<view class="item">
 				<view class="itemLeft">
-					<image src="../../../static/zhibo/icon_biaoti.png"></image>
+					<image src="/static/zhibo/icon_biaoti.png"></image>
 					<view class="hidden">课程可见性</view>
 				</view>
 				<view class="itemRight">
@@ -124,19 +133,18 @@
 			</view>
 			<view class="item">
 				<view class="itemLeft">
-					<image src="../../../static/zhibo/icon_guankan.png"></image>
+					<image src="/static/zhibo/icon_guankan.png"></image>
 					<view class="hidden">如何查看</view>
 				</view>
 				<view class="itemRight">
 					<picker @change="bindPickerChangeChakan" :value="chakanIndex" :range="chakanType">
 					                 <view class="hidden2">{{chakanType[chakanIndex]}}</view>
 					                  </picker>
-					<image src="../../../static/icon/me_lise_more.png"></image>
+					<image src="/static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
 		</view>
 		<view class="save" @click="creatCourseAction">提交申请</view>	
-		<l-file ref="lFile"></l-file>
 		<choose ref="chooesFile" :image="isAddImage" :count="count" :video="isAddVideo" :pdf="isAddPDF"></choose>
 		<w-picker
 		         :visible.sync="visibleTime"
@@ -167,7 +175,6 @@
 </template>
 
 <script>
-	import lFile from "@/components/l-file/l-file.vue"
 	import choose from "@/components/chooes-file/chooes-file.vue"
 	import wPicker from "@/components/w-picker/w-picker.vue";
     import onloadImage from "../../../utils/loadImage.js"
@@ -222,7 +229,6 @@
 			}
 		},
 		components:{
-				lFile,
 				choose
 		},
 		onShow() {
@@ -251,6 +257,32 @@
 					
 				}
 				
+			},
+			lookFileInfo(type,index){
+				let content = '';
+				let that = this;
+				if(type == 'pdf'){
+					content = this.material.pdfFile[index].name
+				}else{
+					content = this.material.videoFile[index].name
+				}
+				uni.showModal({
+					title:type == 'pdf'?'PDF':'视频'+'文件',
+					content:`当前操作的文件为 ${content}`,
+					confirmText:'删除文件',
+					cancelText:'取消操作',
+					success(res) {
+						if(res.confirm){
+							if(type == 'pdf'){
+								that.material.pdfFile.splice(index,1);
+								that.material.pdfList.splice(index,1);
+							}else{
+								that.material.videoFile.splice(index,1);
+								that.material.videoList.splice(index,1);
+							}
+						}
+					}
+				})
 			},
 			confirmtime(e){
 				this.starttime = e.result
@@ -373,10 +405,19 @@
 					switch (that.fileType){
 						case 'material':
 							that.material.videoList.push(res.res.tempFilePath);
-							that.material.videoFile.push(res.res.tempFile);
-							console.log(res.res,res.res)
+							that.material.videoFile.push({
+								value:res.res,
+								type:'video',
+								name:res.res.tempFilePath.split('/')[res.res.tempFilePath.split('/').length-1]
+							});
+							console.log(that.material.videoList,that.material.videoFile)
 						break;
 					}
+				})
+				uni.$on("getFile",res=>{
+					console.log(res);
+					this.material.pdfList.push(res.res.fullPath);
+					this.material.pdfFile.push(res.res);
 				})
 				//选择主持人
  				 uni.$on("chooseHost",(options)=>{
@@ -427,6 +468,7 @@
 			},
 			//创建课程
 			creatCourseAction(){
+ 				let that = this;
  				
 				if(this.zhiboTitle.length==0){
 					uni.showToast({
@@ -463,11 +505,50 @@
 						title:'请输入验证码人数',
 						icon:'none'
 					})
+				}else if(this.material.pdfFile.length == 0&& this.material.videoFile.length == 0){
+					uni.showToast({
+						title:'请选择素材',
+						icon:'none'
+					})
 				}else{
-					this.creatCourse();
+					let tempFiles = that.cover.tempFile;
+					let tempFilePaths = that.cover.imageList;
+					tempFiles = tempFiles.concat(that.material.pdfFile)
+					tempFiles = tempFiles.concat(that.material.videoFile);
+					tempFilePaths = tempFilePaths.concat(that.material.pdfList)
+					tempFilePaths = tempFilePaths.concat(that.material.videoList)
+					console.log(tempFiles,tempFilePaths);
+					onloadImage.init({
+						tempFiles,
+						tempFilePaths
+					},(res,str)=>{
+						let coverUrl = res.imageUrl[0];
+						let file = [];
+						let pdfFile = [];
+						let videoFile = [];
+						if(that.material.pdfFile){
+							that.material.pdfFile.map((v,k)=>{
+								pdfFile.push({
+									type:'pdf',
+									value:res.imageUrl[k+1]
+								})
+							})
+						}
+						if(that.material.videoFile){
+							that.material.videoFile.map((v,k)=>{
+								videoFile.push({
+									type:'video',
+									value:res.imageUrl[k+1+pdfFile.length]
+								})
+							})
+						}
+						file = pdfFile.concat(videoFile);
+						this.creatCourse(coverUrl,file);
+					}).upload();
+					
 				  }
  			},
-			async creatCourse(){
+			async creatCourse(coverUrl,file){
 				let that = this;
 				
 				// await this.getHostList(); 
@@ -495,7 +576,8 @@
 			   		presentation:that.value,
 			   		type:type,
 			   		isVisible:that.isvisiable,
-					invitationCode:that.code
+					invitationCode:that.code,
+					coverUrl
 			   	},
 			   	dataType: 'json',
 			   	success: res => {
@@ -729,8 +811,19 @@
 		margin-right: 12rpx;
 	}
 	.selectedFile{
+		width:710rpx;
 		display: flex;
 		padding-bottom: 34rpx;
+		overflow-x: scroll;
+	}
+	.selectedFile >image , .selectedFile >view{
+		flex-shrink: 0;
+	}
+	.addFile{
+		/* padding-right: 40rpx; */
+	}
+	.fileName{
+		max-width: 150rpx;
 	}
 	.hostview{
 		display: flex;
@@ -745,7 +838,7 @@
 		
 		
 	} 
-	.hostview text{
+	.hostview text ,.hostview view{
 		 font-size: 20rpx;
 		 margin-top: 10rpx;
 		 color: #000000;

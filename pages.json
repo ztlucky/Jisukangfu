@@ -863,6 +863,24 @@
             }
             
         }
+        ,{
+            "path" : "pages/Wode/selectLIve/selectLIve",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "直播",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/Wode/selectCourse/selectCourse",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "课程",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

@@ -77,13 +77,22 @@
 				</view>
 			</view>
 			<view class="selectedItem">
-				<view class="selectedTitle" @click="selectedFilePDF">
+				<view class="selectedTitle" >
 					<image src="/static/zhibo/icon_sucai.png"></image>
 					<view class="">选择素材（仅限MP4和PDF文件）</view>
 				</view>
 				<view class="selectedFile">
-					<video :src="item" v-for="(item , index) in material.videoList"></video>
-					<image src="/static/zhibo/img_tianjia.png" @click="getMaterial"></image>
+					<view  v-for="(item,index) in material.videoFile" @click="lookFileInfo('video',index)" :key= "index" class="hostview">
+						 <image  src="/static/icon_wenjian@2x.png"></image>
+						<view class="fileName hidden">{{item.name}}</view>
+					</view>
+					<view  v-for="(item,index) in material.pdfFile" @click="lookFileInfo('pdf',index)" :key= "index + 1568" class="hostview">
+						 <image  src="/static/icon_wenjian@2x.png"></image>
+						<view class="fileName hidden">{{item.name}}</view>
+					</view>
+					
+					<image class="addFile" src="/static/zhibo/img_tianjia.png" @click="getMaterial"></image>
+					<view style="width:20rpx;height: 10rpx;"></view>
 				</view>
 			</view>
 		</view>
@@ -372,20 +381,17 @@
 					switch (that.fileType){
 						case 'material':
 							that.material.videoList.push(res.res.tempFilePath);
-							that.material.videoFile.push(res.res.tempFile);
-							console.log(res.res,res.res)
+							that.material.videoFile.push({
+								value:res.res,
+								type:'video',
+								name:res.res.tempFilePath.split('/')[res.res.tempFilePath.split('/').length-1]
+							});
 						break;
 					}
 				})
 				uni.$on("getFile",res=>{
-					console.log(res);
-					switch (that.fileType){
-						case 'material':
-							that.material.pdfList.push(res.res.tempFilePath);
-							that.material.pdfFile.push(res.res.tempFile);
-							console.log(res.res,res.res)
-						break;
-					}
+					this.material.pdfList.push(res.res.fullPath);
+					this.material.pdfFile.push(res.res);
 				})
 				//选择主持人
  				 uni.$on("chooseHost",(options)=>{
@@ -436,7 +442,22 @@
 			},
 			//创建直播
 			creatLiveAction(){
- 				
+ 				let that = this;
+ 				let tempFiles = that.cover.tempFile;
+ 				let tempFilePaths = that.cover.imageList;
+ 				tempFiles = tempFiles.concat(that.material.pdfFile)
+ 				tempFiles = tempFiles.concat(that.material.videoFile);
+ 				tempFilePaths = tempFilePaths.concat(that.material.pdfList)
+ 				tempFilePaths = tempFilePaths.concat(that.material.videoList)
+ 				console.log(tempFiles,tempFilePaths);
+ 				onloadImage.init({
+ 					tempFiles,
+ 					tempFilePaths
+ 				},(res,srt)=>{
+ 					console.log("....................")
+ 					console.log(res,str);
+ 					console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+ 				}).upload();
 				if(this.zhiboTitle.length==0){
 					uni.showToast({
 						title:'请输入直播标题',
@@ -742,8 +763,13 @@
 		margin-right: 12rpx;
 	}
 	.selectedFile{
+		width:710rpx;
 		display: flex;
 		padding-bottom: 34rpx;
+		overflow-x: scroll;
+	}
+	.selectedFile >image , .selectedFile >view{
+		flex-shrink: 0;
 	}
 	.hostview{
 		display: flex;
@@ -758,7 +784,7 @@
 		
 		
 	} 
-	.hostview text{
+	.hostview text,.hostview view{
 		 font-size: 20rpx;
 		 margin-top: 10rpx;
 		 color: #000000;
