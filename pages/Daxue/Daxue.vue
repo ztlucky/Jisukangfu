@@ -111,7 +111,7 @@
 						<uni-grid-item v-for="(item ,index) in recommendCourseList" :key="index" :index="index">
 							<view class="recomendbgview">
 								<view class="recomengimageview">
-									<image :src="item.coverurl" mode="scaleToFill"></image>
+									<image :src="item.coverUrl" mode="scaleToFill"></image>
 									<text>课程</text>
 								</view>
 								<text class="recommendtitle_text">{{item.name}}</text>
