@@ -2,7 +2,7 @@
 	 <view  class="bgview" >
 	   <scroll-view scroll-y="true" :style="[{height:scrollviewHeight + 'px'}]">
 		   <view class="videoImageview"  :style="[{height:videoImageHeight + 'px'}]">
- 		   	<image :src="detailInfo.cover" ></image>
+ 		   	<image :src="detailInfo.coverUrl" mode="aspectFill" ></image>
  		  </view>
 		  <view class="secondView">
 		  	<view class="priceview">

@@ -34,12 +34,12 @@
 				 	<uni-grid-item v-for="(item ,index) in recommendCourseList" :key ="index" :index= "index">
 				 	  <view  class="recomendbgview">
 				 										   <view class="recomengimageview">
-				 											   <image  :src="item.coverurl" mode="scaleToFill"></image>
+				 											   <image  :src="item.coverUrl" mode="aspectFill"></image>
 				 											   <text>课程</text>
 				 											   </view>
 				 	       <text class="recommendtitle_text">{{item.name}}</text>
 				 		   <view class="recomendpricebottomView">
-				 		   	<text class="recommemdpricetext">¥{{item.cost}}元/会员价¥{{item.vipcost}}元</text>
+				 		   	<text class="recommemdpricetext">¥{{item.cost}}元/会员价¥{{item.memberCost}}元</text>
 				 			<!-- <text class="recommendbuynumtext">{{item.name}}人购买</text> -->
 				 		    </view>
 				 	  </view>
@@ -131,12 +131,13 @@
    			this.$app.request({
 				  	url: this.$api.shouye.getRecommendcourseList,
 				  	data: {
-				 		page_size:'10',
+						pageNo:1,
+				 		pageSize:'20',
 			 		     sorttype:'1',
 						 pagenum:this.page,
 						 coursetype:this.category_id
 				  	},
-				  	method: 'POST',
+				  	method: 'GET',
 				 	dataType: 'json',
 				  	success: res => {
 				  		console.log("====")
@@ -147,15 +148,15 @@
 							 
 								
 						 
-				  				this.recommendCourseList = this.recommendCourseList.concat(res.data.records) ;
+				  				this.recommendCourseList = this.recommendCourseList.concat(res.result) ;
 								
 									 
-								 if(res.data.records.length == 0 ||res.data.records.length<10){
-									 this.bottomTips = 'nomore'
+								 // if(res.result.length == 0 ||res.result.length<10){
+									//  this.bottomTips = 'nomore'
 									 
-								 }else  if(res.data.records.length == 10){
-								 this.bottomTips = 'more';
-								 }
+								 // }else  if(res.result.length == 10){
+								 // this.bottomTips = 'more';
+								 // }
  								 
 							 
 							
@@ -164,7 +165,7 @@
  							
 			 		} else {
 							 
-				  			this.$alert(res.msg);
+				  			this.$alert(res.message);
 				  		}
 				 	},
 				 	fail: res => {
@@ -175,6 +176,15 @@
 						
 			 	}
 				  });
+				 },
+				 kechengItemClick(e){
+					 let index = e.detail.index;
+					 let id = this.recommendCourseList[index].id;
+					 uni.navigateTo({
+					 	url: "/pages/Daxue/KechengDetail/KechengDetail?id="+id,
+					 	animationDuration: 300,
+					 	animationType: 'slide-in-right'
+					 })
 				 }
 			  
 			   

@@ -1,6 +1,6 @@
 <template>
 	<view class="courseItem" @click="toPage(info.id)">
-		<image mode="aspectFill" src="/static/gongzuotai/bg_zhibo.png"></image>
+		<image mode="aspectFill" :src="info.coverUrl"></image>
 		<view class="title hidden2">{{info.name?info.name:'京东卡风急浪大附近的发苏里科夫健身卡索科洛夫将阿凡达索科洛夫将阿说个事各类数据公开了世界观快乐'}}</view>
 		<view class="tips">课程</view>
 		<view class="price">

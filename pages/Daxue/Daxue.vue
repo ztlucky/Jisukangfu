@@ -116,7 +116,7 @@
 								</view>
 								<text class="recommendtitle_text">{{item.name}}</text>
 								<view class="recomendpricebottomView">
-									<text class="recommemdpricetext">¥{{item.cost}}元/会员价¥{{item.vipcost}}元</text>
+									<text class="recommemdpricetext">¥{{item.cost}}元/会员价¥{{item.memberCost}}元</text>
 									<!-- <text class="recommendbuynumtext">{{item.name}}人购买</text> -->
 								</view>
 							</view>

@@ -543,6 +543,7 @@
 							})
 						}
 						file = pdfFile.concat(videoFile);
+						file = JSON.stringify(file);
 						this.creatCourse(coverUrl,file);
 					}).upload();
 					
@@ -576,8 +577,9 @@
 			   		presentation:that.value,
 			   		type:type,
 			   		isVisible:that.isvisiable,
-					invitationCode:that.code,
-					coverUrl
+					invitationCodeCount:that.code,
+					coverUrl,
+					file
 			   	},
 			   	dataType: 'json',
 			   	success: res => {
@@ -585,7 +587,10 @@
  			         uni.showToast({
 			   	       title:res.message,
                         icon:"none"
-			              })
+			              });
+						  setTimeout(()=>{
+							  uni.navigateBack();
+						  },500)
 			   		} else {
 			   			this.$alert(res.msg);
 			   		}
