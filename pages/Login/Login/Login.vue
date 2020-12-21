@@ -74,7 +74,7 @@
 		methods: {
 			//协议
 			 protolpage(){
-				  const item = {url:"https://www.baidu.com",
+				  const item = {url:"http://www.huaxiakangfu.com/privacy/yinsi.html",
 				                title: "用户协议"
 				                     }
 
@@ -87,7 +87,7 @@
 			 //隐私政策
 			 
 			 privicypage(){
-				const item = {url:"https://www.baidu.com",
+				const item = {url:"http://www.huaxiakangfu.com/privacy/yinsi-.html",
 				               title: "隐私政策"
 				                 }
 				

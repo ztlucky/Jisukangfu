@@ -164,7 +164,7 @@
 			},
 		  },
 		globalData: {
-			userId: uni.getStorageSync('userid') ? uni.getStorageSync('userid') : 1,
+			userId: uni.getStorageSync('userid') ? uni.getStorageSync('userid') : null,
 			userName: uni.getStorageSync('name') ? uni.getStorageSync('name') : '用户'+uni.getStorageSync('userid') ? uni.getStorageSync('userid') : null,
             livesku:"ZB78965",//zhibo
 			classsku:"BJ36987",
