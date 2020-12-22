@@ -72,13 +72,13 @@
 							phone:this.mobile
 						 				
 						},
-						method:'POST',
+						method:'GET',
 						success: (res) => {
 							console.log("ddd");
 							console.log(res.data);
 							
 						 uni.showToast({
-						 	title:res.data.msg,
+						 	title:res.data.message,
 							icon:'none'
 						 })
 						 console.log(res.data.code)

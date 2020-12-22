@@ -13,7 +13,7 @@
 			</view>
 		</view>
 
-		<view class="save" @click="sureAction">确认</view>
+		<view class="save" v-if="isLecture != 1" @click="sureAction">确认</view>
 	</view>
 
 </template>
@@ -27,14 +27,19 @@
 				mainlist: [],
 				selectList: [],
 				originArray: [],
-				searchString: ""
+				searchString: "",
+				isLecture:2,
 			}
 		},
 		onLoad: function(e) {
 			if (e.hostlist != null) {
-				this.originArray = JSON.parse(e.hostlist)
+				this.originArray = JSON.parse(e.hostlist);
+				console.log(this.originArray);
 			}
-
+			this.isLecture = e.isLecture == 1?1:2;
+			if(this.isLecture == 1){
+				
+			}
 			this.getHostList();
 		},
 		methods: {
@@ -51,7 +56,24 @@
 				}
 			},
 			selectItem(index) {
+				
 				var item = this.mainlist[index];
+				if(this.isLecture == 1){
+					if(item.checked){
+						this.mainlist[index].checked = false;
+						this.$set(this.mainlist,index,this.mainlist[index]);
+					}else{
+						this.mainlist.map((v,i)=>{
+							this.mainlist[index].checked = false;
+							this.$set(this.mainlist,i,this.mainlist[i]);
+						})
+						this.mainlist[index].checked = true;
+						this.$set(this.mainlist,index,this.mainlist[index]);
+						uni.setStorageSync('lectureHost',this.mainlist[index]);
+						uni.navigateBack();
+					}
+					return false;
+				}
  				item.checked = !item.checked;
 				if (item.checked == true) {
 					this.selectList.push(item)

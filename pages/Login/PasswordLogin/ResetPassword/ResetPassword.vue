@@ -4,12 +4,12 @@
 		<image src="../../../../static/Login/icon-guanbi.png" class="closeview" @click="returnBack"></image>
 		<text class="title">密码找回</text>
 		<text class="title1">通过注册的手机号找回密码</text>
-		<input type="text" class="input"  placeholder="请输入密码" v-model="password"/>
+		<input type="password" class="input"  placeholder="请输入密码" v-model="password"/>
 		<view class="lineview">
 			
 		</view>
 		<view class="codeview">
-			<input type="text" class="input1" placeholder="请再次输入密码"  v-model="againpassword"/>
+			<input type="password" class="input1" placeholder="请再次输入密码"  v-model="againpassword"/>
 			<!-- <text class="getcode">获取验证码</text> -->
 		</view>
 		<view class="lineview">
@@ -24,6 +24,8 @@
 </template>
 
 <script>
+	// import md5 from "/utils/"
+	let md5 =  require('md5');
 	export default {
 		data() {
 			return {
@@ -78,19 +80,19 @@
 					    icon:'none'
 					 })
 				 }else{
-					 console.log(this.code)
+					 let pwd = md5(this.password + 'JSKF1234'); 
 					 this.$app.request({
-					 		url: this.$api.user.resetPwd ,
+					 		url: this.$api.user.setPwd,
 					 		data: {
 					 			phone: this.mobile,
-					 			passwd: this.password,
-								phonecode:this.code
+					 			pwd: pwd,
+								code:this.code
 					 		},
-					 		method: 'POST',
+					 		method: 'GET',
 					 		success: res => {
 								console.log(res.code);
  					 			uni.showToast({
-					 				title:res.msg,
+					 				title:res.message,
 					 				icon:"none",
 									
 					 			})
