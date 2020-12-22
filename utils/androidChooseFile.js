@@ -69,8 +69,7 @@ class AndroidChooseFile {
 						console.log("版本大于 4.4 ");
 						// ExternalStorageProvider
 						if ("com.android.externalstorage.documents" == uri.getAuthority()) {
-							console.log("sssss")
-							var docId = DocumentsContract.getDocumentId(uri);
+ 							var docId = DocumentsContract.getDocumentId(uri);
 							var split = docId.split(":");
 							var type = split[0];
 							if ("primary" == type) {
@@ -111,8 +110,7 @@ class AndroidChooseFile {
 						}
 						// DownloadsProvider
 						else if ("com.android.providers.downloads.documents" == uri.getAuthority()) {
-							console.log("sssss")
-							
+ 							
 							var id = DocumentsContract.getDocumentId(uri);
 							var ContentUris = plus.android.importClass('android.content.ContentUris');
 							var contentUri = ContentUris.withAppendedId(
@@ -122,8 +120,7 @@ class AndroidChooseFile {
 						}
 						// MediaProvider
 						else if ("com.android.providers.media.documents" == uri.getAuthority()) {
-							console.log("sssss")
-							
+ 							
 							var docId = DocumentsContract.getDocumentId(uri);
 							var split = docId.split(":");
 							var type = split[0];
@@ -150,8 +147,7 @@ class AndroidChooseFile {
 					}
 					// MediaStore (and general)
 					else if ("content" == uri.getScheme()) {
-						console.log("sssss")
-						
+ 						
   					 plus.android.importClass(main.getContentResolver());
  					 let cursor = main.getContentResolver().query(uri, ['_data'], selection, selectionArgs,
  					 null);
