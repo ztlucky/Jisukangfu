@@ -193,37 +193,35 @@
 				console.log(unionid)
 
 				uni.request({
-					url: 'http://www.huaxiakangfu.com:8090/app/user/loginByWX',
-
+					//url: 'http://www.huaxiakangfu.com:8090/app/user/loginByWX',
+                  url:'http://www.huaxiakangfu.com:8090/user/user/loginByWX',
 					header: {
 						'content-type': 'application/json',
 					},
-
 					data: {
-						headurl: info.avatarUrl,
-						name: info.nickName,
-						sex: info.gender,
-						wxid: unionid
-
+					   name:info.nickName,
+					   wxId: unionid,
+					   sex:info.gender,
+					   headUrl:info.avatarUrl
 					},
 					method: 'POST',
 					success: (res) => {
-						console.log(res);
+ 						console.log(res.data)
 						uni.hideLoading()
 						uni.showToast({
-							title: res.data.msg,
+							title: res.data.message,
 							icon: 'none'
 						})
 						if (res.data.code == '200') {
 
-
-							uni.setStorageSync('userid', res.data.data.userid)
-							uni.setStorageSync('name', res.data.data.name)
-							uni.setStorageSync('roletype', res.data.data.roletype)
-							uni.setStorageSync('headurl', res.data.data.name)
-							uni.setStorageSync('phone', res.data.data.phone)
-							getApp().globalData.userId = res.data.data.userid;
-							getApp().globalData.userName = res.data.data.name;
+ 							uni.setStorageSync('userid', res.data.result.id)
+							uni.setStorageSync('name', res.data.result.name)
+							uni.setStorageSync('roletype', res.data.result.roletype)
+							uni.setStorageSync('headurl', res.data.result.name)
+							uni.setStorageSync('phone', res.data.result.phone)
+							uni.setStorageSync("wxid",res.data.result.wxId);
+							getApp().globalData.userId = res.data.result.id;
+							getApp().globalData.userName = res.data.result.name;
 
 
 							setTimeout(function() {

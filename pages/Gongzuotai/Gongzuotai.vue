@@ -193,6 +193,7 @@
 							uni.setStorageSync('headurl', null)
 							uni.setStorageSync('phone', null)
 							uni.setStorageSync("wxid",null);
+							getApp().globalData.userId = null;
 							 
 
 						} else if (e.cancel) {
