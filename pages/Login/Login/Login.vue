@@ -216,8 +216,8 @@
 
  							uni.setStorageSync('userid', res.data.result.id)
 							uni.setStorageSync('name', res.data.result.name)
-							uni.setStorageSync('roletype', res.data.result.roletype)
-							uni.setStorageSync('headurl', res.data.result.name)
+							uni.setStorageSync('roletype', res.data.result.role)
+							uni.setStorageSync('headurl', res.data.result.headUrl)
 							uni.setStorageSync('phone', res.data.result.phone)
 							uni.setStorageSync("wxid",res.data.result.wxId);
 							getApp().globalData.userId = res.data.result.id;
