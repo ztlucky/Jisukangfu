@@ -571,6 +571,25 @@
 			input(e){
 				this.value = e.detail.value
 			},
+			checklecture(){
+				let list = this.lectureList;
+				let notList = [];
+				let confirmList = [];
+				let notIndexList = []
+				list.map((v,k)=>{
+					if(v.date !=''&&v.user.name && v.title !='' && v.address !=''){
+						confirmList.push(v);
+					}else{
+						notIndexList.push(k);
+						notList.push(v);
+					}
+				})
+				return {
+					notList,
+					notIndexList,
+					confirmList
+				};
+			},
 			//创建直播
 			creatLiveAction(){
  				
