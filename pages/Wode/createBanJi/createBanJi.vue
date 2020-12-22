@@ -110,13 +110,52 @@
 				</view>
 				<view class="selectedCourseList" >
 					<view class="selectedCourseItem" v-for="(item,index) in liveList" :key="index + 1200">
-						<view class="courseItemTitle">{{item.name}}</view>
+						<view class="courseItemTitle hidden">{{item.title}}</view>
 						<image src="/static/live/icon_shanchu.png" @click="deleteItem(index,'live')"></image>
 					</view>
 					<view class="selectedCourseAdd" @click="toPage('/pages/Wode/selectLIve/selectLIve')">添加直播</view>
 				</view>
 			</view>
 		</view>
+		
+		<view class="price border selectedItem lecture">
+			<view v-for="(item,index) in lectureList" :key="index">
+				<view class="selectedTitle notBorder" v-if="index == 0">
+					<image src="/static/zhibo/icon_jine.png"></image>
+					<view class="">线下讲座</view>
+				</view>
+				<view class="priceItem">
+					<view class="priceItemLeft">时间</view>
+					<view class="priceItemRight">
+						<view class="" @click="setLectureTimeStatus(index)">{{item.date?item.date:'请选择时间'}}</view>
+						<image src="../../../static/icon/me_lise_more.png"></image>
+					</view>
+				</view>
+				<view class="priceItem">
+					<view class="priceItemLeft">主持人</view>
+					<view class="priceItemRight" @click="chooseHost(true,index)">
+						<view>{{item.user.name?item.user.name:'请选择主持人'}}</view>
+						<image src="../../../static/icon/me_lise_more.png"></image>
+					</view>
+				</view>
+				<view class="priceItem">
+					<view class="priceItemLeft">标题</view>
+					<view class="priceItemRight">
+						<input class="priceItemInput" placeholder="输入标题" v-model="item.title"> </input>
+						<image src="../../../static/icon/me_lise_more.png"></image>
+					</view>
+				</view>
+				<view class="priceItem">
+					<view class="priceItemLeft">地址</view>
+					<view class="priceItemRight">
+						<input class="priceItemInput" placeholder="输入地址" v-model="item.address"> </input>
+						<image src="../../../static/icon/me_lise_more.png"></image>
+					</view>
+				</view>
+				<view class="selectedCourseAdd " @click="addLecture(index)">{{index == lectureList.length - 1?'添加讲座':'删除讲座'}}</view>
+			</view>
+		</view>
+		
 		<view class="price border selectedItem">
 			<view class="selectedTitle notBorder">
 				<image src="/static/zhibo/icon_jine.png"></image>
@@ -191,7 +230,18 @@
 		         @cancel="onCancel"
 		         ref="starttimeTerm" 
 		     ></w-picker>
-			  
+			  <w-picker
+			           :visible.sync="lectureTime"
+			           mode="shortTerm" 
+			           startYear="2017" 
+			           endYear="2030"
+			           :value="lectureList[nowIndex].date"
+			           :current="true"
+			  		  fields="day"
+			  	     :second="false"
+			           @confirm="confirmLectureTime"
+			           ref="lectureTime" 
+			       ></w-picker>
 			 
 				 <w-picker
 				        :visible.sync="visble"
@@ -260,7 +310,15 @@
 				},
 				uploadImageUrls:[],//获取的最终的图片链接
 				courseList:[],
-				liveList:[]
+				liveList:[],
+				lectureList:[{
+					date:'',
+					user:{},
+					title:'',
+					address:''
+				}],
+				nowIndex:0,//当前的讲课
+				lectureTime:false,
 			}
 		},
 		components:{
@@ -268,8 +326,9 @@
 				choose
 		},
 		onShow() {
-			 
-			 
+			 this.getCourseAndLiveList();
+			 this.lectureList[this.nowIndex].user = uni.getStorageSync('lectureHost');
+			 console.log(this.lectureList[this.nowIndex].user)
  		},
 		onLoad() {
 			this.addEvent();
@@ -279,12 +338,40 @@
 			uni.$off();
 		},
 		methods: {
+			setLectureTimeStatus(index){
+				this.lectureTime = true;
+				this.nowIndex = index;
+			},
+			confirmLectureTime(data){
+				this.lectureList[this.nowIndex].date = data.value;
+				this.$set(this.lectureList,this.nowIndex,this.lectureList[this.nowIndex])
+			},
+			addLecture(index){
+				if(this.lectureList.length - 1 == index){
+					this.lectureList.push({
+						date:'',
+						user:{},
+						title:'',
+						address:''
+					})
+				}else{
+					this.lectureList.splice(index,1);
+				}
+			},
+			deleteItem(index,str){
+				if(str == 'course'){
+					this.courseList.splice(index,1);
+				}else if(str == 'live'){
+					this.liveList.splice(index,1)
+				}
+			},
 			getCourseAndLiveList(){
 				let list = uni.getStorageSync('courseAndLiveList');
 				if(list){
 					this.courseList = list.courseList;
 					this.liveList = list.liveList;
 				}
+				console.log(list);
 			},
 			showTimeChoose(){
 				this.visibleTime = !this.visibleTime
@@ -370,12 +457,19 @@
 				});
 			},
 			//选择主讲人
-			chooseHost(data){
-				console.log(data);
-				let testStr = encodeURIComponent(JSON.stringify(this.hostList));//JSON.stringify(数组)来把这个数组变成一个字符串
-
+			chooseHost(f,index){
+				console.log(f,index);
+				let testStr = [];
+				if(f == true){
+					console.log('>>>>>>>>>>>>>')
+					this.nowIndex = index;
+					uni.setStorageSync('lectureHost',this.lectureList[this.nowIndex].user);
+					testStr = encodeURIComponent(JSON.stringify([this.lectureList[this.nowIndex].user]));//JSON.stringify(数组)来把这个数组变成一个字符串
+				}else{
+					testStr = encodeURIComponent(JSON.stringify(this.hostList));//JSON.stringify(数组)来把这个数组变成一个字符串
+				}
 				uni.navigateTo({
-					url:'/pages/Zhibo/ChooseHost/ChooseHost?hostlist='+testStr,
+					url:'/pages/Zhibo/ChooseHost/ChooseHost?hostlist='+testStr+`&isLecture=${f == true?1:2}`,
 					animationDuration:300,
 					animationType:'slide-in-right'
 				})
@@ -476,6 +570,25 @@
 			},
 			input(e){
 				this.value = e.detail.value
+			},
+			checklecture(){
+				let list = this.lectureList;
+				let notList = [];
+				let confirmList = [];
+				let notIndexList = []
+				list.map((v,k)=>{
+					if(v.date !=''&&v.user.name && v.title !='' && v.address !=''){
+						confirmList.push(v);
+					}else{
+						notIndexList.push(k);
+						notList.push(v);
+					}
+				})
+				return {
+					notList,
+					notIndexList,
+					confirmList
+				};
 			},
 			//创建直播
 			creatLiveAction(){
@@ -584,6 +697,11 @@
 				this.showChoose();
 			},
 			toPage(url) {
+				let list = {
+					courseList:this.courseList,
+					liveList:this.liveList
+				}
+				uni.setStorageSync("courseAndLiveList",list);
 				uni.navigateTo({
 					url,
 					animationDuration: 300,
@@ -907,5 +1025,8 @@
 		color: #666666;
 		text-align: center;
 		line-height: 42rpx;
+	}
+	.lecture{
+		padding-bottom: 40rpx;
 	}
 </style>

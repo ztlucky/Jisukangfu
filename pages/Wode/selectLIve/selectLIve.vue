@@ -18,6 +18,9 @@
 		components:{
 			live
 		},
+		onShow() {
+			this.getCourseAndLiveList();
+		},
 		onLoad() {
 			this.getData();
 			console.log(11111)
@@ -36,8 +39,18 @@
 					success: res => {
 						if (res.code ==200) {
 							 
-							 
-						   this.list =  res.result.records;
+							if(this.liveList){
+								this.liveList.map(v=>{
+									if(res.result.records){
+										res.result.records.map((vv,kk)=>{
+											if(vv.id == v.id){
+												res.result.records[kk].isSelect = true;
+											}
+										})
+									}
+								})
+							}
+						    this.list =  res.result.records;
  							
 						 
 						}
@@ -61,7 +74,25 @@
 				this.$set(this.list,index,this.list[index]);
 			},
 			save(){
+				if(this.list){
+					let list = [];
+					this.list.map(v=>{
+						if(v.isSelect) list.push(v);
+					});
+					let arr = {
+						courseList:this.courseList,
+						liveList:list
+					}
+					uni.setStorageSync('courseAndLiveList',arr);
+				}
 				uni.navigateBack();
+			},
+			getCourseAndLiveList(){
+				let list = uni.getStorageSync('courseAndLiveList');
+				if(list){
+					this.courseList = list.courseList;
+					this.liveList = list.liveList;
+				}
 			}
 		}
 	}

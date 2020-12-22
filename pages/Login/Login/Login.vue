@@ -330,13 +330,13 @@
 								// "sex": null,
 								// "userid": 24
 
-								uni.setStorageSync('userid', res.data.data.userid)
+								uni.setStorageSync('userid', res.data.data.id)
 								uni.setStorageSync('name', res.data.data.name)
 								uni.setStorageSync('roletype', res.data.data.roletype)
 								uni.setStorageSync('headurl', res.data.data.name)
 								uni.setStorageSync('phone', res.data.data.phone)
 								uni.setStorageSync("wxid",res.data.data.wxId);
-								getApp().globalData.userId = res.data.data.userid;
+								getApp().globalData.userId = res.data.data.id;
 								getApp().globalData.userName = res.data.data.name;
 								console.log(getApp().globalData.userId);
 								if (res.data.data.pwd == null) {

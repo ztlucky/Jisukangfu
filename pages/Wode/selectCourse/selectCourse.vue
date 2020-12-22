@@ -18,6 +18,9 @@
 		components:{
 			course
 		},
+		onShow() {
+			this.getCourseAndLiveList();
+		},
 		onLoad() {
 			this.getData();
 			console.log(11111)
@@ -35,6 +38,17 @@
 					dataType: 'json',
 					success: res => {
 						if (res.code ==200) {
+							if(this.courseList){
+								this.courseList.map(v=>{
+									if(res.result.records){
+										res.result.records.map((vv,kk)=>{
+											if(vv.id == v.id){
+												res.result.records[kk].isSelect = true;
+											}
+										})
+									}
+								})
+							}
 						   this.list =  res.result.records;
 						   console.log(this.list);
 						}
@@ -52,7 +66,25 @@
 				this.$set(this.list,index,this.list[index]);
 			},
 			save(){
+				if(this.list){
+					let list = [];
+					this.list.map(v=>{
+						if(v.isSelect) list.push(v);
+					});
+					let arr = {
+						courseList:list,
+						liveList:this.liveList
+					}
+					uni.setStorageSync('courseAndLiveList',arr);
+				}
 				uni.navigateBack();
+			},
+			getCourseAndLiveList(){
+				let list = uni.getStorageSync('courseAndLiveList');
+				if(list){
+					this.courseList = list.courseList;
+					this.liveList = list.liveList;
+				}
 			}
 		}
 	}
