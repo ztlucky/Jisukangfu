@@ -1,5 +1,7 @@
+ 
  let apiRoot = 'http://www.huaxiakangfu.com:8090/';
 //let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
+ 
 let api = {
 	common: {
 		aboutUs: apiRoot + 'common/aboutUs.html',

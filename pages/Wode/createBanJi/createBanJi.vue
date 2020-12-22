@@ -91,27 +91,27 @@
 				</view>
 			</view>
 			<view class="selectedItem">
-				<view class="selectedTitle" @click="selectedFilePDF">
+				<view class="selectedTitle" >
 					<image src="/static/live/icon_kecheng.png"></image>
 					<view class="">选择课程</view>
 				</view>
 				<view class="selectedCourseList">
-					<view class="selectedCourseItem">
-						<view class="courseItemTitle">课程一</view>
-						<image src="/static/live/icon_shanchu.png"></image>
+					<view class="selectedCourseItem" v-for="(item , index) in courseList" :key="index">
+						<view class="courseItemTitle hidden">{{item.name}}</view>
+						<image src="/static/live/icon_shanchu.png" @click="deleteItem(index,'course')"></image>
 					</view>
 					<view class="selectedCourseAdd" @click="toPage('/pages/Wode/selectCourse/selectCourse')">添加课程</view>
 				</view>
 			</view>
 			<view class="selectedItem">
-				<view class="selectedTitle" @click="selectedFilePDF">
+				<view class="selectedTitle" >
 					<image src="/static/live/icon_kecheng.png"></image>
 					<view class="">选择直播</view>
 				</view>
-				<view class="selectedCourseList">
-					<view class="selectedCourseItem">
-						<view class="courseItemTitle">直播一</view>
-						<image src="/static/live/icon_shanchu.png"></image>
+				<view class="selectedCourseList" >
+					<view class="selectedCourseItem" v-for="(item,index) in liveList" :key="index + 1200">
+						<view class="courseItemTitle">{{item.name}}</view>
+						<image src="/static/live/icon_shanchu.png" @click="deleteItem(index,'live')"></image>
 					</view>
 					<view class="selectedCourseAdd" @click="toPage('/pages/Wode/selectLIve/selectLIve')">添加直播</view>
 				</view>
@@ -258,7 +258,9 @@
 					pdfList:[],
 					pdfFile:[]
 				},
-				uploadImageUrls:[]//获取的最终的图片链接
+				uploadImageUrls:[],//获取的最终的图片链接
+				courseList:[],
+				liveList:[]
 			}
 		},
 		components:{
@@ -277,6 +279,13 @@
 			uni.$off();
 		},
 		methods: {
+			getCourseAndLiveList(){
+				let list = uni.getStorageSync('courseAndLiveList');
+				if(list){
+					this.courseList = list.courseList;
+					this.liveList = list.liveList;
+				}
+			},
 			showTimeChoose(){
 				this.visibleTime = !this.visibleTime
 			},
