@@ -53,6 +53,7 @@
 <script>
 	import live from "../../../components/live/live.vue";
 	import course from "../../../components/course/course.vue"
+	import request from "../../../utils/util.js"
 	export default {
 		data() {
 			return {
@@ -63,8 +64,22 @@
 			live,
 			course
 		},
+		onLoad(options) {
+			this.id = options.id;
+			this.getInfo();
+		},
 		methods: {
-			
+			getInfo(){
+				return request({
+					url:getApp().$api.banji.getInfo,
+					type:"GET",
+					data:{
+						id:this.id
+					}
+				}).then(data=>{
+					console.log(data);
+				})
+			}
 		}
 	}
 </script>

@@ -329,11 +329,11 @@
 								// "setpwd": 0,
 								// "sex": null,
 								// "userid": 24
-
+								res.data.data = res.data.result;
 								uni.setStorageSync('userid', res.data.data.id)
 								uni.setStorageSync('name', res.data.data.name)
-								uni.setStorageSync('roletype', res.data.data.roletype)
-								uni.setStorageSync('headurl', res.data.data.name)
+								uni.setStorageSync('roletype', res.data.data.rolet)
+								uni.setStorageSync('headurl', res.data.data.headUrl)
 								uni.setStorageSync('phone', res.data.data.phone)
 								uni.setStorageSync("wxid",res.data.data.wxId);
 								getApp().globalData.userId = res.data.data.id;

@@ -8,23 +8,23 @@
 				</view>
 				<view class="itemRight">
 					<input class="input" placeholder="请输入直播标题" v-model="zhiboTitle"></input>
-					 <image src="../../../static/icon/me_lise_more.png"></image>
+					<image src="../../../static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
 			<view class="item">
 				<view class="itemLeft">
 					<image src="/static/live/icon_banjizhuti.png"></image>
 					<view class="hidden">班级主题</view>
-					  
+
 				</view>
 				<view class="itemRight">
 					<picker @change="bindPickerChange" :value="index" :range="category" range-key="name">
-					                 <view class="hidden">{{selectCategroy}}</view> 
-					                  </picker>
+						<view class="hidden">{{selectCategroy}}</view>
+					</picker>
 					<image src="../../../static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
-			<view class="item">
+			<!-- <view class="item">
 				<view class="itemLeft">
 					<image src="../../../static/zhibo/icon_fenlei.png"></image>
 					<view class="hidden">选择分类</view>
@@ -36,7 +36,7 @@
 					                  </picker>
 					<image src="../../../static/icon/me_lise_more.png"></image>
 				</view>
-			</view>
+			</view> -->
 			<view class="item">
 				<view class="itemLeft">
 					<image src="../../../static/zhibo/icon_time.png"></image>
@@ -60,18 +60,19 @@
 		</view>
 		<view class="onLoadCover border" @click="getCover">
 			<image :src="cover.imageList.length!=0?cover.imageList[0]:'../../../static/zhibo/img_fengmian.png'"></image>
-			<view >上传封面</view>
+			<view>上传封面</view>
 		</view>
 		<view class="course border">
-			
+
 			<view class="top">
 				<textarea placeholder="请输入课程的文字内容（选填）…" @input="input"></textarea>
 				<view class="topImageList">
-					<view v-for="(v,k) in imageList" :key="k" :class="'imageItem '+((k)%3 == 1?'imageItem1':'imageItem')" >
+					<view v-for="(v,k) in imageList" :key="k" :class="'imageItem '+((k)%3 == 1?'imageItem1':'imageItem')">
 						<image mode="aspectFill" :src="v"></image>
 						<image src="/static/icon_delete.png" class="delete" @click="deleteImage(k)"></image>
 					</view>
-					<image  src="/static/zhibo/img_tupian.png" :class="'imageItem imageAdd '+((imageList.length)%3 == 1?'imageItem1':'imageItem')" @click="getImages"></image>
+					<image src="/static/zhibo/img_tupian.png" :class="'imageItem imageAdd '+((imageList.length)%3 == 1?'imageItem1':'imageItem')"
+					 @click="getImages"></image>
 				</view>
 			</view>
 			<view class="selectedItem">
@@ -80,18 +81,18 @@
 					<view class="">选择主持人</view>
 				</view>
 				<view class="selectedFile" @click="chooseHost">
-					 
-				  <view  v-for="(item,index) in hostList" :key= "index" class="hostview">
-					  <image :src="item.sex == 1 ?'../../../static/gongzuotai/icon_nan.png':'../../../static/gongzuotai/icon_nv.png'" ></image>
- 					<text>{{item.name}}</text>
-				  	
-				  </view>
+
+					<view v-for="(item,index) in hostList" :key="index" class="hostview">
+						<image :src="item.sex == 1 ?'../../../static/gongzuotai/icon_nan.png':'../../../static/gongzuotai/icon_nv.png'"></image>
+						<text>{{item.name}}</text>
+
+					</view>
 					<image src="/static/zhibo/img_tianjia.png"></image>
-					
+
 				</view>
 			</view>
 			<view class="selectedItem">
-				<view class="selectedTitle" >
+				<view class="selectedTitle">
 					<image src="/static/live/icon_kecheng.png"></image>
 					<view class="">选择课程</view>
 				</view>
@@ -104,11 +105,11 @@
 				</view>
 			</view>
 			<view class="selectedItem">
-				<view class="selectedTitle" >
+				<view class="selectedTitle">
 					<image src="/static/live/icon_kecheng.png"></image>
 					<view class="">选择直播</view>
 				</view>
-				<view class="selectedCourseList" >
+				<view class="selectedCourseList">
 					<view class="selectedCourseItem" v-for="(item,index) in liveList" :key="index + 1200">
 						<view class="courseItemTitle hidden">{{item.title}}</view>
 						<image src="/static/live/icon_shanchu.png" @click="deleteItem(index,'live')"></image>
@@ -117,7 +118,7 @@
 				</view>
 			</view>
 		</view>
-		
+
 		<view class="price border selectedItem lecture">
 			<view v-for="(item,index) in lectureList" :key="index">
 				<view class="selectedTitle notBorder" v-if="index == 0">
@@ -155,7 +156,7 @@
 				<view class="selectedCourseAdd " @click="addLecture(index)">{{index == lectureList.length - 1?'添加讲座':'删除讲座'}}</view>
 			</view>
 		</view>
-		
+
 		<view class="price border selectedItem">
 			<view class="selectedTitle notBorder">
 				<image src="/static/zhibo/icon_jine.png"></image>
@@ -164,7 +165,7 @@
 			<view class="priceItem">
 				<view class="priceItemLeft">价格</view>
 				<view class="priceItemRight">
-					<input class="priceItemInput"  placeholder="输入价格" v-model="cost"></input>
+					<input class="priceItemInput" placeholder="输入价格" v-model="cost"></input>
 					<image src="../../../static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
@@ -182,11 +183,11 @@
 				</view>
 				<view class="itemRight">
 					<input class="input" placeholder="请输入验证码人数" v-model="code"></input>
-					 <image src="../../../static/icon/me_lise_more.png"></image>
+					<image src="../../../static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
 		</view>
-		
+
 		<view class="list border">
 			<view class="item">
 				<view class="itemLeft">
@@ -196,9 +197,9 @@
 				<view class="itemRight">
 					<view class="hidden2" v-if="isvisiable == 1"> 全部可见</view>
 					<view class="hidden2" v-if="isvisiable !=1"> 部分可见</view>
-					
-					<switch  color="#09BB07" style="transform:scale(0.7,0.7) ;"  @change="switchChange" checked="true"  ></switch>
-					 
+
+					<switch color="#09BB07" style="transform:scale(0.7,0.7) ;" @change="switchChange" checked="true"></switch>
+
 				</view>
 			</view>
 			<view class="item">
@@ -208,51 +209,22 @@
 				</view>
 				<view class="itemRight">
 					<picker @change="bindPickerChangeChakan" :value="chakanIndex" :range="chakanType">
-					                 <view class="hidden2">{{chakanType[chakanIndex]}}</view>
-					                  </picker>
+						<view class="hidden2">{{chakanType[chakanIndex]}}</view>
+					</picker>
 					<image src="../../../static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
 		</view>
-		<view class="save" @click="creatLiveAction">提交申请</view>	
+		<view class="save" @click="creatLiveAction">提交申请</view>
 		<l-file ref="lFile"></l-file>
 		<choose ref="chooesFile" :image="isAddImage" :count="count" :video="isAddVideo" :pdf="isAddPDF"></choose>
-		<w-picker
-		         :visible.sync="visibleTime"
-		         mode="shortTerm" 
-		         startYear="2017" 
-		         endYear="2030"
-		         :value="rangeVal"
-		         :current="true"
-				  fields="day"
-			     :second="false"
- 		         @confirm="confirmtime"
-		         @cancel="onCancel"
-		         ref="starttimeTerm" 
-		     ></w-picker>
-			  <w-picker
-			           :visible.sync="lectureTime"
-			           mode="shortTerm" 
-			           startYear="2017" 
-			           endYear="2030"
-			           :value="lectureList[nowIndex].date"
-			           :current="true"
-			  		  fields="day"
-			  	     :second="false"
-			           @confirm="confirmLectureTime"
-			           ref="lectureTime" 
-			       ></w-picker>
-			 
-				 <w-picker
-				        :visible.sync="visble"
-				        mode="time"
-  				        :current="false"
-						:second="false"
-				        :disabledAfter="false"
-				        @confirm="confirmEndtime"
-				        @cancel="onEndtimeCancel"
-				        ref="endtimeTerm" 
-				    ></w-picker>
+		<w-picker :visible.sync="visibleTime" mode="shortTerm" startYear="2017" endYear="2030" :value="rangeVal" :current="true"
+		 fields="day" :second="false" @confirm="confirmtime" @cancel="onCancel" ref="starttimeTerm"></w-picker>
+		<w-picker :visible.sync="lectureTime" mode="shortTerm" startYear="2017" endYear="2030" :value="lectureList[nowIndex].date"
+		 :current="true" fields="day" :second="false" @confirm="confirmLectureTime" ref="lectureTime"></w-picker>
+
+		<w-picker :visible.sync="visble" mode="time" :current="false" :second="false" :disabledAfter="false" @confirm="confirmEndtime"
+		 @cancel="onEndtimeCancel" ref="endtimeTerm"></w-picker>
 	</view>
 </template>
 
@@ -260,180 +232,183 @@
 	import lFile from "@/components/l-file/l-file.vue"
 	import choose from "@/components/chooes-file/chooes-file.vue"
 	import wPicker from "@/components/w-picker/w-picker.vue";
-    import onloadImage from "../../../utils/loadImage.js"
- import request from '../../../utils/util.js'
- 
+	import onloadImage from "../../../utils/loadImage.js"
+	import request from '../../../utils/util.js'
+
 	export default {
 		data() {
 			return {
-				zhiboTitle:'',
-				imageList:[],
-				tempFile:[],
-				rangeVal:'',
-				value:'',
-				visble:false,
-				starttime:"",
-				endtime:"",
-				year:0,
-				month:0,
-				day:0,
-				hour:0,
-				minte:0,
-				endHour:0,
-				endMinute:0,
-				index:0,
-				selectCategroy:"分类",
-				category:[],
-				cost:"",//价格
-				memberCost:"",
-				isvisiable:1,//是否全部可见
-				ischeck:true,//默认全部可见
-				chakanType:["无限查看","验证码查看","收费查看"],
-				hostList:[],//主持人列表
- 				chakanIndex:0,
- 				currentDay:"",
-				visibleTime:false,
-				isAddImage:true,
-				isAddVideo:false,
-				isAddPDF:false,
-				count:1,
-				code:"",
-				cover:{
-					imageList:[],
-					tempFile:[]
+				zhiboTitle: '',
+				imageList: [],
+				tempFile: [],
+				rangeVal: '',
+				value: '',
+				visble: false,
+				starttime: "",
+				endtime: "",
+				year: 0,
+				month: 0,
+				day: 0,
+				hour: 0,
+				minte: 0,
+				endHour: 0,
+				endMinute: 0,
+				index: 0,
+				selectCategroy: "主题",
+				category: [],
+				cost: "", //价格
+				memberCost: "",
+				isvisiable: 1, //是否全部可见
+				ischeck: true, //默认全部可见
+				chakanType: ["无限查看", "验证码查看", "收费查看"],
+				hostList: [], //主持人列表
+				chakanIndex: 0,
+				currentDay: "",
+				visibleTime: false,
+				isAddImage: true,
+				isAddVideo: false,
+				isAddPDF: false,
+				count: 1,
+				code: "",
+				cover: {
+					imageList: [],
+					tempFile: []
 				},
-				material:{
-					videoList:[],
-					videoFile:[],
-					pdfList:[],
-					pdfFile:[]
+				material: {
+					videoList: [],
+					videoFile: [],
+					pdfList: [],
+					pdfFile: []
 				},
-				uploadImageUrls:[],//获取的最终的图片链接
-				courseList:[],
-				liveList:[],
-				lectureList:[{
-					date:'',
-					user:{},
-					title:'',
-					address:''
+				uploadImageUrls: [], //获取的最终的图片链接
+				courseList: [],
+				liveList: [],
+				lectureList: [{
+					date: '',
+					user: {},
+					title: '',
+					address: ''
 				}],
-				nowIndex:0,//当前的讲课
-				lectureTime:false,
+				nowIndex: 0, //当前的讲课
+				lectureTime: false,
 			}
 		},
-		components:{
-				lFile,
-				choose
+		components: {
+			lFile,
+			choose
 		},
 		onShow() {
-			 this.getCourseAndLiveList();
-			 this.lectureList[this.nowIndex].user = uni.getStorageSync('lectureHost');
-			 console.log(this.lectureList[this.nowIndex].user)
- 		},
+			this.getCourseAndLiveList();
+			this.lectureList[this.nowIndex].user = uni.getStorageSync('lectureHost');
+			console.log(this.lectureList[this.nowIndex].user)
+		},
 		onLoad() {
 			this.addEvent();
 			this.getCategory();
 		},
-		onUnload(){
+		onUnload() {
+			// uni.clearStorage();
+			uni.removeStorageSync('lectureHost');
+			uni.removeStorageSync('courseAndLiveList');
 			uni.$off();
 		},
 		methods: {
-			setLectureTimeStatus(index){
+			setLectureTimeStatus(index) {
 				this.lectureTime = true;
 				this.nowIndex = index;
 			},
-			confirmLectureTime(data){
+			confirmLectureTime(data) {
 				this.lectureList[this.nowIndex].date = data.value;
-				this.$set(this.lectureList,this.nowIndex,this.lectureList[this.nowIndex])
+				this.$set(this.lectureList, this.nowIndex, this.lectureList[this.nowIndex])
 			},
-			addLecture(index){
-				if(this.lectureList.length - 1 == index){
+			addLecture(index) {
+				if (this.lectureList.length - 1 == index) {
 					this.lectureList.push({
-						date:'',
-						user:{},
-						title:'',
-						address:''
+						date: '',
+						user: {},
+						title: '',
+						address: ''
 					})
-				}else{
-					this.lectureList.splice(index,1);
+				} else {
+					this.lectureList.splice(index, 1);
 				}
 			},
-			deleteItem(index,str){
-				if(str == 'course'){
-					this.courseList.splice(index,1);
-				}else if(str == 'live'){
-					this.liveList.splice(index,1)
+			deleteItem(index, str) {
+				if (str == 'course') {
+					this.courseList.splice(index, 1);
+				} else if (str == 'live') {
+					this.liveList.splice(index, 1)
 				}
 			},
-			getCourseAndLiveList(){
+			getCourseAndLiveList() {
 				let list = uni.getStorageSync('courseAndLiveList');
-				if(list){
+				if (list) {
 					this.courseList = list.courseList;
 					this.liveList = list.liveList;
 				}
 				console.log(list);
 			},
-			showTimeChoose(){
+			showTimeChoose() {
 				this.visibleTime = !this.visibleTime
 			},
-			addCourse(){
-				
+			addCourse() {
+
 			},
-			showendTimeChoose(){
-				if(this.starttime.length == 0){
+			showendTimeChoose() {
+				if (this.starttime.length == 0) {
 					uni.showToast({
-						title:"请先选择开始时间",
-						icon:'none'
+						title: "请先选择开始时间",
+						icon: 'none'
 					})
-				}else{
+				} else {
 					this.visble = !this.visble
-					
+
 				}
-				
+
 			},
-			confirmtime(e){
+			confirmtime(e) {
 				this.starttime = e.result
-				  var date = new Date(Date.parse(e.result.replace(/-/g, "/"))); 
-				    this.month = date.getMonth() + 1; 
-					this.day = date.getDate(); 
-                     this.year = date.getFullYear(); 
-                   this.hour = date.getHours()
-				   this.minte = date.getMinutes()	
- 			},
-			onCancel(){
-				
+				var date = new Date(Date.parse(e.result.replace(/-/g, "/")));
+				this.month = date.getMonth() + 1;
+				this.day = date.getDate();
+				this.year = date.getFullYear();
+				this.hour = date.getHours()
+				this.minte = date.getMinutes()
 			},
-			onEndtimeCancel(){
-				
+			onCancel() {
+
 			},
-			confirmEndtime(e){
- 				this.endHour = e.result.substring(0,2);
-				this.endMinute = e.result.substring(3,5);
+			onEndtimeCancel() {
+
+			},
+			confirmEndtime(e) {
+				this.endHour = e.result.substring(0, 2);
+				this.endMinute = e.result.substring(3, 5);
 				console.log(parseInt(this.endHour))
-  				if(parseInt(this.endHour) <parseInt(this.hour)){
+				if (parseInt(this.endHour) < parseInt(this.hour)) {
 					this.endtime = "";
 					uni.showToast({
-						title:"结束时间必须大于开始时间",
-						icon:'none'
+						title: "结束时间必须大于开始时间",
+						icon: 'none'
 					})
-				}else if(parseInt(this.endHour) ==parseInt(this.hour)){
-					if(parseInt(this.endMinute)<=parseInt(this.minte)){
+				} else if (parseInt(this.endHour) == parseInt(this.hour)) {
+					if (parseInt(this.endMinute) <= parseInt(this.minte)) {
 						uni.showToast({
-							title:"结束时间必须大于开始时间",
-							icon:'none'
+							title: "结束时间必须大于开始时间",
+							icon: 'none'
 						})
 						this.endtime = "";
-							
-						 
-					}else{ 
-						this.endtime = this.year+"-"+this.month+"-"+this.day+" "+e.result
-						
+
+
+					} else {
+						this.endtime = this.year + "-" + this.month + "-" + this.day + " " + e.result
+
 					}
-				}else{
-					this.endtime = this.year+"-"+this.month+"-"+this.day+" "+e.result
-					
+				} else {
+					this.endtime = this.year + "-" + this.month + "-" + this.day + " " + e.result
+
 				}
- 			},
+			},
 			//获取分类
 			getCategory() {
 				var that = this;
@@ -442,13 +417,13 @@
 					method: 'GET',
 					dataType: 'json',
 					success: res => {
- 						if (res.code == 200) {
+						if (res.code == 200) {
 							console.log("sss")
-							
+
 							console.log(res)
 							that.category = res.result.records;
 							console.log(that.category[0].name)
-							 
+
 						} else {
 							this.$alert(res.msg);
 						}
@@ -457,84 +432,83 @@
 				});
 			},
 			//选择主讲人
-			chooseHost(f,index){
-				console.log(f,index);
+			chooseHost(f, index) {
+				console.log(f, index);
 				let testStr = [];
-				if(f == true){
+				if (f == true) {
 					console.log('>>>>>>>>>>>>>')
 					this.nowIndex = index;
-					uni.setStorageSync('lectureHost',this.lectureList[this.nowIndex].user);
-					testStr = encodeURIComponent(JSON.stringify([this.lectureList[this.nowIndex].user]));//JSON.stringify(数组)来把这个数组变成一个字符串
-				}else{
-					testStr = encodeURIComponent(JSON.stringify(this.hostList));//JSON.stringify(数组)来把这个数组变成一个字符串
+					uni.setStorageSync('lectureHost', this.lectureList[this.nowIndex].user);
+					testStr = encodeURIComponent(JSON.stringify(this.lectureList[this.nowIndex].user)); //JSON.stringify(数组)来把这个数组变成一个字符串
+				} else {
+					testStr = encodeURIComponent(JSON.stringify(this.hostList)); //JSON.stringify(数组)来把这个数组变成一个字符串
 				}
 				uni.navigateTo({
-					url:'/pages/Zhibo/ChooseHost/ChooseHost?hostlist='+testStr+`&isLecture=${f == true?1:2}`,
-					animationDuration:300,
-					animationType:'slide-in-right'
+					url: '/pages/Zhibo/ChooseHost/ChooseHost?hostlist=' + testStr + `&isLecture=${f == true?1:2}`,
+					animationDuration: 300,
+					animationType: 'slide-in-right'
 				})
 			},
-			  bindPickerChange: function(e) {
-			            console.log('picker发送选择改变，携带值为', e.target.value)
-			            this.index = e.target.value
-						this.selectCategroy = this.category[this.index].name
-			        },
-					//可见按钮点击
-					switchChange(){
-						this.ischeck = !this.ischeck
-						if(this.ischeck){
-							this.isvisiable = "全部可见"
-							
-						}else{
-							this.isvisiable = "部分可见"
-						}
-					},
-					bindPickerChangeChakan: function(e) {
-					          console.log('picker发送选择改变，携带值为', e.target.value)
-					          this.chakanIndex = e.target.value
-					      },
-										//可见按钮点击
-										switchChange(){
-											this.ischeck = !this.ischeck
-											if(this.ischeck){
-												this.isvisiable =1
-												
-											}else{
-												this.isvisiable =2
-											}
-										},
-  			addEvent(){
+			bindPickerChange: function(e) {
+				console.log('picker发送选择改变，携带值为', e.target.value)
+				this.index = e.target.value
+				this.selectCategroy = this.category[this.index].name
+			},
+			//可见按钮点击
+			switchChange() {
+				this.ischeck = !this.ischeck
+				if (this.ischeck) {
+					this.isvisiable = "全部可见"
+
+				} else {
+					this.isvisiable = "部分可见"
+				}
+			},
+			bindPickerChangeChakan: function(e) {
+				console.log('picker发送选择改变，携带值为', e.target.value)
+				this.chakanIndex = e.target.value
+			},
+			//可见按钮点击
+			switchChange() {
+				this.ischeck = !this.ischeck
+				if (this.ischeck) {
+					this.isvisiable = 1
+
+				} else {
+					this.isvisiable = 2
+				}
+			},
+			addEvent() {
 				let that = this;
-				uni.$on("getImage",res=>{
-					switch (that.fileType){
+				uni.$on("getImage", res => {
+					switch (that.fileType) {
 						case 'cover':
-						that.cover.imageList = res.res.tempFilePaths;
-						that.cover.tempFile = res.res.tempFiles;
-						console.log(res.res);
-						break;
+							that.cover.imageList = res.res.tempFilePaths;
+							that.cover.tempFile = res.res.tempFiles;
+							console.log(res.res);
+							break;
 					}
 				})
-				uni.$on("getVideo",res=>{
+				uni.$on("getVideo", res => {
 					console.log(res);
-					switch (that.fileType){
+					switch (that.fileType) {
 						case 'material':
 							that.material.videoList.push(res.res.tempFilePath);
 							that.material.videoFile.push(res.res.tempFile);
-							console.log(res.res,res.res)
-						break;
+							console.log(res.res, res.res)
+							break;
 					}
 				})
 				//选择主持人
- 				 uni.$on("chooseHost",(options)=>{
-				         that.hostList =  JSON.parse(options.selectList)
-						 console.log( that.hostList)
- 				     })
-				
+				uni.$on("chooseHost", (options) => {
+					that.hostList = JSON.parse(options.selectList)
+				})
+
 			},
-			showChoose(){
+			showChoose() {
 				this.$refs.chooesFile.cancel(true);
 			},
-			getCover(){
+			getCover() {
 				this.isAddImage = true;
 				this.isAddVideo = false;
 				this.isAddPDF = false;
@@ -542,7 +516,7 @@
 				this.fileType = 'cover';
 				this.showChoose();
 			},
-			getMaterial(){
+			getMaterial() {
 				this.isAddImage = false;
 				this.isAddVideo = true;
 				this.isAddPDF = true;
@@ -550,36 +524,36 @@
 				this.fileType = 'material';
 				this.showChoose();
 			},
-			getImages(){
+			getImages() {
 				let that = this;
 				uni.chooseImage({
-				    count: 6,
-				    sizeType: ['original', 'compressed'],
-				    sourceType: ['album'],
-				    success: function(res) {
+					count: 6,
+					sizeType: ['original', 'compressed'],
+					sourceType: ['album'],
+					success: function(res) {
 						console.log(res);
-				        // 预览图片
-				        that.imageList = that.imageList.concat(res.tempFilePaths);
+						// 预览图片
+						that.imageList = that.imageList.concat(res.tempFilePaths);
 						that.tempFile = that.tempFile.concat(res.tempFiles)
-				    }
-				    });
+					}
+				});
 			},
-			deleteImage(index){
-				this.tempFile.splice(index,1);
-				this.imageList.splice(index,1);
+			deleteImage(index) {
+				this.tempFile.splice(index, 1);
+				this.imageList.splice(index, 1);
 			},
-			input(e){
+			input(e) {
 				this.value = e.detail.value
 			},
-			checklecture(){
+			checklecture() {
 				let list = this.lectureList;
 				let notList = [];
 				let confirmList = [];
 				let notIndexList = []
-				list.map((v,k)=>{
-					if(v.date !=''&&v.user.name && v.title !='' && v.address !=''){
+				list.map((v, k) => {
+					if (v.date != '' && v.user.name && v.title != '' && v.address != '') {
 						confirmList.push(v);
-					}else{
+					} else {
 						notIndexList.push(k);
 						notList.push(v);
 					}
@@ -591,146 +565,165 @@
 				};
 			},
 			//创建直播
-			creatLiveAction(){
- 				
-				if(this.zhiboTitle.length==0){
-					uni.showToast({
-						title:'请输入课程标题',
-						icon:'none'
-					})
-				}else if (this.selectCategroy == "分类"){
-					uni.showToast({
-						title:'请选择课程分类',
-						icon:'none'
-					})
-				}else if(this.cover.imageList.length == 0){
-                  uni.showToast({
-						title:'请设置该课程封面',
-						icon:'none'
-					})
-				}else if(this.hostList.length == 0){
-                  uni.showToast({
-						title:'请选择主持人',
-						icon:'none'
-					})
-				}else if(this.cost.length==0){
-                  uni.showToast({
-						title:'请输入课程价格',
-						icon:'none'
-					})
-				}else if(this.memberCost.length==0){
-                  uni.showToast({
-						title:'请输入会员价格',
-						icon:'none'
-					})
-				}else if(this.code==''){
-                  uni.showToast({
-						title:'请输入验证码人数',
-						icon:'none'
-					})
-				}else{
-					this.creatLive();
-				  }
- 			},
-			async creatLive(){
+			creatLiveAction() {
 				let that = this;
-				
+				let lectureList = this.checklecture();
+				if (this.zhiboTitle.length == 0) {
+					uni.showToast({
+						title: '请输入直播标题',
+						icon: 'none'
+					})
+				} else if (this.selectCategroy == "主题") {
+					uni.showToast({
+						title: '请选择直播主题',
+						icon: 'none'
+					})
+				} else if (this.cover.imageList.length == 0) {
+					uni.showToast({
+						title: '请设置该直播封面',
+						icon: 'none'
+					})
+				} else if (this.hostList.length == 0) {
+					uni.showToast({
+						title: '请选择主持人',
+						icon: 'none'
+					})
+				} else if (this.cost.length == 0) {
+					uni.showToast({
+						title: '请输入直播价格',
+						icon: 'none'
+					})
+				} else if (this.memberCost.length == 0) {
+					uni.showToast({
+						title: '请输入会员价格',
+						icon: 'none'
+					})
+				} else if (this.code == '') {
+					uni.showToast({
+						title: '请输入验证码人数',
+						icon: 'none'
+					})
+				} else if (lectureList.confirmList.length == 0) {
+					uni.showToast({
+						title: '请完善线下讲座',
+						icon: 'none'
+					})
+				} else {
+					let tempFiles = that.cover.tempFile;
+					let tempFilePaths = that.cover.imageList;
+					tempFiles = tempFiles.concat(that.tempFile)
+					tempFilePaths = tempFilePaths.concat(that.imageList);
+					onloadImage.init({
+						tempFiles,
+						tempFilePaths
+					}, (res, str) => {
+						let coverUrl = res.imageUrl[0];
+						let file = [];
+						if (that.imageList) {
+							that.imageList.map((v, k) => {
+								file.push({
+									type: 'img',
+									value: res.imageUrl[k + 1]
+								})
+							})
+						}
+						file = JSON.stringify(file);
+						this.creatLive(coverUrl, file, JSON.stringify(lectureList.confirmList));
+					}).upload();
+				}
+			},
+			async creatLive(coverUrl, file, classtAble) {
+				let that = this;
+				console.log(coverUrl, file);
 				// await this.getHostList(); 
- 				let type = this.category[this.index].id
-				var lecIds="";
+				let type = this.category[this.index].id
+				var lecIds = "";
 				for (var i = 0; i < this.hostList.length; i++) {
 					let item = this.hostList[i]
-					
-				  lecIds+=item.id+",";	
+
+					lecIds += item.id + ",";
 				}
-	            console.log(lecIds)
- 				
- 					//调用创建直播的接口
-			   this.$app.request({
-			   	url: this.$api.zhibo.addlive,
-			   	method: 'POST',
-			   	data: {
-			   		cost:that.cost,
-			   		memberCost:that.memberCost,
-			   		cover:that.uploadImageUrls[0],
-			   		startTime:that.starttime,
-			   		endTime:that.endtime,
-			   		lecturerIds: lecIds,//主持人
-			   		title:that.zhiboTitle,
-			   		userId:getApp().globalData.userId,
-			   		presentation:that.value,
-			   		type:type,
-			   		isVisible:that.isvisiable
-			   	},
-			   	dataType: 'json',
-			   	success: res => {
- 			   		if (res.code == 200) {
- 			         uni.showToast({
-			   	       title:res.message,
-                        icon:"none"
-			              })
-			   		} else {
-			   			this.$alert(res.msg);
-			   		}
-			   	},
-			   	complete: res => {}
-			   });
-	           
-  
- 			},
-			 
-			//上传图片
-			uploadCover(){
- 				
-  				let that = this;
- 				
- 				onloadImage.init({
- 					tempFiles:that.cover.tempFile.concat(that.tempFile),
- 					tempFilePaths:that.cover.imageList.concat(that.imageList)
- 				},(data,str)=>{
- 					console.log(data.imageUrl,str);
- 				 
- 				}).upload();
+				console.log(lecIds)
+				return request({
+					url: getApp().$api.banji.creatbanjiList,
+					type: 'POST',
+					data: {
+						cost: that.cost,
+						memberCost: that.memberCost,
+						cover: that.uploadImageUrls[0],
+						startTime: that.starttime + ":00",
+						endTime: that.endtime + ":00",
+						lecturerIds: lecIds, //主持人
+						title: that.zhiboTitle,
+						userId: getApp().globalData.userId,
+						presentation: that.value,
+						type: type,
+						createUserId: that.globalData.userId,
+						isVisible: that.isvisiable,
+						coverUrl,
+						file,
+						classtAble
+					}
+				},true,true).then(data=>{
+					console.log(data)
+				})
 			},
-			selectedFilePDF(){
+
+			//上传图片
+			uploadCover() {
+
+				let that = this;
+
+				onloadImage.init({
+					tempFiles: that.cover.tempFile.concat(that.tempFile),
+					tempFilePaths: that.cover.imageList.concat(that.imageList)
+				}, (data, str) => {
+					console.log(data.imageUrl, str);
+
+				}).upload();
+			},
+			selectedFilePDF() {
 				console.log("1111")
 				this.showChoose();
 			},
 			toPage(url) {
 				let list = {
-					courseList:this.courseList,
-					liveList:this.liveList
+					courseList: this.courseList,
+					liveList: this.liveList
 				}
-				uni.setStorageSync("courseAndLiveList",list);
+				uni.setStorageSync("courseAndLiveList", list);
 				uni.navigateTo({
 					url,
 					animationDuration: 300,
 					animationType: 'slide-in-right'
 				})
 			}
-			
-			
+
+
 		}
 	}
 </script>
 
 <style scoped>
-	.viewPage{
+	.viewPage {
 		width: 750rpx;
 		min-height: 100vh;
 		background-color: #F6F6F6;
 		overflow: hidden;
 		padding-bottom: 174rpx;
 	}
-	.border{
-		margin-top:30rpx;
+
+	.border {
+		margin-top: 30rpx;
 	}
-	.list{
+
+	.list {
 		width: 750rpx;
 		background-color: #FFFFFF;
 	}
-	.item{
-		width:720rpx;
+
+	.item {
+		width: 720rpx;
 		height: 110rpx;
 		display: flex;
 		align-items: center;
@@ -738,19 +731,23 @@
 		margin-left: 30rpx;
 		border-bottom: 4rpx solid #F0F0F0;
 	}
-	.list .item:last-child{
-		border:none
+
+	.list .item:last-child {
+		border: none
 	}
-	.item .itemLeft{
+
+	.item .itemLeft {
 		display: flex;
 		align-items: center;
 	}
-	.itemLeft image{
-		width:40rpx;
+
+	.itemLeft image {
+		width: 40rpx;
 		height: 40rpx;
 		margin-right: 12rpx;
 	}
-	.item .itemLeft view{
+
+	.item .itemLeft view {
 		width: 160rpx;
 		font-size: 28rpx;
 		font-family: PingFangSC-Regular, PingFang SC;
@@ -758,22 +755,23 @@
 		color: #666666;
 		line-height: 28rpx;
 	}
-	 
-	.itemRight{
+
+	.itemRight {
 		display: flex;
 		align-items: center;
-		 
+
 	}
-	 
-	.input{
-		width:400rpx ;
+
+	.input {
+		width: 400rpx;
 		text-align: right;
- 		font-size:26rpx;
- 		/* margin-right: 40rpx; */
+		font-size: 26rpx;
+		/* margin-right: 40rpx; */
 		text-align: right;
- 	}
-	.itemRight view{
-		width:300rpx;
+	}
+
+	.itemRight view {
+		width: 300rpx;
 		font-size: 24rpx;
 		font-family: PingFangSC-Regular, PingFang SC;
 		font-weight: 400;
@@ -781,117 +779,136 @@
 		line-height: 34rpx;
 		text-align: right;
 	}
-	.itemRight image{
-		width:16rpx;
+
+	.itemRight image {
+		width: 16rpx;
 		height: 30rpx;
 		margin-right: 30rpx;
 		margin-left: 24rpx;
 	}
-	.onLoadCover{
+
+	.onLoadCover {
 		width: 750rpx;
 		height: 186rpx;
 		display: flex;
 		align-items: center;
 		background-color: #FFFFFF;
 	}
-	.onLoadCover image{
-		width:126rpx;
+
+	.onLoadCover image {
+		width: 126rpx;
 		height: 126rpx;
 		padding-left: 30rpx;
 		padding-right: 22rpx;
 	}
-	.top{
-		width:690rpx;
-		padding:34rpx 30rpx;
+
+	.top {
+		width: 690rpx;
+		padding: 34rpx 30rpx;
 		background-color: #FFFFFF;
 		padding-bottom: 4rpx;
 	}
-	.topImageList{
-		
+
+	.topImageList {
+
 		display: flex;
 		flex-wrap: wrap;
 	}
-	.top textarea{
+
+	.top textarea {
 		height: 100rpx;
 		margin-bottom: 20rpx;
-		font-size:28rpx;
+		font-size: 28rpx;
 	}
-	.imageItem{
+
+	.imageItem {
 		position: relative;
-		width:184rpx;
+		width: 184rpx;
 		height: 184rpx;
 		margin-bottom: 30rpx;
 	}
-	.imageItem1{
-		margin:30rpx;
+
+	.imageItem1 {
+		margin: 30rpx;
 		margin-top: 0rpx;
 	}
-	.imageItem image:nth-child(1){
+
+	.imageItem image:nth-child(1) {
 		position: absolute;
-		top:0;
+		top: 0;
 		left: 0;
-		width:184rpx;
+		width: 184rpx;
 		height: 184rpx;
 	}
-	.imageAdd{
+
+	.imageAdd {
 		/* background-color: red; */
-		
+
 		background: #F5F5F5;
 		border-radius: 8rpx;
 		border: 2rpx dashed #DEDEDE;
 	}
-	.imageAdd image:nth-child(1){
-		width:50rpx;
+
+	.imageAdd image:nth-child(1) {
+		width: 50rpx;
 		height: 50rpx;
-		top:50%;
+		top: 50%;
 		left: 50%;
-		transform: translate(-50%,-50%);
+		transform: translate(-50%, -50%);
 	}
-	.imageItem .delete{
-		width:28rpx;
+
+	.imageItem .delete {
+		width: 28rpx;
 		height: 28rpx;
 		position: absolute;
-		top:8rpx;
+		top: 8rpx;
 		right: 8rpx;
 		/* background-color: #007AFF; */
-		border-radius: 50%;	
+		border-radius: 50%;
 	}
-	.textView{
-		width:690rpx;
-		padding:0 30rpx;
+
+	.textView {
+		width: 690rpx;
+		padding: 0 30rpx;
 		background-color: #FFFFFF;
-		margin-top:30rpx;
+		margin-top: 30rpx;
 		padding-bottom: 30rpx;
 	}
-	.title{
-		color:#999999;
-		font-size:28rpx;
-		padding-top:24rpx;
+
+	.title {
+		color: #999999;
+		font-size: 28rpx;
+		padding-top: 24rpx;
 	}
-	.textView input{
-		font-size:28rpx;
-		color:#333333;
+
+	.textView input {
+		font-size: 28rpx;
+		color: #333333;
 		line-height: 60rpx;
 		height: 60rpx;
 		/* padding: 0 20rpx; */
 	}
-	.textView view:nth-child(3){
-		padding-top:38rpx;
-		border-top:2rpx solid #E5E5E5;
+
+	.textView view:nth-child(3) {
+		padding-top: 38rpx;
+		border-top: 2rpx solid #E5E5E5;
 	}
-	.textView textarea{
+
+	.textView textarea {
 		height: 80rpx;
-		font-size:28rpx;
-		width:100%;
+		font-size: 28rpx;
+		width: 100%;
 		border-bottom: 2rpx solid #E5E5E5;
 	}
-	.selectedItem{
-		width:720rpx;
+
+	.selectedItem {
+		width: 720rpx;
 		padding-left: 30rpx;
 		background-color: #FFFFFF;
 	}
-	.selectedTitle{
-		border-top:2rpx solid #F0F0F0;
+
+	.selectedTitle {
+		border-top: 2rpx solid #F0F0F0;
 		display: flex;
 		height: 98rpx;
 		align-items: center;
@@ -900,67 +917,79 @@
 		font-weight: 400;
 		color: #666666;
 	}
-	.selectedTitle image{
-		width:40rpx;
+
+	.selectedTitle image {
+		width: 40rpx;
 		height: 40rpx;
 		margin-right: 12rpx;
 	}
-	.selectedFile{
+
+	.selectedFile {
 		display: flex;
 		padding-bottom: 34rpx;
 	}
-	.hostview{
+
+	.hostview {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		padding-right: 10rpx;
 	}
-	.hostview image{
-		width:88rpx;
+
+	.hostview image {
+		width: 88rpx;
 		height: 88rpx;
 		border-radius: 50%;
-		
-		
-	} 
-	.hostview text{
-		 font-size: 20rpx;
-		 margin-top: 10rpx;
-		 color: #000000;
-		
-	} 
-	.selectedFile image{
-		width:88rpx;
+
+
+	}
+
+	.hostview text {
+		font-size: 20rpx;
+		margin-top: 10rpx;
+		color: #000000;
+
+	}
+
+	.selectedFile image {
+		width: 88rpx;
 		height: 88rpx;
 		border-radius: 50%;
 	}
-	.notBorder{
+
+	.notBorder {
 		border: none;
 	}
-	.priceItem{
-		width:690rpx;
+
+	.priceItem {
+		width: 690rpx;
 		padding-right: 30rpx;
 		display: flex;
 		height: 54rpx;
 		justify-content: space-between;
 		align-items: center;
 	}
-	.priceItemLeft{
+
+	.priceItemLeft {
 		font-size: 24rpx;
 		font-family: PingFangSC-Regular, PingFang SC;
 		font-weight: 400;
 		color: #666666;
 		line-height: 34rpx;
 	}
-	.priceItemRight{
+
+	.priceItemRight {
 		display: flex;
 		align-items: center;
 	}
-	.priceItemInput{
+
+	.priceItemInput {
 		text-align: right;
 		font-size: 24rpx;
 		margin-right: 30rpx;
- 	}
-	.priceItemRight view{
+	}
+
+	.priceItemRight view {
 		font-size: 24rpx;
 		font-family: PingFangSC-Regular, PingFang SC;
 		font-weight: 400;
@@ -968,10 +997,12 @@
 		line-height: 34px;
 		margin-right: 26rpx;
 	}
-	.priceItemRight image{
-		width:16rpx;
+
+	.priceItemRight image {
+		width: 16rpx;
 		height: 30rpx;
- 	}
+	}
+
 	.save {
 		position: fixed;
 		bottom: 38rpx;
@@ -982,7 +1013,7 @@
 		background: linear-gradient(180deg, #31D880 0%, #24CE59 100%);
 		box-shadow: 0px 10rpx 14rpx 0px rgba(49, 216, 128, 0.33);
 		border-radius: 40rpx;
-	
+
 		font-size: 28rpx;
 		font-family: PingFangSC-Medium, PingFang SC;
 		font-weight: 500;
@@ -990,35 +1021,41 @@
 		text-align: center;
 		line-height: 80rpx;
 	}
-	.border_{
-		border-bottom:2rpx solid #F0F0F0;
+
+	.border_ {
+		border-bottom: 2rpx solid #F0F0F0;
 	}
-	.selectedCourseList{
+
+	.selectedCourseList {
 		padding-bottom: 40rpx;
 	}
-	.selectedCourseItem{
-		width:690rpx;
+
+	.selectedCourseItem {
+		width: 690rpx;
 		height: 40rpx;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 	}
-	.selectedCourseItem image{
-		width:30rpx;
+
+	.selectedCourseItem image {
+		width: 30rpx;
 		height: 30rpx;
 	}
-	.selectedCourseItem view{
+
+	.selectedCourseItem view {
 		font-size: 24rpx;
 		font-family: PingFangSC-Regular, PingFang SC;
 		font-weight: 400;
 		color: #666666;
 	}
-	.selectedCourseAdd{
+
+	.selectedCourseAdd {
 		width: 134rpx;
 		height: 42rpx;
 		border-radius: 8rpx;
 		border: 2rpx solid #DDDDDD;
-		margin-top:16rpx;
+		margin-top: 16rpx;
 		font-size: 24rpx;
 		font-family: PingFangSC-Regular, PingFang SC;
 		font-weight: 400;
@@ -1026,7 +1063,8 @@
 		text-align: center;
 		line-height: 42rpx;
 	}
-	.lecture{
+
+	.lecture {
 		padding-bottom: 40rpx;
 	}
 </style>

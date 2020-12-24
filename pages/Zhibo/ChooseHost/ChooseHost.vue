@@ -32,13 +32,17 @@
 			}
 		},
 		onLoad: function(e) {
+			console.log(e)
 			if (e.hostlist != null) {
 				this.originArray = JSON.parse(e.hostlist);
 				console.log(this.originArray);
 			}
 			this.isLecture = e.isLecture == 1?1:2;
 			if(this.isLecture == 1){
-				
+				if(this.originArray){
+					this.originArray = [this.originArray]
+				}
+				console.log(this.originArray)
 			}
 			this.getHostList();
 		},
@@ -100,7 +104,7 @@
 						if (that.originArray.length > 0) {
 							for (var j = 0; j < that.originArray.length; j++) {
 								var itemj = that.originArray[j];
-								if (itemj.name == item.name) {
+								if (itemj.id == item.id) {
 									that.$set(item, 'checked', true)
 									that.selectList.push(item)
 									break
@@ -126,7 +130,6 @@
 					let nowPage = pages[pages.length - 1]; //当前页页面实例
 					let prevPage = pages[pages.length - 2];
 					var select_List = JSON.stringify(this.selectList)
-                  console.log(this.selectList.length)
 					uni.$emit("chooseHost", {
 						selectList: select_List,
 					})

@@ -4,8 +4,8 @@
 			<view :class="item.isSelected?'view':''" @click="setStatus(index)" v-for="(item , index ) in illnessList">{{item.name}}</view>
 			<view class="setShowStatus" @click="setShowStatus()">{{nowShowStatus?'收起':'展开'}}</view>
 		</view>
-		<view class="list">
-			<expert :isshow="(k == expertList.length-1)" v-for="(v,k) in expertList" :key="k"></expert>
+		<view class="list" v-if="expertList.length !=0">
+			<expert :info="v" :isshow="(k == expertList.length-1)" v-for="(v,k) in expertList" :key="k"></expert>
 		</view>
 	</view>
 </template>
@@ -30,7 +30,10 @@
 		},
 		methods: {
 			init(){
-				this.getNavList();
+				this.getNavList().then(data=>{
+					this.getList();
+				})
+				
 			},
 			setStatus(index){
 				if(index == this.nowIndex) return false;
@@ -39,6 +42,7 @@
 				this.$set(this.illnessList,index,this.illnessList[index]);
 				this.$set(this.illnessList,this.nowIndex,this.illnessList[this.nowIndex]);
 				this.nowIndex = index;
+				this.getList();
 			},
 			setShowStatus(){
 				this.nowShowStatus = !this.nowShowStatus;
@@ -55,7 +59,20 @@
 				},true,true).then(data=>{
 					data.records[0].isSelected = true;
 					that.illnessList = data.records;
-					console.log(data);
+				})
+			},
+			getList(){
+				let that = this;
+				return request({
+					url:getApp().$api.huanzhe.getAllDoutorList,
+					type:"GEt",
+					data:{
+						forte:that.illnessList[that.nowIndex].name,
+						pageNo:1,
+						pageSize:100
+					}
+				},true,true).then(data=>{
+					that.expertList = data.records;
 				})
 			}
 		}

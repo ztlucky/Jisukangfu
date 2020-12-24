@@ -1,5 +1,5 @@
 <template>
-	<view class="item" @click="toPage('/pages/Wode/banJiDesc/banJiDesc')">
+	<view class="item" @click="toPage('/pages/Wode/banJiDesc/banJiDesc?id='+itemObject.id)">
 		<view class="banJiInfo">
 			<image class="infoIcon" src="/static/gongzuotai/bg_huiyuan.png"></image>
 			<view class="banJiInfoTips">课程</view>

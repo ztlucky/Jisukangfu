@@ -45,7 +45,7 @@
 						<swiper class="swiper" :autoplay="true" :circular="true" @change="change" :style="[{height:swiperHeight + 'px'}]">
 							<swiper-item v-for="(item, index) in slider" :key="index">
 								<navigator class="item" hover-class="none" :url="'/pages/article/detail?id=' + item.id">
-									<image :lazy-load="true" :src="item.url+item.pictures" mode="aspectFill" :style="[{height:swiperHeight + 'px'}]"></image>
+									<image :lazy-load="true" :src="item.url+'/'+item.pictures" mode="aspectFill" :style="[{height:swiperHeight + 'px'}]"></image>
 
 								</navigator>
 							</swiper-item>

@@ -1,6 +1,6 @@
  
  let apiRoot = 'http://www.huaxiakangfu.com:8090/';
-//let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
+// let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
  
 let api = {
 	common: {
@@ -165,6 +165,7 @@ let api = {
 		editProgram:`${apiRoot}treatment/treatment/edit`,//编辑治疗项目
 		getHomeInfo:`${apiRoot}user/user/hzHomePageData`,//获取咨询首页数据
 		getDoctorList:`${apiRoot}user/user/queryYS`,
+		getAllDoutorList:`${apiRoot}doctor/doctor/list`,
  	},
 	wechat: {
 		miniAppLogin: apiRoot + 'wechat/miniAppLogin',
@@ -200,6 +201,7 @@ let api = {
 	banji:{
 		"getbanjiList":`${apiRoot}class/class/list`,
 		"creatbanjiList":`${apiRoot}class/class/add`,
+		"getInfo":`${apiRoot}class/class/queryById`
 	},
 	sys:{
 		"onloadFile":`${apiRoot}sys/common/upload`

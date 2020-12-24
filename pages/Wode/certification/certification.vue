@@ -79,7 +79,7 @@
 			</view>
 		</view>
 		<view class="save" v-if="info && info.result == null" >审核中</view>
-		<view class="save" v-else @click="save()">{{info && info.result && info.result == 0?'未审核':info.result == 1?'审核成功':info.result == 2?'审核失败':'提交审核	'}}</view>
+		<view class="save" v-else @click="save()">{{info && info.result && info.result == 0?'未审核':info &&info.result == 1?'审核成功':info &&info.result == 2?'审核失败':'提交审核	'}}</view>
 		<w-picker mode="selector" :visible.sync="visible"
         value="住院医师"
         default-type="name"
@@ -201,7 +201,6 @@
 					}
 				},true,true).then(data=>{
 					that.info = data.records[0];
-					console.log(that.info);
 				})
 			},
 			toPage(key){
@@ -237,6 +236,11 @@
 					});
 					return false;
 				}
+				let forte = [];
+				that.shanChangLingYu.map(v=>{
+					forte.push(v.name)
+				})
+				forte = forte.join(',')
 				let  tempFiles = [this.qualificationFile,this.workFile];
 				let tempFilePaths = [this.qualificationFile.fullPath,this.workFile.fullPath]
 				onloadImage.init({
@@ -248,7 +252,7 @@
 					url:getApp().$api.user.addQualification,
 					type:"POST",
 					data:{
-						forte:JSON.stringify(that.shanChangLingYu),
+						forte,
 						idNo:that.idNo,
 						school:that.work,
 						education:that.xueLi.id,
@@ -327,7 +331,6 @@
 				this.positionItem = data.obj;
 			},
 			onConfirm_(data){
-				console.log(data);
 				this.positionItem_ = data.obj;
 			},
 			getIllnessList(){
@@ -340,10 +343,16 @@
 						pageSize:200
 					}
 				},true,true).then(data=>{
-					data.records.map((v,k)=>{
+					console.log(data);
+					if(data.records){
+						data.records.map((v,k)=>{
 						data.records[k].value = v.name;
 					})
+					}
+					
+					console.log(that.binData1);
 					that.binData1 = data.records;
+					console.log(that.binData1);
 				})
 			}
 		}

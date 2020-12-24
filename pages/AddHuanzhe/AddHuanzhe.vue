@@ -326,27 +326,32 @@
 			 },
 			 save(f = true){
 			 		 let str = "";
-			 		 if(!this.huanzhename){
-			 			 str = '请输入患者姓名'
-			 		 }else if(!this.huanzheIDNumber){
-			 			 str = "请输入患者身份证号"
-			 		 }else if(!this.checkCode(this.huanzheIDNumber)){
-						 str = "请输入患者正确身份证号"
-					 }else if(!this.huanzheMobile){
-			 			 str = "请输入患者手机号"
-			 		 }else if(this.res == "请选择省市区"){
-			 			 str = "请选择地区"
-			 		 }else if(!this.detailAdress){
-			 			 str = "请输入详细地址"
-			 		 }else if(!this.sourceValue){
-			 			 str = "请选择患者来源"
-			 		 }else if(this.sourceValue.id == 2 &&!this.beds){
-			 			str = "请输入床位"
-			 		 }else if(!this.illnessValue){
-			 			 str = "请选择诊断结果"
-			 		 }else if(!this.symptomsValue){
-			 			 str = "请选择症状结果"
-			 		 }
+			 		//  if(!this.huanzhename){
+			 		// 	 str = '请输入患者姓名'
+			 		//  }else if(!this.huanzheIDNumber){
+			 		// 	 str = "请输入患者身份证号"
+			 		//  }else if(!this.checkCode(this.huanzheIDNumber)){
+						//  str = "请输入患者正确身份证号"
+					 // }else if(!this.huanzheMobile){
+			 		// 	 str = "请输入患者手机号"
+			 		//  }else if(this.res == "请选择省市区"){
+			 		// 	 str = "请选择地区"
+			 		//  }else if(!this.detailAdress){
+			 		// 	 str = "请输入详细地址"
+			 		//  }else if(!this.sourceValue){
+			 		// 	 str = "请选择患者来源"
+			 		//  }else if(this.sourceValue.id == 2 &&!this.beds){
+			 		// 	str = "请输入床位"
+			 		//  }else if(!this.illnessValue){
+			 		// 	 str = "请选择诊断结果"
+			 		//  }else if(!this.symptomsValue){
+			 		// 	 str = "请选择症状结果"
+			 		//  }
+					if(!this.sourceValue){
+						str = "请选择患者来源"
+					}else if(this.sourceValue.id == 2 &&!this.beds){
+						str = "请输入床位"
+					}
 			 		 if(str){
 						 uni.showToast({
 							title: str,
@@ -354,10 +359,7 @@
 							duration: 2000
 						})
 			 		 }else{
-						 let that = this;
-			 		 	console.log(this.huanzhename,
-							this.huanzheIDNumber,
-							this.huanzheMobile,this.res,this.detailAdress,this.sourceValue,this.illnessValue,this.symptomsValue)		 
+						 let that = this;	 
 			 		 let age = that.discriCard(that.huanzheIDNumber);
 					 return request({
 						 url:that.$api.huanzhe.addHuanZhe,
@@ -370,14 +372,14 @@
 								 idNo:that.huanzheIDNumber,
 								 phoneNumber:that.huanzheMobile,
 								 detailedAddress:that.detailAdress,
-								 patientsSource:that.sourceValue.id,
-								 illnessId:Number.parseInt(that.illnessValue.id),
-								 symptomId:that.symptomsValue.id,
-								 illnessName:that.illnessValue.value,
-								 symptomName:that.symptomsValue.value,
-								 province:that.res.split("-")[0],
-								 city:that.res.split("-")[1],
-								 county:that.res.split("-")[2],
+								 patientsSource:that.sourceValue?that.sourceValue.id:'',
+								 illnessId:Number.parseInt(that.illnessValue?that.illnessValue.id:'0'),
+								 symptomId:that.symptomsValue?that.symptomsValue.id:'',
+								 illnessName:that.illnessValue?that.illnessValue.value:'',
+								 symptomName:that.symptomsValue?that.symptomsValue.value:'',
+								 province:that.res?that.res.split("-")[0]:'',
+								 city:that.res?that.res.split("-")[1]:'',
+								 county:that.res?that.res.split("-")[2]:'',
 								 userId:getApp().globalData.userId
 						 }
 					 }).then(data=>{

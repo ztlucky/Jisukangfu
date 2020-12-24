@@ -505,47 +505,19 @@
 						title:'请输入验证码人数',
 						icon:'none'
 					})
-				}else if(this.material.pdfFile.length == 0&& this.material.videoFile.length == 0){
-					uni.showToast({
-						title:'请选择素材',
-						icon:'none'
-					})
 				}else{
-					let tempFiles = that.cover.tempFile;
-					let tempFilePaths = that.cover.imageList;
-					tempFiles = tempFiles.concat(that.material.pdfFile)
-					tempFiles = tempFiles.concat(that.material.videoFile);
-					tempFilePaths = tempFilePaths.concat(that.material.pdfList)
-					tempFilePaths = tempFilePaths.concat(that.material.videoList)
-					console.log(tempFiles,tempFilePaths);
-					onloadImage.init({
-						tempFiles,
-						tempFilePaths
-					},(res,str)=>{
-						let coverUrl = res.imageUrl[0];
-						let file = [];
-						let pdfFile = [];
-						let videoFile = [];
-						if(that.material.pdfFile){
-							that.material.pdfFile.map((v,k)=>{
-								pdfFile.push({
-									type:'pdf',
-									value:res.imageUrl[k+1]
-								})
-							})
-						}
-						if(that.material.videoFile){
-							that.material.videoFile.map((v,k)=>{
-								videoFile.push({
-									type:'video',
-									value:res.imageUrl[k+1+pdfFile.length]
-								})
-							})
-						}
-						file = pdfFile.concat(videoFile);
-						file = JSON.stringify(file);
-						this.creatCourse(coverUrl,file);
-					}).upload();
+					if(this.material.pdfFile.length == 0&& this.material.videoFile.length == 0){
+						let tempFiles = that.cover.tempFile;
+						let tempFilePaths = that.cover.imageList;
+						onloadImage.init({
+							tempFiles,
+							tempFilePaths
+						},(res,str)=>{
+							let coverUrl = res.imageUrl[0];
+							this.creatCourse(coverUrl,'');
+						}).upload();
+					}
+					
 					
 				  }
  			},

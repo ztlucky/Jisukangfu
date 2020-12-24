@@ -1,11 +1,11 @@
 <template>
 	<view :class="isshow?'item item1':'item'" @click="openInfo">
-		<image class="itemLeft" src="../../static/gongzuotai/icon_nv.png"></image>
+		<image class="itemLeft" :src="info.headUrl" mode="aspectFill"></image>
 		<view class="itemRight">
 			<view class="name">
 				<view class="nameText">
-					<view >蜡笔小新</view>
-					<view >主治医师</view>
+					<view >{{info.name}}</view>
+					<view >{{info.jobTitle?info.jobTitle:''}}</view>
 				</view>
 				<view class="price">19526.23元</view>
 			</view>
@@ -32,6 +32,9 @@
 			isshow:{
 				type:Boolean,
 				default:true
+			},
+			info:{
+				type:Object
 			}
 		},
 		data() {

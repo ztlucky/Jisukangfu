@@ -113,8 +113,9 @@
 				uni.$on("addItem",this.setList)
 			},
 			setList(data){
+				console.log(data);
 				this.list.push({
-					text:data
+					name:data
 				});
 			},
 			setNowStatus(){
@@ -129,15 +130,15 @@
 					data.typeId = this.typeId;
 					data.typeName = this.typename
 					data.name = this.name;
-					if(this.list.length == 0){
+					// if(this.list.length == 0){
 						
-					}else{
-						this.list.map(v=>{
-							list.push({
-								name:v.text
-							})
-						})
-					}
+					// }else{
+					// 	this.list.map(v=>{
+					// 		list.push({
+					// 			name:v.text
+					// 		})
+					// 	})
+					// }
 					data.ratingScaleClassifyList = list;
 					data.userId = getApp().globalData.userId;
 					return request({

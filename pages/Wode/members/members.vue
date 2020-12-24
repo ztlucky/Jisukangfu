@@ -173,7 +173,12 @@
 						goodsSku:getApp().globalData.member
 					}
 				},true,true,false).then(data=>{
-					that.getUserInfo();
+					uni.showToast({
+						title:'购买成功'
+					})
+					setTimeout(()=>{
+						that.getUserInfo();
+					},1000)
 				})
 			}
 		}

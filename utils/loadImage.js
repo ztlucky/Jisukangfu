@@ -39,12 +39,13 @@ class loadImage {
 		this.imageUrl = []
 		this.nowCount = 0
 		this.fn = fn;
-		this.url = data.url?data.url:getApp().$api.oss.onLoadFile
+		this.url = data.url?data.url:getApp().$api.oss.onLoadFile;
+		console.log(this)
 		return this;
 	}
 
 	upload() {
-		// this.checkFileSize().then(()=>{
+		this.checkFileSize().then(()=>{
 			uni.showLoading({
 			title: `文件上传中（${this.nowCount}/${this.imageList.length}）`,
 			mask: true
@@ -62,7 +63,14 @@ class loadImage {
 			console.log(file);
 			this.fn(this, JSON.stringify(file));
 		} else {
+			console.log('继续',this.imageList[this.nowCount].type)
 			if (this.imageList[this.nowCount].type && this.imageList[this.nowCount].type == 'video') {
+				if (this.imagePathList[this.nowCount].value.substring(0, 5) == 'https') {
+					this.imageUrl.push(this.imagePathList[this.nowCount].value);
+					this.nowCount++;
+					this.upload();
+					return false;
+				}
 				this.uploadVideo();
 			} else {
 				if (this.imagePathList[this.nowCount].substring(0, 5) == 'https') {
@@ -74,16 +82,20 @@ class loadImage {
 				this.uploadImage();
 			}
 		}
-		// });
+		});
 		
 	}
 	checkFileSize(){
 		//查看文件大小
-		let size = '';
+		let size = 0;
 		this.imageList.map((v,i)=>{
-			size+=v.value?v.value.size:v.size
+			size+=v.value?Number.parseInt(v.value.size):Number.parseFloat(v.size)
 		});
-		size = (size/1024).toFixed(2)
+		console.log(size);
+		size = (size/1024).toFixed(2);
+		console.log(size);
+		console.log(getApp().globalData.userId)
+		console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 		return request({
 			url:getApp().$api.user.getNowMemory,
 			type:"GET",

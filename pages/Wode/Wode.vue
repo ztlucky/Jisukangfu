@@ -55,7 +55,7 @@
 
 							<image class="iconimage" src="../../static/Me/icon_kaquan.png" mode=""></image>
 							<text class="icontitle">我的卡券</text>
-							<text class="bluetext">1张</text>
+							<text class="bluetext">0张</text>
 
 						</view>
 

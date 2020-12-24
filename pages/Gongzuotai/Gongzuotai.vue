@@ -97,7 +97,7 @@
 							<image src="../../static/gongzuotai/icon_shijian_hong.png" mode=""></image>
 							<text>输入时间：{{item.createTime}}</text>
 						</view>
-						<text class="bianhao">编号：{{item.idNo}}</text>
+						<text class="bianhao">编号：{{item.num}}</text>
 					</view>
 
 				</view>
