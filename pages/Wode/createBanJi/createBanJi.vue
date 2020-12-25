@@ -176,6 +176,20 @@
 					<image src="../../../static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
+			<view class="priceItem">
+				<view class="priceItemLeft">优惠券个数</view>
+				<view class="priceItemRight">
+					<input class="priceItemInput" placeholder="输入优惠券个数" v-model="couponsNumber"></input>
+					<image src="../../../static/icon/me_lise_more.png"></image>
+				</view>
+			</view>
+			<view class="priceItem">
+				<view class="priceItemLeft">优惠券价格</view>
+				<view class="priceItemRight">
+					<input class="priceItemInput" placeholder="输入优惠券价格" v-model="couponsPrice"> </input>
+					<image src="../../../static/icon/me_lise_more.png"></image>
+				</view>
+			</view>
 			<view class="item" style="margin-left: 0;border-bottom: 0;">
 				<view class="itemLeft">
 					<image src="../../../static/zhibo/icon_biaoti.png"></image>
@@ -202,7 +216,7 @@
 
 				</view>
 			</view>
-			<view class="item">
+			<!-- <view class="item">
 				<view class="itemLeft">
 					<image src="../../../static/zhibo/icon_guankan.png"></image>
 					<view class="hidden">如何查看</view>
@@ -213,7 +227,7 @@
 					</picker>
 					<image src="../../../static/icon/me_lise_more.png"></image>
 				</view>
-			</view>
+			</view> -->
 		</view>
 		<view class="save" @click="creatLiveAction">提交申请</view>
 		<l-file ref="lFile"></l-file>
@@ -254,7 +268,7 @@
 				endHour: 0,
 				endMinute: 0,
 				index: 0,
-				selectCategroy: "主题",
+				selectCategroy: "分类",
 				category: [],
 				cost: "", //价格
 				memberCost: "",
@@ -291,6 +305,8 @@
 				}],
 				nowIndex: 0, //当前的讲课
 				lectureTime: false,
+				couponsPrice:'',
+				couponsNumber:''
 			}
 		},
 		components: {
@@ -564,7 +580,7 @@
 					confirmList
 				};
 			},
-			//创建直播
+			//创建班级
 			creatLiveAction() {
 				let that = this;
 				let lectureList = this.checklecture();
@@ -573,29 +589,29 @@
 						title: '请输入班级标题',
 						icon: 'none'
 					})
-				} else if (this.selectCategroy == "主题") {
+				} else if (this.selectCategroy == "分类") {
 					uni.showToast({
-						title: '请选择直播主题',
+						title: '请选择班级分类',
 						icon: 'none'
 					})
 				} else if (this.cover.imageList.length == 0) {
 					uni.showToast({
-						title: '请设置该直播封面',
+						title: '请设置该班级封面',
 						icon: 'none'
 					})
 				} else if (this.hostList.length == 0) {
 					uni.showToast({
-						title: '请选择主持人',
+						title: '请选择老师',
 						icon: 'none'
 					})
 				} else if (this.cost.length == 0) {
 					uni.showToast({
-						title: '请输入直播价格',
+						title: '请输入班级价格',
 						icon: 'none'
 					})
 				} else if (this.memberCost.length == 0) {
 					uni.showToast({
-						title: '请输入会员价格',
+						title: '请输入班级会员价格',
 						icon: 'none'
 					})
 				} else if (this.code == '') {
@@ -662,7 +678,9 @@
 						isVisible: that.isvisiable,
 						coverUrl,
 						file,
-						classtAble
+						classtAble,
+						couponCount:that.couponsNumber?that.couponsNumber:0,
+						coupon:that.couponsPrice?that.couponsPrice:0
 					}
 				},true,true).then(data=>{
 					console.log(data)

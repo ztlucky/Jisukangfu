@@ -1,7 +1,7 @@
 <template>
 	<view class="viewPage">
 		<view class="list" >
-			<view class="item" @click="toPage('work')">
+			<view class="item" @click="toPage('/pages/Wode/WorkUnits/WorkUnits')">
 				<view class="itemTitle">工作单位</view>
 				<view class="itemRight" >
 					<view class="itemRightText hidden">{{work}}</view>
@@ -204,6 +204,14 @@
 				})
 			},
 			toPage(key){
+				if(key == '/pages/Wode/WorkUnits/WorkUnits'){
+					uni.navigateTo({
+						url:key,
+						animationDuration:300,
+						animationType:'slide-in-right'
+					})
+					return false;
+				}
 				uni.navigateTo({
 					url:'/pages/work/addOtherCertification/addOtherCertification?key='+key+'&value='+this[key],
 					animationDuration:300,

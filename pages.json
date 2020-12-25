@@ -246,6 +246,15 @@
 			}
 		},
 		{
+			"path": "pages/Wode/WorkUnits/WorkUnits",
+			"style": {
+				"navigationBarTitleText": "工作单位",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black"
+
+			}
+		},
+		{
 			"path": "pages/Wode/plan/plan",
 			"style": {
 				"navigationBarTitleText": "我的方案",
