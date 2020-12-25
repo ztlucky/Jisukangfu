@@ -7,11 +7,11 @@
 					<view class="hidden">班级标题</view>
 				</view>
 				<view class="itemRight">
-					<input class="input" placeholder="请输入直播标题" v-model="zhiboTitle"></input>
+					<input class="input" placeholder="请输入班级标题" v-model="zhiboTitle"></input>
 					<image src="../../../static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
-			<view class="item">
+			<!-- <view class="item">
 				<view class="itemLeft">
 					<image src="/static/live/icon_banjizhuti.png"></image>
 					<view class="hidden">班级主题</view>
@@ -23,8 +23,8 @@
 					</picker>
 					<image src="../../../static/icon/me_lise_more.png"></image>
 				</view>
-			</view>
-			<!-- <view class="item">
+			</view> -->
+			<view class="item">
 				<view class="itemLeft">
 					<image src="../../../static/zhibo/icon_fenlei.png"></image>
 					<view class="hidden">选择分类</view>
@@ -36,8 +36,8 @@
 					                  </picker>
 					<image src="../../../static/icon/me_lise_more.png"></image>
 				</view>
-			</view> -->
-			<view class="item">
+			</view>
+			<!-- <view class="item">
 				<view class="itemLeft">
 					<image src="../../../static/zhibo/icon_time.png"></image>
 					<view class="hidden">开课时间</view>
@@ -56,7 +56,7 @@
 					<view class="hidden2">{{endtime}}</view>
 					<image src="../../../static/icon/me_lise_more.png"></image>
 				</view>
-			</view>
+			</view> -->
 		</view>
 		<view class="onLoadCover border" @click="getCover">
 			<image :src="cover.imageList.length!=0?cover.imageList[0]:'../../../static/zhibo/img_fengmian.png'"></image>
@@ -65,7 +65,7 @@
 		<view class="course border">
 
 			<view class="top">
-				<textarea placeholder="请输入课程的文字内容（选填）…" @input="input"></textarea>
+				<textarea placeholder="请输入班级的文字内容（选填）…" @input="input"></textarea>
 				<view class="topImageList">
 					<view v-for="(v,k) in imageList" :key="k" :class="'imageItem '+((k)%3 == 1?'imageItem1':'imageItem')">
 						<image mode="aspectFill" :src="v"></image>
@@ -78,7 +78,7 @@
 			<view class="selectedItem">
 				<view class="selectedTitle">
 					<image src="/static/zhibo/icon_zhuchiren.png"></image>
-					<view class="">选择主持人</view>
+					<view class="">选择老师</view>
 				</view>
 				<view class="selectedFile" @click="chooseHost">
 
@@ -179,10 +179,10 @@
 			<view class="item" style="margin-left: 0;border-bottom: 0;">
 				<view class="itemLeft">
 					<image src="../../../static/zhibo/icon_biaoti.png"></image>
-					<view class="hidden">验证码人数</view>
+					<view class="hidden">邀请码人数</view>
 				</view>
 				<view class="itemRight">
-					<input class="input" placeholder="请输入验证码人数" v-model="code"></input>
+					<input class="input" placeholder="请输入邀请码人数" v-model="code"></input>
 					<image src="../../../static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
@@ -260,7 +260,7 @@
 				memberCost: "",
 				isvisiable: 1, //是否全部可见
 				ischeck: true, //默认全部可见
-				chakanType: ["无限查看", "验证码查看", "收费查看"],
+				chakanType: ["无限查看", "邀请码查看", "收费查看"],
 				hostList: [], //主持人列表
 				chakanIndex: 0,
 				currentDay: "",
@@ -570,7 +570,7 @@
 				let lectureList = this.checklecture();
 				if (this.zhiboTitle.length == 0) {
 					uni.showToast({
-						title: '请输入直播标题',
+						title: '请输入班级标题',
 						icon: 'none'
 					})
 				} else if (this.selectCategroy == "主题") {
@@ -600,7 +600,7 @@
 					})
 				} else if (this.code == '') {
 					uni.showToast({
-						title: '请输入验证码人数',
+						title: '请输入邀请码人数',
 						icon: 'none'
 					})
 				} else if (lectureList.confirmList.length == 0) {

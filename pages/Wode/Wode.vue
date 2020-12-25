@@ -7,7 +7,7 @@
 					<view class="toprightV">
 						<view class="up">
 							<text class="name">{{info.name?info.name:''}}</text>
-							<text class="huiyuan">{{info.role == 2?'康复师':'普通会员'}}</text>
+							<text class="huiyuan">{{info.userType == 2?'会员':info.userType == 3?'超级会员':'普通用户'}}</text>
 						</view>
 						<text class="bianji">编辑个人资料</text>
 					</view>

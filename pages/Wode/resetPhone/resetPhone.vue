@@ -38,8 +38,9 @@
 		onLoad(options) {
 			// this.key = options.key?options.key:'';
 			this.phone = options.value?options.value:'';
-			if(this.phone == ''){
-				this.nowStatus == 2;
+			if(!(/^1(3|4|5|7|8)\d{9}$/.test(options.value))){
+				console.log('是吧')
+				this.nowStatus = 2;
 			}
 			this.setTime();
 		},
