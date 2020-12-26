@@ -1,7 +1,7 @@
 <template>
 	<view class="conteview">
 		<view class="searchbgview">
-			<input class="input" placeholder="请输入手机号" confirm-type="search" @confirm="confirm" v-model="searchString" @input="onInput"></input>
+			<input class="input" placeholder="请输入手机号或者姓名" confirm-type="search" @confirm="confirm" v-model="searchString" @input="onInput"></input>
 		</view>
 		<view class="list" v-show="mainlist.length>0">
 			<view class="studentBgview" v-for="(item,index) in mainlist" :key="index" @click="selectItem(index)">
@@ -94,7 +94,8 @@
 					data: {
 						pageNo: 1,
 						pageSize: 500,
-						phone: this.searchString
+						condition:true,
+						name: this.searchString
 					}
 				}, true, true).then(data => {
 					that.mainlist = data.records;

@@ -1,6 +1,6 @@
  
- let apiRoot = 'http://www.huaxiakangfu.com:8090/';
-// let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
+ // let apiRoot = 'http://www.huaxiakangfu.com:8090/';
+let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
  
 let api = {
 	common: {
@@ -135,7 +135,8 @@ let api = {
 		getQualificationList:`${apiRoot}qualification_audit/qualificationAudit/list`,
 		getNowMemory:`${apiRoot}user/user/updateMemoryUsedQuantity`,//获取当前储量
 		//移除消息
-		 removeuserFormessage:`${apiRoot}message/message/delNeedPushOfUser`
+		 removeuserFormessage:`${apiRoot}message/message/delNeedPushOfUser`,
+		getBillList:`${apiRoot}bill/bill/list`
 		
 	},
 	huanzhe:{

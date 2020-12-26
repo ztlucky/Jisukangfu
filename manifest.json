@@ -91,7 +91,12 @@
                         "UniversalLinks" : ""
                     }
                 },
-                "share" : {},
+                "share" : {
+                    "weixin" : {
+                        "appid" : "wx646e9d2c8699d4b8",
+                        "UniversalLinks" : ""
+                    }
+                },
                 "maps" : {},
                 "push" : {
                     "unipush" : {}

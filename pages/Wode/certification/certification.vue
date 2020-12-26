@@ -4,7 +4,7 @@
 			<view class="item" @click="toPage('/pages/Wode/WorkUnits/WorkUnits')">
 				<view class="itemTitle">工作单位</view>
 				<view class="itemRight" >
-					<view class="itemRightText hidden">{{work}}</view>
+					<view class="itemRightText hidden"></view>
 					<image src="/static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
@@ -32,10 +32,10 @@
 					<image src="/static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
-			<view class="item" @click="showSelectView">
+			<view class="item" @click="toPage('positionItem')">
 				<view class="itemTitle">职称</view>
-				<view class="itemRight">
-					<view :class="positionItem && positionItem.id?'itemRightText':'itemRightText itemRightText1'  ">{{positionItem && positionItem.id?positionItem.value:'请选择您的职称'}}</view>
+				<view class="itemRight" >
+					<view class="itemRightText">{{positionItem}}</view>
 					<image src="/static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
@@ -46,14 +46,14 @@
 					<image src="/static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
-			<view class="item" @click="chooseFile('qualificationFile')">
+			<view class="item" @click="toPage('/pages/Wode/uploadCertificate/uploadCertificate')">
 				<view class="itemTitle">资质证书</view>
 				<view class="itemRight">
 					<view class="itemRightText hidden">{{qualificationFile?qualificationFile.name:''}}</view>
 					<image src="/static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
-			<view class="item" @click="chooseFile('workFile')">
+			<view class="item" @click="toPage('/pages/Wode/uploadCertificate/uploadCertificate')">
 				<view class="itemTitle">工作证书</view>
 				<view class="itemRight">
 					<view class="itemRightText hidden">{{workFile?workFile.name:''}}</view>
@@ -152,7 +152,7 @@
 					id:4,
 					value:'主任医师'
 				}],
-				positionItem:null,
+				positionItem:'',
 				xueLi:null,
 				info:{},
 				shanChangLingYu:null,
@@ -167,6 +167,10 @@
 				{
 					id:2,
 					value:'班级'
+				},
+				{
+					id:3,
+					value:'全部'
 				}]
 			}
 		},
@@ -211,6 +215,13 @@
 						animationType:'slide-in-right'
 					})
 					return false;
+				}else if(key == '/pages/Wode/uploadCertificate/uploadCertificate'){
+					uni.navigateTo({
+						url:key,
+						animationDuration:300,
+						animationType:'slide-in-right'
+					})
+					return false;
 				}
 				uni.navigateTo({
 					url:'/pages/work/addOtherCertification/addOtherCertification?key='+key+'&value='+this[key],
@@ -219,10 +230,27 @@
 				})
 			},
 			save(){
-				if(!this.info && this.info.result !== 2)return;
 				let str = '';
+				
+				if(!this.info && this.info.result !== 2)return;
+				let uploadCertificate = uni.getStorageSync('uploadCertificate');
+				let company = uni.getStorageSync('workUnits');
+				if(company){
+					company = JSON.stringify(company);
+				}
+				if(uploadCertificate){
+					console.log(uploadCertificate)
+					if(uploadCertificate.work.length == 0){
+						str = '请选择工作证书'
+					}else if(uploadCertificate.qualification.length == 0){
+						str = '请选择资质证书'
+					}else{
+						this.qualificationFile = uploadCertificate.qualification;
+						this.workFile = uploadCertificate.work
+					}
+				}
 				let that = this;
-				if(this.work == ''){
+				if(this.school == ''){
 					str = '请输入毕业院校'
 				}else if(this.xueLi == null){
 					str = '请选择您的学历'
@@ -230,7 +258,7 @@
 					str = '请输入您的身份证号'
 				}else if(!this.check(this.idNo)){
 					str = '您的身份证身份格式不正确'
-				}else if(this.positionItem == null){
+				}else if(this.positionItem == ''){
 					str = '请选择您的职称'
 				}else if(this.positionItem_ == null){
 					str = '请选择您的认证类型'
@@ -248,26 +276,39 @@
 				that.shanChangLingYu.map(v=>{
 					forte.push(v.name)
 				})
-				forte = forte.join(',')
-				let  tempFiles = [this.qualificationFile,this.workFile];
-				let tempFilePaths = [this.qualificationFile.fullPath,this.workFile.fullPath]
+				forte = forte.join(',');
+				let  tempFiles = [];
+				let tempFilePaths = [];
+				this.qualificationFile.map((v,k)=>{
+					tempFiles.push(v);
+					tempFilePaths.push(v.fullPath)
+				});
+				this.workFile.map((v,k)=>{
+					tempFiles.push(v);
+					tempFilePaths.push(v.fullPath)
+				});
+				console.log("(>>>>>>>>>>>>>>>>>>)")
 				onloadImage.init({
 					tempFiles,
 					tempFilePaths
 				},(res)=>{
+					console.log(res);
 					let file = res.imageUrl.join(',');
+					console.log(file);
+					console.log(company)
 					return request({
 					url:getApp().$api.user.addQualification,
 					type:"POST",
 					data:{
 						forte,
 						idNo:that.idNo,
-						school:that.work,
+						school:that.school,
 						education:that.xueLi.id,
 						remark:that.remark,
 						type:that.positionItem_.id,
-						jobTitle:that.positionItem.value,
-						file
+						jobTitle:that.positionItem,
+						file,
+						company
 					}
 				}).then(data=>{
 					uni.showToast({
@@ -275,6 +316,8 @@
 						icon:'none',
 						duration:1500
 					})
+					uni.removeStorageSync('workUnits');
+					uni.removeStorageSync('uploadCertificate');
 					setTimeout(()=>{
 						uni.navigateBack();
 					},1200)

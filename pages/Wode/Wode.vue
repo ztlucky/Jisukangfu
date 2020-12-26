@@ -15,12 +15,12 @@
 				<view class="lineview">
 
 				</view>
-				<uni-grid :column="4" :square="false" :showBorder="false" @change="" :highlight="false">
+				<uni-grid :column="2" :square="false" :showBorder="false" @change="" :highlight="false">
 					<uni-grid-item v-for="(item ,index) in  tongjidata" :key="index" :index="index">
 						<view class="tongjiView">
 							<text class="numberText">{{item.number}}</text>
 							<text class="tip">{{item.title}}</text>
-							<view class="line1" v-if="index%4 !=3 "></view>
+							<view class="line1" v-if="index%2 !=1 "></view>
 						</view>
 					</uni-grid-item>
 				</uni-grid>
@@ -38,7 +38,7 @@
 					<text class="icontitle">我的钱包</text>
 				</view>
 				<view class="qianbaoview">
-					<text class="money">{{money}}</text>
+					<text class="money">{{money?money:0}}</text>
 					<text class="yuan" v-if="!ismoneySecret">元</text>
 					<view class="secretImage" @click="changeSecret">
 						<image :src="ismoneySecret?'../../static/Me/icon_yanjing.png':'../../static/Me/kejian.png'" mode=""></image>
@@ -49,10 +49,16 @@
 				</view>
 				<view class="lineview">
 				</view>
+				<view class="iconview" @click="toPage('/pages/Wode/billList/billList')">
+					<image class="iconimage" src="../../static/Me/icon_dingdan.png" mode=""></image>
+					<text class="icontitle">全部账单</text>
+					<image src="../../static/icon_jiantou.png" mode="" class="rightIcon"></image>
+				</view>
+				<view class="lineview">
+				</view>
 				<view class="jifen">
 					<view class="jifenview">
 						<view class="iconview">
-
 							<image class="iconimage" src="../../static/Me/icon_kaquan.png" mode=""></image>
 							<text class="icontitle">我的卡券</text>
 							<text class="bluetext">0张</text>
@@ -60,9 +66,9 @@
 						</view>
 
 					</view>
-					<!-- <view class="v_line">
+					<view class="v_line">
 
-					</view> -->
+					</view>
 					<!-- <view class="jifenview">
 						<view class="iconview">
 
@@ -74,8 +80,6 @@
 
 					</view> -->
 				</view>
-
-
 				<view class="lineview">
 
 				</view>
@@ -112,7 +116,7 @@
 			</view>
 			<view class="bgview">
 
-				<view class="iconview iconview1" @click="toPage('')">
+				<view class="iconview iconview1" @click="toPage('/pages/Wode/live/live?type=1')">
 					<image class="iconimage" src="../../static/Me/icon_zhibo.png" mode=""></image>
 					<text class="icontitle">我的创建直播</text>
 					<image src="../../static/icon_jiantou.png" mode="" class="rightIcon"></image>
@@ -121,7 +125,7 @@
 
 				<view class="lineview">
 				</view>
-				<view class="iconview iconview1" @click="toPage('')">
+				<view class="iconview iconview1" @click="toPage('/pages/Wode/course/course?type=1')">
 					<image class="iconimage" src="../../static/Me/icon_kecheng.png" mode=""></image>
 					<text class="icontitle">我的创建课程</text>
 					<image src="../../static/icon_jiantou.png" mode="" class="rightIcon"></image>
@@ -129,7 +133,7 @@
 				<view class="lineview">
 
 				</view>
-				<view class="iconview iconview1" @click="toPage('')">
+				<view class="iconview iconview1" @click="toPage('/pages/Wode/banJi/banJi?type=1')">
 					<image class="iconimage" src="../../static/Me/icon_banji.png" mode=""></image>
 					<text class="icontitle">我的创建班级</text>
 					<image class="rightIcon" src="../../static/icon_jiantou.png" mode=""></image>
@@ -165,13 +169,7 @@
 		data() {
 			return {
 				promptVisible: false,
-				tongjidata: [{
-						number: 0,
-						title: "得分"
-					}, {
-						number: 0,
-						title: "患者"
-					},
+				tongjidata: [
 					{
 						number: 0,
 						title: "粉丝"
@@ -453,10 +451,9 @@
 					that.info = data;
 					// that.tongjidata[0].number = data.concernCount?data.concernCount:0;
 					// that.tongjidata[1].number = data.concernCount?data.concernCount:0;
-					that.tongjidata[2].number = data.fansCount ? data.fansCount : 0;
-					that.tongjidata[3].number = data.concernCount ? data.concernCount : 0;
+					that.tongjidata[0].number = data.fansCount ? data.fansCount : 0;
+					that.tongjidata[1].number = data.concernCount ? data.concernCount : 0;
 					that.money = data.wallet ? data.wallet : 0;
-					console.log(data);
 				})
 			}
 		}

@@ -54,6 +54,12 @@
 				}]
 			}
 		},
+		onLoad() {
+			let list = uni.getStorageSync('workUnits');
+			if(list){
+				this.list = list;
+			}
+		},
 		methods: {
 			showTime(index,type) {
 				this.type = type;
@@ -91,7 +97,8 @@
 				
 			},
 			save(){
-				console.log(this.list);
+				uni.setStorageSync('workUnits',this.list);
+				uni.navigateBack();
 			}
 		}
 	}

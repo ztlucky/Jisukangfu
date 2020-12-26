@@ -23,6 +23,9 @@
 				
 		},
 		onLoad:function(e){
+			if(options.type == 1){
+				this.type = options.type?options.type:2;
+			}
 			this.getList()
 		},
 		 
@@ -41,6 +44,8 @@
 					type: 'GET',
 					data:{
 						 createUserId:getApp().globalData.userId,
+					condition1:this.type == 1,
+					condition2:this.type == 2
 						 
 					}
 				},true,true).then(data=>{

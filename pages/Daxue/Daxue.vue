@@ -45,7 +45,7 @@
 						<swiper class="swiper" :autoplay="true" :circular="true" @change="change" :style="[{height:swiperHeight + 'px'}]">
 							<swiper-item v-for="(item, index) in slider" :key="index">
 								<navigator class="item" hover-class="none" :url="'/pages/article/detail?id=' + item.id">
-									<image :lazy-load="true" :src="item.url+'/'+item.pictures" mode="aspectFill" :style="[{height:swiperHeight + 'px'}]"></image>
+									<image :lazy-load="true" :src="item.picturesUrl" mode="aspectFill" :style="[{height:swiperHeight + 'px'}]"></image>
 
 								</navigator>
 							</swiper-item>
@@ -77,7 +77,7 @@
 							<block v-for="(item, index) in pengyouzaikanList" :key="index">
 								<view class="item" @tap="goDetail(item.id)">
 									<view class="img">
-										<image :src="item.headurl" mode="">
+										<image :src="item.headUrl" mode="aspectFill">
 										</image>
 										<text class="biaoqian">医师</text>
 									</view>
@@ -111,7 +111,7 @@
 						<uni-grid-item v-for="(item ,index) in recommendCourseList" :key="index" :index="index">
 							<view class="recomendbgview">
 								<view class="recomengimageview">
-									<image :src="item.coverUrl" mode="scaleToFill"></image>
+									<image :src="item.coverUrl" mode="aspectFill"></image>
 									<text>课程</text>
 								</view>
 								<text class="recommendtitle_text">{{item.name}}</text>
@@ -556,7 +556,7 @@
 			kechengItemClick: function(e) {
 				uni.navigateTo({
 
-					url: './Zhibodetail/Zhibodetail?id=' + e.detail.index,
+					url: '/pages/Daxue/KechengDetail/KechengDetail?id=' + e.detail.index,
 					animationType: "slide-in-right",
 					animationDuration: 300
 				})

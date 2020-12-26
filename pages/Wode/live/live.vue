@@ -12,10 +12,14 @@
 	export default {
 		data() {
 			return {
-				list:[]
+				list:[],
+				type:''
 			}
 		},
-		onLoad() {
+		onLoad(options) {
+			if(options.type == 1){
+				this.type = options.type?options.type:2;
+			}
 			this.getData()
 		},
 		methods: {
@@ -25,7 +29,9 @@
 					
 					url: this.$api.zhibo.livelist,
 					data: {
-						userId:getApp().globalData.userId
+						userId:getApp().globalData.userId,
+						condition1:this.type == 1,
+						condition2:this.type == 2
 					},
 					method: 'GET',
 					dataType: 'json',

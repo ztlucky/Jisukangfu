@@ -103,7 +103,7 @@
 							data:{
 								phone:that.phone,
 								code:that.code,
-								id:getApp().globalData.userId
+								user_id:getApp().globalData.userId
 							}
 						}).then(data=>{
 							that.code = '';
@@ -118,7 +118,7 @@
 							data:{
 								phone:that.phone,
 								code:that.code,
-								id:getApp().globalData.userId
+								user_id:getApp().globalData.userId
 							}
 						}).then(data=>{
 							uni.showToast({

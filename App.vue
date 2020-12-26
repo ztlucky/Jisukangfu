@@ -57,7 +57,10 @@
 			if (args) {
 			  	// 处理args参数，如直达到某新页面等  
 			 	console.log(args)
-			
+				uni.showModal({
+					title:'提示',
+					content:JSON.stringify(args)
+				})
 			}
 			// #endif
 			

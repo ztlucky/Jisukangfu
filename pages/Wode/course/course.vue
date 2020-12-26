@@ -35,6 +35,11 @@
 		onShow() {
 			this.getList(true);
 		},
+		onLoad(options) {
+			if(options.type == 1){
+				this.type = options.type?options.type:2;
+			}
+		},
 		components:{
 				course
 		},
@@ -58,7 +63,9 @@
 					type:"GET",
 					data:{
 						pageNo:that.index,
-						pageSize:that.size
+						pageSize:that.size,
+						condition1:this.type == 1,
+						condition2:this.type == 2
 					}
 				},true,true).then(data=>{
 					console.log(data.records);
