@@ -1,7 +1,7 @@
 <template>
 	<view class="item" @click="toPage('/pages/Wode/banJiDesc/banJiDesc?id='+itemObject.id)">
 		<view class="banJiInfo">
-			<image class="infoIcon" src="/static/gongzuotai/bg_huiyuan.png"></image>
+			<image class="infoIcon" :src="itemObject.coverUrl"></image>
 			<view class="banJiInfoTips">课程</view>
 			<view class="banJiInfoText">
 				<view class="textTitle hidden">{{itemObject.name}}</view>
@@ -12,7 +12,7 @@
  -->				</view>
 			</view>
 		</view>
-		<view class="banJiDesc hidden2">{{itemObject.presentation}}
+		<view class="banJiDesc hidden2" v-if="itemObject.presentation">{{itemObject.presentation}}
  		</view>
 	</view>
 </template>

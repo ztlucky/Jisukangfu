@@ -153,10 +153,10 @@
 				},true,true).then(data=>{
 					console.log("dddddd")
 					console.log(data)
- 					that.detailInfo = data;
+ 					that.detailInfo = data.data;
 					that.isbuy = data.isBuy;
 					that.isfav = data.isCollect;
-				 
+					
 						if(data.isBuy == true){
 							this.buyBtnText = "已购买"
 							this.buyBackColor = '#999999'
@@ -182,7 +182,7 @@
 					 //取消收藏
 					 this.$app.request({
 					 	url:  getApp().$api.course.unfavCourse,
-					 	method: 'DELETE',
+					 	method: 'POST',
 					 	data: {
 					 		userid:getApp().globalData.userId,
 					 		bindtype:1,
@@ -265,7 +265,7 @@
 						})
 			
 					
-				}else if(this.buyBtnText.text == '已购买'  ){
+				}else if(this.buyBtnText == '已购买'  ){
 					// if(this.detailInfo.status == 1){
 					// 	const item = {liveid:this.courseID,streamName:this.detailInfo.streamName, title:this.detailInfo.title}
 					// 	 uni.navigateTo({

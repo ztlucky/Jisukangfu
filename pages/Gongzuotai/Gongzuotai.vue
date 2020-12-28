@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<scroll-view scroll-y="true" :style="[{height:viewHeight + 'px'}]">
+		<scroll-view v-if="permissions == 1" scroll-y="true" :style="[{height:viewHeight + 'px'}]">
 
 
 			<view class="bgview">
@@ -9,7 +9,7 @@
 				<text class="maintitle">工作台</text>
 				<text class="nametitle">{{info.name}} > </text>
 				<text class="time">{{info.createTime}}</text>
-				<text class="loginout" @click="loginoutaction">退出</text>
+				<!-- <text class="loginout" @click="loginoutaction">退出</text> -->
 				<view class="hview">
 					<view class="v_view">
 						<text class="uptitle">{{info.score?info.score:0}}</text>
@@ -104,7 +104,9 @@
 			</view>
 
 		</scroll-view>
-
+		<view class="backView" v-if="permissions == 2">
+			
+		</view>
 	</view>
 
 </template>
@@ -115,6 +117,7 @@
 		data() {
 			return {
 				viewHeight: 0,
+				permissions:1,
 				huanzheTitle: [{
 						title: '新增患者',
 						icon: '../../static/gongzuotai/icon_xinzeng.png'
@@ -778,5 +781,13 @@
 
 
 
+	}
+	.backView{
+		width: 100vw;
+		height: 100vh;
+		position: fixed;
+		top:0;
+		left: 0;
+		z-index: 1000;
 	}
 </style>

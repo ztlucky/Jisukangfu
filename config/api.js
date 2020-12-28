@@ -1,6 +1,6 @@
  
- // let apiRoot = 'http://www.huaxiakangfu.com:8090/';
-let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
+ let apiRoot = 'http://www.huaxiakangfu.com:8090/';
+// let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
  
 let api = {
 	common: {
@@ -37,7 +37,7 @@ let api = {
 		getPengyouzaikanList:apiRoot +"app/home_page/getFriendLook",
 		//轮播图
 		getBannerImageList:apiRoot +"app/home_page/queryList",
-		
+		search:`${apiRoot}app/search/searchByNameLike`
 	},
 	zhibo:{
 		//直播详情
@@ -136,7 +136,8 @@ let api = {
 		getNowMemory:`${apiRoot}user/user/updateMemoryUsedQuantity`,//获取当前储量
 		//移除消息
 		 removeuserFormessage:`${apiRoot}message/message/delNeedPushOfUser`,
-		getBillList:`${apiRoot}bill/bill/list`
+		getBillList:`${apiRoot}bill/bill/list`,
+		decideQualification:`${apiRoot}qualification_audit/qualificationAudit/decideQualification`,//资质判断
 		
 	},
 	huanzhe:{
@@ -197,7 +198,7 @@ let api = {
 		//课程关联
 		"favCourse":`${apiRoot}user_course_bind/userCourseBind/add`,
 		///取消关联
-		"unfavCourse":`${apiRoot}user_course_bind/userCourseBind/delete`
+		"unfavCourse":`${apiRoot}user_course_bind/userCourseBind/delMyCourseList`
 	},
 	banji:{
 		"getbanjiList":`${apiRoot}class/class/list`,

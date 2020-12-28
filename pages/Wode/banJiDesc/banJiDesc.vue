@@ -2,21 +2,17 @@
 	<view class="viewPage">
 		<view class="desc">
 			<view class="title">班级简介</view>
-			<view class="descText">
-				德贝佳口腔门诊部有限公司是专业提供先进齿科服务口腔品牌，长期以来致力于为国内中产阶级及外籍人士提供专业的齿科服务。  
-				拥有数字化种植中心、数字化正畸中心，修复美容科等九大科室，院内设置3D数字化设计，由专人专业操作设计，实现真正的看得见、摸得着的数字化技术。
-				特别设置“医疗质量控制小组”、“院感质量控制小组”、“急救预控小组”、“消毒供应室”等15大保障服务质控小组，为顾客安全诊疗保驾护航。 
-			</view>
+			<view class="descText">{{info.presentation}}</view>
 		</view>
-		<view class="live">
+		<view class="live" v-if="info.liveList.length !=0">
 			<view class="title">直播</view>
-			<live v-for="(v,k) in [1,2,3]" :key="k"></live>
+			<live :list="info.liveList"></live>
 		</view>
-		<view class="course">
+		<view class="course" v-if="info.courseList.length >= 0">
 			<view class="title">课程</view>
 			<view class="list">
-				<view class="item" v-for="(v,k) in [1,2,3,4,5,6,7,8,9]">
-					<course ></course>
+				<view class="item" v-for="(v,k) in info.courseList">
+					<course :info="v"></course>
 				</view>
 			</view>
 		</view>
@@ -57,7 +53,7 @@
 	export default {
 		data() {
 			return {
-				
+				info:{}
 			}
 		},
 		components:{
@@ -70,13 +66,15 @@
 		},
 		methods: {
 			getInfo(){
+				let that = this;
 				return request({
 					url:getApp().$api.banji.getInfo,
 					type:"GET",
 					data:{
 						id:this.id
 					}
-				}).then(data=>{
+				},true,true).then(data=>{
+					this.info = data;
 					console.log(data);
 				})
 			}

@@ -59,7 +59,7 @@
 			</view> -->
 		</view>
 		<view class="onLoadCover border" @click="getCover">
-			<image :src="cover.imageList.length!=0?cover.imageList[0]:'../../../static/zhibo/img_fengmian.png'"></image>
+			<image :src="cover.imageList.length!=0?cover.imageList[0]:'../../../static/zhibo/img_fengmian.png'" mode="aspectFill"></image>
 			<view>上传封面</view>
 		</view>
 		<view class="course border">
@@ -123,7 +123,7 @@
 			<view v-for="(item,index) in lectureList" :key="index">
 				<view class="selectedTitle notBorder" v-if="index == 0">
 					<image src="/static/zhibo/icon_jine.png"></image>
-					<view class="">线下讲座</view>
+					<view class="">线下讲座（选填）</view>
 				</view>
 				<view class="priceItem">
 					<view class="priceItemLeft">时间</view>
@@ -525,12 +525,41 @@
 				this.$refs.chooesFile.cancel(true);
 			},
 			getCover() {
-				this.isAddImage = true;
-				this.isAddVideo = false;
-				this.isAddPDF = false;
-				this.count = 1;
-				this.fileType = 'cover';
-				this.showChoose();
+				let that = this;
+				console.log(that.cover.imageList)
+				if(this.cover.imageList.length !=0){
+					uni.showModal({
+						title:"提示",
+						content:'请选择你的操作',
+						confirmText:'更换图片',
+						cancelText:'查看原图',
+						success(res) {
+							if(res.confirm){
+								that.isAddImage = true;
+								that.isAddVideo = false;
+								that.isAddPDF = false;
+								that.count = 1;
+								that.fileType = 'cover';
+								that.showChoose();
+							}else{
+								console.log(that.cover.imageList)
+								uni.previewImage({
+									current:0,
+									urls:that.cover.imageList
+								})
+							}
+						}
+					})
+				}else{
+					that.isAddImage = true;
+					that.isAddVideo = false;
+					that.isAddPDF = false;
+					that.count = 1;
+					that.fileType = 'cover';
+					that.showChoose();
+				}
+				
+				
 			},
 			getMaterial() {
 				this.isAddImage = false;
@@ -619,11 +648,6 @@
 						title: '请输入邀请码人数',
 						icon: 'none'
 					})
-				} else if (lectureList.confirmList.length == 0) {
-					uni.showToast({
-						title: '请完善线下讲座',
-						icon: 'none'
-					})
 				} else {
 					let tempFiles = that.cover.tempFile;
 					let tempFilePaths = that.cover.imageList;
@@ -644,7 +668,8 @@
 							})
 						}
 						file = JSON.stringify(file);
-						this.creatLive(coverUrl, file, JSON.stringify(lectureList.confirmList));
+						
+						this.creatLive(coverUrl, file, JSON.stringify(lectureList.confirmList?lectureList.confirmList:[]));
 					}).upload();
 				}
 			},
@@ -659,7 +684,22 @@
 
 					lecIds += item.id + ",";
 				}
-				console.log(lecIds)
+				let liveIds = [];
+				let courseIds = [];
+				if(this.courseList.length !=0){
+					this.courseList.map(v=>{
+						courseIds.push(v.id)
+					});
+					
+				}
+				if(this.liveList.length !=0){
+					this.liveList.map(v=>{
+						liveIds.push(v.id);
+					});
+					
+				}
+				courseIds = courseIds.join(',')
+				liveIds = liveIds.join(',')
 				return request({
 					url: getApp().$api.banji.creatbanjiList,
 					type: 'POST',
@@ -667,23 +707,27 @@
 						cost: that.cost,
 						memberCost: that.memberCost,
 						cover: that.uploadImageUrls[0],
-						startTime: that.starttime + ":00",
-						endTime: that.endtime + ":00",
 						lecturerIds: lecIds, //主持人
 						title: that.zhiboTitle,
 						userId: getApp().globalData.userId,
 						presentation: that.value,
 						type: type,
-						createUserId: that.globalData.userId,
+						createUserId: getApp().globalData.userId,
 						isVisible: that.isvisiable,
 						coverUrl,
 						file,
 						classtAble,
+						invitationCodeCount:that.code,
 						couponCount:that.couponsNumber?that.couponsNumber:0,
-						coupon:that.couponsPrice?that.couponsPrice:0
+						coupon:that.couponsPrice?that.couponsPrice:0,
+						liveIds,
+						courseIds
 					}
 				},true,true).then(data=>{
+					
 					console.log(data)
+				}).catch(err=>{
+					console.log(err);
 				})
 			},
 

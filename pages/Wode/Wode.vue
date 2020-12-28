@@ -116,7 +116,7 @@
 			</view>
 			<view class="bgview">
 
-				<view class="iconview iconview1" @click="toPage('/pages/Wode/live/live?type=1')">
+				<view class="iconview" :class="isLive?'':'iconview1'" @click="toPage('/pages/Wode/live/live?type=1','isLive')">
 					<image class="iconimage" src="../../static/Me/icon_zhibo.png" mode=""></image>
 					<text class="icontitle">我的创建直播</text>
 					<image src="../../static/icon_jiantou.png" mode="" class="rightIcon"></image>
@@ -125,7 +125,7 @@
 
 				<view class="lineview">
 				</view>
-				<view class="iconview iconview1" @click="toPage('/pages/Wode/course/course?type=1')">
+				<view class="iconview" @click="toPage('/pages/Wode/course/course?type=1')">
 					<image class="iconimage" src="../../static/Me/icon_kecheng.png" mode=""></image>
 					<text class="icontitle">我的创建课程</text>
 					<image src="../../static/icon_jiantou.png" mode="" class="rightIcon"></image>
@@ -133,7 +133,7 @@
 				<view class="lineview">
 
 				</view>
-				<view class="iconview iconview1" @click="toPage('/pages/Wode/banJi/banJi?type=1')">
+				<view class="iconview " :class="isCourse?'':'iconview1'" @click="toPage('/pages/Wode/banJi/banJi?type=1','isCourse')">
 					<image class="iconimage" src="../../static/Me/icon_banji.png" mode=""></image>
 					<text class="icontitle">我的创建班级</text>
 					<image class="rightIcon" src="../../static/icon_jiantou.png" mode=""></image>
@@ -183,13 +183,18 @@
 				info: {},
 				chongzhiMoney: '',
 				tixianVisble:false,
-				tixianMoney:''
+				tixianMoney:'',
+				isLive:false,
+				isCourse:false
 			}
 		},
 		onShow: function() {
-			console.log()
 			if (getApp().globalData.userId) {
-				this.getUserInfo();
+				this.decideQualification(1).then(()=>{
+					this.decideQualification(2).then(()=>{
+						this.getUserInfo();
+					})
+				})
 
 			} else {
 				//未登陆
@@ -208,7 +213,25 @@
 			
 		},
 		methods: {
-				 
+			decideQualification(type){
+				let that = this;
+				return request({
+					url:getApp().$api.user.decideQualification,
+					type:'POST',
+					data:{
+						type
+					}
+				},false,true).then(data=>{
+					if(data == '有资质！'){
+						if(type == 1){
+							that.isLive = true;
+						}else{
+							that.isCourse = true;
+						}
+					}
+					console.log(data);
+				})
+			},
 			 tixian(){
 				 if(this.money>0 ){
 				    this.tixianVisble = true;
@@ -284,8 +307,7 @@
 						uni.hideLoading()
 						console.log(res)
 						if (res.code == 200) {
-							//绑定成功后
-							刷新本地wxid数据
+							//绑定成功后刷新本地wxid数据
  							uni.setStorageSync("wxid",wxid);
 
 							uni.showToast({
@@ -432,7 +454,14 @@
 					this.money = Number.parseFloat(this.info.wallet);
 				}
 			},
-			toPage(url) {
+			toPage(url,str = false) {
+				if(str){
+					uni.showToast({
+						title:'暂无该资质',
+						icon:'none'
+					})
+					if(!this[str]) return false;
+				}
 				uni.navigateTo({
 					url,
 					animationDuration: 300,

@@ -46,7 +46,7 @@
 			</view>
 		</view>
 		<view class="onLoadCover border" @click="getCover">
-			<image :src="cover.imageList.length!=0?cover.imageList[0]:'../../../static/zhibo/img_fengmian.png'"></image>
+			<image :src="cover.imageList.length!=0?cover.imageList[0]:'../../../static/zhibo/img_fengmian.png'" mode="aspectFill"></image>
 			<view >上传封面</view>
 		</view>
 		<view class="course border">
@@ -115,13 +115,27 @@
 					<image src="../../../static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
+			<view class="priceItem">
+				<view class="priceItemLeft">优惠券个数</view>
+				<view class="priceItemRight">
+					<input class="priceItemInput" placeholder="输入优惠券个数" v-model="couponsNumber"></input>
+					<image src="../../../static/icon/me_lise_more.png"></image>
+				</view>
+			</view>
+			<view class="priceItem">
+				<view class="priceItemLeft">优惠券价格</view>
+				<view class="priceItemRight">
+					<input class="priceItemInput" placeholder="输入优惠券价格" v-model="couponsPrice"> </input>
+					<image src="../../../static/icon/me_lise_more.png"></image>
+				</view>
+			</view>
 			<view class="item" style="margin-left: 0;border-bottom: 0;">
 				<view class="itemLeft">
 					<image src="/static/zhibo/icon_biaoti.png"></image>
-					<view class="hidden">验证码人数</view>
+					<view class="hidden">邀请码人数</view>
 				</view>
 				<view class="itemRight">
-					<input class="input" placeholder="请输入验证码人数" v-model="code"></input>
+					<input class="input" placeholder="请输入邀请码人数" v-model="code"></input>
 					 <image src="/static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
@@ -140,7 +154,7 @@
 					 
 				</view>
 			</view>
-			<view class="item">
+			<!-- <view class="item">
 				<view class="itemLeft">
 					<image src="../../../static/zhibo/icon_guankan.png"></image>
 					<view class="hidden">如何查看</view>
@@ -151,7 +165,7 @@
 					                  </picker>
 					<image src="../../../static/icon/me_lise_more.png"></image>
 				</view>
-			</view>
+			</view> -->
 		</view>
 		<view class="save" @click="creatLiveAction">提交申请</view>	
 		<l-file ref="lFile"></l-file>
@@ -236,7 +250,9 @@
 					pdfList:[],
 					pdfFile:[]
 				},
-				uploadImageUrls:[]//获取的最终的图片链接
+				uploadImageUrls:[],//获取的最终的图片链接
+				couponsPrice:'',
+				couponsNumber:''
 			}
 		},
 		components:{
@@ -414,13 +430,42 @@
 			showChoose(){
 				this.$refs.chooesFile.cancel(true);
 			},
-			getCover(){
-				this.isAddImage = true;
-				this.isAddVideo = false;
-				this.isAddPDF = false;
-				this.count = 1;
-				this.fileType = 'cover';
-				this.showChoose();
+			getCover() {
+				let that = this;
+				console.log(that.cover.imageList)
+				if(this.cover.imageList.length !=0){
+					uni.showModal({
+						title:"提示",
+						content:'请选择你的操作',
+						confirmText:'更换图片',
+						cancelText:'查看原图',
+						success(res) {
+							if(res.confirm){
+								that.isAddImage = true;
+								that.isAddVideo = false;
+								that.isAddPDF = false;
+								that.count = 1;
+								that.fileType = 'cover';
+								that.showChoose();
+							}else{
+								console.log(that.cover.imageList)
+								uni.previewImage({
+									current:0,
+									urls:that.cover.imageList
+								})
+							}
+						}
+					})
+				}else{
+					that.isAddImage = true;
+					that.isAddVideo = false;
+					that.isAddPDF = false;
+					that.count = 1;
+					that.fileType = 'cover';
+					that.showChoose();
+				}
+				
+				
 			},
 			getMaterial(){
 				this.isAddImage = false;
@@ -497,7 +542,7 @@
 					})
 				}else if(this.code==''){
                   uni.showToast({
-						title:'请输入验证码人数',
+						title:'请输入邀请码人数',
 						icon:'none'
 					})
 				}else if(this.material.pdfFile.length == 0&& this.material.videoFile.length == 0){
@@ -557,25 +602,6 @@
 					
 				  lecIds+=item.id+",";	
 				}
-	            console.log(lecIds)
- 				console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
- 					//调用创建直播的接口
-					console.log({
-			   		cost:that.cost,
-			   		memberCost:that.memberCost,
-			   		cover:that.uploadImageUrls[0],
-			   		startTime:that.starttime+':00',
-			   		endTime:that.endtime+':00',
-			   		lecturerIds: lecIds,//主持人
-			   		title:that.zhiboTitle,
-			   		userId:getApp().globalData.userId,
-			   		presentation:that.value,
-			   		type:type,
-			   		isVisible:that.isvisiable,
-					invitationCodeCount:that.code,
-					cover:coverUrl,
-					file
-			   	})
 			   this.$app.request({
 			   	url: this.$api.zhibo.addlive,
 			   	method: 'POST',
@@ -593,7 +619,10 @@
 			   		isVisible:that.isvisiable,
 					invitationCodeCount:that.code,
 					coverUrl,
-					file
+					file,
+					invitationCodeCount:that.code,
+					couponCount:that.couponsNumber?that.couponsNumber:0,
+					coupon:that.couponsPrice?that.couponsPrice:0,
 			   	},
 			   	dataType: 'json',
 			   	success: res => {

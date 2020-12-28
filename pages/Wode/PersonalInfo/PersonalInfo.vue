@@ -31,6 +31,10 @@
 				<text class="title">资质认证</text>
 				<image src="static/icon_jiantou.png" mode="" class="rightIcon"></image>
 			</view>
+			<view class="itemView itemView-" style="margin-top: 15px;" @click="loggedOut">
+				<text class="title">退出登陆</text>
+				<image src="static/icon_jiantou.png" mode="" class="rightIcon"></image>
+			</view>
  		</view>
 		<w-picker :visible.sync="visible"
         mode="selector"
@@ -80,6 +84,26 @@
 			this.getUserInfo();
 		},
 		methods: {
+			loggedOut(){
+				let that = this;
+				uni.showModal({
+					title:'提示',
+					content:'确认退出当前登陆账号？',
+					success(res) {
+						if(res.confirm){
+							uni.clearStorageSync();
+							getApp().globalData.userId = null;
+							uni.navigateTo({
+								url: '/pages/Login/Login/Login',
+								animationType: 'slide-in-bottom',
+								animationDuration: 300
+							});
+						}
+					}
+				})
+				
+				
+			},
 			showSelectView(){
 				this.visible = true;
 			},
@@ -260,5 +284,15 @@
               height: 2rpx;
 			  background-color: #ECECEC;
 		}
+	}
+	.itemView-{
+		position: absolute !important;
+		width: 750rpx;
+		display: flex;
+		bottom: 40rpx;
+		justify-content: center;
+		align-items: center;
+		left: 50%;
+		transform: translateX(-50%);
 	}
 </style>

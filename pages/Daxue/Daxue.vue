@@ -103,8 +103,6 @@
 					<view v-show="recommendCourseList.length >0" class="sectiontitleview" @click="jumpRecommendPage">
 						<text class="sectiontitle">推荐课程</text>
 						<text class="sectionrighttitle">查看更多></text>
-
-
 					</view>
 
 					<uni-grid :column="2" class="recommendgridview" :square="false" :showBorder="false" @change="kechengItemClick">
@@ -542,7 +540,7 @@
 			//点击 朋友在看item
 
 			goDetail(index) {
-				// url:'../../goods/gooddetail/gooddetail?id='+this.zhibokeArray[e.detail.index].id,
+				// index = this.zhibokeArray[index].id,
 				console.log(index)
 
 				uni.navigateTo({
@@ -556,7 +554,7 @@
 			kechengItemClick: function(e) {
 				uni.navigateTo({
 
-					url: '/pages/Daxue/KechengDetail/KechengDetail?id=' + e.detail.index,
+					url: '/pages/Daxue/KechengDetail/KechengDetail?id=' + this.recommendCourseList[e.detail.index].id,
 					animationType: "slide-in-right",
 					animationDuration: 300
 				})
