@@ -92,7 +92,7 @@
 
 		</scroll-view>
 		<xiangmu v-if="isShowPerformWindow" :short="short" :long="long" :number="number" @setNumber="setNumber" @setShowPerformWindowStatus="setShowPerformWindowStatus" @stopProgress="stopProgress" @setShowFinishWindowStatus="setShowFinishWindowStatus"></xiangmu>
-		<complete-target v-if="isShowFinishWindow" @confirmFinish="confirmFinish" :number="number"></complete-target>
+		<complete-target v-if="isShowFinishWindow" @confirmFinish="confirmFinish" :number="nowScore"></complete-target>
 	</view>
 </template>
 
@@ -123,7 +123,8 @@
 				size: 10,
 				isGetMoreHuanZheList: true,
 				nowIndex:0,
-				nowIndex1:0
+				nowIndex1:0,
+				nowScore:0
 			}
 		},
 		onShow: function() {
@@ -202,6 +203,7 @@
 				this.nowIndex = k;
 				this.nowIndex1 = kk;
 				this.number = 1;
+				this.nowScore = item.subproject[kk].score;
 				this.setShowPerformWindowStatus();
 			},
 			addMoreData() {

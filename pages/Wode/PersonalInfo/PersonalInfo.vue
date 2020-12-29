@@ -18,6 +18,12 @@
 				<image src="/static/icon_jiantou.png" mode="" class="rightIcon"></image>
 			</view>
 			<view class="lineview"></view>
+			<view class="itemView" @click="editinfo('introduce')">
+				<text class="title">简介</text>
+				<view class="content hidden">{{info.introduce}}</view>
+				<image src="/static/icon_jiantou.png" class="rightIcon"></image>
+			</view>
+			<view class="lineview"></view>
 			<view class="itemView" @click="toPage('/pages/Wode/resetPhone/resetPhone?value='+info.phone)">
 				<text class="title">手机号</text>
 				<text class="content">{{info.phone}}</text>
@@ -263,6 +269,7 @@
 				
 			.content{
 				position: absolute;
+				max-width: 500rpx;
 				right: 70rpx;
 				font-size: 28rpx;
 				font-family: PingFangSC-Regular, PingFang SC;

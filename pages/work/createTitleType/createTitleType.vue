@@ -1,9 +1,9 @@
 <template>
 	<view class="view">
 		<view class="content">
-			<view class="title">评定量表分类</view>
-			<yealuo @getBackVal="getBackVal" the-style="font-size: 46upx;"  :selectIco="true" overflow="hide" :isSetUrl="true" placeholder="请选择分类" width="590" :binData="binData" 
-			 :isShowAllBack="true" padding="20rpx"></yealuo>
+			<!-- <view class="title">评定量表分类</view> -->
+			<!-- <yealuo @getBackVal="getBackVal" the-style="font-size: 46upx;"  :selectIco="true" overflow="hide" :isSetUrl="true" placeholder="请选择分类" width="590" :binData="binData" 
+			 :isShowAllBack="true" padding="20rpx"></yealuo> -->
 			<view class="title">评定量表标题</view>
 			<input placeholder="请输入要创建的评定量表的标题" v-model="title"/>
 		</view>
@@ -62,15 +62,7 @@
 				})
 			},
 			next(){
-				if(this.nowIndex == -1){
-					uni.showToast({
-						title:'请选择分类',
-						duration:1500,
-						icon:"none",
-						mask:true
-					});
-					return false;
-				}else if(!this.title){
+				if(!this.title){
 					uni.showToast({
 						title:'请输入量表的标题',
 						duration:1500,
@@ -79,7 +71,8 @@
 					});
 					return false;
 				}
-				let url = `/pages/work/pingDingLiangBiaoProblemType/pingDingLiangBiaoProblemType?typeid=${this.binData[this.nowIndex].id}&name=${this.title}&typename=${this.binData[this.nowIndex].name}`;
+				let pingDingLiangBiao = uni.getStorageSync('pingDingLiangBiaoType')
+				let url = `/pages/work/pingDingLiangBiaoProblemType/pingDingLiangBiaoProblemType?typeid=${pingDingLiangBiao.id}&name=${this.title}&typename=${pingDingLiangBiao.name}`;
 				uni.navigateTo({
 					url,
 					animationDuration: 300,

@@ -10,7 +10,7 @@
 				<view class="border"></view>
 			</view>
 		</view>
-		<view class="list">
+		<view class="list" v-if="banjiList.length >=1">
 			<ban-ji v-for="(v,k) in banjiList" :itemObject="v"></ban-ji>
 		</view>
 		<view class="save"  @click="creatBanji" v-if="type == 1">新建班级</view>
@@ -120,7 +120,8 @@
 	}
 	.list{
 		padding:0 30rpx;
-		padding-bottom: 140rpx;
+		background-color: #FFFFFF;
+		padding-bottom: 120rpx;
 	}
 	.save {
 		position: fixed;

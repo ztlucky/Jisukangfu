@@ -32,7 +32,7 @@
   			 
  		<view class="list">
  			<view class="item" v-for="(v,k) in list">
- 				<course :info="v"  ></course>
+ 				<ban-ji :itemObject="v"></ban-ji>
  			</view>
  		</view>
  		<!-- <articleList   class="mainlist" :list="list"   /> -->
@@ -59,12 +59,14 @@ import uniSwiperDot from '@/components/uni-swiper-dot/uni-swiper-dot.vue';
 
 import uniGrid from "@/components/uni-grid/uni-grid.vue";
 import uniGridItem from "@/components/uni-grid-item/uni-grid-item.vue"
+import banJi from "@/components/banJi/banJi"
 export default {
 	components: {
 		  articleList,
 		pageLoading,
  		iconfont,
 		banjiList,
+		banJi
  	},
 	data() {
 		return {  
@@ -180,7 +182,7 @@ export default {
 			}
 			this.$app.request({
 				
-				url: this.$api.course.getList,
+				url: this.$api.banji.getbanjiList,
 				data,
 				method: 'GET',
 				dataType: 'json',

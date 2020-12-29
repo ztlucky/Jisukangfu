@@ -66,7 +66,10 @@
 					type:"GET",
 					data:{
 						pageNo:that.index,
-						pageSize:that.size
+						pageSize:that.size,
+						customerId:getApp().globalData.userId,
+						column:'createTime',
+						order:'desc'
 					}
 				},true,true).then(data=>{
 					if(data.records && data.records.length>= that.size){

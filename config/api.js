@@ -88,7 +88,7 @@ let api = {
 		getList:`${apiRoot}rating_scale/ratingScale/list`,
 		getQuestionList:`${apiRoot}question/question/list`,
 		getQuestionType:`${apiRoot}question_classify/questionClassify/list`,
-		add:`${apiRoot}rating_scaleratingScale/add`,
+		add:`${apiRoot}rating_scale/ratingScale/add`,
 		addQuestionType:`${apiRoot}question_classify/questionClassify/add`,
 		deleteQuestionType:`${apiRoot}rating_scale_classify/ratingScaleClassify/deleteBatch`,
 		deleteQuestion:`${apiRoot}question/question/deleteBatch`,
@@ -138,6 +138,7 @@ let api = {
 		 removeuserFormessage:`${apiRoot}message/message/delNeedPushOfUser`,
 		getBillList:`${apiRoot}bill/bill/list`,
 		decideQualification:`${apiRoot}qualification_audit/qualificationAudit/decideQualification`,//资质判断
+		isUseWorkbench:`${apiRoot}doctor/doctor/isUseWorkbench`,//是否有权限使用工作台
 		
 	},
 	huanzhe:{
@@ -207,6 +208,9 @@ let api = {
 	},
 	sys:{
 		"onloadFile":`${apiRoot}sys/common/upload`
+	},
+	share:{
+		'rebate':`${apiRoot}rebate/rebate/add`
 	}
  
 };

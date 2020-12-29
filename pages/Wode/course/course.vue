@@ -10,7 +10,7 @@
 				<view class="border"></view>
 			</view>
 		</view>
-		<view class="list">
+		<view class="list" v-if="list.length >=1">
 			<view class="item" v-for="(v,k) in list">
 				<course :info="v"  ></course>
 			</view>
@@ -148,7 +148,8 @@
 		padding-right: 0;
 		display: flex;
 		flex-wrap: wrap;
-		padding-bottom: 140rpx;
+		background-color: #FFFFFF;
+		padding-bottom: 40rpx;
 	}
 	.item{
 		margin-right: 30rpx;

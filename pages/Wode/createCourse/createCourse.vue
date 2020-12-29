@@ -158,7 +158,7 @@
 				</view>
 			</view> -->
 		</view>
-		<view class="save" @click="creatCourseAction">提交申请</view>	
+		<view class="save" @click="creatCourseAction">创建课程</view>	
 		<choose ref="chooesFile" :image="isAddImage" :count="count" :video="isAddVideo" :pdf="isAddPDF"></choose>
 		<w-picker
 		         :visible.sync="visibleTime"
@@ -515,7 +515,7 @@
 			creatCourseAction(){
  				let that = this;
  				
-				if(this.zhiboTitle.length==0){
+				if(this.zhiboTitle==''){
 					uni.showToast({
 						title:'请输入课程标题',
 						icon:'none'
@@ -561,6 +561,42 @@
 							let coverUrl = res.imageUrl[0];
 							this.creatCourse(coverUrl,'');
 						}).upload();
+					}else{
+						let tempFiles = that.cover.tempFile;
+											let tempFilePaths = that.cover.imageList;
+											tempFiles = tempFiles.concat(that.material.pdfFile)
+											tempFiles = tempFiles.concat(that.material.videoFile);
+											tempFilePaths = tempFilePaths.concat(that.material.pdfList)
+											tempFilePaths = tempFilePaths.concat(that.material.videoList)
+
+											onloadImage.init({
+												tempFiles,
+												tempFilePaths
+											},(res,str)=>{
+												let coverUrl = res.imageUrl[0];
+												let file = [];
+												let pdfFile = [];
+												let videoFile = [];
+												if(that.material.pdfFile){
+													that.material.pdfFile.map((v,k)=>{
+														pdfFile.push({
+															type:'pdf',
+															value:res.imageUrl[k+1]
+														})
+													})
+												}
+												if(that.material.videoFile){
+													that.material.videoFile.map((v,k)=>{
+														videoFile.push({
+															type:'video',
+															value:res.imageUrl[k+1+pdfFile.length]
+														})
+													})
+												}
+												file = pdfFile.concat(videoFile);
+												file = JSON.stringify(file);
+												this.creatCourse(coverUrl,file);
+											}).upload();
 					}
 					
 					

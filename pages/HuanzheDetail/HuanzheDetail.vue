@@ -6,7 +6,7 @@
 		<view class="navRight" @click="endZhiliao" v-if="zhiliaoStaut == 0">
 			结束治疗
 		</view>
-		<view class="navRight" @click="endZhiliao" v-if="zhiliaoStaut == 1">
+		<view class="navRight" v-if="zhiliaoStaut == 1">
 			治疗已结束
 		</view>
 	 </view>
@@ -260,8 +260,8 @@
 			<text class="kangfujilu" @click="toPage('/pages/HuanzheDetail/record/record')">康复记录</text>
 		</view>
 		<xiangmu v-if="isShowPerformWindow" :short="short" :long="long" :number="number" @setNumber="setNumber" @setShowPerformWindowStatus="setShowPerformWindowStatus" @stopProgress="stopProgress" @setShowFinishWindowStatus="setShowFinishWindowStatus"></xiangmu>
-		<complete-target v-if="isShowFinishWindow" @confirmFinish="confirmFinish" :number="number"></complete-target>
-	<view class="controlview"  :style="[{top:navheight+statusBarHeight+ 'px'}]"  v-show="zhiliaoStaut == 1">
+		<complete-target v-if="isShowFinishWindow" @confirmFinish="confirmFinish" :number="nowScore"></complete-target>
+		<view class="controlview"  :style="[{top:navheight+statusBarHeight+ 'px'}]" @click="endZhiListTips"  v-show="zhiliaoStaut == 1">
 		
 	</view>
 	</view>
@@ -311,7 +311,7 @@
 				nowIndex:0,
 				info:{},
 				zhiliaoStaut:0,
-				
+				nowScore:0
 			}
 		},
 		onShow: function() {
@@ -328,6 +328,13 @@
 			
 		},
 		methods: {
+			endZhiListTips(){
+				uni.showToast({
+					title:'治疗已结束',
+					duration:1500,
+					icon:'none'
+				})
+			},
 			init(){
 				this.getInfo();
 			},
@@ -342,6 +349,7 @@
 				this.long = item.longGoals;
 				this.nowIndex = k;
 				this.number = 1;
+				this.nowScore = item.subproject[k].score;
 				this.setShowPerformWindowStatus();
 			},
 				//结束治疗

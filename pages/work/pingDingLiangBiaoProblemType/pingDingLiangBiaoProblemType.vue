@@ -35,7 +35,7 @@
 			list:[],
 			num:0,
 			index: 1,
-			size: 10,
+			size: 20,
 			id:-1,
 			isGetMoreList: true
 			}
@@ -146,18 +146,16 @@
 						type:"POST",
 						data
 					}).then(data=>{
-						uni.showToast({
-							title:'保存成功',
-							duration:1500,
-							mask:1500
-						});
-						
+						// uni.showToast({
+						// 	title:'保存成功',
+						// 	duration:1500,
+						// 	mask:1500
+						// });
 						setTimeout(()=>{
-							console.log('保存成功');
 							uni.navigateBack({
 								delta:2
 							})
-						},1500)
+						},500)
 					}).catch(err=>{
 						console.log(err)
 					})
@@ -221,6 +219,7 @@
 	.view{
 		min-height: 100vh;
 		background-color: #f6f6f6;
+		padding-bottom: 120rpx;
 	}
 	.navRight{
 		width:104rpx;

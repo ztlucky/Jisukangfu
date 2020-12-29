@@ -35,7 +35,7 @@
 			list:[],
 			num:0,
 			index:1,
-			size:10
+			size:20
 			}
 		},
 		onReachBottom() {
@@ -52,6 +52,9 @@
 		},
 		onLoad(data) {
 			this.id = data.id?data.id:5;
+			
+		},
+		onShow() {
 			this.getList(true);
 		},
 		methods: {
@@ -117,6 +120,7 @@
 	.view{
 		min-height: 100vh;
 		background-color: #f6f6f6;
+		padding-bottom: 120rpx;
 	}
 	.navRight{
 		width:104rpx;
@@ -133,7 +137,7 @@
 		margin:30rpx;
 		border-radius: 12rpx;
 		background-color: #FFFFFF;
-		padding-bottom: 46rpx; 
+		padding-bottom: 86rpx; 
 	}
 	.list .item{
 		height: 102rpx;

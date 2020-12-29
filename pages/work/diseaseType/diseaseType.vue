@@ -38,7 +38,7 @@
 				],
 				num: 0,
 				index: 1,
-				size: 10,
+				size: 20,
 				isGetMoreList: true
 			}
 		},
@@ -170,6 +170,7 @@
 	.view {
 		min-height: 100vh;
 		background-color: #f6f6f6;
+		padding-bottom: 120rpx;
 	}
 
 	.navRight {

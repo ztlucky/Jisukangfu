@@ -339,9 +339,31 @@
 				//     // 分享失败
 				//   }
 				// })
+				let goodsId = this.courseID;
+				let rebateType = getApp().globalData.livesku;
+				let couponCode = this.detailInfo.coupon;
+				let invitationCode = this.detailInfo.invitationCode;
+				if(this.detailInfo.invitationCodeCount == this.detailInfo.invitationCodeUsedCount){
+					invitationCode = 0
+				}
+				if(this.detailInfo.couponCount == this.detailInfo.couponUsedCount){
+					couponCode = 0
+				}
+				return request({
+					url:getApp().$api.share.rebate,
+					data:{
+						goodsId,
+						rebateType
+					},
+					type:"POST"
+				}).then(res=>{
+					let result = res.result;
+					console.log(`http://192.168.3.13:8081/#/kangfutest?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}&result=${result}`)
+					console.log(res);
+				})
 				let shareData = {
 					type:0,
-					shareUrl: "http://192.168.3.13:8081/#/kangfutest",
+					shareUrl:`http://192.168.3.13:8081/#/kangfutest?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}`,
 					shareTitle: "分享的标题",
 					shareContent: "分享的描述",
 				};

@@ -176,6 +176,22 @@
 			}
 		},
 		{
+			"path": "pages/Wode/banJi/allBanJi",
+			"style": {
+				"navigationBarTitleText": "学习班",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black",
+				"app-plus": {
+					"titleNView": {
+						"splitLine": {
+							"color": "#f2f2f2",
+							"height":"2px"
+						}
+					}
+				}
+			}
+		},
+		{
 			"path": "pages/Wode/banJiDesc/banJiDesc",
 			"style": {
 				"navigationBarTitleText": "班级详情",

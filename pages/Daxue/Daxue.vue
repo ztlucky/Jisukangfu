@@ -526,11 +526,11 @@
 					case 3:
 						{
 
-							// uni.navigateTo({
-							// 	url: 'XuexiBan/XuexiBan',
-							// 	animationType: "slide-in-right",
-							// 	animationDuration: 300
-							// })
+							uni.navigateTo({
+								url: '/pages/Wode/banJi/allBanJi',
+								animationType: "slide-in-right",
+								animationDuration: 300
+							})
 
 						}
 						break;

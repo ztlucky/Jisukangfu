@@ -10,7 +10,7 @@
 				<view class="border"></view>
 			</view>
 		</view>
-		<view class="list">
+		<view class="list" v-if="list.length >=1">
 			<live  :list="list" ></live>
 		</view>
 		<view class="save" @click="create" v-if="type == 1">新建直播课程</view>
@@ -119,7 +119,8 @@
 		background-color: #FFFFFF;
 	}
 	.list{
-		padding-bottom: 140rpx;
+		padding-bottom: 40rpx;
+		background-color: #FFFFFF;
 	}
 	.save {
 		position: fixed;

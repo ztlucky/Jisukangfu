@@ -8,7 +8,7 @@
 					<view class="">年龄：{{info.huanZheInfo.age}}</view>
 				</view>
 				<view class="leftType">
-					<image src="../../../static/gongzuotai/icon_zhenduan1.png"></image>
+					<image src="/static/gongzuotai/icon_zhenduan1.png"></image>
 					<view class="leftTypeText">诊断：{{info.huanZheInfo.illnessName}}</view>
 				</view>
 			</view>
@@ -32,7 +32,8 @@
 				<view class="itemBottom">
 					<view class="" v-if="v.doctorAdviceType == '短嘱'">剩余时间：{{v.days<=0?0:v.days}}天</view>
 					<view class="" v-if="v.doctorAdviceType == '长嘱'">长期</view>
-					<view class="" @click="endXiangMu(k)">结束</view>
+					<view class="" v-if="v.type != 2" @click="endXiangMu(k)">结束</view>
+					<view class="endXiangMu" v-else>已结束</view>
 				</view>
 			</view>
 		</view>
@@ -126,7 +127,7 @@
 					confirmColor:"#31D880",
 					success(res) {
 						if(res.confirm){
-							that.completeXiangMu().then(()=>{
+							that.endXiangMu_(index).then(()=>{
 								that.getList(true);
 							});
 						}
@@ -137,6 +138,17 @@
 				// this.setShowPerformWindowStatus();
 				// this.short = this.list[index].shortGoals;
 				// this.long = this.list[index].longGoals
+			},
+			endXiangMu_(index){
+				let id = this.list[index].id;
+				return request({
+					url:getApp().$api.huanzhe.editProgram,
+					type:"PUT",
+					data:{
+						id,
+						type:'2'
+					}
+				})
 			},
 			setNumber(data){
 				this.number = data.num;
@@ -384,7 +396,10 @@
 		line-height: 42rpx;
 		text-align: center;
 	}
-
+	.itemBottom .endXiangMu{
+		border: 2rpx solid #CCCCCC !important;
+		color: #CCCCCC !important;
+	}
 	.bottom {
 		position: fixed;
 		bottom: 44rpx;

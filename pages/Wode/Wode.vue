@@ -61,7 +61,7 @@
 						<view class="iconview">
 							<image class="iconimage" src="../../static/Me/icon_kaquan.png" mode=""></image>
 							<text class="icontitle">我的卡券</text>
-							<text class="bluetext">0张</text>
+							<text class="bluetext">{{ticketCount?ticketCount:0}}张</text>
 
 						</view>
 
@@ -474,10 +474,13 @@
 					url: getApp().$api.user.getUserInfo,
 					type: "GET",
 					data: {
-						id: getApp().globalData.userId
+						id: getApp().globalData.userId,
+						condition:true
 					}
 				}, true, true).then(data => {
-					that.info = data;
+					console.log(data);
+					that.ticketCount = data.ticketCount;
+					that.info = data.data;
 					// that.tongjidata[0].number = data.concernCount?data.concernCount:0;
 					// that.tongjidata[1].number = data.concernCount?data.concernCount:0;
 					that.tongjidata[0].number = data.fansCount ? data.fansCount : 0;

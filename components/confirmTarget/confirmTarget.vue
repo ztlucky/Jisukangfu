@@ -50,7 +50,7 @@
 			setNumber(data){
 				let num = this.number;
 				num+=data;
-				if(num>=1 && num<=10){
+				if(num>=1 && num<=100){
 					this.number = num;
 					this.$emit('setNumber',{num})
 				}

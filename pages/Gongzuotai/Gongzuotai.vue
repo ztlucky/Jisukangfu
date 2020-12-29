@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<scroll-view v-if="permissions == 1" scroll-y="true" :style="[{height:viewHeight + 'px'}]">
+		<scroll-view  scroll-y="true" :style="[{height:viewHeight + 'px'}]">
 
 
 			<view class="bgview">
@@ -104,9 +104,9 @@
 			</view>
 
 		</scroll-view>
-		<view class="backView" v-if="permissions == 2">
-			
-		</view>
+		<!-- <view class="backView" v-if="permissions == 2">
+			<view>请购买会员，获取工作台使用权限</view>
+		</view> -->
 	</view>
 
 </template>
@@ -117,7 +117,7 @@
 		data() {
 			return {
 				viewHeight: 0,
-				permissions:1,
+				permissions: 2,
 				huanzheTitle: [{
 						title: '新增患者',
 						icon: '../../static/gongzuotai/icon_xinzeng.png'
@@ -151,8 +151,8 @@
 				topImageHeight: '',
 				zhiboimagewidth: '',
 				zhiboimageheight: '',
-				info:{},
-				list:[]
+				info: {},
+				list: []
 
 			}
 		},
@@ -163,8 +163,8 @@
 			this.zhiboimagewidth = this.$app.getwindowWidth() * 0.4;
 			this.zhiboimageheight = this.zhiboimagewidth * 0.5
 			if (getApp().globalData.userId) {
-			 
-			
+
+
 			} else {
 				//未登陆
 				uni.navigateTo({
@@ -176,12 +176,27 @@
 
 		},
 		onLoad() {
-			this.getInfo().then(()=>{
+			this.isUseWorkbench().then(() => {
+				
+			})
+			this.getInfo().then(() => {
 				this.getHuanZheList();
 			})
-			
+	
 		},
 		methods: {
+			isUseWorkbench() {
+				let that = this;
+				return request({
+					url: getApp().$api.user.isUseWorkbench,
+					type: "GET",
+					data: {
+						user_id:getApp().globalData.userId
+					}
+				}).then(data => {
+					that.permissions = 1;
+				})
+			},
 			//退出登录
 			loginoutaction() {
 				uni.showModal({
@@ -190,14 +205,14 @@
 					success: function(e) {
 
 						if (e.confirm) {
- 							uni.setStorageSync('userid', null)
+							uni.setStorageSync('userid', null)
 							uni.setStorageSync('name', null)
-							uni.setStorageSync('roletype',null)
+							uni.setStorageSync('roletype', null)
 							uni.setStorageSync('headurl', null)
 							uni.setStorageSync('phone', null)
-							uni.setStorageSync("wxid",null);
+							uni.setStorageSync("wxid", null);
 							getApp().globalData.userId = null;
-							 
+
 
 						} else if (e.cancel) {
 							console.log('用户点击取消');
@@ -211,10 +226,10 @@
 				return request({
 					url: getApp().$api.work.getInfo,
 					type: 'GET',
-					data:{
-						id:getApp().globalData.userId
+					data: {
+						id: getApp().globalData.userId
 					}
-				},true,true).then(data=>{
+				}, true, true).then(data => {
 					that.info = data;
 					that.info.name = uni.getStorageSync('name')
 					console.log(data);
@@ -222,6 +237,14 @@
 			},
 			//新增患者 历史患者  添加笔记 等响应方法
 			huanzheAction(index) {
+				if((index == 0 || index == 2) && this.permissions == 2){
+					uni.showToast({
+						title:'请购买会员，获取工作台使用权限',
+						icon:'none',
+						duration:1500
+					})
+					return false;
+				}
 				switch (index) {
 
 					case 0:
@@ -277,7 +300,14 @@
 			},
 			//我的患者 一键比较 学习笔记本 后台设置
 			wodehuanzheAction(index) {
-
+				if((index == 1 || index == 2 || index == 3) && this.permissions == 2){
+					uni.showToast({
+						title:'请购买会员，获取工作台使用权限',
+						duration:1500,
+						icon:'none'
+					})
+					return false;
+				}
 				switch (index) {
 
 					case 0:
@@ -323,7 +353,7 @@
 
 			huanzheXiangqing(id) {
 				uni.navigateTo({
-					url: '../HuanzheDetail/HuanzheDetail?id='+id,
+					url: '../HuanzheDetail/HuanzheDetail?id=' + id,
 					animationDuration: 300,
 					animationType: 'slide-in-right'
 				})
@@ -342,12 +372,12 @@
 						pageSize: 6
 					},
 					userId: getApp().globalData.userId
-				},true,true).then(data => {
+				}, true, true).then(data => {
 					that.list = data.records;
 					console.log(that.list);
 				})
 			},
-			toPage(url){
+			toPage(url) {
 				uni.navigateTo({
 					url,
 					animationDuration: 300,
@@ -782,12 +812,27 @@
 
 
 	}
-	.backView{
+
+	.backView {
 		width: 100vw;
 		height: 100vh;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		position: fixed;
-		top:0;
+		top: 0;
 		left: 0;
-		z-index: 1000;
+		z-index: 900;
+	}
+	.backView view{
+		width:300rpx;
+		background-color: rgba(0,0,0,.4);
+		border-radius:16rpx;
+		padding:30rpx;
+		font-size: 22rpx;
+		font-family: PingFangSC-Medium, PingFang SC;
+		font-weight: 500;
+		color: #ffffff;
+		text-align: center;
 	}
 </style>
