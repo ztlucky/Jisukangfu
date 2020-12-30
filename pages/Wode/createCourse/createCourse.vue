@@ -581,7 +581,8 @@
 													that.material.pdfFile.map((v,k)=>{
 														pdfFile.push({
 															type:'pdf',
-															value:res.imageUrl[k+1]
+															value:res.imageUrl[k+1],
+															name:tempFiles[k+1].name
 														})
 													})
 												}
@@ -589,7 +590,8 @@
 													that.material.videoFile.map((v,k)=>{
 														videoFile.push({
 															type:'video',
-															value:res.imageUrl[k+1+pdfFile.length]
+															value:res.imageUrl[k+1+pdfFile.length],
+															name:tempFiles[k+1+pdfFile.length].name
 														})
 													})
 												}

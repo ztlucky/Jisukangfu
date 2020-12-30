@@ -82,7 +82,9 @@
 						pageNo:that.index,
 						pageSize:that.size,
 						condition1:this.type == 2 && that.nowIndex == 0,
-						condition2:this.type == 2 && that.nowIndex == 1
+						condition2:this.type == 2 && that.nowIndex == 1,
+						column:'createTime',
+						order:'desc'
 					}
 				},true,true).then(data=>{
 					console.log(data.records);

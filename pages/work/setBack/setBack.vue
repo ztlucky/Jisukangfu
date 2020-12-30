@@ -30,6 +30,11 @@
 					title:"治疗项目",
 					subtitle:"创建常用的疾病治疗项目",
 					image:'../../../static/gongzuotai/icon_zhiliaoxiangmu.png'
+				},
+				{
+					title:"医生设置",
+					subtitle:"医生设置",
+					image:'../../../static/gongzuotai/icon_pingdingliangbiao.png'
 				}
 				
 				]
@@ -52,9 +57,15 @@
 						animationDuration:300,
 						animationType:'slide-in-right'
 					})
-				}else{
+				}else if(k == 2){
 					uni.navigateTo({
 						url:'/pages/work/xiangMu/xiangMu',
+						animationDuration:300,
+						animationType:'slide-in-right'
+					})
+				}else if(k == 3){
+					uni.navigateTo({
+						url:'/pages/work/setDoctor/setDoctor',
 						animationDuration:300,
 						animationType:'slide-in-right'
 					})

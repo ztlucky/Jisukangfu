@@ -59,6 +59,7 @@
 		},
 		onLoad(data) {
 			this.id = data.id?data.id:0;
+			this.title = data.title?data.title:'评定量表'
 			// this.getList(true);
 		},
 		methods: {

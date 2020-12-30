@@ -16,32 +16,30 @@
 				</view>
 			</view>
 		</view>
-		<view class="lecture">
+		<view class="lecture" v-if="info.classTable && info.classTable.length !=0">
 			<view class="title">线下讲座</view>
 			<view class="lectureList">
-				<view class="lectureItem" v-for="(v,k) in [1,2,3]" :key="k">
+				<view class="lectureItem" v-for="(v,k) in info.classTable" :key="k">
 					<view class="lectureTitle">
 						<view class="dot"></view>
-						<view class="">线下讲座一</view>
+						<view class="">{{v.name}}</view>
 					</view>
-					<view class="lectureText">时间：2020-06-31</view>
+					<view class="lectureText">时间：{{v.date}}</view>
 					<view class="lectureTypes">
-						<view class="lectureType">主任医师：路鹏桦</view>
-						<view class="lectureType">主任医师：路鹏桦</view>
-						<view class="lectureType">主任医师：路鹏桦</view>
+						<view class="lectureType">{{v.user.role_dictText}}：{{v.user.name}}</view>
 					</view>
-					<view class="lectureAddress hidden">地点：芝罘区互联网外包基地产业园芝罘区互联网外包基地产业园芝罘区互联网外包基地产业园</view>
+					<view class="lectureAddress hidden">地点：{{v.address}}</view>
 				</view>
 			</view>
 			
 		</view>
 		<view class="bottom">
-			<view>原价100/会员价90</view>
-			<view class="">
-				<image src="/static/zhibo/icon_shoucang.png"></image>
+			<view>原价¥{{info.cost}}/会员价¥{{info.memberCost}}</view>
+			<view class="" @click="favAction">
+				<image :src="isfav == true ?'../../../static/zhibo/icon_yishoucang.png':'../../../static/zhibo/icon_shoucang.png'" ></image>
 				<view class="">收藏本课</view>
 			</view>
-			<view >立即购买</view>
+			<view  class="buy" :style="{background:buyBackColor}"  @click="comfirmOrder">{{buyBtnText}}</view>
 		</view>
 	</view>
 </template>
@@ -53,7 +51,8 @@
 	export default {
 		data() {
 			return {
-				info:{}
+				info:{},
+				isfav:false
 			}
 		},
 		components:{
@@ -62,6 +61,9 @@
 		},
 		onLoad(options) {
 			this.id = options.id;
+			
+		},
+		onShow() {
 			this.getInfo();
 		},
 		methods: {
@@ -71,13 +73,105 @@
 					url:getApp().$api.banji.getInfo,
 					type:"GET",
 					data:{
-						id:this.id
+						id:this.id,
+						user_id:getApp().globalData.userId
 					}
 				},true,true).then(data=>{
-					this.info = data;
-					console.log(data);
+					data.data.classTable = JSON.parse(data.data.classTable);
+					this.info = data.data;
+					that.isbuy = data.isBuy;
+					that.isfav = data.isCollect;
+					
+						if(data.isBuy == true){
+							this.buyBtnText = "已购买"
+							this.buyBackColor = '#999999'
+							
+						}else{
+							this.buyBtnText = "立即购买"
+							this.buyBackColor = '#ff0000'
+							
+							
+						}
 				})
-			}
+			},
+			comfirmOrder(){
+				if(this.buyBtnText == "立即购买"){
+					const item = {sku:getApp().globalData.classsku, courseID:this.id,cover:this.info.coverUrl,cost:this.info.cost,title:this.info.name,time:this.info.createTime}
+						uni.navigateTo({
+						     url:'../../Order/ConfirmOrder/ConfirmOrder?item='+ encodeURIComponent(JSON.stringify(item)),
+							animationType:'slide-in-right',
+							animationDuration:300
+						})
+							
+					
+				}else if(this.buyBtnText == '已购买'  ){
+			
+				
+					
+				}
+			},
+			favAction(){
+				 let that = this;
+				 if(that.isfav == true){
+					 //取消收藏
+					 this.$app.request({
+					 	url:  getApp().$api.banji.unfavCourse,
+					 	method: 'POST',
+					 	data: {
+					 		userId:getApp().globalData.userId,
+					 		bindType:1,
+					 		classId:(that.id) * 1
+					 	},
+					 	dataType: 'json',
+					 	success: res => {
+					 		if (res.code == 200) {
+					              that.isfav = false;
+					 							  uni.showToast({
+					 							  	title:res.message,
+					 								icon:'none'
+					 							  })
+					 		} else {
+					 			uni.showToast({
+					 				title:res.message,
+					 			    icon:'none'
+					 			})
+					 		}
+					 	},
+					 	complete: res => {}
+					 });
+					  
+				 }else{
+					 //添加收藏
+					 
+					this.$app.request({
+						url:  getApp().$api.banji.favCourse,
+						method: 'POST',
+						data: {
+							userId:getApp().globalData.userId,
+							bindType:1,
+							classId:(that.id) * 1	
+						},
+						dataType: 'json',
+						success: res => {
+							if (res.code == 200) {
+					             that.isfav = true;
+												  uni.showToast({
+												  	title:res.message,
+													icon:'none'
+												  })
+							} else {
+								uni.showToast({
+									title:res.message,
+								    icon:'none'
+								})
+							}
+						},
+						complete: res => {}
+					});
+					 
+				 }
+				 
+			 },
 		}
 	}
 </script>

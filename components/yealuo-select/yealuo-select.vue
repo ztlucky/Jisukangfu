@@ -142,7 +142,6 @@
 		},
 		created() {
 			this.data=this.binData;
-			console.log(this.data)
 		},
 		watch: {
 			value(val){

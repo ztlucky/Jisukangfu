@@ -1,5 +1,5 @@
  
- let apiRoot = 'http://www.huaxiakangfu.com:8090/';
+ let apiRoot = 'http://www.huaxiakangfu.com:8090/'; 
 // let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
  
 let api = {
@@ -28,7 +28,7 @@ let api = {
 	shouye:{
 		//首页接口
 		//获取课程类型列表
-		getcourseCategoryList:apiRoot + "/datatype/datatype/list",
+		getcourseCategoryList:apiRoot + "datatype/datatype/list",
 		//推荐课程列表
 		getRecommendcourseList:apiRoot + "app/home_page/recommendedCourses",
 		//推荐学习班
@@ -139,6 +139,7 @@ let api = {
 		getBillList:`${apiRoot}bill/bill/list`,
 		decideQualification:`${apiRoot}qualification_audit/qualificationAudit/decideQualification`,//资质判断
 		isUseWorkbench:`${apiRoot}doctor/doctor/isUseWorkbench`,//是否有权限使用工作台
+		getTicketList:`${apiRoot}ticket/appTicket/list`
 		
 	},
 	huanzhe:{
@@ -179,7 +180,8 @@ let api = {
 	oss:{
 		'getPictureUrl':`${apiRoot}app/ali_oss/getPictureUrl`,
 		'onLoadFile':`${apiRoot}app/ali_oss/uploadFile`,
-		'onLoadVideo':`${apiRoot}app/ali_vod/uploadVideo`
+		'onLoadVideo':`${apiRoot}app/ali_vod/uploadVideo`,
+		'getVideoUrl':`${apiRoot}app/ali_vod/getPlayInfo`
 			},
 	notes:{
 		"addNotes":`${apiRoot}study_notes/studyNotes/add`,
@@ -204,7 +206,9 @@ let api = {
 	banji:{
 		"getbanjiList":`${apiRoot}class/class/list`,
 		"creatbanjiList":`${apiRoot}class/class/add`,
-		"getInfo":`${apiRoot}class/class/queryById`
+		"getInfo":`${apiRoot}class/class/queryById`,
+		"favCourse":`${apiRoot}user_class_bind/userClassBind/add`,
+		"unfavCourse":`${apiRoot}user_class_bind/userClassBind/delMyClass`
 	},
 	sys:{
 		"onloadFile":`${apiRoot}sys/common/upload`

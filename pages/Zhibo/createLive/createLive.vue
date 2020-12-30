@@ -167,7 +167,7 @@
 				</view>
 			</view> -->
 		</view>
-		<view class="save" @click="creatLiveAction">提交申请</view>	
+		<view class="save" @click="creatLiveAction">创建直播</view>	
 		<l-file ref="lFile"></l-file>
 		<choose ref="chooesFile" :image="isAddImage" :count="count" :video="isAddVideo" :pdf="isAddPDF"></choose>
 		<w-picker
@@ -271,6 +271,32 @@
 			uni.$off();
 		},
 		methods: {
+			lookFileInfo(type,index){
+				let content = '';
+				let that = this;
+				if(type == 'pdf'){
+					content = this.material.pdfFile[index].name
+				}else{
+					content = this.material.videoFile[index].name
+				}
+				uni.showModal({
+					title:type == 'pdf'?'PDF':'视频'+'文件',
+					content:`当前操作的文件为 ${content}`,
+					confirmText:'删除文件',
+					cancelText:'取消操作',
+					success(res) {
+						if(res.confirm){
+							if(type == 'pdf'){
+								that.material.pdfFile.splice(index,1);
+								that.material.pdfList.splice(index,1);
+							}else{
+								that.material.videoFile.splice(index,1);
+								that.material.videoList.splice(index,1);
+							}
+						}
+					}
+				})
+			},
 			showTimeChoose(){
 				this.visibleTime = !this.visibleTime
 			},
@@ -545,50 +571,56 @@
 						title:'请输入邀请码人数',
 						icon:'none'
 					})
-				}else if(this.material.pdfFile.length == 0&& this.material.videoFile.length == 0){
-					uni.showToast({
-						title:'请选择素材',
-						icon:'none'
-					})
 				}else{
-					
-					let tempFiles = that.cover.tempFile;
-					let tempFilePaths = that.cover.imageList;
-					tempFiles = tempFiles.concat(that.material.pdfFile)
-					tempFiles = tempFiles.concat(that.material.videoFile);
-					tempFilePaths = tempFilePaths.concat(that.material.pdfList)
-					tempFilePaths = tempFilePaths.concat(that.material.videoList)
-					console.log(tempFiles,tempFilePaths);
-					onloadImage.init({
-						tempFiles,
-						tempFilePaths
-					},(res,str)=>{
-						console.log("--------------------------------")
-						let coverUrl = res.imageUrl[0];
-						let file = [];
-						let pdfFile = [];
-						let videoFile = [];
-						if(that.material.pdfFile){
-							that.material.pdfFile.map((v,k)=>{
-								pdfFile.push({
-									type:'pdf',
-									value:res.imageUrl[k+1]
+					if(this.material.pdfFile.length == 0&& this.material.videoFile.length == 0){
+						let tempFiles = that.cover.tempFile;
+						let tempFilePaths = that.cover.imageList;
+						onloadImage.init({
+							tempFiles,
+							tempFilePaths
+						},(res,str)=>{
+							let coverUrl = res.imageUrl[0];
+							this.creatLive(coverUrl,'');
+						}).upload();
+					}else{
+						let tempFiles = that.cover.tempFile;
+						let tempFilePaths = that.cover.imageList;
+						tempFiles = tempFiles.concat(that.material.pdfFile)
+						tempFiles = tempFiles.concat(that.material.videoFile);
+						tempFilePaths = tempFilePaths.concat(that.material.pdfList)
+						tempFilePaths = tempFilePaths.concat(that.material.videoList)
+						onloadImage.init({
+							tempFiles,
+							tempFilePaths
+						},(res,str)=>{
+							let coverUrl = res.imageUrl[0];
+							let file = [];
+							let pdfFile = [];
+							let videoFile = [];
+							if(that.material.pdfFile){
+								that.material.pdfFile.map((v,k)=>{
+									pdfFile.push({
+										type:'pdf',
+										value:res.imageUrl[k+1],
+										name:tempFiles[k+1].name
+									})
 								})
-							})
-						}
-						if(that.material.videoFile){
-							that.material.videoFile.map((v,k)=>{
-								videoFile.push({
-									type:'video',
-									value:res.imageUrl[k+1+pdfFile.length]
+							}
+							if(that.material.videoFile){
+								that.material.videoFile.map((v,k)=>{
+									videoFile.push({
+										type:'video',
+										value:res.imageUrl[k+1+pdfFile.length],
+										name:tempFiles[k+1+pdfFile.length].name
+									})
 								})
-							})
-						}
-						
-						file = pdfFile.concat(videoFile);
-						file = JSON.stringify(file);
-						this.creatLive(coverUrl,file);
-					}).upload();
+							}
+							
+							file = pdfFile.concat(videoFile);
+							file = JSON.stringify(file);
+							this.creatLive(coverUrl,file);
+						}).upload();
+					}
 				  }
  			},
 			async creatLive(coverUrl,file){

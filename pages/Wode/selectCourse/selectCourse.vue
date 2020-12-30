@@ -32,7 +32,7 @@
 					
 					url: this.$api.course.getList,
 					data: {
-						userId: 1
+						userId: getApp().globalData.userId
 					},
 					method: 'GET',
 					dataType: 'json',

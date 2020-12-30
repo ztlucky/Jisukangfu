@@ -32,7 +32,7 @@
 					
 					url: this.$api.zhibo.livelist,
 					data: {
-						userId: 1
+						userId: getApp().globalData.userId
 					},
 					method: 'GET',
 					dataType: 'json',

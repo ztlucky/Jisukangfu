@@ -106,7 +106,9 @@
 					data:{
 						userId:that.id,
 						pageNo:1,
-						pageSize:200
+						pageSize:200,
+						condition1:true,
+						condition2:true
 					}
 				},true,true).then(data=>{
 					that.recommendCourseList = data.records;
@@ -361,6 +363,8 @@
 		padding-bottom: 0;
 	}
 	.value{
+		word-wrap: break-word;
+		word-break: normal;
 		text-indent:2em;
 		padding:0 30rpx;
 		padding-top:30rpx;

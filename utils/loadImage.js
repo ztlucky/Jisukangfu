@@ -47,7 +47,7 @@ class loadImage {
 	upload() {
 		this.checkFileSize().then(()=>{
 			uni.showLoading({
-			title: `文件上传中（${this.nowCount}/${this.imageList.length}）`,
+			title: `上传中（${this.nowCount}/${this.imageList.length}）`,
 			mask: true
 		})
 		console.log(this.imageList.length == this.nowCount)
@@ -65,8 +65,9 @@ class loadImage {
 		} else {
 			console.log('继续',this.imageList[this.nowCount].type)
 			if (this.imageList[this.nowCount].type && this.imageList[this.nowCount].type == 'video') {
-				if (this.imagePathList[this.nowCount].value.substring(0, 5) == 'https') {
-					this.imageUrl.push(this.imagePathList[this.nowCount].value);
+				console.log(this.imagePathList[this.nowCount])
+				if (this.imagePathList[this.nowCount].substring(0, 5) == 'https') {
+					this.imageUrl.push(this.imagePathList[this.nowCount]);
 					this.nowCount++;
 					this.upload();
 					return false;
@@ -93,9 +94,6 @@ class loadImage {
 		});
 		console.log(size);
 		size = (size/1024).toFixed(2);
-		console.log(size);
-		console.log(getApp().globalData.userId)
-		console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 		return request({
 			url:getApp().$api.user.getNowMemory,
 			type:"GET",
@@ -104,19 +102,23 @@ class loadImage {
 				condition:false,
 				size
 			}
-		},false)
+		},false).then(data=>{
+			console.log(data);
+		})
 	}
 	buf2hex(buffer) { // buffer is an ArrayBuffer
 		return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
 	}
 	uploadImage() {
+		console.log("-----------------")
 		this.getFile();
 	}
 	uploadVideo(){
+		console.log('<<<<<<<<<<<<<<视频<<<<<<<<<<<<<')
 		this.getFile(getApp().$api.oss.onLoadVideo)
 	}
 	
-	getFile(url) {
+	getFile(url = '') {
 		
 		let file = this.imageList[this.nowCount].value ? this.imageList[this.nowCount].value : this.imageList[this.nowCount];
 		let filePath = this.imagePathList[this.nowCount];
@@ -128,6 +130,7 @@ class loadImage {
 				'Content-Type': 'multipart/form-data'
 			}
 		};
+		console.log(filePath)
 		this.sendFile(filePath,url);
 	}
 	// 发送文件方法
@@ -178,6 +181,7 @@ class loadImage {
 	                    break
 	                case 3: // 上传任务提交数据,监听 statechanged 事件时可多次触发此状态。（重点）
 	                    // uploadedSize表示当前已经上传了的数据大小，totalSize表示文件总大小，单位是字节b
+						// this.nowOnLoadNumber = parseInt(100 * upload.uploadedSize/upload.totalSize);
 	                    console.log('上传进度',parseInt(100 * upload.uploadedSize/upload.totalSize) )
 	                    break
 	                case 4: // 上传任务已完成, 无论成功或失败都会执行到 4 这里

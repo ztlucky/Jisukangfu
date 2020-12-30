@@ -61,8 +61,10 @@
 						pageNo:1,
 						pageSize:200,
 						 createUserId:getApp().globalData.userId,
-					condition1:this.type == 2 && that.nowIndex == 0,
-					condition2:this.type == 2&& that.nowIndex == 1
+						condition1:this.type == 2 && that.nowIndex == 0,
+						condition2:this.type == 2&& that.nowIndex == 1,
+						column:'createTime',
+						order:'desc'
 						 
 					}
 				},true,true).then(data=>{

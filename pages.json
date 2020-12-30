@@ -152,6 +152,22 @@
 			}
 		},
 		{
+			"path": "pages/Wode/ticketList/ticketList",
+			"style": {
+				"navigationBarTitleText": "我的卡券",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black",
+				"app-plus": {
+					"titleNView": {
+						"splitLine": {
+							"color": "#f2f2f2",
+							"height":"2px"
+						}
+					}
+				}
+			}
+		},
+		{
 			"path": "pages/Zhibo/createLive/createLive",
 			"style": {
 				"navigationBarTitleText": "创建直播",
@@ -409,6 +425,12 @@
 		},
 		{
 			"path": "pages/work/xiangMu/xiangMu",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/work/setDoctor/setDoctor",
 			"style": {
 				"navigationStyle": "custom"
 			}

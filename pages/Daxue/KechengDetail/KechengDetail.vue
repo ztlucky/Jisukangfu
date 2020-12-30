@@ -37,31 +37,30 @@
 			</scroll-view>
 		 </view>
 		  
-		  <!-- 下载课件 -->
-		  <!-- <view class="downloadView">
-			  <view class="sectionview">
-			  	<view class="iconview">
-			  		
-			  	</view>
-			  	<text>课件</text>
-				</view>
+		  <view class="downloadView" v-if="pdfFile.length !=0 || videoFile.length !=0">
+		  			  <view class="sectionview">
+		  			  	<view class="iconview">
+		  			  		
+		  			  	</view>
+		  			  	<text>课件</text>
+		  				</view>
 		  	  <view class="lineview">
 		  	  	
 		  	  </view>
-			  <view class="downLoadItemView">
-			  	<image src="../../../static/zhibo/icon_pdf.png" class="downImage"></image>
-				<text class="downtitle">华南地区较早开展种植诊疗业.pdf</text>
-				<image class="rightimage" src="../../../static/zhibo/icon_jiantou1.png"></image>
-			  </view>
-			  <view class="middleLineview">
-			  	
-			  </view>
-			  <view class="downLoadItemView">
-			  	<image src="../../../static/zhibo/icon-shipin.png" class="downImage"></image>
-			  				<text class="downtitle">华南地区较早开展.mp4</text>
-			  				<image class="rightimage" src="../../../static/zhibo/icon_jiantou1.png"></image>
-			  </view>
-		  </view> -->
+		  			  <view class="downLoadItemView" @click="openFile(item.value)" v-for="(item , index) in pdfFile" :key="index">
+		  			  	<image src="../../../static/zhibo/icon_pdf.png" class="downImage"></image>
+		  				<text class="downtitle">{{item.name}}</text>
+		  				<image class="rightimage" src="../../../static/zhibo/icon_jiantou1.png"></image>
+		  			  </view>
+		  			  <view class="middleLineview">
+		  			  	
+		  			  </view>
+		  			  <view class="downLoadItemView" @click="setVideoUrl(true,item.value)" v-for="(item , index) in videoFile" :key="index+100">
+		  			  	<image src="../../../static/zhibo/icon-shipin.png" class="downImage"></image>
+		  			  		<text class="downtitle">{{item.name}}</text>
+		  			  		<image class="rightimage" src="../../../static/zhibo/icon_jiantou1.png"></image>
+		  			  </view>
+		  </view>
 		  <!-- 选择 -->
 		  <view class="lastview">
 		  <zzx-tabs   :items="items" :current="current" @clickItem="onClickItem" ref="mytabs" :activeColor="activeColor" 
@@ -83,7 +82,7 @@
 		  	            
 		  </view>
 	 </scroll-view>	
-	 <view class="bottomview">
+	 <view class="bottomview" v-if="detailInfo.userId != userId">
 	 	<text class="price">原价 ¥ {{detailInfo.cost}}/会员价 ¥ {{detailInfo.memberCost}}</text>
 		<view class="favview" @click="favAction">
 			<image :src="isfav == true ?'../../../static/zhibo/icon_yishoucang.png':'../../../static/zhibo/icon_shoucang.png'" ></image>
@@ -92,7 +91,11 @@
 		</view>
 		<text class="buy" :style="{background:buyBackColor}" @click="comfirmOrder">{{buyBtnText}}</text>
 	 </view>
- 
+	<view class="showVideo" v-if="showVideo">
+		<view class="showVideoView" @click="setVideoUrl(false)"></view>
+		<!-- {{videoUrl}} -->
+		<video :src="videoUrl" initial-time='0'></video>
+	</view>
 	 </view>
 	
 </template>
@@ -122,7 +125,12 @@
 				buyBtnText:'立即购买',
 				buyBackColor:'#ff0000',
  				enableCamera: false,
-				context: null
+				context: null,
+				pdfFile:[],
+				videoFile:[],
+				videoFileId:[],
+				videoUrl:'',
+				showVideo:false
 
 				 
 			}
@@ -130,6 +138,7 @@
 		onLoad:function(e){
 			//获取直播详情
 			this.courseID = e.id;
+			this.userId = getApp().globalData.userId;
 			console.log(this.courseID)
 			},
 	   onShow:function(e){
@@ -156,7 +165,30 @@
  					that.detailInfo = data.data;
 					that.isbuy = data.isBuy;
 					that.isfav = data.isCollect;
-					
+					if(data.data.file != ''){
+						let file = JSON.parse(data.data.file);
+						let videoFileId = [];
+						let videoFile = [];
+						that.pdfFile = [];
+						file.map(v=>{
+							if(v.type == 'pdf'){
+								that.pdfFile.push({
+									value:v.value,
+									name:v.name
+								})
+							}else if(v.type == 'video'){
+								videoFileId.push(v.value);
+								videoFile.push(v)
+							}
+						});
+						that.videoFileId = videoFileId;
+						if(videoFileId.length !=0){
+							that.videoFile = [];
+							console.log(videoFile)
+							that.getVideoUrlList(videoFile);
+						}
+						that.$forceUpdate();
+					}
 						if(data.isBuy == true){
 							this.buyBtnText = "已购买"
 							this.buyBackColor = '#999999'
@@ -174,6 +206,58 @@
 					})
   				})
 				 
+			},
+			openFile(url){
+				uni.showModal({
+					title:'操作提示',
+					content:'是否查看这个文件',
+					success(res) {
+						if(res.confirm){
+							uni.downloadFile({
+							  url,
+							  success: function (res) {
+							    var filePath = res.tempFilePath;
+							    uni.openDocument({
+							      filePath: filePath,
+							      success: function (res) {
+							      }
+							    });
+							  }
+							});
+						}
+					}
+				})
+			},
+			getVideoUrlList(file){
+				let that = this;
+				return request({
+					url:getApp().$api.oss.getVideoUrl,
+					data:{
+						v_id:this.videoFileId[0]
+					},
+					type:"GET"
+				},false,true).then(data=>{
+					that.videoFile = [];
+					data.map((v,k)=>{
+						that.videoFile.push({
+							value:v.url,
+							name:file[k].name
+						});
+					});
+					that.$forceUpdate();
+					console.log(that.videoFile,that.pdfFile)
+				})
+			},
+			setVideoUrl(f,src){
+				if(f){
+					this.videoUrl = src;
+				}
+				console.log(this.videoUrl);
+				this.showVideo = f;
+			},
+			getUrlName(url){
+				let name = url.split('/')[url.split('/').length-1];
+				return name.split('.')[1];
 			},
 			//添加收藏
 			 favAction(){
@@ -689,5 +773,31 @@
 		 }
 
 	 }
+ }
+ .showVideo{
+ 	width:100vw;
+ 	height: 100vh;
+ 	display: flex;
+ 	justify-content: center;
+ 	align-items: center;
+ 	position: fixed;
+ 	top:0;
+ 	left: 0;
+ 	z-index: 100;
+ 	background-color: rgba(0,0,0,.2);
+ }
+ .showVideo video{
+ 	position: relative;
+ 	z-index: 10;
+ 	width:690rpx;
+ 	height: 400rpx;
+ }
+ .showVideoView{
+ 	position: absolute;
+ 	top:0;
+ 	left: 0;
+ 	width: 100vw;
+ 	height: 100vh;
+ 	z-index: 2;
  }
 </style>

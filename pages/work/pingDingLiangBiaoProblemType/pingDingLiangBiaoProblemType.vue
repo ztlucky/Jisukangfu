@@ -1,10 +1,10 @@
 <template>
 	<view class="view">
-		<nav-bar  bgColor="#31D880" backState="1000" fontColor="#ffffff" title="评定量表" type="ordinary">
+		<nav-bar  bgColor="#31D880" backState="1000" fontColor="#ffffff" title="评定量表问题分类" type="ordinary">
 			<view slot="right" v-if="isEdit" @click="save" class="navRight">保存</view>
 		</nav-bar>
 		<view class="list" v-if="list.length!=0">
-			<view class="item" @click="toPage(isEdit?k:'/pages/work/pingDingLiangBiaoInfo/pingDingLiangBiaoInfo?id='+v.id,!isEdit)" v-for="(v,k) in list" :key="k">
+			<view class="item" @click="toPage(isEdit?k:'/pages/work/pingDingLiangBiaoInfo/pingDingLiangBiaoInfo?id='+v.id+'&title='+v.name,!isEdit)" v-for="(v,k) in list" :key="k">
 				<view class="itemLeft"></view>
 				<view class="itemRight">
 					<view class="rightText hidden">{{v.name}}</view>

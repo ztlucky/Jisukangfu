@@ -7,7 +7,7 @@
 				<navigator class="input" url="../Search/Search" hover-class="none" open-type="navigate">
 					<image mode="aspectFill" class="searchImage" src="../../static/icon_search.png"></image>
 
-					<text>搜索课程</text>
+					<text>搜索</text>
 				</navigator>
 				<navigator class="user" url="../Message/Message" hover-class="none">
 					<image src="../../static/icon_message.png"></image>
@@ -123,12 +123,14 @@
 					</uni-grid>
 					<view v-show="banjiList.length >0" class="lineview">
 					</view>
-					<view v-show="banjiList.length >0" class="sectiontitleview" @click="jumpRecommedBanjiPage">
+					<view v-show="banjiList.length >0" class="sectiontitleview" @click="toPage('/pages/Wode/banJi/allBanJi')">
 						<text class="sectiontitle">班级推荐</text>
 						<text class="sectionrighttitle">查看更多></text>
 					</view>
-					<banjiList class="mainlist" :list="banjiList" />
-
+					<!-- <banjiList class="mainlist" :list="banjiList" /> -->
+					<view class="banJiList">
+						<ban-ji :itemObject="item" v-for="(item , index) in banjiList" :key="index"></ban-ji>
+					</view>
 				</hr-pull-load>
 			</view>
 
@@ -148,6 +150,7 @@
 	import uniSwiperDot from '@/components/uni-swiper-dot/uni-swiper-dot.vue';
 	import uniGrid from "@/components/uni-grid/uni-grid.vue";
 	import uniGridItem from "@/components/uni-grid-item/uni-grid-item.vue"
+	import banJi from "@/components/banJi/banJi"
  
 	export default {
 		components: {
@@ -155,8 +158,8 @@
 			pageLoading,
 			iconfont,
 			banjiList,
-			hrPullLoad
-
+			hrPullLoad,
+			banJi
 		},
 		data() {
 			return {
@@ -359,10 +362,12 @@
 					method: 'GET',
 					dataType: 'json',
 					success: res => {
-						console.log("dddddd")
-						console.log(res)
 						if (res.code == 200) {
-							console.log(res)
+							// res.result.records.unshift({
+							// 	name: '全部',
+							// 	id: undefined
+							
+							// })
 							that.category = res.result.records;
 							if (that.category_index > -1) {
 								let nextIndex = that.category_index - 1;
@@ -600,6 +605,13 @@
 					url: 'BanjiTuijian/BanjiTuijian',
 					animationDuration: 300,
 					animationType: 'slide-in-right'
+				})
+			},
+			toPage(url){
+				uni.navigateTo({
+					url,
+					animationType: "slide-in-right",
+					animationDuration: 300
 				})
 			}
 
@@ -1219,5 +1231,8 @@
 		height: 8upx;
 		background-color: #F9F9F9;
 		margin-top: 30rpx;
+	}
+	.banJiList{
+		padding:0 30rpx;
 	}
 </style>

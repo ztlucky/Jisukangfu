@@ -1,6 +1,6 @@
 <template>
 	<view class="view">
-		<nav-bar bgColor="#31D880" backState="1000" fontColor="#ffffff" title="评定量表" type="ordinary">
+		<nav-bar bgColor="#31D880" backState="1000" fontColor="#ffffff" title="评定量表分类" type="ordinary">
 			<view slot="right" v-if="isEdit" @click="save" class="navRight">保存</view>
 		</nav-bar>
 		<view class="list" v-if="list.length!=0">

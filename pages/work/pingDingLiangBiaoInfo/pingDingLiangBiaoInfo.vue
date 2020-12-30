@@ -1,6 +1,6 @@
 <template>
 	<view class="view">
-		<nav-bar  bgColor="#31D880" backState="1000" fontColor="#ffffff" title="评定量表" type="ordinary">
+		<nav-bar  bgColor="#31D880" backState="1000" fontColor="#ffffff" :title="title" type="ordinary">
 			<view slot="right" v-if="isEdit" @click="save" class="navRight">保存</view>
 		</nav-bar>
 		<view v-for="(v,k) in list" :key="k">
@@ -101,7 +101,7 @@
 		},
 		onLoad(data) {
 			this.id = data.id?data.id:5;
-			
+			this.title = data.title?data.title:'评定量表'
 		},
 		methods: {
 			setStatus(index){

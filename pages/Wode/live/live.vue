@@ -40,12 +40,13 @@
 			//获取直播数据
  			getData() {
 				this.$app.request({
-					
 					url: this.$api.zhibo.livelist,
 					data: {
 						userId:getApp().globalData.userId,
 						condition1:this.type == 2 && this.nowIndex == 0,
-						condition2:this.type == 2 && this.nowIndex == 1
+						condition2:this.type == 2 && this.nowIndex == 1,
+						column:'createTime',
+						order:'desc'
 					},
 					method: 'GET',
 					dataType: 'json',

@@ -179,7 +179,9 @@
 				let that =this;
 				let data = {
 					pageNo: 1,
-					pageSize: 500
+					pageSize: 500,
+					column:'createTime',
+					order:'desc'
 				}
 				if (this.category_id) {
 					data.type = this.category_id;

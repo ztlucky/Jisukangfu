@@ -58,7 +58,7 @@
 				</view>
 				<view class="jifen">
 					<view class="jifenview">
-						<view class="iconview">
+						<view class="iconview" @click="toPage('/pages/Wode/ticketList/ticketList')">
 							<image class="iconimage" src="../../static/Me/icon_kaquan.png" mode=""></image>
 							<text class="icontitle">我的卡券</text>
 							<text class="bluetext">{{ticketCount?ticketCount:0}}张</text>
@@ -168,6 +168,7 @@
 		},
 		data() {
 			return {
+				ticketCount:0,
 				promptVisible: false,
 				tongjidata: [
 					{
@@ -481,11 +482,9 @@
 					console.log(data);
 					that.ticketCount = data.ticketCount;
 					that.info = data.data;
-					// that.tongjidata[0].number = data.concernCount?data.concernCount:0;
-					// that.tongjidata[1].number = data.concernCount?data.concernCount:0;
 					that.tongjidata[0].number = data.fansCount ? data.fansCount : 0;
 					that.tongjidata[1].number = data.concernCount ? data.concernCount : 0;
-					that.money = data.wallet ? data.wallet : 0;
+					that.money = data.data.wallet ? data.data.wallet : 0;
 				})
 			}
 		}

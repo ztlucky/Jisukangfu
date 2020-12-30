@@ -229,7 +229,7 @@
 				</view>
 			</view> -->
 		</view>
-		<view class="save" @click="creatLiveAction">提交申请</view>
+		<view class="save" @click="creatLiveAction">创建班级</view>
 		<l-file ref="lFile"></l-file>
 		<choose ref="chooesFile" :image="isAddImage" :count="count" :video="isAddVideo" :pdf="isAddPDF"></choose>
 		<w-picker :visible.sync="visibleTime" mode="shortTerm" startYear="2017" endYear="2030" :value="rangeVal" :current="true"
@@ -700,6 +700,7 @@
 				}
 				courseIds = courseIds.join(',')
 				liveIds = liveIds.join(',')
+				console.log(classtAble);
 				return request({
 					url: getApp().$api.banji.creatbanjiList,
 					type: 'POST',
@@ -716,7 +717,7 @@
 						isVisible: that.isvisiable,
 						coverUrl,
 						file,
-						classtAble,
+						classTable:classtAble,
 						invitationCodeCount:that.code,
 						couponCount:that.couponsNumber?that.couponsNumber:0,
 						coupon:that.couponsPrice?that.couponsPrice:0,

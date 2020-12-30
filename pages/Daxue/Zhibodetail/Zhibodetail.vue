@@ -47,7 +47,7 @@
 			</view>
 
 			<!-- 下载课件 -->
-			<!-- <view class="downloadView">
+			<view class="downloadView" v-if="pdfFile.length !=0 || videoFile.length !=0">
 			  <view class="sectionview">
 			  	<view class="iconview">
 			  		
@@ -57,20 +57,20 @@
 		  	  <view class="lineview">
 		  	  	
 		  	  </view>
-			  <view class="downLoadItemView">
+			  <view class="downLoadItemView" @click="openFile(item.value)" v-for="(item , index) in pdfFile" :key="index">
 			  	<image src="../../../static/zhibo/icon_pdf.png" class="downImage"></image>
-				<text class="downtitle">华南地区较早开展种植诊疗业.pdf</text>
+				<text class="downtitle">{{item.name}}</text>
 				<image class="rightimage" src="../../../static/zhibo/icon_jiantou1.png"></image>
 			  </view>
 			  <view class="middleLineview">
 			  	
 			  </view>
-			  <view class="downLoadItemView">
+			  <view class="downLoadItemView" @click="setVideoUrl(true,item.value)" v-for="(item , index) in videoFile" :key="index+100">
 			  	<image src="../../../static/zhibo/icon-shipin.png" class="downImage"></image>
-			  				<text class="downtitle">华南地区较早开展.mp4</text>
-			  				<image class="rightimage" src="../../../static/zhibo/icon_jiantou1.png"></image>
+			  		<text class="downtitle">{{item.name}}</text>
+			  		<image class="rightimage" src="../../../static/zhibo/icon_jiantou1.png"></image>
 			  </view>
-		  </view> -->
+		  </view>
 			<!-- 选择 -->
 			<view class="lastview">
 				<zzx-tabs :items="items" :current="current" @clickItem="onClickItem" ref="mytabs" :activeColor="activeColor"
@@ -81,27 +81,26 @@
 				</view>
 				<view v-show="current === 1">
 					<view class="studentBgview" v-for="(item,index) in detailInfo.studentList" :key="index">
-
 						<image :src="item.headUrl"></image>
-
 						<text>{{item.name}}</text>
-
-
 					</view>
 				</view>
 
 			</view>
 		</scroll-view>
-		<view class="bottomview">
+		<view class="bottomview" >
 			<text class="price">原价 ¥ {{detailInfo.cost}}/会员价 ¥ {{detailInfo.memberCost}}</text>
 			<view class="favview" @click="favAction">
 				<image :src="isfav == true ?'../../../static/zhibo/icon_yishoucang.png':'../../../static/zhibo/icon_shoucang.png'"></image>
 				<text>收藏本课</text>
-
 			</view>
 			<text class="buy" :style="{background:buyBackColor}" @click="comfirmOrder">{{buyBtnText}}</text>
 		</view>
-
+		<view class="showVideo" v-if="showVideo">
+			<view class="showVideoView" @click="setVideoUrl(false)"></view>
+			<!-- {{videoUrl}} -->
+			<video :src="videoUrl" initial-time='0'></video>
+		</view>
 	</view>
 
 </template>
@@ -133,8 +132,12 @@
 				buyBtnText: '立即购买',
 				buyBackColor: '#ff0000',
 				enableCamera: false,
-				context: null
-
+				context: null,
+				pdfFile:[],
+				videoFile:[],
+				videoFileId:[],
+				videoUrl:'',
+				showVideo:false
 
 			}
 		},
@@ -146,6 +149,7 @@
 		onShow: function(e) {
 			this.videoImageHeight = this.$app.getwindowWidth() * 0.563 - 44
 			this.scrollviewHeight = this.$app.getwindowHeight() - 44;
+			this.getLivedetail();
 		},
 
 		methods: {
@@ -161,14 +165,34 @@
 						user_id: getApp().globalData.userId
 					}
 				}, true, true).then(data => {
-					console.log("dddddd")
-					console.log(data)
 					that.detailInfo = data.data;
 					that.isbuy = data.isBuy;
 					that.isfav = data.isCollect;
-					console.log(data.data.userId)
-					console.log(getApp().globalData.userId)
-
+					if(data.data.file != ''){
+						let file = JSON.parse(data.data.file);
+						let videoFileId = [];
+						let videoFile = [];
+						that.pdfFile = [];
+						file.map(v=>{
+							if(v.type == 'pdf'){
+								that.pdfFile.push({
+									value:v.value,
+									name:v.name
+								})
+							}else if(v.type == 'video'){
+								videoFileId.push(v.value);
+								videoFile.push(v)
+							}
+						});
+						that.videoFileId = videoFileId;
+						if(videoFileId.length !=0){
+							that.videoFile = [];
+							console.log(videoFile)
+							that.getVideoUrlList(videoFile);
+						}
+						that.$forceUpdate();
+					}
+					
 					if (data.data.userId == getApp().globalData.userId) {
 						if (data.data.status == 0) {
 							this.buyBtnText = "开始直播"
@@ -204,6 +228,37 @@
 					})
 				})
 
+			},
+			getVideoUrlList(file){
+				let that = this;
+				return request({
+					url:getApp().$api.oss.getVideoUrl,
+					data:{
+						v_id:this.videoFileId[0]
+					},
+					type:"GET"
+				},false,true).then(data=>{
+					that.videoFile = [];
+					data.map((v,k)=>{
+						that.videoFile.push({
+							value:v.url,
+							name:file[k].name
+						});
+					});
+					that.$forceUpdate();
+					console.log(that.videoFile,that.pdfFile)
+				})
+			},
+			setVideoUrl(f,src){
+				if(f){
+					this.videoUrl = src;
+				}
+				console.log(this.videoUrl);
+				this.showVideo = f;
+			},
+			getUrlName(url){
+				let name = url.split('/')[url.split('/').length-1];
+				return name.split('.')[1];
 			},
 			//添加收藏
 			favAction() {
@@ -274,6 +329,27 @@
 					this.current = e.currentIndex;
 				}
 			},
+			openFile(url){
+				uni.showModal({
+					title:'操作提示',
+					content:'是否查看这个文件',
+					success(res) {
+						if(res.confirm){
+							uni.downloadFile({
+							  url,
+							  success: function (res) {
+							    var filePath = res.tempFilePath;
+							    uni.openDocument({
+							      filePath: filePath,
+							      success: function (res) {
+							      }
+							    });
+							  }
+							});
+						}
+					}
+				})
+			},
 			//确认订单	传递所需的参数
 			comfirmOrder() {
 				console.log(this.$api.zhibo.livePushurl)
@@ -288,7 +364,7 @@
 				} else if (this.buyBtnText == "立即购买") {
 
 					const item = {
-						sku: getApp().livesku,
+						sku: getApp().globalData.livesku,
 						courseID: this.courseID,
 						cover: this.detailInfo.cover,
 						cost: this.detailInfo.cost,
@@ -829,5 +905,31 @@
 		width: 40rpx;
 		height: 40rpx;
 		margin-right: 30rpx;
+	}
+	.showVideo{
+		width:100vw;
+		height: 100vh;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		position: fixed;
+		top:0;
+		left: 0;
+		z-index: 100;
+		background-color: rgba(0,0,0,.2);
+	}
+	.showVideo video{
+		position: relative;
+		z-index: 10;
+		width:690rpx;
+		height: 400rpx;
+	}
+	.showVideoView{
+		position: absolute;
+		top:0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		z-index: 2;
 	}
 </style>

@@ -23,16 +23,16 @@
 				 		<text class="lefttext">课程价格</text>
 						<text class="righttext">¥ {{cost}}</text>
 				 	</view>
-					<view class="secondItemview">
-						<text class="lefttext">优惠价格</text>
-										<text class="righttext">-0</text>
+					<view class="secondItemview" v-if="payInfo.memberPrice">
+						<text class="lefttext">会员价格</text>
+						<text class="righttext">¥{{payInfo.memberPrice}}</text>
 					</view>
 					<view class="secondlineview">
 						
 					</view>
-					<view class="secondItemview" @click="showCouponview">
+					<view class="secondItemview" v-if="payInfo.discountCoupon">
 						<text class="lefttext">优惠券</text>
-										<text class="righttext1">{{couponTip}} ></text>
+						<text class="righttext1">-¥{{payInfo.discountCoupon}} ></text>
 					</view>
 					 
 				 </view>
@@ -47,8 +47,8 @@
 			<text class="totalprice">合计</text>
 			<text class="price1">¥</text>
 			
-			<text class="price">{{cost}}</text>
-			<view class="paynowview" @click="paynow">立即支付
+			<text class="price">{{payInfo.actuallyPaid?payInfo.actuallyPaid:0}}</text>
+			<view class="paynowview" @click="paynow">{{payInfo.type == 202?'邀请码兑换':'立即支付'}}
 				
 			</view>
 			
@@ -99,7 +99,7 @@
 
 <script>
 	import uniPopup from "@/components/uni-popup/uni-popup.vue"
-	
+	import request from "../../../utils/util.js"
 	export default {
 		components:{
 			uniPopup
@@ -126,22 +126,22 @@
  				couponList:[],//优惠券列表
 				couponTip:"暂无可用",
 				sku:"",
-				
+				payInfo:{}
 			}
 		},
 		onLoad:function(option){
-   if(option.item !=null){
-	   // const item = {courseID:2,cover:this.cover,cost:this.detailInfo.cost,title:this.detailInfo.title,time:this.detailInfo.beginTime}
-	   
-	 let objClone=  JSON.parse(decodeURIComponent(option.item))
-	 this.cover = objClone.cover
-	 this.courseId = objClone.courseID
-	 this.cost = objClone.cost;
-	 this.title = objClone.title;
-	 this.beginTime = objClone.time;
-	 this.sku = objClone.sku;
-   }
-   
+		   if(option.item !=null){
+			   // const item = {courseID:2,cover:this.cover,cost:this.detailInfo.cost,title:this.detailInfo.title,time:this.detailInfo.beginTime}
+			   
+			 let objClone=  JSON.parse(decodeURIComponent(option.item))
+			 this.cover = objClone.cover
+			 this.courseId = objClone.courseID
+			 this.cost = objClone.cost;
+			 this.title = objClone.title;
+			 this.beginTime = objClone.time;
+			 this.sku = objClone.sku;
+		   }
+			this.getPayInfo();
  		},
 		onShow:function(e){
  				this.scrollviewHeight = this.$app.getwindowHeight()-44;
@@ -150,36 +150,42 @@
 				
 		},
 		methods: {
-			//立即支付
-			paynow(){
-				var that = this;
-				console.log(that.courseId)
-				this.$app.request({
+			getPayInfo(){
+				let that = this;
+				return request({
 					url: this.$api.dingdan.creatOrder,
 					data: {
 						customerId:getApp().globalData.userId,
 						goodsId:that.courseId,
+						goodsSku:that.sku,
+						status:103
+					},
+					type:"POST"
+				},true,true).then(data=>{
+					that.payInfo = data;
+					console.log(data);
+				})
+			},
+			//立即支付
+			paynow(){
+				var that = this;
+				return request({
+					url:this.$api.dingdan.creatOrder,
+					data: {
+						customerId:getApp().globalData.userId,
+						goodsId:(that.courseId) *1,
 						goodsSku:that.sku
  					},
-					method: 'POST',
-					dataType: 'json',
-					success: res => {
- 					   uni.showToast({
- 						title:res.message,
+					type:"POST",
+				}).then(data=>{
+					uni.showToast({
+						title:'购买成功',
 						icon:'none'
- 					   })
-					    setTimeout(function() {
-					         uni.navigateBack({
-					            	
-					            })
-					         }, 1000);
- 						 
-					},
-					fail: res => {
-					},
-					complete: res => {
-					}
-				});
+					})
+					 setTimeout(function() {
+					      uni.navigateBack({})
+					      }, 1000);
+				})
 			},
 			//获取优惠券列表
 			getcouponlist(){
