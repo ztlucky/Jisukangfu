@@ -363,11 +363,11 @@
 					dataType: 'json',
 					success: res => {
 						if (res.code == 200) {
-							// res.result.records.unshift({
-							// 	name: '全部',
-							// 	id: undefined
+							res.result.records.unshift({
+								name: '全部',
+								id: undefined
 							
-							// })
+							})
 							that.category = res.result.records;
 							if (that.category_index > -1) {
 								let nextIndex = that.category_index - 1;

@@ -130,16 +130,17 @@
 					data.typeId = this.typeId;
 					data.typeName = this.typename
 					data.name = this.name;
-					// if(this.list.length == 0){
+					console.log(this.list);
+					if(this.list.length == 0){
 						
-					// }else{
-					// 	this.list.map(v=>{
-					// 		list.push({
-					// 			name:v.text
-					// 		})
-					// 	})
-					// }
-					data.ratingScaleClassifyList = list;
+					}else{
+						this.list.map(v=>{
+							list.push({
+								name:v.name
+							})
+						})
+					}
+					data.questionClassifyList = list;
 					data.userId = getApp().globalData.userId;
 					return request({
 						url:getApp().$api.pingdingliangbiao.add,

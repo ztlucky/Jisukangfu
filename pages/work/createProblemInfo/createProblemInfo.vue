@@ -16,7 +16,7 @@
 			<view class="title">{{index == -1?'问题':'选项'}}解释</view>
 			<input v-model="text"/>
 			<view class="title">{{index == -1?'问题':'选项'}}诊断</view>
-			<textarea v-model="text1"></textarea>
+			<input v-model="text1"/>
 		</view>
 		<view class="save" @click="save()">保存</view>
 	</view>

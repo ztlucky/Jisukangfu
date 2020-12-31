@@ -39,13 +39,13 @@
 					<image src="/static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
-			<view class="item" @click="showSelectView_">
+			<!-- <view class="item" @click="showSelectView_">
 				<view class="itemTitle">认证类型</view>
 				<view class="itemRight">
 					<view :class="positionItem_ && positionItem_.id?'itemRightText':'itemRightText itemRightText1'  ">{{positionItem_ && positionItem_.id?positionItem_.value:'请选择您的认证类型'}}</view>
 					<image src="/static/icon/me_lise_more.png"></image>
 				</view>
-			</view>
+			</view> -->
 			<view class="item" @click="toPage('/pages/Wode/uploadCertificate/uploadCertificate')">
 				<view class="itemTitle">资质证书</view>
 				<view class="itemRight">
@@ -159,7 +159,10 @@
 				binData1:[],
 				qualificationFile:null,
 				workFile:null,
-				positionItem_:null,
+				positionItem_:{
+					id:3,
+					value:'全部'
+				},
 				typeList:[{
 					id:1,
 					value:'直播'
@@ -167,6 +170,10 @@
 				{
 					id:2,
 					value:'班级'
+				},
+				{
+					id:4,
+					value:'课程'
 				},
 				{
 					id:3,
@@ -387,11 +394,12 @@
 			getIllnessList(){
 				let that = this;
 				return request({
-					url:getApp().$api.huanzhe.getillnessList,
+					url:getApp().$api.shouye.getcourseCategoryList,
 					type:'GET',
 					data:{
 						pageNo:1,
-						pageSize:200
+						pageSize:200,
+						type:2
 					}
 				},true,true).then(data=>{
 					console.log(data);

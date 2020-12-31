@@ -177,7 +177,8 @@ export default {
 				pageNo: 1,
 				pageSize: 500,
 				column:'createTime',
-				order:'desc'
+				order:'desc',
+				isVisible:1
 			}
 			if (this.category_id) {
 				data.type = this.category_id;

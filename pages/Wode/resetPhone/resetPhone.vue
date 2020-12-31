@@ -9,7 +9,7 @@
 			<view :class="nowStatus == 2?'item ':'item item1'">2.验证新手机号</view>
 		</view>
 		<view class="input">
-			<input type="number" :disabled="nowStatus == 1" maxlength="11" :name="phone" v-model="phone" placeholder="请输入手机号" />
+			<input type="number" :disabled="nowStatus == 1" maxlength="11" :name="phone" v-model="phone" :placeholder="nowStatus == 1?'请输入手机号':'请输入新的手机号'" />
 			<view class="sendCode" @click="sendCode">{{time<= 0?'发送验证码':time+'s'}}</view>
 		</view>
 		<view class="input input1">
@@ -108,6 +108,7 @@
 						}).then(data=>{
 							that.code = '';
 							that.time = 0;
+							that.phone = '';
 							that.nowStatus = 2;
 						})
 						

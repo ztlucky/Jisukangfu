@@ -125,7 +125,7 @@
 
 				<view class="lineview">
 				</view>
-				<view class="iconview" @click="toPage('/pages/Wode/course/course?type=1')">
+				<view class="iconview" :class="isCourse?'':'iconview1'" @click="toPage('/pages/Wode/course/course?type=1')">
 					<image class="iconimage" src="../../static/Me/icon_kecheng.png" mode=""></image>
 					<text class="icontitle">我的创建课程</text>
 					<image src="../../static/icon_jiantou.png" mode="" class="rightIcon"></image>
@@ -133,7 +133,7 @@
 				<view class="lineview">
 
 				</view>
-				<view class="iconview " :class="isCourse?'':'iconview1'" @click="toPage('/pages/Wode/banJi/banJi?type=1','isCourse')">
+				<view class="iconview " :class="isBanJi?'':'iconview1'" @click="toPage('/pages/Wode/banJi/banJi?type=1','isCourse')">
 					<image class="iconimage" src="../../static/Me/icon_banji.png" mode=""></image>
 					<text class="icontitle">我的创建班级</text>
 					<image class="rightIcon" src="../../static/icon_jiantou.png" mode=""></image>
@@ -186,14 +186,17 @@
 				tixianVisble:false,
 				tixianMoney:'',
 				isLive:false,
-				isCourse:false
+				isCourse:false,
+				isBanJi:false
 			}
 		},
 		onShow: function() {
 			if (getApp().globalData.userId) {
 				this.decideQualification(1).then(()=>{
 					this.decideQualification(2).then(()=>{
-						this.getUserInfo();
+						this.decideQualification(4).then(()=>{
+							this.getUserInfo();
+						})
 					})
 				})
 
@@ -226,7 +229,9 @@
 					if(data == '有资质！'){
 						if(type == 1){
 							that.isLive = true;
-						}else{
+						}else if(type == 2){
+							that.isBanJi = true;
+						}else if(type == 4){
 							that.isCourse = true;
 						}
 					}

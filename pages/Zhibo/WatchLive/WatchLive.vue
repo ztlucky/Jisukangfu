@@ -234,21 +234,16 @@
 			},
 			getmessageList(){
 				var that = this;
-				console.log({
-					receiveId:that.liveid,
-					type:getApp().globalData.livesku,
-					sendId:getApp().globalData.userId
-				})
 				this.$app.request({
 					url: this.$api.zhibo.getMessageList,
 					data: {
-						receiveId:getApp().globalData.userId,
+						c_id:uni.getStorageSync('clientInfo').clientid,
 						type:getApp().globalData.livesku,
 						sendId:getApp().globalData.userId,
 						condition:true,
 						objectId:that.liveid,
 						column:'createTime',
-						order:'desc'
+						order:'asc'
 						
 					},
 					method: 'GET',

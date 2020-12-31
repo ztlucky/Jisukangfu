@@ -3,7 +3,7 @@
 		<view class="header header1">
 			<view class="sousuo">
 				<image src="/static/homesearch.png"></image>
-				<input placeholder="搜索课程" v-model="value" focus="true" @blur="getList()"/>
+				<input placeholder="搜索" v-model="value" focus="true" @blur="getList()"/>
 			</view>
 			<view class="allList">
 				<view class="list" v-if="allList.user.records.length !=0">

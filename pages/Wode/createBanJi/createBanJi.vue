@@ -708,7 +708,7 @@
 						cost: that.cost,
 						memberCost: that.memberCost,
 						cover: that.uploadImageUrls[0],
-						lecturerIds: lecIds, //主持人
+						expertIds: lecIds, //主持人
 						title: that.zhiboTitle,
 						userId: getApp().globalData.userId,
 						presentation: that.value,

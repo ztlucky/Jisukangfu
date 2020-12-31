@@ -3,12 +3,13 @@
 		<nav-bar bgColor="#FFFFFF" fontColor="#333333" title="直播详情">
 			<image slot="right" class="rightImage" @click="share" src="/static/share.png"></image>
 		</nav-bar>
-		<scroll-view scroll-y="true" :style="[{height:scrollviewHeight + 'px'}]">
+		<scroll-view scroll-y="true" :style="[{height:scrollviewHeight + 'px',paddingBottom:'120rpx'}]">
 			<view class="videoImageview" :style="[{height:videoImageHeight + 'px'}]">
 				<image v-if="!showVideo" :src="detailInfo.cover" mode="aspectFill" :style="[{height:videoImageHeight + 'px'}]"></image>
 				<!-- <video v-else :src="videoUrl" initial-time='0'></video> -->
 			</view>
-			<video v-if="showVideo" class="videoImageviewVideo" :style="[{height:videoImageHeight + 'px',top:66+'px'}]" :src="videoUrl" initial-time='0'></video>
+			<video v-if="showVideo" class="videoImageviewVideo" :style="[{height:videoImageHeight + 'px',top:66+'px'}]" :src="videoUrl"
+			 initial-time='0'></video>
 			<view class="secondView">
 				<view class="priceview">
 					<text class="price1">¥</text>
@@ -50,47 +51,70 @@
 
 			<!-- 下载课件 -->
 			<view class="downloadView" v-if="pdfFile.length !=0 || videoFile.length !=0">
-			  <view class="sectionview">
-			  	<view class="iconview">
-			  		
-			  	</view>
-			  	<text>课件</text>
+				<view class="sectionview">
+					<view class="iconview">
+
+					</view>
+					<text>课件</text>
 				</view>
-		  	  <view class="lineview">
-		  	  	
-		  	  </view>
-			  <view class="downLoadItemView" @click="openFile(item.value)" v-for="(item , index) in pdfFile" :key="index">
-			  	<image src="../../../static/zhibo/icon_pdf.png" class="downImage"></image>
-				<text class="downtitle">{{item.name}}</text>
-				<image class="rightimage" src="../../../static/zhibo/icon_jiantou1.png"></image>
-			  </view>
-			  <view class="middleLineview">
-			  	
-			  </view>
-			  <view class="downLoadItemView" @click="setVideoUrl(true,item.value)" v-for="(item , index) in videoFile" :key="index+100">
-			  	<image src="../../../static/zhibo/icon-shipin.png" class="downImage"></image>
-			  		<text class="downtitle">{{item.name}}</text>
-			  		<image class="rightimage" src="../../../static/zhibo/icon_jiantou1.png"></image>
-			  </view>
-		  </view>
+				<view class="lineview">
+
+				</view>
+				<view class="downLoadItemView" @click="openFile(item.value)" v-for="(item , index) in pdfFile" :key="index">
+					<image src="../../../static/zhibo/icon_pdf.png" class="downImage"></image>
+					<text class="downtitle">{{item.name}}</text>
+					<image class="rightimage" src="../../../static/zhibo/icon_jiantou1.png"></image>
+				</view>
+				<view class="middleLineview">
+
+				</view>
+				<view class="downLoadItemView" @click="setVideoUrl(true,item.value)" v-for="(item , index) in videoFile" :key="index+100">
+					<image src="../../../static/zhibo/icon-shipin.png" class="downImage"></image>
+					<text class="downtitle">{{item.name}}</text>
+					<image class="rightimage" src="../../../static/zhibo/icon_jiantou1.png"></image>
+				</view>
+			</view>
 			<!-- 选择 -->
 			<view class="lastview">
 				<zzx-tabs :items="items" :current="current" @clickItem="onClickItem" ref="mytabs" :activeColor="activeColor"
 				 :lineWidth="line_width" :lineColor="line_color">
 				</zzx-tabs>
-				<view class="detailText" v-show="current === 0">{{detailInfo.presentation}}
-
-				</view>
+				<view class="detailText" v-show="current === 0">{{detailInfo.presentation}}</view>
 				<view v-show="current === 1">
-					<view class="studentBgview" v-for="(item,index) in detailInfo.studentList" :key="index">
-						<image :src="item.headUrl"></image>
-						<text>{{item.name}}</text>
+					<view class="messageView">
+						<view v-for="(item , index) in messageList" :key="index">
+							<view class="messageItem messageLeft" v-if="item.sendUser.id != userid">
+								<image :src="item.sendUser.headUrl" mode="aspectFill" class="messageItemImage"></image>
+								<view class="messageItemName">
+									<view class="messageItemNameTitle hidden">{{item.sendUser.name}}</view>
+									<view class="messageItemNameText">{{item.content}}</view>
+								</view>
+							</view>
+
+							<view class="messageItem messageRight" v-if="item.sendUser.id == userid">
+								<view class="messageItemName">
+									<view class="messageItemName">
+										<view class="messageItemNameTitle hidden">我</view>
+										<view class="messageItemNameText">{{item.content}}</view>
+									</view>
+								</view>
+								<image :src="item.sendUser.headUrl?item.sendUser.headUrl:item.sendUser.sex == 1 ?'../../../static/gongzuotai/icon_nan.png':'../../../static/gongzuotai/icon_nv.png'" mode="aspectFill" class="messageItemImage"></image>
+
+							</view>
+
+						</view>
+
+						<view class="messageInput" v-if="isbuy || detailInfo.userId == userid">
+							<input placeholder="请输入您的留言" v-model="messageValue" />
+							<view class="sendMessage" :class="messageValue?'sendMessage_':''" @click="sendMessage">发送</view>
+						</view>
 					</view>
+
 				</view>
 
 			</view>
 		</scroll-view>
-		<view class="bottomview" >
+		<view class="bottomview" v-if="current == 0">
 			<text class="price">原价 ¥ {{detailInfo.cost}}/会员价 ¥ {{detailInfo.memberCost}}</text>
 			<view class="favview" @click="favAction">
 				<image :src="isfav == true ?'../../../static/zhibo/icon_yishoucang.png':'../../../static/zhibo/icon_shoucang.png'"></image>
@@ -121,7 +145,7 @@
 				courseID: '',
 				videoImageHeight: 411,
 				scrollviewHeight: 0,
-				items: ["详情", "学生"],
+				items: ["详情", "评论"],
 				detailInfo: '',
 				isfav: false,
 				cover: "", //封面
@@ -134,21 +158,25 @@
 				buyBackColor: '#ff0000',
 				enableCamera: false,
 				context: null,
-				pdfFile:[],
-				videoFile:[],
-				videoFileId:[],
-				videoUrl:'',
-				showVideo:false
-
+				pdfFile: [],
+				videoFile: [],
+				videoFileId: [],
+				videoUrl: '',
+				showVideo: false,
+				messageValue: '',
+				messageList: [],
+				userid: ''
 			}
 		},
 		onLoad: function(e) {
 			//获取直播详情
 			this.courseID = e.id;
 			this.getLivedetail();
+			this.getMessageList();
+			this.userid = getApp().globalData.userId;
 		},
 		onShow: function(e) {
-			this.videoImageHeight = this.$app.getwindowWidth() * 0.563 - 44
+			this.videoImageHeight = this.$app.getwindowWidth() * 0.763 - 44
 			this.scrollviewHeight = this.$app.getwindowHeight() - 44;
 			this.getLivedetail();
 		},
@@ -169,31 +197,31 @@
 					that.detailInfo = data.data;
 					that.isbuy = data.isBuy;
 					that.isfav = data.isCollect;
-					if(data.data.file != ''){
+					if (data.data.file != '') {
 						let file = JSON.parse(data.data.file);
 						let videoFileId = [];
 						let videoFile = [];
 						that.pdfFile = [];
-						file.map(v=>{
-							if(v.type == 'pdf'){
+						file.map(v => {
+							if (v.type == 'pdf') {
 								that.pdfFile.push({
-									value:v.value,
-									name:v.name
+									value: v.value,
+									name: v.name
 								})
-							}else if(v.type == 'video'){
+							} else if (v.type == 'video') {
 								videoFileId.push(v.value);
 								videoFile.push(v)
 							}
 						});
 						that.videoFileId = videoFileId;
-						if(videoFileId.length !=0){
+						if (videoFileId.length != 0) {
 							that.videoFile = [];
 							console.log(videoFile)
 							that.getVideoUrlList(videoFile);
 						}
 						that.$forceUpdate();
 					}
-					
+
 					if (data.data.userId == getApp().globalData.userId) {
 						if (data.data.status == 1) {
 
@@ -226,38 +254,46 @@
 				})
 
 			},
-			getVideoUrlList(file){
+			getVideoUrlList(file) {
 				let that = this;
 				return request({
-					url:getApp().$api.oss.getVideoUrl,
-					data:{
-						v_ids:this.videoFileId
+					url: getApp().$api.oss.getVideoUrl,
+					data: {
+						v_ids: this.videoFileId
 					},
-					type:"POST"
-				},false,true).then(data=>{
+					type: "POST"
+				}, false, true).then(data => {
 					that.videoFile = [];
-					data.map((v,k)=>{
+					data.map((v, k) => {
 						that.videoFile.push({
-							value:v[0].url,
-							name:file[k].name
+							value: v[0].url,
+							name: file[k].name
 						});
 					});
 					that.$forceUpdate();
-					console.log(that.videoFile,that.pdfFile)
+					console.log(that.videoFile, that.pdfFile)
 				})
 			},
-			setVideoUrl(f,src){
-				if(f){
+			setVideoUrl(f, src) {
+				if(!this.isbuy){
+					uni.showToast({
+						title:'请购买后进行查看',
+						duration:1500,
+						icon:'none'
+					});
+					return false;
+				}
+				if (f) {
 					this.videoUrl = src;
 				}
 				console.log(this.videoUrl);
 				this.showVideo = f;
 			},
-			getUrlName(url){
-				let name = url.split('/')[url.split('/').length-1];
+			getUrlName(url) {
+				let name = url.split('/')[url.split('/').length - 1];
 				return name.split('.')[1];
 			},
-			
+
 			//添加收藏
 			favAction() {
 				let that = this;
@@ -327,22 +363,29 @@
 					this.current = e.currentIndex;
 				}
 			},
-			openFile(url){
+			openFile(url) {
+				if(!this.isbuy){
+					uni.showToast({
+						title:'请购买后进行查看',
+						duration:1500,
+						icon:'none'
+					});
+					return false;
+				}
 				uni.showModal({
-					title:'操作提示',
-					content:'是否查看这个文件',
+					title: '操作提示',
+					content: '是否查看这个文件',
 					success(res) {
-						if(res.confirm){
+						if (res.confirm) {
 							uni.downloadFile({
-							  url,
-							  success: function (res) {
-							    var filePath = res.tempFilePath;
-							    uni.openDocument({
-							      filePath: filePath,
-							      success: function (res) {
-							      }
-							    });
-							  }
+								url,
+								success: function(res) {
+									var filePath = res.tempFilePath;
+									uni.openDocument({
+										filePath: filePath,
+										success: function(res) {}
+									});
+								}
 							});
 						}
 					}
@@ -401,13 +444,13 @@
 
 
 			},
-			openInfo(index){
+			openInfo(index) {
 				uni.navigateTo({
 					url: '/pages/Daxue/TeacherDetail/TeacherDetail?id=' + index,
 					animationType: "slide-in-right",
 					animationDuration: 300
 				})
-			}	,
+			},
 			share() {
 				// uni.shareWithSystem({
 				//   summary: '直播详情',
@@ -424,10 +467,10 @@
 				let rebateType = getApp().globalData.livesku;
 				let couponCode = this.detailInfo.coupon;
 				let invitationCode = this.detailInfo.invitationCode;
-				if(this.detailInfo.invitationCodeCount == this.detailInfo.invitationCodeUsedCount){
+				if (this.detailInfo.invitationCodeCount == this.detailInfo.invitationCodeUsedCount) {
 					invitationCode = 0
 				}
-				if(this.detailInfo.couponCount == this.detailInfo.couponUsedCount){
+				if (this.detailInfo.couponCount == this.detailInfo.couponUsedCount) {
 					couponCode = 0
 				}
 				// return request({
@@ -443,8 +486,8 @@
 				// 	console.log(res);
 				// })
 				let shareData = {
-					type:0,
-					shareUrl:`http://192.168.3.13:8081/#/kangfutest?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}`,
+					type: 0,
+					shareUrl: `http://192.168.3.13:8081/#/kangfutest?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}`,
 					shareTitle: "分享的标题",
 					shareContent: "分享的描述",
 				};
@@ -459,6 +502,44 @@
 					// 第二种关闭弹窗的方式
 					shareObj.close();
 				}, 5000);
+			},
+			sendMessage() {
+				if (this.messageValue == '') return false;
+				let that = this;
+				return request({
+					url: getApp().$api.zhibo.sendMessage,
+					data: {
+						type: getApp().globalData.livesku,
+						content: that.messageValue,
+						sendId: getApp().globalData.userId,
+						createBy: getApp().globalData.userName,
+						objectId: that.id,
+					},
+					type: "POST"
+				}, true, true).then(data => {
+					that.messageValue = '';
+					that.getMessageList();
+				})
+			},
+			getMessageList() {
+				let that = this;
+				return request({
+					url: getApp().$api.zhibo.getMessageList,
+					type: "GET",
+					data: {
+						c_id: uni.getStorageSync('clientInfo').clientid,
+						type: getApp().globalData.livesku,
+						sendId: getApp().globalData.userId,
+						condition: true,
+						objectId: that.id,
+						column: 'createTime',
+						order: 'asc',
+						pageNo: 1,
+						pageSize: 30
+					}
+				}, true, true).then(data => {
+					that.messageList = data.records;
+				})
 			}
 		}
 	}
@@ -782,7 +863,8 @@
 		background: #FFFFFF;
 		border-radius: 4rpx;
 		padding-top: 20rpx;
-		padding-bottom: 30rpx;
+		// padding-bottom: 30rpx;
+		min-height: 500rpx;
 
 		.detailText {
 			margin-left: 24rpx;
@@ -823,7 +905,7 @@
 		width: 100%;
 		bottom: 0px;
 		right: 0px;
-		position: absolute;
+		position: fixed;
 		background-color: #FFFFFF;
 		display: flex;
 		flex-direction: row;
@@ -873,12 +955,14 @@
 			text-align: center;
 		}
 	}
-	.videoImageviewVideo{
-		 position: fixed;
-		 left: 0;
-		 width: 100%;
-		 height: 570rpx;
+
+	.videoImageviewVideo {
+		position: fixed;
+		left: 0;
+		width: 100%;
+		height: 570rpx;
 	}
+
 	.videoImageview {
 		display: flex;
 		flex-direction: row;
@@ -886,12 +970,14 @@
 		height: 400rpx;
 		align-items: center;
 		position: relative;
+
 		// margin-bottom: 40rpx;
 		image {
 			width: 100%;
 			height: 370rpx;
 		}
-		video{
+
+		video {
 			width: 100%;
 			height: 370rpx;
 		}
@@ -921,30 +1007,128 @@
 		height: 40rpx;
 		margin-right: 30rpx;
 	}
-	.showVideo{
-		width:100vw;
+
+	.showVideo {
+		width: 100vw;
 		height: 100vh;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		position: fixed;
-		top:0;
+		top: 0;
 		left: 0;
 		z-index: 100;
-		background-color: rgba(0,0,0,.2);
+		background-color: rgba(0, 0, 0, .2);
 	}
-	.showVideo video{
+
+	.showVideo video {
 		position: relative;
 		z-index: 10;
-		width:690rpx;
+		width: 690rpx;
 		height: 400rpx;
 	}
-	.showVideoView{
+
+	.showVideoView {
 		position: absolute;
-		top:0;
+		top: 0;
 		left: 0;
 		width: 100vw;
 		height: 100vh;
 		z-index: 2;
+	}
+
+	.messageView {
+		position: relative;
+		width: 100%;
+		min-height: 500rpx;
+		padding-bottom: 60rpx;
+		background-color: #FFF7F7;
+	}
+
+	.messageView .messageItem {
+		padding-top: 40rpx;
+		display: flex;
+	}
+
+	.messageItemImage {
+		width: 68rpx;
+		height: 68rpx;
+		border-radius: 50%;
+		background-color: red;
+		margin-right: 20rpx;
+	}
+
+	.messageItemNameTitle {
+		font-size: 24rpx;
+		font-family: PingFangSC-Regular, PingFang SC;
+		font-weight: 400;
+		color: #666666;
+	}
+
+	.messageItemNameText {
+		margin-top: 16rpx;
+		width: 450rpx;
+		padding: 24rpx;
+		background: #FFFFFF;
+		border-radius: 8px;
+		font-size: 24rpx;
+		font-family: PingFangSC-Regular, PingFang SC;
+		font-weight: 400;
+		color: #000000;
+	}
+
+	.messageRight {
+		justify-content: flex-end;
+	}
+
+	.messageRight .messageItemNameTitle {
+		text-align: right;
+	}
+
+	.messageRight .messageItemImage {
+		margin-right: 0;
+		margin-left: 20rpx;
+	}
+
+	.messageInput {
+		width:690rpx;
+		padding:20rpx 30rpx;
+		position: fixed;
+		// width: 100%;
+		bottom: 0rpx;
+		left: 0;
+		padding-top: 0;
+		display: flex;
+		height: 70rpx;
+		align-items: center;
+	}
+
+	.messageInput input {
+		flex: 1;
+		background: #FFFFFF;
+		border-radius: 4px;
+		border: 2px solid #E6E6E6;
+		padding: 0 24rpx;
+		line-height: 70rpx;
+		height: 70rpx;
+		margin-right: 20rpx;
+	}
+
+	.messageInput view {
+		width: 120rpx;
+		height: 70rpx;
+		font-size: 28rpx;
+		font-family: PingFangSC-Regular, PingFang SC;
+		font-weight: 400;
+		color: #FFFFFF;
+		border-radius: 8rpx;
+		background-color: #CCCCCC;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.messageInput .sendMessage_ {
+		background-color: #00D67B;
 	}
 </style>

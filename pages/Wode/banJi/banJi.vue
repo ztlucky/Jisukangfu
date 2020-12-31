@@ -36,9 +36,11 @@
 		},
 		onLoad:function(options){
 			this.type = options.type?options.type:2;
-			this.getList()
+			
 		},
-		 
+		 onShow() {
+		 	this.getList()
+		 },
 		methods: {
 			setNowStatus(index){
 				if(index == this.nowIndex) return false;

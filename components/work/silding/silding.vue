@@ -2,7 +2,7 @@
 	<view class="sild" >
 		<view class="sildLeft" @click.stop="" :style="'width:'+(!isRun?'640':'500')+'rpx'" >
 			<view :class="isRun?'text hidden':'text hidden text1'" :style="'width:'+(!isRun?'494':'442')+'rpx;color:'+(dataprops.title?'#333333':'#888888')" v-if="!isEdit">{{dataprops.title?dataprops.title:isRun?'请输入选项内容':'请输入问题标题'}}</view>
-			<input :placeholder="isRun?'请输入选项内容':'请输入问题标题'" class="text" :focus="true" @blur="blur()" :style="'width:'+(!isRun?'494':'442')+'rpx'" v-else v-model="dataprops.title"/>
+			<input :placeholder="isRun?'请输入选项内容':'请输入问题标题'" class="text"  @blur="blur()" :style="'width:'+(!isRun?'494':'442')+'rpx'" v-else v-model="dataprops.title"/>
 			<image src="/static/work/edit.png" @click="setEditStatus()"></image>
 		</view>
 		<image src="/static/work/delete.png" v-if="isRun" @click="deleteItem"  class="delete"></image>
@@ -115,8 +115,8 @@
 				
 			},
 			setEditStatus(){
+				console.log('--------------------')
 				if(this.isRun){
-					console.log(this.dataprops);
 					this.dataprops.imgList = JSON.stringify(this.dataprops.imgList);
 					let str = `?index=${this.dataprops.index}&title=${this.dataprops.title}&text=${this.dataprops.text}&text1=${this.dataprops.text1}&imglist=${this.dataprops.imgList}`;
 					uni.navigateTo({
@@ -137,6 +137,7 @@
 				this.isEdit = !this.isEdit;
 			},
 			blur(){
+				console.log('<<<<<<<<<<<<<<<<<<<<<<<<<')
 				let that = this;
 				this.setEditStatus();
 				this.$emit('editTitle',{

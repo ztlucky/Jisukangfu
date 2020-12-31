@@ -1,6 +1,6 @@
  
- // let apiRoot = 'http://www.huaxiakangfu.com:8090/'; 
-let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
+ let apiRoot = 'http://www.huaxiakangfu.com:8090/'; 
+// let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
  
 let api = {
 	common: {
@@ -194,7 +194,8 @@ let api = {
  
 		'getInfo':`${apiRoot}patient/patient/YSWorkbench`,
 		'getCompareList':`${apiRoot}patient/patient/queryAKeyToCompare`,
-		'workEndDate':`${apiRoot}doctor/doctor/queryById`
+		'workEndDate':`${apiRoot}doctor/doctor/queryById`,
+		'editForte':`${apiRoot}doctor/doctor/editForte`
 	},
 	course:{
 		"addCourse":`${apiRoot}course/course/add`,
