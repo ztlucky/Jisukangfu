@@ -5,8 +5,10 @@
 		</nav-bar>
 		<scroll-view scroll-y="true" :style="[{height:scrollviewHeight + 'px'}]">
 			<view class="videoImageview" :style="[{height:videoImageHeight + 'px'}]">
-				<image :src="detailInfo.cover"></image>
+				<image v-if="!showVideo" :src="detailInfo.cover" mode="aspectFill" :style="[{height:videoImageHeight + 'px'}]"></image>
+				<!-- <video v-else :src="videoUrl" initial-time='0'></video> -->
 			</view>
+			<video v-if="showVideo" class="videoImageviewVideo" :style="[{height:videoImageHeight + 'px',top:66+'px'}]" :src="videoUrl" initial-time='0'></video>
 			<view class="secondView">
 				<view class="priceview">
 					<text class="price1">¥</text>
@@ -35,7 +37,7 @@
 				</view>
 				<scroll-view scroll-x="true" class="teacherscrollview">
 					<block v-for="(item, index) in detailInfo.lecturerList" :key="index">
-						<view class="item">
+						<view class="item" @click="openInfo(item.id)">
 
 							<image class="teacherImage" :src="item.sex == 1 ?'../../../static/gongzuotai/icon_nan.png':'../../../static/gongzuotai/icon_nv.png'"
 							 mode="">
@@ -96,11 +98,10 @@
 			</view>
 			<text class="buy" :style="{background:buyBackColor}" @click="comfirmOrder">{{buyBtnText}}</text>
 		</view>
-		<view class="showVideo" v-if="showVideo">
+		<!-- <view class="showVideo" v-if="showVideo">
 			<view class="showVideoView" @click="setVideoUrl(false)"></view>
-			<!-- {{videoUrl}} -->
 			<video :src="videoUrl" initial-time='0'></video>
-		</view>
+		</view> -->
 	</view>
 
 </template>
@@ -118,7 +119,7 @@
 		data() {
 			return {
 				courseID: '',
-				videoImageHeight: 211,
+				videoImageHeight: 411,
 				scrollviewHeight: 0,
 				items: ["详情", "学生"],
 				detailInfo: '',
@@ -194,18 +195,14 @@
 					}
 					
 					if (data.data.userId == getApp().globalData.userId) {
-						if (data.data.status == 0) {
-							this.buyBtnText = "开始直播"
-							this.buyBackColor = '#ff0000'
-
-						} else if (data.data.status == 1) {
+						if (data.data.status == 1) {
 
 							this.buyBtnText = "直播中"
 							this.buyBackColor = '#999999'
 
 						} else {
-							this.buyBtnText = "已结束"
-							this.buyBackColor = '#999999'
+							this.buyBtnText = "开始直播"
+							this.buyBackColor = '#ff0000'
 
 						}
 
@@ -234,14 +231,14 @@
 				return request({
 					url:getApp().$api.oss.getVideoUrl,
 					data:{
-						v_id:this.videoFileId[0]
+						v_ids:this.videoFileId
 					},
-					type:"GET"
+					type:"POST"
 				},false,true).then(data=>{
 					that.videoFile = [];
 					data.map((v,k)=>{
 						that.videoFile.push({
-							value:v.url,
+							value:v[0].url,
 							name:file[k].name
 						});
 					});
@@ -260,6 +257,7 @@
 				let name = url.split('/')[url.split('/').length-1];
 				return name.split('.')[1];
 			},
+			
 			//添加收藏
 			favAction() {
 				let that = this;
@@ -378,7 +376,7 @@
 					})
 
 
-				} else if (this.buyBtnText.text == '已购买') {
+				} else if (this.buyBtnText == '已购买') {
 					if (this.detailInfo.status == 1) {
 						const item = {
 							liveid: this.courseID,
@@ -403,6 +401,13 @@
 
 
 			},
+			openInfo(index){
+				uni.navigateTo({
+					url: '/pages/Daxue/TeacherDetail/TeacherDetail?id=' + index,
+					animationType: "slide-in-right",
+					animationDuration: 300
+				})
+			}	,
 			share() {
 				// uni.shareWithSystem({
 				//   summary: '直播详情',
@@ -425,18 +430,18 @@
 				if(this.detailInfo.couponCount == this.detailInfo.couponUsedCount){
 					couponCode = 0
 				}
-				return request({
-					url:getApp().$api.share.rebate,
-					data:{
-						goodsId,
-						rebateType
-					},
-					type:"POST"
-				}).then(res=>{
-					let result = res.result;
-					console.log(`http://192.168.3.13:8081/#/kangfutest?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}&result=${result}`)
-					console.log(res);
-				})
+				// return request({
+				// 	url:getApp().$api.share.rebate,
+				// 	data:{
+				// 		goodsId,
+				// 		rebateType
+				// 	},
+				// 	type:"POST"
+				// }).then(res=>{
+				// 	let result = res.result;
+				// 	console.log(`http://192.168.3.13:8081/#/kangfutest?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}&result=${result}`)
+				// 	console.log(res);
+				// })
 				let shareData = {
 					type:0,
 					shareUrl:`http://192.168.3.13:8081/#/kangfutest?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}`,
@@ -868,17 +873,27 @@
 			text-align: center;
 		}
 	}
-
+	.videoImageviewVideo{
+		 position: fixed;
+		 left: 0;
+		 width: 100%;
+		 height: 570rpx;
+	}
 	.videoImageview {
 		display: flex;
 		flex-direction: row;
 		width: 100%;
+		height: 400rpx;
 		align-items: center;
 		position: relative;
-
+		// margin-bottom: 40rpx;
 		image {
 			width: 100%;
-			height: 100%;
+			height: 370rpx;
+		}
+		video{
+			width: 100%;
+			height: 370rpx;
 		}
 
 		.playImageView {

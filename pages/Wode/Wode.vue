@@ -457,10 +457,13 @@
 			},
 			toPage(url,str = false) {
 				if(str){
-					uni.showToast({
-						title:'暂无该资质',
-						icon:'none'
-					})
+					if(!this[str]){
+						uni.showToast({
+							title:'暂无该资质,请先提交您的资质后重试',
+							icon:'none',
+							duration:2000
+						})
+					}
 					if(!this[str]) return false;
 				}
 				uni.navigateTo({
@@ -482,9 +485,11 @@
 					console.log(data);
 					that.ticketCount = data.ticketCount;
 					that.info = data.data;
-					that.tongjidata[0].number = data.fansCount ? data.fansCount : 0;
-					that.tongjidata[1].number = data.concernCount ? data.concernCount : 0;
+					that.tongjidata[0].number = data.data.fansCount ? data.data.fansCount : 0;
+					that.tongjidata[1].number = data.data.concernCount ? data.data.concernCount : 0;
 					that.money = data.data.wallet ? data.data.wallet : 0;
+					// console.log(this.tongjidata);
+					// that.$forceUpdate();
 				})
 			}
 		}

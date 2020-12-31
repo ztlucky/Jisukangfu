@@ -11,7 +11,7 @@
 			:lineWidth="line_width" :lineColor="line_color">
 			           </zzx-tabs>
 				<!-- <text class="guanzhuview" style="width: 30%;height: 50px;">
-					 添加关注</text> -->		  
+					 添加关注</text>	 -->	  
 		</view>
 		<view class="xiaoxiview" :style="[{height:bottomheight+ 'px'}]" v-if="current == 0" >
 			<scroll-view :scroll-y="true"  :style="[{height:scrollviewHeight+ 'px'}]" class="scrollview">
@@ -234,12 +234,22 @@
 			},
 			getmessageList(){
 				var that = this;
+				console.log({
+					receiveId:that.liveid,
+					type:getApp().globalData.livesku,
+					sendId:getApp().globalData.userId
+				})
 				this.$app.request({
 					url: this.$api.zhibo.getMessageList,
 					data: {
-						receiveId:that.liveid,
+						receiveId:getApp().globalData.userId,
 						type:getApp().globalData.livesku,
-						sendId:getApp().globalData.userId
+						sendId:getApp().globalData.userId,
+						condition:true,
+						objectId:that.liveid,
+						column:'createTime',
+						order:'desc'
+						
 					},
 					method: 'GET',
 					dataType: 'json',

@@ -1,9 +1,10 @@
 <template>
 	 <view  class="bgview" >
 	   <scroll-view scroll-y="true" :style="[{height:scrollviewHeight + 'px'}]">
-		   <view class="videoImageview"  :style="[{height:videoImageHeight + 'px'}]">
- 		   	<image :src="detailInfo.coverUrl" mode="aspectFill" ></image>
+		   <view class="videoImageview" :style="[{height:videoImageHeight + 'px'}]">
+ 		   	<image v-if="!showVideo" :src="detailInfo.coverUrl" :style="[{height:videoImageHeight + 'px'}]" mode="aspectFill" ></image>
  		  </view>
+		  <video v-if="showVideo" class="videoImageviewVideo" :style="[{height:videoImageHeight + 'px',top:0+'px'}]" :src="videoUrl" initial-time='0'></video>
 		  <view class="secondView">
 		  	<view class="priceview">
 				<text class="price1">¥</text>
@@ -27,7 +28,7 @@
 		 	</view>
 			<scroll-view  scroll-x="true" class="teacherscrollview" >
 			  <block v-for="(item, index) in detailInfo.lecturerList" :key="index">
-			    <view class="item" >
+			    <view class="item" @click="openInfo(item.id)">
  					
  			        <image class="teacherImage" :src="item.sex == 1 ?'../../../static/gongzuotai/icon_nan.png':'../../../static/gongzuotai/icon_nv.png'" mode="">	
 					</image>
@@ -91,11 +92,10 @@
 		</view>
 		<text class="buy" :style="{background:buyBackColor}" @click="comfirmOrder">{{buyBtnText}}</text>
 	 </view>
-	<view class="showVideo" v-if="showVideo">
+	<!-- <view class="showVideo" v-if="showVideo">
 		<view class="showVideoView" @click="setVideoUrl(false)"></view>
-		<!-- {{videoUrl}} -->
 		<video :src="videoUrl" initial-time='0'></video>
-	</view>
+	</view> -->
 	 </view>
 	
 </template>
@@ -136,6 +136,7 @@
 			}
 		},
 		onLoad:function(e){
+			this.getHeight();
 			//获取直播详情
 			this.courseID = e.id;
 			this.userId = getApp().globalData.userId;
@@ -149,6 +150,58 @@
 	   },	 
 			
 		methods: {
+			getHeight(){
+				uni.getSystemInfo({
+					success: (e) => {
+					      // this.compareVersion(e.SDKVersion, '2.5.0')
+					      let statusBar = 0
+					      let customBar = 0
+					      
+					      
+					      // #ifdef MP
+					      statusBar = e.statusBarHeight
+					      customBar = e.statusBarHeight + 45
+					      if (e.platform === 'android') {
+					        this.$store.commit('SET_SYSTEM_IOSANDROID', false)
+					        customBar = e.statusBarHeight + 50
+					      }
+					      // #endif
+					      
+					      
+					      // #ifdef MP-WEIXIN
+					      statusBar = e.statusBarHeight
+					      // @ts-ignore
+					      const custom = wx.getMenuButtonBoundingClientRect()
+					      customBar = custom.bottom + custom.top - e.statusBarHeight
+					      // #endif
+					
+					
+					      // #ifdef MP-ALIPAY
+					      statusBar = e.statusBarHeight
+					      customBar = e.statusBarHeight + e.titleBarHeight
+					      // #endif
+					
+					
+					      // #ifdef APP-PLUS
+					      console.log('app-plus', e)
+					      statusBar = e.statusBarHeight
+					      customBar = e.statusBarHeight + 45
+					      // #endif
+					
+					
+					      // #ifdef H5
+					      statusBar = 0
+					      customBar = e.statusBarHeight + 45
+					      // #endif
+					
+						// 这里你可以自己决定存放方式，建议放在store中，因为store是实时变化的
+					      // this.$store.commit('SET_STATUS_BAR', statusBar)
+					      // this.$store.commit('SET_CUSTOM_BAR', customBar)
+					      // this.$store.commit('SET_SYSTEM_INFO', e)
+						  this.navBarHeight = customBar;
+					    }
+				})
+			},
 			/*获取课程详情*/
 			getCoursedetail() {
 				let that = this;
@@ -233,19 +286,19 @@
 				return request({
 					url:getApp().$api.oss.getVideoUrl,
 					data:{
-						v_id:this.videoFileId[0]
+						v_ids:this.videoFileId
 					},
-					type:"GET"
+					type:"POST"
 				},false,true).then(data=>{
+					console.log(data);
 					that.videoFile = [];
 					data.map((v,k)=>{
 						that.videoFile.push({
-							value:v.url,
+							value:v[0].url,
 							name:file[k].name
 						});
 					});
 					that.$forceUpdate();
-					console.log(that.videoFile,that.pdfFile)
 				})
 			},
 			setVideoUrl(f,src){
@@ -369,6 +422,13 @@
 				
 				
 			
+			},
+			openInfo(index){
+				uni.navigateTo({
+					url: '/pages/Daxue/TeacherDetail/TeacherDetail?id=' + index,
+					animationType: "slide-in-right",
+					animationDuration: 300
+				})
 			}	
 		}
 	}
@@ -662,6 +722,7 @@
 			border-radius: 4rpx;
 			padding-top: 20rpx; 
 			padding-bottom: 30rpx;
+			min-height: 500rpx;
 			 .detailText{
 				 margin-left: 24rpx;
 				 margin-right: 24rpx;
@@ -746,16 +807,28 @@
 		  text-align: center;
 	  }
 	}
+ .videoImageviewVideo{
+	 position: fixed;
+	 left: 0;
+	 width: 100%;
+	 // height: 570rpx;
+ }
  .videoImageview{
 	 display: flex;
 	 flex-direction: row;
 	 width: 100%;
+	 height: 600rpx;
  	align-items: center;
 	position: relative;
+	margin-bottom: 40rpx;
  	image{
 			width: 100%;
-			height: 100%;
- 		} 
+			height: 570rpx;
+ 		}
+	video{
+		width: 100%;
+		height: 570rpx;
+	}
 	 .playImageView{
 		 
 		 position: absolute;

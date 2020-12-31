@@ -11,7 +11,7 @@
 						<view class="titleLeft hidden">{{name}}</view>
 						<view class="titleRight"> - 用户</view>
 					</view>
-					<view class="user" v-for="(item,index) in allList.user.records" :key="index">
+					<view class="user" v-for="(item,index) in allList.user.records" @click="openInfo(item.id)" :key="index">
 						<view class="userItem">
 							<view class="headerLeft">
 								<view class="name">
@@ -110,6 +110,13 @@
 					}
 				},true,true).then(data=>{
 					that.allList = data;
+				})
+			},
+			openInfo(index){
+				uni.navigateTo({
+					url: '/pages/Daxue/TeacherDetail/TeacherDetail?id=' + index,
+					animationType: "slide-in-right",
+					animationDuration: 300
 				})
 			}
 		}

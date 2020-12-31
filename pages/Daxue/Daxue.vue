@@ -339,7 +339,7 @@
 					url: this.$api.shouye.getPengyouzaikanList,
 					method: 'GET',
 					data: {
-						user_id: 10
+						user_id: getApp().globalData.userId
 					},
 					dataType: 'json',
 					success: res => {

@@ -2,16 +2,12 @@
 	import {
 		mapMutations
 	} from 'vuex';
-
 	export default {
 		onLaunch: function() {
 			console.log('App Launch')
 
 			// #ifdef APP-PLUS
-			setTimeout(function() {
-				console.log(plus.push.getClientInfo())
-
-			}, 5000)
+				this.getClientInfo();
 
 			const _self = this;
 			const _handlePush = function(message) {
@@ -165,6 +161,17 @@
 					dTask.start();
 				}
 			},
+		getClientInfo(){
+			let clientInfo = plus.push.getClientInfo();
+			if(clientInfo && clientInfo.clientid){
+				uni.setStorageSync('clientInfo',clientInfo);
+			}else{
+				setTimeout(()=>{
+					this.getClientInfo();
+				},500)
+			}
+			console.log(clientInfo);
+		}
 		},
 		globalData: {
 			userId: uni.getStorageSync('userid') ? uni.getStorageSync('userid') : null,
@@ -174,7 +181,8 @@
 			classsku: "BJ36987",
 			course: 'KC14789',
 			member: 'HY32522',
-			reword: 'DS12546'
+			reword: 'DS12546',
+			clientid:''
 
 		},
 		getUrlQuery(url){

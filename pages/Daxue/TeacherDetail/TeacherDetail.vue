@@ -15,7 +15,11 @@
 						<view> </view>
 					</view>
 				</view>
-				<image class="headerRight" mode="aspectFill" :src="info.headUrl?info.headUrl:'../../../static/gongzuotai/icon_nv.png'"></image>
+				<view class="headerRightView" @click="addConcern">
+					<image class="headerRight" mode="aspectFill" :src="info.headUrl?info.headUrl:'../../../static/gongzuotai/icon_nv.png'"></image>
+					<view>{{concern?'取消关注':'关注'}}</view>
+				</view>
+				
 			</view>
 			<!-- <view class="headerBottom">
 				<view class="bottomTitle">擅长：</view>
@@ -38,11 +42,17 @@
 			</view>
 			<view class="value">{{info.introduce?info.introduce:'无'}}</view>
 		</view>
-		<view v-show="recommendCourseList.length >0" class="sectiontitleview" >
-			<text class="sectiontitle">他的课程</text>
-			<!-- <text class="sectionrighttitle">查看更多></text> -->
+		<view class="headerNav">
+			<view :class="nowIndex == 0?'navItem':'navItem navItem1'" @click="setNowStatus(0)">
+				<view class="text">他创建的课程</view>
+				<view class="border"></view>
+			</view>
+			<view :class="nowIndex == 1?'navItem':'navItem navItem1'" @click="setNowStatus(1)">
+				<view class="text">他喜欢的课程</view>
+				<view class="border"></view>
+			</view>
 		</view>
-		<uni-grid :column="2" class="recommendgridview" :square="false" :showBorder="false" @change="kechengItemClick">
+		<uni-grid :column="2" v-if="recommendCourseList.length >0" class="recommendgridview" :square="false" :showBorder="false" @change="kechengItemClick">
 			<uni-grid-item v-for="(item ,index) in recommendCourseList" :key="index" :index="index">
 				<view class="recomendbgview">
 					<view class="recomengimageview">
@@ -72,7 +82,7 @@
 		onLoad(options) {
 			this.id = options.id;
 			this.getInfo().then(()=>{
-				this.getList();
+				this.getList_();
 			})
 			
 		},
@@ -81,7 +91,9 @@
 				dataTypeAllNumber:600,
 				dataTypeList:[100,50,150,50,200],
 				recommendCourseList:[],
-				info:{}
+				info:{},
+				nowIndex:0,
+				concern:false
 			}
 		},
 		methods: {
@@ -90,12 +102,13 @@
 				return request({
 					url:getApp().$api.user.getUserInfo,
 					data:{
-						condition:true,
-						id:that.id
+						// condition:true,
+						id:that.id,
+						b_id:getApp().globalData.userId
 					}
 				},true,true).then(data=>{
+					that.concern = data.concern;
 					that.info = data.data;
-					console.log(data.data);
 				})
 			},
 			getList(){
@@ -114,12 +127,61 @@
 					that.recommendCourseList = data.records;
 				})
 			},
+			getList_(){
+				let that = this;
+				return request({
+					type:'GET',
+					url:getApp().$api.course.getList,
+					data:{
+						userId:that.id,
+						pageNo:1,
+						pageSize:200,
+					}
+				},true,true).then(data=>{
+					that.recommendCourseList = data.records;
+				})
+			},
 			kechengItemClick: function(e) {
 				uni.navigateTo({
 					url: '/pages/Daxue/KechengDetail/KechengDetail?id=' +this.recommendCourseList[e.detail.index].id ,
 					animationType: "slide-in-right",
 					animationDuration: 300
 				})
+			},
+			addConcern(){
+				let that = this;
+				if(!this.concern){
+					return request({
+						url:getApp().$api.user.addConcern,
+						data:{
+							concernId:that.id,
+							userId:getApp().globalData.userId
+						},
+						type:"POST"
+					},true).then(data=>{
+						that.getInfo()
+					})
+				}else{
+					return request({
+						url:getApp().$api.user.deleteConcern,
+						data:{
+							concern_id:that.id,
+							user_id:getApp().globalData.userId
+						},
+						type:"GET"
+					},true).then(data=>{
+						that.getInfo()
+					})
+				}
+			},
+			setNowStatus(index){
+				if(this.nowIndex == index)return false;
+				if(index == 1){
+					this.getList();
+				}else{
+					this.getList_();
+				}
+				this.nowIndex = index;
 			}
 		}
 	}
@@ -133,7 +195,7 @@
 		box-sizing: border-box;
 		padding-left: 15upx;
 		padding-right: 15upx;
-	
+		padding-bottom: 20rpx;
 	}
 	
 	.recomendbgview {
@@ -504,5 +566,54 @@
 		font-family: PingFangSC-Regular, PingFang SC;
 		font-weight: 400;
 		color: #FFFFFF;
+	}
+	.headerRightView{
+		padding-bottom: 10rpx;
+	}
+	.headerRightView view{
+		text-align: center;
+		font-size: 24rpx;
+		font-family: PingFangSC-Regular, PingFang SC;
+		font-weight: 400;
+	}
+	.headerNav{
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		width:690rpx;
+		height: 80rpx;
+		padding:0 30rpx;
+		/* background-color: #FFFFFF; */
+	}
+	.navItem{
+		width:200rpx;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		margin-right: 40rpx;
+	}
+	.text{
+		font-size: 28rpx;
+		font-family: PingFangSC-Medium, PingFang SC;
+		font-weight: 500;
+		color: #333333;
+		line-height: 40rpx;
+	}
+	.border{
+		margin-top: 6rpx;
+		width: 32rpx;
+		height: 4rpx;
+		background-color: #31D880;
+		border-radius: 4rpx;
+	}
+	.navItem1 .text{
+		color:#999999;
+	}
+	.navItem1 .border{
+		background-color: #FFFFFF;
+	}
+	.headerLeft{
+		padding-top:40rpx;
 	}
 </style>

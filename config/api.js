@@ -1,6 +1,6 @@
  
- let apiRoot = 'http://www.huaxiakangfu.com:8090/'; 
-// let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
+ // let apiRoot = 'http://www.huaxiakangfu.com:8090/'; 
+let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
  
 let api = {
 	common: {
@@ -139,7 +139,9 @@ let api = {
 		getBillList:`${apiRoot}bill/bill/list`,
 		decideQualification:`${apiRoot}qualification_audit/qualificationAudit/decideQualification`,//资质判断
 		isUseWorkbench:`${apiRoot}doctor/doctor/isUseWorkbench`,//是否有权限使用工作台
-		getTicketList:`${apiRoot}ticket/appTicket/list`
+		getTicketList:`${apiRoot}ticket/appTicket/list`,
+		addConcern:`${apiRoot}concern/concern/add`,
+		deleteConcern:`${apiRoot}concern/concern/unfollow`
 		
 	},
 	huanzhe:{
@@ -181,7 +183,7 @@ let api = {
 		'getPictureUrl':`${apiRoot}app/ali_oss/getPictureUrl`,
 		'onLoadFile':`${apiRoot}app/ali_oss/uploadFile`,
 		'onLoadVideo':`${apiRoot}app/ali_vod/uploadVideo`,
-		'getVideoUrl':`${apiRoot}app/ali_vod/getPlayInfo`
+		'getVideoUrl':`${apiRoot}/app/ali_vod/getPlayInfoList`
 			},
 	notes:{
 		"addNotes":`${apiRoot}study_notes/studyNotes/add`,
@@ -191,7 +193,8 @@ let api = {
 	work:{
  
 		'getInfo':`${apiRoot}patient/patient/YSWorkbench`,
-		'getCompareList':`${apiRoot}patient/patient/queryAKeyToCompare`
+		'getCompareList':`${apiRoot}patient/patient/queryAKeyToCompare`,
+		'workEndDate':`${apiRoot}doctor/doctor/queryById`
 	},
 	course:{
 		"addCourse":`${apiRoot}course/course/add`,
