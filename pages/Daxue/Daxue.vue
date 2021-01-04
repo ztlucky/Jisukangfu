@@ -9,10 +9,10 @@
 
 					<text>搜索</text>
 				</navigator>
-				<navigator class="user" url="../Message/Message" hover-class="none">
+				<!-- <navigator class="user" url="../Message/Message" hover-class="none">
 					<image src="../../static/icon_message.png"></image>
 					<text v-if="messageCount > 0">{{messageCount}}</text>
-				</navigator>
+				</navigator> -->
 			</view>
 
 
@@ -53,7 +53,7 @@
 					</uni-swiper-dot>
 
 
-					<uni-grid :column="4" class="tikubgview" :square="false" :showBorder="false" @change="secondCategroy" :highlight="false">
+					<uni-grid :column="3" class="tikubgview" :square="false" :showBorder="false" @change="secondCategroy" :highlight="false">
 						<uni-grid-item v-for="(item ,index) in cateArray" :key="index" :index="index">
 
 							<view class="catebgview">
@@ -136,10 +136,6 @@
 
 
 		</view>
-		<view class="showTips">
-			{{args}}
-			{{args_text}}
-		</view>
 	</view>
 </template>
 
@@ -166,8 +162,6 @@
 		},
 		data() {
 			return {
-				args_text:'',
-				args:'',
 				bottomTips: '',
 				topheight: 90,
 				statusBarHeight: 20,
@@ -219,7 +213,7 @@
 					}
 
 				],
-				category_id: 1,
+				category_id: 0,
 				category_index: 0,
 				scroll_category_id: 'scroll_category_id_0',
 				currentSliderIndex: 0,
@@ -227,11 +221,12 @@
 				banjiList: [],
 				pengyouzaikanList: [],
 				//考试直播课程，学习班
-				cateArray: [{
-						icon: '../../static/icon_kaoshi.png',
+				cateArray: [
+					// {
+					// 	icon: '../../static/icon_kaoshi.png',
 
-						name: "考试"
-					},
+					// 	name: "考试"
+					// },
 					{
 						icon: "../../static/icon_zhibo.png",
 						name: "直播"
@@ -297,8 +292,6 @@
 			};
 		},
 		onLoad(e) {
-			this.args = uni.getStorageSync('args')?uni.getStorageSync('args'):'1515';
-			this.arge_text = JSON.stringify(this.args)?JSON.stringify(this.args):'2323';
 			// #ifdef H5
 			if (e.category_id > 0) {
 				this.category_id = e.category_id;
@@ -372,7 +365,7 @@
 						if (res.code == 200) {
 							res.result.records.unshift({
 								name: '全部',
-								id: undefined
+								id: 0
 							
 							})
 							that.category = res.result.records;
@@ -502,7 +495,7 @@
 			//点击考试/直播/课程/学习班
 			secondCategroy: function(e) {
 				switch (e.detail.index) {
-					case 0:
+					case -1:
 						{
 
 							uni.navigateTo({
@@ -513,7 +506,7 @@
 
 						}
 						break;
-					case 1:
+					case 0:
 						{
 
 							uni.navigateTo({
@@ -524,7 +517,7 @@
 
 						}
 						break;
-					case 2:
+					case 1:
 						{
 							uni.navigateTo({
 								url: 'Kecheng/Kecheng',
@@ -535,7 +528,7 @@
 
 						}
 						break;
-					case 3:
+					case 2:
 						{
 
 							uni.navigateTo({
@@ -1241,16 +1234,5 @@
 	}
 	.banJiList{
 		padding:0 30rpx;
-	}
-	.showTips{
-		position: fixed;
-		top:0;
-		left: 0;
-		z-index: 100;
-		width: 100vw;
-		height: 100vh;
-		background-color: #000000;
-		font-size:30rpx;
-		color: #FFFFFF;
 	}
 </style>

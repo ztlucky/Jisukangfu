@@ -1,10 +1,13 @@
 <template>
 	<view class="bgview">
+		<nav-bar bgColor="#FFFFFF" fontColor="#333333" title="课程详情">
+			<image slot="right" class="rightImage" @click="share" src="/static/share.png"></image>
+		</nav-bar>
 		<scroll-view scroll-y="true" :style="[{height:scrollviewHeight + 'px'}]">
 			<view class="videoImageview" :style="[{height:videoImageHeight + 'px'}]">
 				<image v-if="!showVideo" :src="detailInfo.coverUrl" :style="[{height:videoImageHeight + 'px'}]" mode="aspectFill"></image>
 			</view>
-			<video v-if="showVideo" class="videoImageviewVideo" :style="[{height:videoImageHeight + 'px',top:0+'px'}]" :src="videoUrl"
+			<video v-if="showVideo" class="videoImageviewVideo" :style="[{height:videoImageHeight + 'px',top:66+'px'}]" :src="videoUrl"
 			 initial-time='0'></video>
 			<view class="secondView">
 				<view class="priceview">
@@ -127,7 +130,7 @@
 <script>
 	import zzxTabs from "@/components/zzx-tabs/zzx-tabs.vue"
 	import request from '../../../utils/util.js'
-
+	import appShare from "@/plugins/share/index.js"
 	export default {
 		components: {
 			zzxTabs
@@ -165,7 +168,7 @@
 		onLoad: function(e) {
 			this.getHeight();
 			//获取直播详情
-			this.courseID = e.id;
+			this.courseID = this.id = e.id;
 			this.userId = getApp().globalData.userId;
 			this.getMessageList();
 			this.userid = getApp().globalData.userId;
@@ -243,6 +246,7 @@
 				}, true, true).then(data => {
 					console.log("dddddd")
 					console.log(data)
+					
 					that.detailInfo = data.data;
 					that.isbuy = data.isBuy;
 					that.isfav = data.isCollect;
@@ -289,7 +293,7 @@
 
 			},
 			openFile(url) {
-				if (!this.isbuy) {
+				if (!this.isbuy&& getApp().globalData.userId != this.detailInfo.userId) {
 					uni.showToast({
 						title: '请购买后进行查看',
 						duration: 1500,
@@ -337,7 +341,7 @@
 				})
 			},
 			setVideoUrl(f, src) {
-				if (!this.isbuy) {
+				if (!this.isbuy&& getApp().globalData.userId != this.detailInfo.userId) {
 					uni.showToast({
 						title: '请购买后进行查看',
 						duration: 1500,
@@ -517,6 +521,46 @@
 				}, true, true).then(data => {
 					that.messageList = data.records;
 				})
+			},
+			share() {
+				let goodsId = this.courseID;
+				let rebateType = getApp().globalData.livesku;
+				let couponCode = this.detailInfo.coupon;
+				let invitationCode = this.detailInfo.invitationCode;
+				if (this.detailInfo.invitationCodeCount == this.detailInfo.invitationCodeUsedCount) {
+					invitationCode = 0
+				}
+				if (this.detailInfo.couponCount == this.detailInfo.couponUsedCount) {
+					couponCode = 0
+				}
+				return request({
+					url:getApp().$api.share.rebate,
+					data:{
+						goodsId,
+						rebateType
+					},
+					type:"POST"
+				},false).then(res=>{
+					let result = res.result;
+					let shareData = {
+						type: 0,
+						shareUrl: `http://192.168.3.45:8081/#/kangfutest?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}&rebateCode=${result}`,
+						shareTitle: "分享的标题",
+						shareContent: "分享的描述",
+					};
+					// 调用
+					let shareObj = appShare(shareData, res => {
+						console.log("分享成功回调", res);
+						// 分享成功后关闭弹窗
+						// 第一种关闭弹窗的方式
+						closeShare();
+					});
+					// setTimeout(() => {
+					// 	// 第二种关闭弹窗的方式
+					// 	shareObj.close();
+					// }, 5000);
+				})
+				
 			}
 		}
 	}
@@ -1101,5 +1145,10 @@
 
 	.messageInput .sendMessage_ {
 		background-color: #00D67B;
+	}
+	.rightImage {
+		width: 40rpx;
+		height: 40rpx;
+		margin-right: 30rpx;
 	}
 </style>

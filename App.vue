@@ -2,11 +2,12 @@
 	import {
 		mapMutations
 	} from 'vuex';
+	import request from "./utils/util.js"
 	export default {
 		onLaunch: function() {
-			console.log('App Launch')
-			this.getShareData();
+			
 			// #ifdef APP-PLUS
+			this.getShareData();
 			this.getClientInfo();
 
 			const _self = this;
@@ -73,59 +74,76 @@
 				});
 			},
 			getShareData: function() {
-				if(!uni.getStorageSync('userid')){
+				if (!uni.getStorageSync('userid')) {
 					return false;
 				}
-				var args1 =
-					'jisukangfu://pages/Daxue/Zhibodetail/Zhibodetail?id=20&rebateType=ZB78965&couponCode=0&invitationCode=762812';
+				let userId = uni.getStorageSync('userid');
+				// var args1 ='jisukangfu://pages/Daxue/Zhibodetail/Zhibodetail?id=20&rebateType=ZB78965&couponCode=0&invitationCode=762812';
+				let args1 =  plus.runtime.arguments;
 				let info = this.getUrlQuery(args1);
-				console.log(info);
-				info.rebatetype = toUpperCase(inof.rebatetype);
-				if(info.couponcode == '0' && (!info.invitationcode || info.invitationcode.length <=3)){
-					this.toPage();
-				}else if(info.couponcode != '0' && (info.invitationcode && info.invitationcode.length >=3)){
-					this.addTicket(info.id,info.rebatetype,2,info.couponcode).then(data=>{
-						this.addTicket(info.id,info.rebatetype,1,info.invitationcode).then(()=>{
-							this.toPage();
+				info.rebatetype = info.rebatetype == 'zb78965'?'ZB78965':info.rebatetype == 'bj   36987'?'BJ36987':'KC14789';
+				if(info.rebatecode && info.rebatecode.length >=10){
+					request({
+						url:getApp().$api.share.addRebateBind,
+						type:"POST",
+						data:{
+							rebateCode:info.rebatecode,
+							userId
+						}
+					})
+				}
+				if (info.couponcode == '0' && (!info.invitationcode || info.invitationcode.length <= 3)) {
+					this.toPage(info.rebatetype,info.id);
+				} else if (info.couponcode != '0' && (info.invitationcode && info.invitationcode.length >= 3)) {
+					this.addTicket(info.id, info.rebatetype, 2, info.couponcode).then(data => {
+						this.addTicket(info.id, info.rebatetype, 1, info.invitationcode).then(() => {
+							this.toPage(info.rebatetype,info.id);
 						});
 					})
-				}else if(info.couponcode != '0' && (!info.invitationcode || info.invitationcode.length <=3)){
-					this.addTicket(info.id,info.rebatetype,2,info.couponcode).then(data=>{
-						this.toPage();
+				} else if (info.couponcode != '0' && (!info.invitationcode || info.invitationcode.length <= 3)) {
+					this.addTicket(info.id, info.rebatetype, 2, info.couponcode).then(data => {
+						this.toPage(info.rebatetype,info.id);
 					})
-				}else if(info.couponcode == '0' && (info.invitationcode && info.invitationcode.length >=3)){
-					this.addTicket(info.id,info.rebatetype,1,info.invitationcode).then(()=>{
-						this.toPage();
+				} else if (info.couponcode == '0' && (info.invitationcode && info.invitationcode.length >= 3)) {
+					this.addTicket(info.id, info.rebatetype, 1, info.invitationcode).then(() => {
+						this.toPage(info.rebatetype,info.id);
 					});
 				}
-				// #ifdef APP-PLUS
-				var args = plus.runtime.arguments;
-
-				if (args) {
-					// 处理args参数，如直达到某新页面等  
-					console.log(args);
-					uni.setStorageSync('args', args);
-					// uni.showToast({
-					// 	title: '提示',
-					// 	content: JSON.stringify(args),
-					// 	duration:15000
-					// })
-				}
-				// #endif
 			},
-			addTicket(goodsId,goodsSku,type,value){
-				
+			addTicket(goodsId, goodsSku, type, value) {
+				return request({
+					url:getApp().$api.share.addTicket,
+					type:'POST',
+					data:{
+						goodsId,
+						goodsSku,
+						type,
+						value
+					}
+				})
 			},
-			toPage(rebatetype){
+			toPage(rebatetype, id) {
 				switch (rebatetype) {
-					case "zb78965":
-							
+					case "ZB78965":
+						uni.navigateTo({
+							url: "/pages/Daxue/Zhibodetail/Zhibodetail?id=" + id,
+							animationDuration: 300,
+							animationType: 'slide-in-right'
+						})
 						break;
-					case "bj36987":
-				
+					case "BJ36987":
+						uni.navigateTo({
+							url: "/pages/Wode/banJiDesc/banJiDesc?id=" + id,
+							animationDuration: 300,
+							animationType: 'slide-in-right'
+						})
 						break;
-					case "kc14789":
-				
+					case "KC14789":
+						uni.navigateTo({
+							url: "/pages/Daxue/KechengDetail/KechengDetail?id=" + id,
+							animationDuration: 300,
+							animationType: 'slide-in-right'
+						})
 						break;
 				}
 			},
@@ -143,7 +161,6 @@
 					},
 					dataType: 'json',
 					success: res => {
-						console.log("++++", res)
 						if (res.code == 200) {
 							let item = res.result.records[0]
 							if (widgetInfo.versionCode != item.versionNumber) {

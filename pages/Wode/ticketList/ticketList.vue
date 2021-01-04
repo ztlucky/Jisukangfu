@@ -11,8 +11,8 @@
 			</view>
 		</view>
 		<view class="list">
-			<view v-for="(item , index ) in list" :key="index">
-				<view class="item" v-if="(nowIndex == 0 && item.status == 10)||(nowIndex == 1 && item.status == 11)">
+			<view v-for="(item , index ) in list" :key="index" style="margin-top:20rpx">
+				<view class="item" v-if="((nowIndex == 0 && item.status == 10)||(nowIndex == 1 && item.status == 11)) && item.type == 2">
 					<image src="/static/bg_youhuiquan@2x.png"></image>
 					<view class="itemTop">
 						<view class="itemTopLeft">
@@ -25,6 +25,20 @@
 						</view>
 					</view>
 					<view class="itemText">无门槛</view>
+					<view class="itemBottom">不可与其他优惠券共同使用</view>
+				</view>
+				<view class="item" v-if="((nowIndex == 0 && item.status == 10)||(nowIndex == 1 && item.status == 11)) && item.type == 1">
+					<image src="/static/bg_youhuiquan@2x.png"></image>
+					<view class="itemTop">
+						<view class="itemTopLeft">
+							<image src="/static/icon_huiyuan @2x.png"></image>
+							<view class="hidden" >邀请码</view>
+						</view>
+						<view class="itemTopRight">
+							<view class="rightTips"></view>
+							<view class="rightPrice">{{item.value}}</view>
+						</view>
+					</view>
 					<view class="itemBottom">不可与其他优惠券共同使用</view>
 				</view>
 			</view>

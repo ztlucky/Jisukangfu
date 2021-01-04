@@ -75,7 +75,7 @@
 			return {
 				statusBarHeight: 20,
 
-				category_id: 1,
+				category_id: 0,
 				category_index: 0,
 				scroll_category_id: 'scroll_category_id_0',
 				currentSliderIndex: 0,
@@ -157,10 +157,11 @@
 						if (res.code == 200) {
 							res.result.records.unshift({
 								name: '全部',
-								id: undefined
+								id: 0
 
 							})
 							that.category = res.result.records;
+							console.log(that.category_index)
 							if (that.category_index > -1) {
 								let nextIndex = that.category_index - 1;
 								nextIndex = nextIndex <= 0 ? 0 : nextIndex;

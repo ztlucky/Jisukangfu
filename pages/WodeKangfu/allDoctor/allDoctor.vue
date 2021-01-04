@@ -50,9 +50,10 @@
 			getNavList(){
 				let that = this;
 				return request({
-					url:getApp().$api.huanzhe.getillnessList,
+					url:getApp().$api.shouye.getcourseCategoryList,
 					type:"GET",
 					data:{
+						type:2,
 						pageNo:1,
 						pageSize:200
 					}

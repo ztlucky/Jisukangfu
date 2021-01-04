@@ -1,5 +1,8 @@
 <template>
 	<view class="viewPage">
+		<nav-bar bgColor="#FFFFFF" fontColor="#333333" title="班级详情">
+			<image slot="right" class="rightImage" @click="share" src="/static/share.png"></image>
+		</nav-bar>
 		<view class="desc">
 			<view class="title">班级简介</view>
 			<view class="descText">{{info.presentation}}</view>
@@ -119,6 +122,7 @@
 	import course from "../../../components/course/course.vue"
 	import request from "../../../utils/util.js"
 	import zzxTabs from "@/components/zzx-tabs/zzx-tabs.vue"
+	import appShare from "@/plugins/share/index.js"
 	export default {
 		data() {
 			return {
@@ -312,6 +316,47 @@
 				}, true, true).then(data => {
 					that.messageList = data.records;
 				})
+			},
+			share() {
+				let goodsId = this.courseID;
+				let rebateType = getApp().globalData.livesku;
+				let couponCode = this.detailInfo.coupon;
+				let invitationCode = this.detailInfo.invitationCode;
+				if (this.detailInfo.invitationCodeCount == this.detailInfo.invitationCodeUsedCount) {
+					invitationCode = 0
+				}
+				if (this.detailInfo.couponCount == this.detailInfo.couponUsedCount) {
+					couponCode = 0
+				}
+				return request({
+					url:getApp().$api.share.rebate,
+					data:{
+						goodsId,
+						rebateType
+					},
+					type:"POST"
+				},false).then(res=>{
+					let result = res.result;
+					let shareData = {
+						type: 0,
+						shareUrl: `http://192.168.3.45:8081/#/kangfutest?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}&rebateCode=${result}`,
+						shareTitle: "分享的标题",
+						shareContent: "分享的描述",
+					};
+					console.log(shareData)
+					// 调用
+					let shareObj = appShare(shareData, res => {
+						console.log("分享成功回调", res);
+						// 分享成功后关闭弹窗
+						// 第一种关闭弹窗的方式
+						closeShare();
+					});
+					// setTimeout(() => {
+					// 	// 第二种关闭弹窗的方式
+					// 	shareObj.close();
+					// }, 5000);
+				})
+				
 			}
 		}
 	}
@@ -749,5 +794,10 @@
 
 	.messageInput .sendMessage_ {
 		background-color: #00D67B;
+	}
+	.rightImage {
+		width: 40rpx;
+		height: 40rpx;
+		margin-right: 30rpx;
 	}
 </style>

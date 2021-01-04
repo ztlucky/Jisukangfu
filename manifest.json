@@ -26,7 +26,8 @@
             "Share" : {},
             "OAuth" : {},
             "VideoPlayer" : {},
-            "SQLite" : {}
+            "SQLite" : {},
+            "LivePusher" : {}
         },
         /* 应用发布信息 */
         "distribute" : {

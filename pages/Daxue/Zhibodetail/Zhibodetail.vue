@@ -170,7 +170,7 @@
 		},
 		onLoad: function(e) {
 			//获取直播详情
-			this.courseID = e.id;
+			this.courseID = this.id = e.id;
 			this.getLivedetail();
 			this.getMessageList();
 			this.userid = getApp().globalData.userId;
@@ -185,7 +185,7 @@
 			/*获取直播详情*/
 			getLivedetail() {
 				let that = this;
-				console.log(this.courseID)
+
 				return request({
 					url: getApp().$api.zhibo.getLivecourseDetailInfo,
 					type: 'GET',
@@ -275,7 +275,7 @@
 				})
 			},
 			setVideoUrl(f, src) {
-				if(!this.isbuy){
+				if(!this.isbuy&& getApp().globalData.userId != this.detailInfo.userId){
 					uni.showToast({
 						title:'请购买后进行查看',
 						duration:1500,
@@ -364,7 +364,7 @@
 				}
 			},
 			openFile(url) {
-				if(!this.isbuy){
+				if(!this.isbuy && getApp().globalData.userId != this.detailInfo.userId){
 					uni.showToast({
 						title:'请购买后进行查看',
 						duration:1500,
@@ -452,17 +452,6 @@
 				})
 			},
 			share() {
-				// uni.shareWithSystem({
-				//   summary: '直播详情',
-				//   href: 'http://192.168.3.13:8081/#/kangfutest',
-				//   // imageUrl:'/static/bgimage.png',
-				//   success(){
-				//     // 分享完成，请注意此时不一定是成功分享
-				//   },
-				//   fail(){
-				//     // 分享失败
-				//   }
-				// })
 				let goodsId = this.courseID;
 				let rebateType = getApp().globalData.livesku;
 				let couponCode = this.detailInfo.coupon;
@@ -473,36 +462,35 @@
 				if (this.detailInfo.couponCount == this.detailInfo.couponUsedCount) {
 					couponCode = 0
 				}
-				// return request({
-				// 	url:getApp().$api.share.rebate,
-				// 	data:{
-				// 		goodsId,
-				// 		rebateType
-				// 	},
-				// 	type:"POST"
-				// }).then(res=>{
-				// 	let result = res.result;
-				// 	console.log(`http://192.168.3.13:8081/#/kangfutest?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}&result=${result}`)
-				// 	console.log(res);
-				// })
-				console.log(`http://192.168.3.45:8081/#/kangfutest?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}`);
-				let shareData = {
-					type: 0,
-					shareUrl: `http://192.168.3.45:8081/#/kangfutest?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}`,
-					shareTitle: "分享的标题",
-					shareContent: "分享的描述",
-				};
-				// 调用
-				let shareObj = appShare(shareData, res => {
-					console.log("分享成功回调", res);
-					// 分享成功后关闭弹窗
-					// 第一种关闭弹窗的方式
-					closeShare();
-				});
-				setTimeout(() => {
-					// 第二种关闭弹窗的方式
-					shareObj.close();
-				}, 5000);
+				return request({
+					url:getApp().$api.share.rebate,
+					data:{
+						goodsId,
+						rebateType
+					},
+					type:"POST"
+				},false).then(res=>{
+					let result = res.result;
+					let shareData = {
+						type: 0,
+						shareUrl: `http://192.168.3.45:8081/#/kangfutest?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}&rebateCode=${result}`,
+						shareTitle: "分享的标题",
+						shareContent: "分享的描述",
+					};
+					console.log(shareData)
+					// 调用
+					let shareObj = appShare(shareData, res => {
+						console.log("分享成功回调", res);
+						// 分享成功后关闭弹窗
+						// 第一种关闭弹窗的方式
+						closeShare();
+					});
+					// setTimeout(() => {
+					// 	// 第二种关闭弹窗的方式
+					// 	shareObj.close();
+					// }, 5000);
+				})
+				
 			},
 			sendMessage() {
 				if (this.messageValue == '') return false;

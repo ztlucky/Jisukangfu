@@ -219,7 +219,8 @@ let api = {
 	},
 	share:{
 		'rebate':`${apiRoot}rebate/rebate/add`,
-		'addTicket':`${apiRoot}ticket/appTicket/add`
+		'addTicket':`${apiRoot}ticket/appTicket/add`,
+		'addRebateBind':`${apiRoot}user_rebate_bind/userRebateBind/add`
 	}
  
 };
