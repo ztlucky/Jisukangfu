@@ -218,7 +218,8 @@ let api = {
 		"onloadFile":`${apiRoot}sys/common/upload`
 	},
 	share:{
-		'rebate':`${apiRoot}rebate/rebate/add`
+		'rebate':`${apiRoot}rebate/rebate/add`,
+		'addTicket':`${apiRoot}ticket/appTicket/add`
 	}
  
 };

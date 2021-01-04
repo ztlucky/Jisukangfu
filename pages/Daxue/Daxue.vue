@@ -136,7 +136,10 @@
 
 
 		</view>
-
+		<view class="showTips">
+			{{args}}
+			{{args_text}}
+		</view>
 	</view>
 </template>
 
@@ -163,6 +166,8 @@
 		},
 		data() {
 			return {
+				args_text:'',
+				args:'',
 				bottomTips: '',
 				topheight: 90,
 				statusBarHeight: 20,
@@ -292,6 +297,8 @@
 			};
 		},
 		onLoad(e) {
+			this.args = uni.getStorageSync('args')?uni.getStorageSync('args'):'1515';
+			this.arge_text = JSON.stringify(this.args)?JSON.stringify(this.args):'2323';
 			// #ifdef H5
 			if (e.category_id > 0) {
 				this.category_id = e.category_id;
@@ -1234,5 +1241,16 @@
 	}
 	.banJiList{
 		padding:0 30rpx;
+	}
+	.showTips{
+		position: fixed;
+		top:0;
+		left: 0;
+		z-index: 100;
+		width: 100vw;
+		height: 100vh;
+		background-color: #000000;
+		font-size:30rpx;
+		color: #FFFFFF;
 	}
 </style>

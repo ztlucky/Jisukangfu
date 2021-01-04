@@ -485,9 +485,10 @@
 				// 	console.log(`http://192.168.3.13:8081/#/kangfutest?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}&result=${result}`)
 				// 	console.log(res);
 				// })
+				console.log(`http://192.168.3.45:8081/#/kangfutest?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}`);
 				let shareData = {
 					type: 0,
-					shareUrl: `http://192.168.3.13:8081/#/kangfutest?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}`,
+					shareUrl: `http://192.168.3.45:8081/#/kangfutest?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}`,
 					shareTitle: "分享的标题",
 					shareContent: "分享的描述",
 				};
