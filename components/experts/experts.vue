@@ -5,23 +5,23 @@
 			<view class="name">
 				<view class="nameText">
 					<view >{{info.name}}</view>
-					<view >{{info.jobTitle?info.jobTitle:''}}</view>
+					<!-- <view >{{info.jobTitle?info.jobTitle:''}}</view> -->
 				</view>
-				<view class="price">19526.23元</view>
+				<!-- <view class="price">19526.23元</view> -->
 			</view>
-			<view class="text text1">烟台毓璜顶医院</view>
-			<view class="text text2">
+			<view class="text text1">{{info.role == 2?'康复师':'普通用户'}}</view>
+			<!-- <view class="text text2">
 				<view >好评率：95%</view>
 				<view >1万+预约方案</view>
-			</view>
-			<view class="typeList">
+			</view> -->
+			<!-- <view class="typeList">
 				<view>心脏病</view>
 				<view>心脏病心脏病</view>
 				<view>心脏病心脏病心脏病</view>
 				<view>心脏病</view>
 				<view>心脏病心脏病</view>
 				<view>心脏病心脏病心脏病</view>
-			</view>
+			</view> -->
 		</view>
 	</view>
 </template>
@@ -45,10 +45,15 @@
 		methods: {
 			openInfo(){
 				uni.navigateTo({
-					url:"/pages/WodeKangfu/doctorInfo/doctorInfo",
-					animationDuration: 300,
-					animationType: 'slide-in-right'
+					url: '/pages/Daxue/TeacherDetail/TeacherDetail?id=' + this.info.id,
+					animationType: "slide-in-right",
+					animationDuration: 300
 				})
+				// uni.navigateTo({
+				// 	url:"/pages/WodeKangfu/doctorInfo/doctorInfo",
+				// 	animationDuration: 300,
+				// 	animationType: 'slide-in-right'
+				// })
 			}
 		}
 	}
@@ -57,7 +62,7 @@
 <style scoped>
 	.item{
 		width:690rpx;
-		height: 200rpx;
+		height: 120rpx;
 		padding:20rpx 0rpx;
 		background-color: #FFFFFF;
 		display: flex;

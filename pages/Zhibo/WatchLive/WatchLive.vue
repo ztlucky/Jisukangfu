@@ -40,7 +40,7 @@
 				
 			</scroll-view>
 			<view class="inputview">
-				<input   style="height: 32px;" v-model="inputvalue" :adjust-position="true" class="input" type="text" placeholder="在此处输入评论内容" />
+				<input   style="height: 32px;" v-model="inputvalue" :adjust-position="false" class="input" type="text" placeholder="在此处输入评论内容" />
 				<text @click="sendMessage">发送</text>
 			</view>
 
@@ -56,7 +56,7 @@
 <script>
 	import zzxTabs from "@/components/zzx-tabs/zzx-tabs.vue"
 	import Prompt from '@/components/zz-prompt/index.vue'
-
+	import appShare from "@/plugins/share/index.js"
 	export default {
 		components: {
 			Prompt
@@ -143,6 +143,22 @@
 			
 		},
 		methods: {
+			share() {
+				let shareData = {
+					type: 0,
+					shareUrl: `http://jskf.huaxiakangfu.com/app_share/index.html#/`,
+					shareTitle: "分享的标题",
+					shareContent: "分享的描述",
+				};
+				// 调用
+				let shareObj = appShare(shareData, res => {
+					console.log("分享成功回调", res);
+					// 分享成功后关闭弹窗
+					// 第一种关闭弹窗的方式
+					closeShare();
+				});
+				
+			},
 			dashangAction(){
 				this.promptVisible = true
 			},

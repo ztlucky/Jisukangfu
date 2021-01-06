@@ -202,7 +202,8 @@
 					   name:info.nickName,
 					   wxId: unionid,
 					   sex:info.gender,
-					   headUrl:info.avatarUrl
+					   headUrl:info.avatarUrl,
+					   appVersionNumber:plus.runtime.version
 					},
 					method: 'POST',
 					success: (res) => {
@@ -248,128 +249,120 @@
 			//微信登陆
 			weixinLoginAction() {
 				var that = this
-
-				uni.getProvider({
-
-					service: 'oauth',
-
-					success: function(res) {
-
-						console.log(res.provider);
-
-						//支持微信、qq和微博等
-
-						if (~res.provider.indexOf('weixin')) {
-
-							uni.login({
-								provider: 'weixin',
-								success: function(loginRes) {
-									// 获取用户信息
-									uni.getUserInfo({
-										provider: 'weixin',
-										success: function(infoRes) {
-											console.log(infoRes.userInfo)
-
-
-											that.weixinLogin(infoRes.userInfo, loginRes.authResult.openid)
-										}
-									})
-								},
-
-								fail: function(res) {
-									uni.showToast({
-										title: "授权失败",
-										icon: 'none'
-									})
-								}
-							})
+				plus.runtime.getProperty(plus.runtime.appid,(wgtinfo)=>{
+					that.appVersionNumber = wgtinfo.version;
+					uni.getProvider({
+					
+						service: 'oauth',
+					
+						success: function(res) {
+					
+							console.log(res.provider);
+					
+							//支持微信、qq和微博等
+					
+							if (~res.provider.indexOf('weixin')) {
+					
+								uni.login({
+									provider: 'weixin',
+									success: function(loginRes) {
+										// 获取用户信息
+										uni.getUserInfo({
+											provider: 'weixin',
+											success: function(infoRes) {
+												console.log(infoRes.userInfo)
+												that.weixinLogin(infoRes.userInfo, loginRes.authResult.openid)
+											}
+										})
+									},
+					
+									fail: function(res) {
+										uni.showToast({
+											title: "授权失败",
+											icon: 'none'
+										})
+									}
+								})
+							}
 						}
-					}
-				});
+					});
+				    })
+				
 			},
 			//登陆操作							
 			loginAction() {
-
+				let that = this;
 				if (this.code.length == 0 || this.mobile.length == 0) {
 					uni.showToast({
 						title: '请完善相关信息',
 						icon: 'none'
 					})
 				} else {
-					uni.request({
-						url: 'http://www.huaxiakangfu.com:8090/user/user/loginByPhoneCode',
-
-						header: {
-							'content-type': 'application/json',
-						},
-						data: {
-							phone: this.mobile,
-							code: this.code
-
-						},
-						method: 'GET',
-						success: (res) => {
-							console.log(res);
-							uni.showToast({
-								title: res.data.message,
-								icon: 'none'
-							})
-							if (res.data.code == '200') {
-								// "company": null,
-								// "education": null,
-								// "headurl": null,
-								// "introduce": null,
-								// "lastLogintime": "2020年10月13日10时44分02秒",
-								// "name": "18265352478",
-								// "paytype": 1,
-								// "phone": "18265352478",
-								// "registtime": "2020年09月25日14时18分42秒",
-								// "roletype": 1,
-								// "school": null,
-								// "setpwd": 0,
-								// "sex": null,
-								// "userid": 24
-								res.data.data = res.data.result;
-								uni.setStorageSync('userid', res.data.data.id)
-								uni.setStorageSync('name', res.data.data.name)
-								uni.setStorageSync('roletype', res.data.data.rolet)
-								uni.setStorageSync('headurl', res.data.data.headUrl)
-								uni.setStorageSync('phone', res.data.data.phone)
-								uni.setStorageSync("wxid",res.data.data.wxId);
-								getApp().globalData.userId = res.data.data.id;
-								getApp().globalData.userName = res.data.data.name;
-								console.log(getApp().globalData.userId);
-								if (res.data.data.pwd == null) {
-									//登陆成功，未设置密码
-									//进入设置密码页面	
-									setTimeout(function() {
-										uni.navigateTo({
-											url: '../SetPassword/SetPassword',
-											animationDuration: 300,
-											animationType: 'slide-in-right'
-										})
-									}, 2000)
-
-								} else {
-
-									setTimeout(function() {
-										// 登录成功
-										uni.switchTab({
-											url: '../../Daxue/Daxue'
-
-										})
-									}, 2000)
-								}
-							}
-
-						},
-						fail: (res) => {
-							uni.showToast({
-								icon: "none",
-								title: "请求失败，请检查网络"
-							})
-						}
-					});
+					plus.runtime.getProperty(plus.runtime.appid,(wgtinfo)=>{
+					    uni.request({
+					    	url: 'http://www.huaxiakangfu.com:8090/user/user/loginByPhoneCode',
+					    
+					    	header: {
+					    		'content-type': 'application/json',
+					    	},
+					    	data: {
+					    		phone: that.mobile,
+					    		code: that.code,
+					    		v_num:wgtinfo.version
+					    
+					    	},
+					    	method: 'GET',
+					    	success: (res) => {
+					    		console.log(res);
+					    		uni.showToast({
+					    			title: res.data.message,
+					    			icon: 'none'
+					    		})
+					    		if (res.data.code == '200') {
+					    
+					    			res.data.data = res.data.result;
+					    			uni.setStorageSync('userid', res.data.data.id)
+					    			uni.setStorageSync('name', res.data.data.name)
+					    			uni.setStorageSync('roletype', res.data.data.rolet)
+					    			uni.setStorageSync('headurl', res.data.data.headUrl)
+					    			uni.setStorageSync('phone', res.data.data.phone)
+					    			uni.setStorageSync("wxid",res.data.data.wxId);
+					    			getApp().globalData.userId = res.data.data.id;
+					    			getApp().globalData.userName = res.data.data.name;
+					    			console.log(getApp().globalData.userId);
+					    			if (res.data.data.pwd == null) {
+					    				//登陆成功，未设置密码
+					    				//进入设置密码页面	
+					    				setTimeout(function() {
+					    					uni.navigateTo({
+					    						url: '../SetPassword/SetPassword',
+					    						animationDuration: 300,
+					    						animationType: 'slide-in-right'
+					    					})
+					    				}, 2000)
+					    
+					    			} else {
+					    
+					    				setTimeout(function() {
+					    					// 登录成功
+					    					uni.switchTab({
+					    						url: '../../Daxue/Daxue'
+					    
+					    					})
+					    				}, 2000)
+					    			}
+					    		}
+					    
+					    	},
+					    	fail: (res) => {
+					    		uni.showToast({
+					    			icon: "none",
+					    			title: "请求失败，请检查网络"
+					    		})
+					    	}
+					    });
+					    })
+					
 
 
 

@@ -57,48 +57,55 @@
 			 	
 			 })
 			 let passwd = md5(this.password + 'JSKF1234');
-				this.$app.request({
-						url: this.$api.user.loginPwd,
-						data: {
-							account: this.mobile,
-							pwd:passwd
-						},
-						method: 'GET',
-						success: res => {
-							uni.hideLoading()
-							uni.showToast({
-								title:res.message,
-								icon:"none"
-							})
-								//登陆成功
-							if(res.code == '200'){
-								 uni.setStorageSync('userid',res.result.id)
-								 uni.setStorageSync('name',res.result.name)
-								 uni.setStorageSync('roletype',res.result.roletype)
-								 uni.setStorageSync('headurl',res.result.headUrl)
-								 uni.setStorageSync('phone',res.result.phone)
-								getApp().globalData.userId = res.result.id;
-								getApp().globalData.userName = res.result.name; 
-								
- 								setTimeout(function(){
-								      // 登录成功
-								uni.switchTab({
-									url:'../../Daxue/Daxue'
-									 
-								})},2000)
-								
-							}
-							 
-						},
-						fail: res => {
-							uni.hideLoading()
+			 let that = this;
+			 plus.runtime.getProperty(plus.runtime.appid,(wgtinfo)=>{
+				 that.$app.request({
+				 		url: that.$api.user.loginPwd,
+				 		data: {
+				 			account: that.mobile,
+				 			pwd:passwd,
+					    	v_num:wgtinfo.version
 							
-						},
-						complete: res => {
-							 uni.hideLoading()
-							 
-						}
-					});
+				 		},
+				 		method: 'GET',
+				 		success: res => {
+				 			uni.hideLoading()
+				 			uni.showToast({
+				 				title:res.message,
+				 				icon:"none"
+				 			})
+				 				//登陆成功
+				 			if(res.code == '200'){
+				 				 uni.setStorageSync('userid',res.result.id)
+				 				 uni.setStorageSync('name',res.result.name)
+				 				 uni.setStorageSync('roletype',res.result.roletype)
+				 				 uni.setStorageSync('headurl',res.result.headUrl)
+				 				 uni.setStorageSync('phone',res.result.phone)
+				 				getApp().globalData.userId = res.result.id;
+				 				getApp().globalData.userName = res.result.name; 
+				 				
+				 				setTimeout(function(){
+				 				      // 登录成功
+				 				uni.switchTab({
+				 					url:'../../Daxue/Daxue'
+				 					 
+				 				})},2000)
+				 				
+				 			}
+				 			 
+				 		},
+				 		fail: res => {
+				 			uni.hideLoading()
+				 			
+				 		},
+				 		complete: res => {
+				 			 uni.hideLoading()
+				 			 
+				 		}
+				 	});
+			     console.log(wgtinfo.version);//应用版本号
+			     })
+				
 			},
 			
 			passwordLoginAction(){

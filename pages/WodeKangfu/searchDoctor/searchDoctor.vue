@@ -10,9 +10,9 @@
 		<view class="header header2" :style="'padding-top:'+topheight+'px'">
 			<view class="title">搜索</view>
 		</view>
-		<view class="recommended">
+		<view class="recommended" v-if="expertList && expertList.length >=1">
 			<view class="recommendedList" >
-				<expert :isshow="(k == expertList.length-1)" v-for="(v,k) in expertList" :key="k"></expert>
+				<expert :info="v" :isshow="(k == expertList.length-1)" v-for="(v,k) in expertList" :key="k"></expert>
 			</view>
 		</view>
 	</view>
@@ -28,7 +28,7 @@
 		},
 		data() {
 			return {
-				expertList:[1,2,3,4,5,6,7,8,9],
+				expertList:[],
 				topheight:0,
 				value:'',
 				isGetMoreDataList:true
@@ -56,9 +56,19 @@
 				this.topheight += this.statusBarHeight;
 			},
 			getList(){
-				// return request({
-					
-				// })
+				let that = this;
+				let data = {
+					pageNo:1,
+					pageSize:100,
+					name:this.value
+				}
+				return request({
+					url:getApp().$api.huanzhe.getDoctorList,
+					type:"GET",
+					data
+				},true,true).then(data=>{
+					that.expertList = data.records;
+				})
 			}
 		}
 	}

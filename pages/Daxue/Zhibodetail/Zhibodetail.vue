@@ -120,7 +120,7 @@
 				<image :src="isfav == true ?'../../../static/zhibo/icon_yishoucang.png':'../../../static/zhibo/icon_shoucang.png'"></image>
 				<text>收藏本课</text>
 			</view>
-			<text class="buy" :style="{background:buyBackColor}" @click="comfirmOrder">{{buyBtnText}}</text>
+			<text class="buy" :style="{background:buyBackColor}" @click="comfirmOrder">{{buyBtnText == '已购买'?detailInfo.status == 1?'进入直播':buyBtnText:buyBtnText}}</text>
 		</view>
 		<!-- <view class="showVideo" v-if="showVideo">
 			<view class="showVideoView" @click="setVideoUrl(false)"></view>
@@ -238,7 +238,11 @@
 					} else {
 						if (data.isBuy == true) {
 							this.buyBtnText = "已购买"
-							this.buyBackColor = '#999999'
+							if(this.detailInfo.status == 1){
+								this.buyBackColor = '#ff0000'
+							}else{
+								this.buyBackColor = '#999999'
+							}
 
 						} else {
 							this.buyBtnText = "立即购买"
@@ -473,7 +477,7 @@
 					let result = res.result;
 					let shareData = {
 						type: 0,
-						shareUrl: `http://192.168.3.45:8081/#/kangfutest?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}&rebateCode=${result}`,
+						shareUrl: `http://jskf.huaxiakangfu.com/app_share/index.html#/?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}&rebateCode=${result}`,
 						shareTitle: "分享的标题",
 						shareContent: "分享的描述",
 					};
@@ -518,7 +522,7 @@
 					data: {
 						c_id: uni.getStorageSync('clientInfo').clientid,
 						type: getApp().globalData.livesku,
-						sendId: getApp().globalData.userId,
+						// sendId: getApp().globalData.userId,
 						condition: true,
 						objectId: that.id,
 						column: 'createTime',
@@ -1030,7 +1034,7 @@
 		position: relative;
 		width: 100%;
 		min-height: 500rpx;
-		padding-bottom: 60rpx;
+		padding-bottom: 120rpx;
 		background-color: #FFF7F7;
 	}
 

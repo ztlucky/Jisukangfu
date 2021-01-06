@@ -58,20 +58,27 @@
 						pageSize:200
 					}
 				},true,true).then(data=>{
+					data.records.unshift({
+								name: '全部',
+								id: null
+							})
 					data.records[0].isSelected = true;
 					that.illnessList = data.records;
 				})
 			},
 			getList(){
 				let that = this;
+				let data = {
+					pageNo:1,
+					pageSize:100,
+				}
+				if(that.illnessList[that.nowIndex].id){
+					data.type = that.illnessList[that.nowIndex].id
+				}
 				return request({
-					url:getApp().$api.huanzhe.getAllDoutorList,
+					url:getApp().$api.huanzhe.getDoctorList,
 					type:"GEt",
-					data:{
-						forte:that.illnessList[that.nowIndex].name,
-						pageNo:1,
-						pageSize:100
-					}
+					data
 				},true,true).then(data=>{
 					that.expertList = data.records;
 				})

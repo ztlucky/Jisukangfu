@@ -31,7 +31,7 @@
 			<text class="kuaijiebiaoqian">快捷标签</text>
 			<view class="kuaijiebiaoqianview">
 				<uni-grid :column="2"  :square="false"   :showBorder="false" @change="duanqikuaijiebianqianclick" :highlight="false">
-					<uni-grid-item  v-for="(item ,index) in kuaijiebianqianArray" :key ="index" :index= "index" >
+					<uni-grid-item  v-for="(item ,index) in kuaijiebianqianArray1" :key ="index" :index= "index" >
 					
 					 <text  class="bianqiantext" @click="changqikuaijiebianqianclick(index)">
 					 	 
@@ -79,12 +79,32 @@
 				mainscrollvieheight:0,
 				duanqimubiao:'',
 				changqimubiao:'',
-				kuaijiebianqianArray:['平稳站立30s',
-				'永久站立，跑五公里',
-				'马拉松比赛拿到名次',
-				'平稳站立30s马拉松比赛拿到名次',
-				'永久站立，跑五公里',
-				'马拉松比赛拿到名次马拉松比赛拿到名次马拉松比赛拿到名次']
+				kuaijiebianqianArray:[
+					['坐位静态平衡达二级',
+					'独立站立30秒',
+					'可独立站立两分钟以上',
+					'可单腿站立30秒',
+					'在辅助下可行走10米',
+					'可独立行走5米'],
+					['可独立行走20米以上',
+					'会独自翻身',
+					'可自己由坐位到站立位',
+					'上肢可上举90度以上',
+					'肘关节可做分离运动',
+					'手指可抓握乒乓球大小的东西']
+				],
+				kuaijiebianqianArray1:[
+					['可实现基本自理',
+					'可独自如厕',
+					'可独自穿衣',
+					'可单独行走100米以上',
+					'上肢关节活动度基本正常',
+					'可独自站立5分钟以上'],
+					['能够独立吃饭',
+					'吃饭不呛咳',
+					'能够独自上下楼梯',
+					'能够表达简单的言语']
+				]
 			}
 		},
 		onShow:function(){

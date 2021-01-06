@@ -19,7 +19,7 @@
 		<view class="hot">
 			<view class="hotTitle">热门专家</view>
 			<view class="hotList" >
-				<view class="hotItem" v-for="(v,k) in hot" :key="k" @click="toPage('/pages/WodeKangfu/doctorInfo/doctorInfo?id='+v.id)">
+				<view class="hotItem" v-for="(v,k) in hot" :key="k" @click="toPage('/pages/Daxue/TeacherDetail/TeacherDetail?id='+v.id)">
 					<image mode="aspectFill" :src="v.headUrl" ></image>
 					<view class="hotName hidden">{{v.name}}</view>
 					<view class="hotType hidden">{{v.jobTitle?v.jobTitle:' '}}</view>

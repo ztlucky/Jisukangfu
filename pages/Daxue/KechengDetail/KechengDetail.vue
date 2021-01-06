@@ -510,7 +510,6 @@
 					data: {
 						c_id: uni.getStorageSync('clientInfo').clientid,
 						type: getApp().globalData.course,
-						sendId: getApp().globalData.userId,
 						condition: true,
 						objectId: that.id,
 						column: 'createTime',
@@ -533,6 +532,7 @@
 				if (this.detailInfo.couponCount == this.detailInfo.couponUsedCount) {
 					couponCode = 0
 				}
+				console.log(`http://jskf.huaxiakangfu.com/app_share/index.html#/?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}`)
 				return request({
 					url:getApp().$api.share.rebate,
 					data:{
@@ -544,7 +544,7 @@
 					let result = res.result;
 					let shareData = {
 						type: 0,
-						shareUrl: `http://192.168.3.45:8081/#/kangfutest?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}&rebateCode=${result}`,
+						shareUrl: `http://jskf.huaxiakangfu.com/app_share/index.html#/?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}&rebateCode=${result}`,
 						shareTitle: "分享的标题",
 						shareContent: "分享的描述",
 					};
@@ -1056,7 +1056,7 @@
 		position: relative;
 		width: 100%;
 		min-height: 500rpx;
-		padding-bottom: 60rpx;
+		padding-bottom: 120rpx;
 		background-color: #FFF7F7;
 	}
 

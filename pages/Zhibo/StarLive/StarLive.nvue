@@ -77,7 +77,7 @@
 					loadLiveurl(){
  										var that = this;
 										uni.request({
-											url: 'http://www.huaxiakangfu.com:8090/live/live/getPushUrl',
+											url: getApp().$api.zhibo.livePushurl,
 											data: {
 												'流名称': this.streamName
 												 

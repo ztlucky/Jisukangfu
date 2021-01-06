@@ -18,31 +18,31 @@
 				 */
 				_self.updatePushMessage(message);
 			};
-			// var ispush = false;
-			// plus.push.addEventListener('click', function(message) {
-			// 	//plus.nativeUI.toast('push click');
-			// 	_handlePush(message);
-			// 	if (message.title == "UA54963") {
-			// 		//检查更新
-			// 		ispush = true;
-			// 		plus.runtime.getProperty(plus.runtime.appid, function(widgetInfo) {
-			// 			_self.onUpdate(uni.getSystemInfoSync().platform, widgetInfo)
-			// 		});
-			// 	}
+			var ispush = false;
+			plus.push.addEventListener('click', function(message) {
+				//plus.nativeUI.toast('push click');
+				_handlePush(message);
+				if (message.title == "UA54963") {
+					//检查更新
+					ispush = true;
+					plus.runtime.getProperty(plus.runtime.appid, function(widgetInfo) {
+						_self.onUpdate(uni.getSystemInfoSync().platform, widgetInfo)
+					});
+				}
 
-			// });
-			// plus.push.addEventListener('receive', function(message) {
-			// 	plus.nativeUI.toast('push receive');
-			// 	_handlePush(message);
-			// });
-			// //没有点击推送，接口请求检测版本更新
-			// if (ispush == false) {
-			// 	console.log(ispush)
-			// 	plus.runtime.getProperty(plus.runtime.appid, function(widgetInfo) {
+			});
+			plus.push.addEventListener('receive', function(message) {
+				plus.nativeUI.toast('push receive');
+				_handlePush(message);
+			});
+			//没有点击推送，接口请求检测版本更新
+			if (ispush == false) {
+				console.log(ispush)
+				plus.runtime.getProperty(plus.runtime.appid, function(widgetInfo) {
 
-			// 		_self.onUpdate(uni.getSystemInfoSync().platform, widgetInfo)
-			// 	});
-			// }
+					_self.onUpdate(uni.getSystemInfoSync().platform, widgetInfo)
+				});
+			}
 
 
 			// #endif
@@ -56,13 +56,14 @@
 		},
 		methods: {
 			...mapMutations(['updatePushMessage']),
-			checkUpdate(downloadUrl, tipmessage) {
+			checkUpdate(downloadUrl, tipmessage,type) {
 				var that = this
 				uni.showModal({
 					title: "提示",
 					showCancel: false,
 					content: tipmessage,
 					confirmText: '更新',
+					showCancel:type ==100,
 					success: function(result) {
 						// 更新
 						if (result.confirm) {
@@ -81,6 +82,7 @@
 				// var args1 ='jisukangfu://pages/Daxue/Zhibodetail/Zhibodetail?id=20&rebateType=ZB78965&couponCode=0&invitationCode=762812';
 				let args1 =  plus.runtime.arguments;
 				let info = this.getUrlQuery(args1);
+				if(!info.rebatetype)return false;
 				info.rebatetype = info.rebatetype == 'zb78965'?'ZB78965':info.rebatetype == 'bj   36987'?'BJ36987':'KC14789';
 				if(info.rebatecode && info.rebatecode.length >=10){
 					request({
@@ -164,7 +166,7 @@
 						if (res.code == 200) {
 							let item = res.result.records[0]
 							if (widgetInfo.versionCode != item.versionNumber) {
-								that.checkUpdate(item.downloadUrl, item.remark)
+								that.checkUpdate(item.downloadUrl, item.remark,item.type)
 
 							}
 
@@ -232,7 +234,6 @@
 						this.getClientInfo();
 					}, 500)
 				}
-				console.log(clientInfo);
 			},
 			getUrlQuery: function(url) {
 				// 用JS拿到URL，如果函数接收了URL，那就用函数的参数。如果没传参，就使用当前页面的URL
