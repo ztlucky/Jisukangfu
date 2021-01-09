@@ -6,6 +6,8 @@
 	export default {
 		onLaunch: function() {
 			
+			this.$store.dispatch('getSystemInfo');
+			
 			// #ifdef APP-PLUS
 			plus.push.setAutoNotification( false );
 			this.getShareData();
@@ -305,7 +307,9 @@
 			course: 'KC14789',
 			member: 'HY32522',
 			reword: 'DS12546',
-			clientid: ''
+			clientid: '',
+			BaseUrl:"http://3237632k3k.goho.co/jeecg-boot/",
+ 			
 
 		}
 	}

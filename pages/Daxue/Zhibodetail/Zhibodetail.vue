@@ -431,8 +431,14 @@
 					//确认订单	传递所需的参数
 					comfirmOrder() {
 						if (getApp().globalData.userId == this.detailInfo.userId) {
+							console.log("ttttt")
+							const item = {
+								streamName: this.detailInfo.streamName,
+								liveid:  this.courseID,
+  								title: this.detailInfo.title,
+ 							}
 							uni.navigateTo({
-								url: '../../Zhibo/StarLive/StarLive?streamName=' + this.detailInfo.streamName + '&liveid=' + this.courseID,
+								url: '../../Zhibo/StarLive/StarLive?item=' + encodeURIComponent(JSON.stringify(item)),
 								animationType: 'slide-in-right',
 								animationDuration: 300
 							})
@@ -440,8 +446,13 @@
 						}
 						if (this.buyBtnText == "开始直播") {
 							console.log(this.courseID)
+							const item = {
+								streamName: this.detailInfo.streamName,
+								liveid:  this.courseID,
+								title: this.detailInfo.title,
+							}
 							uni.navigateTo({
-								url: '../../Zhibo/StarLive/StarLive?streamName=' + this.detailInfo.streamName + '&liveid=' + this.courseID,
+								url: '../../Zhibo/StarLive/StarLive?item=' + encodeURIComponent(JSON.stringify(item)),
 								animationType: 'slide-in-right',
 								animationDuration: 300
 							})

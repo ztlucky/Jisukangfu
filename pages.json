@@ -936,6 +936,24 @@
             }
             
         }
+         
+        ,{
+            "path" : "pages/Zhibo/EndLive/EndLive",
+            "style" :                                                                                    
+            {
+              "app-plus": {
+              	"titleNView": "false",
+              	"scrollIndicator": "none",
+              	"bounce": "none",
+              	"safearea": {
+              		"bottom": {
+              			"offset": "auto"
+              		}
+              	}
+              }
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
