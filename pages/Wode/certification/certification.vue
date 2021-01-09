@@ -1,5 +1,8 @@
 <template>
 	<view class="viewPage">
+		<nav-bar bgColor="#FFFFFF" fontColor="#333333" title="个人信息">
+			<image slot="right" class="rightImage" @click="toPage('/pages/Wode/customerInfo/customerInfo?type=1')" src="/static/tips.png"></image>
+		</nav-bar>
 		<view class="list" >
 			<view class="item" @click="toPage('/pages/Wode/WorkUnits/WorkUnits')">
 				<view class="itemTitle">工作单位</view>
@@ -479,5 +482,10 @@
 		color: #FFFFFF;
 		text-align: center;
 		line-height: 80rpx;
+	}
+	.rightImage {
+		width: 40rpx;
+		height: 40rpx;
+		margin-right: 30rpx;
 	}
 </style>

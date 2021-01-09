@@ -9,15 +9,15 @@
 					<text class="username">潮汐海灵</text>
 					<view class="tipText">
 						<text class="blackText">当前患者</text>
-						<text class="greenText">10</text>
+						<text class="greenText">{{info.currentTotal?info.currentTotal:0}}</text>
 						<text class="blackText">名，</text>
 						<text class="blackText"> 新增患者</text>
-						<text class="greenText">2</text>
+						<text class="greenText">{{info.nowTotal?info.nowTotal:0}}</text>
 						<text class="blackText">名</text>
 					</view>
 					<view class="tipText">
 						<text class="blackText">一共有</text>
-						<text class="greenText">100</text>
+						<text class="greenText">{{info.total?info.total:0}}</text>
 						<text class="blackText">名康复患者</text>
 
 					</view>
@@ -27,8 +27,8 @@
 					<uni-grid :column="4" :square="false" :showBorder="false" @change="" :highlight="false">
 						<uni-grid-item v-for="(item ,index) in currentHuanzhetongji" :key="index" :index="index">
 							<view class="huanzhetongjiView">
-								<text class="numberText">{{item.number}}</text>
-								<text class="bingyin">{{item.bingname}}</text>
+								<text class="numberText">{{item.total}}</text>
+								<text class="bingyin hidden">{{item.illness_name?item.illness_name:'双方尽快释放减肥是咖啡·'}}</text>
 								<view class="lineview" v-if="index%4 !=3 ">
 								</view>
 							</view>
@@ -37,15 +37,15 @@
 						</uni-grid-item>
 					</uni-grid>
 					<view class="moreview" @click="moreaction">
-						<view>查看更多</view>
+						<view>{{ishowMore?'收起':'展开'}}</view>
 						<image src="../../static/f_my_kecheng_arrow.png"></image>
 					</view>
 					<view class="defenview">
 						<view class="defenrightview">
-							<text class="defenText">80</text>
+							<text class="defenText">{{info.month?info.month:0}}</text>
 							<text class="benyuedefen">本月得分</text>
 						</view>
-						<text class="jinridefen">今日得分 6 分</text>
+						<text class="jinridefen">今日得分 {{info.day?info.data:0}} 分</text>
 					</view>
 
 				</view>
@@ -124,7 +124,8 @@
 				isGetMoreHuanZheList: true,
 				nowIndex:0,
 				nowIndex1:0,
-				nowScore:0
+				nowScore:0,
+				info:{}
 			}
 		},
 		onShow: function() {
@@ -229,10 +230,12 @@
 					data: {
 						pageNo: that.index,
 						pageSize: that.size,
-						userId: getApp().globalData.userId
+						userId: getApp().globalData.userId,
+						condition:true
 					},
 					type: 'GET'
 				}, true, true).then(data => {
+					data.records = data.data.records;
 					if(data.records){
 						data.records.map((vv,kk)=>{
 							if(vv.treatmentList.length>=1){
@@ -256,6 +259,9 @@
 						that.isGetMoreHuanZheList = false;
 					}
 					that.huanzhelist = that.huanzhelist.concat(data.records);
+					that.info = data;
+					that.huanzhetongji = data.illness_total;
+					that.resetData();
 					this.index++;
 				})
 			},
@@ -303,9 +309,8 @@
 			},
 			resetData() {
 				this.currentHuanzhetongji = [];
-				if (this.ishowMore) {
+				if (this.ishowMore || this.huanzhetongji.length <=4) {
 					this.currentHuanzhetongji = this.huanzhetongji
-
 				} else {
 					for (var i = 0; i < 4; i++) {
 						this.currentHuanzhetongji.push(this.huanzhetongji[i])
@@ -468,7 +473,8 @@
 				}
 
 				.bingyin {
-
+					display: inline-block;
+					max-width: 150rpx;
 					font-size: 20rpx;
 					font-family: PingFangSC-Regular, PingFang SC;
 					font-weight: 400;

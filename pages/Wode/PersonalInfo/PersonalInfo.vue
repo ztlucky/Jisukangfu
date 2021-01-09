@@ -1,5 +1,8 @@
 <template>
 	<view>
+		<nav-bar bgColor="#FFFFFF" fontColor="#333333" title="个人信息">
+			<image slot="right" class="rightImage" @click="toPage('/pages/Wode/customerInfo/customerInfo?type=2')" src="/static/tips.png"></image>
+		</nav-bar>
 		<view class="contentview">
 			<view class="itemImageView" @click="getImages()">
 				<image mode="aspectFill" :src="info.headUrl"  class="usericon"></image>
@@ -301,5 +304,10 @@
 		align-items: center;
 		left: 50%;
 		transform: translateX(-50%);
+	}
+	.rightImage {
+		width: 40rpx;
+		height: 40rpx;
+		margin-right: 30rpx;
 	}
 </style>

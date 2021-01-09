@@ -98,6 +98,14 @@
 				"navigationBarTextStyle": "white"
 
 			}
+		},{
+			"path": "pages/work/MyPatientsList/MyPatientsList",
+			"style": {
+				"navigationBarTitleText": "病例列表",
+				"navigationBarBackgroundColor": "#31D880",
+				"navigationBarTextStyle": "white"
+
+			}
 		},
 		{
 			"path": "pages/work/createProblemType/createProblemType",
@@ -261,9 +269,7 @@
 		{
 			"path": "pages/Wode/certification/certification",
 			"style": {
-				"navigationBarTitleText": "资质认证",
-				"navigationBarBackgroundColor": "#FFFFFF",
-				"navigationBarTextStyle": "black"
+				"navigationStyle": "custom"
 
 			}
 		},
@@ -809,10 +815,7 @@
 		}, {
 			"path": "pages/Wode/PersonalInfo/PersonalInfo",
 			"style": {
-				"navigationBarTitleText": "个人信息",
-				"enablePullDownRefresh": false,
-				"navigationBarBackgroundColor": "#FFFFFF",
-				"navigationBarTextStyle": "black"
+				"navigationStyle": "custom"
 			}
 
 		}, {
@@ -932,6 +935,15 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "课程",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/Wode/customerInfo/customerInfo",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "提示",
                 "enablePullDownRefresh": false
             }
             

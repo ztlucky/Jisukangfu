@@ -1,6 +1,6 @@
 <template>
 	<view class="list" v-if="list.length > 0">
-		<navigator :url="'/pages/Daxue/Zhibodetail/Zhibodetail?id=' + item.id" class="item" v-for="(item, index) in list" :key="index" hover-class="none">
+		<view @click="toPage('/pages/Daxue/Zhibodetail/Zhibodetail?id=' + item.id)" class="item" v-for="(item, index) in list" :key="index" hover-class="none">
 	<view class="itemLeft">
 		<image mode="aspectFill" :src="item.cover"></image>
 		<view class="tips">
@@ -22,7 +22,7 @@
 		</view>
 	</view>
 					 
-		</navigator>
+		</view>
 	</view>
 	 
 </template>
@@ -35,6 +35,10 @@
 				default: function(e) {
 					return [];
 				}
+			},
+			notpay:{
+				type:Boolean,
+				default:false
 			}
 		},
 		data() {
@@ -43,9 +47,16 @@
 			}
 		},
 		methods: {
-			toPage() {
+			toPage(url) {
+				if(this.notpay){
+					uni.showToast({
+						title:'请在购买班级后，在进行该操作!',
+						icon:'none'
+					})
+					return false;
+				}
 				uni.navigateTo({
-					url: "/pages/Daxue/Zhibodetail/Zhibodetail",
+					url,
 					animationDuration: 300,
 					animationType: 'slide-in-right'
 				})
