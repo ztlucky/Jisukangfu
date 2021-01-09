@@ -23,6 +23,10 @@
 			index:{
 				type:Number,
 				default:-1
+			},
+			notpay:{
+				type:Boolean,
+				default:false
 			}
 		},
 		data() {
@@ -32,6 +36,13 @@
 		},
 		methods: {
 			toPage(id) {
+				if(this.notpay){
+					uni.showToast({
+						title:'请在购买班级后，在进行该操作!',
+						icon:'none'
+					})
+					return false;
+				}
 				if(this.isSelect){
 					// console.log(this.info.isSelect)
 					// this.info.isSelect = this.info.isSelect;

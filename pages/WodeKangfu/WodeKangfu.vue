@@ -55,7 +55,7 @@
 				topNav:[
 					{
 						name:'我的病例',
-						url:'/pages/HuanzheDetail/HuanzheDetail?is_edit=0',
+						url:'/pages/work/MyPatientsList/MyPatientsList',
 						icon:'/static/zixun/icon_anli.png'
 					},
 					// {

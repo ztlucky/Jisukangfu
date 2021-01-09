@@ -22,7 +22,7 @@
 					image:'../../../static/gongzuotai/icon_pingdingliangbiao.png'
 				},
 				{
-					title:"疾病诊断、症状表现、一键比较",
+					title:"疾病诊断",
 					subtitle:"创建常见的疾病诊状",
 					image:'../../../static/gongzuotai/icon_jibingzhenduan.png'
 				},

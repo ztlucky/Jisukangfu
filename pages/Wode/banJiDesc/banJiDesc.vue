@@ -9,13 +9,13 @@
 		</view>
 		<view class="live" v-if="info.liveList.length !=0">
 			<view class="title">直播</view>
-			<live :list="info.liveList"></live>
+			<live :list="info.liveList" :notpay="!isbuy"></live>
 		</view>
 		<view class="course" v-if="info.courseList.length >= 0">
 			<view class="title">课程</view>
 			<view class="list">
 				<view class="item" v-for="(v,k) in info.courseList">
-					<course :info="v"></course>
+					<course :info="v" :notpay="!isbuy"></course>
 				</view>
 			</view>
 		</view>
@@ -56,8 +56,8 @@
 				</view>
 			</view>
 			<view v-show="current === 2">
-				<view class="messageView">
-					<view v-for="(item , index) in messageList" :key="index">
+				<scroll-view id="scrollview" :scroll-top="scrollTop" class="messageView" scroll-y="true" >
+					<view v-for="(item , index) in messageList" :key="index" class="m-item">
 						<view class="messageItem messageLeft" v-if="item.sendUser.id != userid">
 							<image :src="item.sendUser.headUrl" mode="aspectFill" class="messageItemImage"></image>
 							<view class="messageItemName">
@@ -84,7 +84,7 @@
 						<input placeholder="请输入您的留言" v-model="messageValue" />
 						<view class="sendMessage" :class="messageValue?'sendMessage_':''" @click="sendMessage">发送</view>
 					</view>
-				</view>
+				</scroll-view>
 
 			</view>
 
@@ -134,9 +134,13 @@
 				userid: '',
 				current: 0,
 				activeColor: '#000000',
-				current: 0,
 				line_width: "8%",
-				line_color: '#31D880'
+				line_color: '#31D880',
+				scrollTop: 0,
+				style:{
+					pageHeight:0,
+					contentViewHeight:0
+				}
 			}
 		},
 		components: {
@@ -148,7 +152,8 @@
 			this.id = options.id;
 			this.getMessageList();
 			this.userid = getApp().globalData.userId;
-
+			this.style.pageHeight = 500;
+			this.style.contentViewHeight = 500;
 		},
 		onShow() {
 			this.getInfo();
@@ -157,8 +162,30 @@
 			onClickItem(e) {
 				if (this.current !== e.currentIndex) {
 					this.current = e.currentIndex;
+					if (this.current == 2) {
+						this.scrollToBottom();
+					}
 				}
 			},
+			scrollToBottom() {
+				let that = this;
+				let query = uni.createSelectorQuery();
+				query.selectAll('.m-item').boundingClientRect();
+				query.select('#scrollview').boundingClientRect();
+				query.exec((res) => {
+							that.style.mitemHeight = 0;
+							if(!res[0]) return false;
+							res[0].forEach((rect) => that.style.mitemHeight = that.style.mitemHeight + rect.height + 100) //获取所有内部子元素的高度
+							// 因为vue的虚拟DOM 每次生成的新消息都是之前的，所以采用异步setTimeout    主要就是添加了这红字
+							
+							setTimeout(() => {
+
+								if (that.style.mitemHeight > (that.style.contentViewHeight - 80)) { //判断子元素高度是否大于显示高度
+									that.scrollTop = that.style.mitemHeight - that.style.contentViewHeight //用子元素的高度减去显示的高度就获益获得序言滚动的高度
+								}
+							}, 200)
+						})
+					},
 			getInfo() {
 				let that = this;
 				return request({
@@ -315,6 +342,7 @@
 					}
 				}, true, true).then(data => {
 					that.messageList = data.records;
+					that.scrollToBottom();
 				})
 			},
 			share() {
@@ -706,10 +734,9 @@
 	.messageView {
 		position: relative;
 		width: 100%;
-		min-height: 500rpx;
-		max-height: 800rpx;
+		height: 500rpx;
 		overflow-y: scroll;
-		padding-bottom: 120rpx;
+		// padding-bottom: 120rpx;
 		background-color: #FFF7F7;
 	}
 

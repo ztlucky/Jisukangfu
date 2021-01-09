@@ -1,6 +1,6 @@
  
- let apiRoot = 'http://kfy.huaxiakangfu.com/';
-  // let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
+// let apiRoot = 'http://kfy.huaxiakangfu.com/';
+let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
  
 let api = {
 	common: {
@@ -216,7 +216,8 @@ let api = {
 		"unfavCourse":`${apiRoot}user_class_bind/userClassBind/delMyClass`
 	},
 	sys:{
-		"onloadFile":`${apiRoot}sys/common/upload`
+		"onloadFile":`${apiRoot}sys/common/upload`,
+		"getCustomerInfo":`${apiRoot}sys_set/sysSet/queryServiceInfo`
 	},
 	share:{
 		'rebate':`${apiRoot}rebate/rebate/add`,

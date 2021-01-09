@@ -81,7 +81,7 @@
 				</zzx-tabs>
 				<view class="detailText" v-show="current === 0">{{detailInfo.presentation}}</view>
 				<view v-show="current === 1">
-					<scroll-view id="scrollview" :scroll-top="scrollTop" class="messageView" scroll-y="true" :scroll-into-view="intoView">
+					<scroll-view id="scrollview" :scroll-top="scrollTop" class="messageView" scroll-y="true" >
 						<view class="m-item" v-for="(item , index) in messageList" :key="index" :id="index == messageList.length -1?'end':'aa'+index">
 							<view class="messageItem messageLeft" v-if="item.sendUser.id != userid">
 								<image :src="item.sendUser.headUrl" mode="aspectFill" class="messageItemImage"></image>
@@ -1087,8 +1087,7 @@
 	.messageView {
 		position: relative;
 		width: 100%;
-		min-height: 500rpx;
-		max-height: 800rpx;
+		height: 500rpx;
 		// overflow-y: scroll;
 		// padding-bottom: 120rpx;
 		background-color: #FFF7F7;

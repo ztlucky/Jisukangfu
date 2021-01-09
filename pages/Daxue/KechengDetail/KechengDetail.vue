@@ -76,8 +76,8 @@
 
 				</view>
 				<view v-show="current === 1">
-					<view class="messageView">
-						<view v-for="(item , index) in messageList" :key="index">
+					<scroll-view id="scrollview" :scroll-top="scrollTop" class="messageView" scroll-y="true" >
+						<view class="m-item" v-for="(item , index) in messageList" :key="index">
 							<view class="messageItem messageLeft" v-if="item.sendUser.id != userid">
 								<image :src="item.sendUser.headUrl" mode="aspectFill" class="messageItemImage"></image>
 								<view class="messageItemName">
@@ -99,13 +99,11 @@
 							</view>
 
 						</view>
-
-						<view class="messageInput" v-if="isbuy || detailInfo.userId == userid">
-							<input placeholder="请输入您的留言" v-model="messageValue" />
-							<view class="sendMessage" :class="messageValue?'sendMessage_':''" @click="sendMessage">发送</view>
-						</view>
+					</scroll-view>
+					<view class="messageInput" v-if="isbuy || detailInfo.userId == userid">
+						<input placeholder="请输入您的留言" v-model="messageValue" />
+						<view class="sendMessage" :class="messageValue?'sendMessage_':''" @click="sendMessage">发送</view>
 					</view>
-
 				</view>
 
 			</view>
@@ -160,7 +158,12 @@
 				showVideo: false,
 				messageValue: '',
 				messageList: [],
-				userid: ''
+				userid: '',
+				scrollTop: 0,
+				style:{
+					pageHeight:0,
+					contentViewHeight:0
+				}
 
 
 			}
@@ -172,6 +175,8 @@
 			this.userId = getApp().globalData.userId;
 			this.getMessageList();
 			this.userid = getApp().globalData.userId;
+			this.style.pageHeight = 500;
+			this.style.contentViewHeight = 400;
 		},
 		onShow: function(e) {
 			this.videoImageHeight = this.$app.getwindowWidth() * 0.763 - 44
@@ -340,6 +345,25 @@
 					that.$forceUpdate();
 				})
 			},
+			scrollToBottom() {
+				let that = this;
+				let query = uni.createSelectorQuery();
+				query.selectAll('.m-item').boundingClientRect();
+				query.select('#scrollview').boundingClientRect();
+				query.exec((res) => {
+							that.style.mitemHeight = 0;
+							
+							res[0].forEach((rect) => that.style.mitemHeight = that.style.mitemHeight + rect.height + 100) //获取所有内部子元素的高度
+							// 因为vue的虚拟DOM 每次生成的新消息都是之前的，所以采用异步setTimeout    主要就是添加了这红字
+							
+							setTimeout(() => {
+
+								if (that.style.mitemHeight > (that.style.contentViewHeight - 80)) { //判断子元素高度是否大于显示高度
+									that.scrollTop = that.style.mitemHeight - that.style.contentViewHeight //用子元素的高度减去显示的高度就获益获得序言滚动的高度
+								}
+							}, 400)
+						})
+					},
 			setVideoUrl(f, src) {
 				if (!this.isbuy&& getApp().globalData.userId != this.detailInfo.userId) {
 					uni.showToast({
@@ -426,6 +450,9 @@
 			onClickItem(e) {
 				if (this.current !== e.currentIndex) {
 					this.current = e.currentIndex;
+					if (this.current == 1) {
+						this.scrollToBottom();
+					}
 				}
 			},
 			//确认订单	传递所需的参数
@@ -519,6 +546,7 @@
 					}
 				}, true, true).then(data => {
 					that.messageList = data.records;
+					that.scrollToBottom();
 				})
 			},
 			share() {
@@ -576,6 +604,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		padding-bottom: 120rpx;
 	}
 
 	.secondView {
@@ -585,6 +614,7 @@
 		margin-left: 30rpx;
 		margin-right: 30rpx;
 		margin-top: 30rpx;
+		
 		display: flex;
 		flex-direction: column;
 
@@ -927,7 +957,7 @@
 		width: 100%;
 		bottom: 0px;
 		right: 0px;
-		position: absolute;
+		position: fixed;
 		background-color: #FFFFFF;
 		display: flex;
 		flex-direction: row;
@@ -1056,10 +1086,7 @@
 	.messageView {
 		position: relative;
 		width: 100%;
-		min-height: 500rpx;
-		max-height: 800rpx;
-		overflow-y: scroll;
-		padding-bottom: 120rpx;
+		height: 500rpx;
 		background-color: #FFF7F7;
 	}
 

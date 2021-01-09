@@ -257,7 +257,7 @@
 			</view>
 			<view style="width:100%;height:120rpx"></view>
 		</scroll-view>
-		<view class="bottomview">
+		<view class="bottomview" v-if="my != 1">
 			<text class="huanzhepingding" @click="toPage('/pages/KangfuPingdingListPage/KangfuPingdingListPage')">患者评定</text>
 			<text class="kangfujilu" @click="toPage('/pages/HuanzheDetail/record/record')">康复记录</text>
 		</view>
@@ -328,7 +328,7 @@
 		},
 		onLoad(options) {
 			this.id = options.id ? options.id : 1;
-
+			this.my = options.my;
 		},
 		methods: {
 			endZhiListTips() {
