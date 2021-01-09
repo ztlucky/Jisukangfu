@@ -1,7 +1,7 @@
 <template>
 	<view class="viewPage">
 		<nav-bar bgColor="#FFFFFF" fontColor="#333333" title="个人信息">
-			<image slot="right" class="rightImage" @click="toPage('/pages/Wode/customerInfo/customerInfo?type=1')" src="/static/tips.png"></image>
+			<image slot="right" class="rightImage" @click="toPage_('/pages/Wode/customerInfo/customerInfo?type=1')" src="/static/tips.png"></image>
 		</nav-bar>
 		<view class="list" >
 			<view class="item" @click="toPage('/pages/Wode/WorkUnits/WorkUnits')">
@@ -235,6 +235,13 @@
 				}
 				uni.navigateTo({
 					url:'/pages/work/addOtherCertification/addOtherCertification?key='+key+'&value='+this[key],
+					animationDuration:300,
+					animationType:'slide-in-right'
+				})
+			},
+			toPage_(url){
+				uni.navigateTo({
+					url,
 					animationDuration:300,
 					animationType:'slide-in-right'
 				})

@@ -1,6 +1,6 @@
 <template>
 	<view class="viewPage">
-		<view class="item">{{value}}</view>
+		<view class="item">{{type == 1?data.auditExplain:data.customerService}}</view>
 	</view>
 </template>
 
@@ -9,10 +9,11 @@
 	export default {
 		data() {
 			return {
-				value:''
+				data:{}
 			}
 		},
-		onLoad() {
+		onLoad(options) {
+			this.type = options.type;
 			this.getInfo();
 		},
 		methods: {
@@ -23,7 +24,7 @@
 					data:{},
 					type:"GET"
 				},true,true).then(data=>{
-					that.value = data;
+					that.data = data;
 				})
 			}
 		}
