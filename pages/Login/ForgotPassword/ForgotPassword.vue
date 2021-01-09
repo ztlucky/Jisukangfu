@@ -61,7 +61,7 @@
 				}else{
 					
 					uni.request({
-						url:'http://www.huaxiakangfu.com:8090/app/msg/sendcode',
+						url:'http://kfy.huaxiakangfu.com/app/msg/sendcode',
 						
 						header: {
 						 'content-type': 'application/json', 

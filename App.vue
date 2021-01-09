@@ -7,6 +7,7 @@
 		onLaunch: function() {
 			
 			// #ifdef APP-PLUS
+			plus.push.setAutoNotification( false );
 			this.getShareData();
 			this.getClientInfo();
 
@@ -32,8 +33,12 @@
 
 			});
 			plus.push.addEventListener('receive', function(message) {
-				plus.nativeUI.toast('push receive');
-				_handlePush(message);
+				if(message.title == "ZB78965"){
+					uni.$emit('setMessageData',{});
+				}
+				
+				// plus.nativeUI.toast('push receive');
+				// _handlePush(message);
 			});
 			//没有点击推送，接口请求检测版本更新
 			if (ispush == false) {
@@ -52,6 +57,7 @@
 
 		},
 		onHide: function() {
+			
 			console.log('App Hide')
 		},
 		methods: {

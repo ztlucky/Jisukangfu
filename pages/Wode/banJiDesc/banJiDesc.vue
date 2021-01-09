@@ -170,7 +170,7 @@
 					}
 				}, true, true).then(data => {
 					data.data.classTable = JSON.parse(data.data.classTable);
-					this.info = data.data;
+					this.info = this.detailInfo = data.data;
 					that.isbuy = data.isBuy;
 					that.isfav = data.isCollect;
 
@@ -311,7 +311,7 @@
 						column: 'createTime',
 						order: 'asc',
 						pageNo: 1,
-						pageSize: 30
+						pageSize: 300
 					}
 				}, true, true).then(data => {
 					that.messageList = data.records;
@@ -328,6 +328,8 @@
 				if (this.detailInfo.couponCount == this.detailInfo.couponUsedCount) {
 					couponCode = 0
 				}
+				let name = uni.getStorageSync('name');
+				let that = this;
 				return request({
 					url:getApp().$api.share.rebate,
 					data:{
@@ -340,8 +342,8 @@
 					let shareData = {
 						type: 0,
 						shareUrl: `http://jskf.huaxiakangfu.com/app_share/index.html#/?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}&rebateCode=${result}`,
-						shareTitle: "分享的标题",
-						shareContent: "分享的描述",
+						shareTitle: `${name}: 分享了班级《${that.detailInfo.name}》`,
+						shareContent: "班级简介: "+that.detailInfo.presentation,
 					};
 					console.log(shareData)
 					// 调用
@@ -705,6 +707,8 @@
 		position: relative;
 		width: 100%;
 		min-height: 500rpx;
+		max-height: 800rpx;
+		overflow-y: scroll;
 		padding-bottom: 120rpx;
 		background-color: #FFF7F7;
 	}

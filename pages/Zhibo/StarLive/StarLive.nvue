@@ -46,6 +46,11 @@
  			
 			
 		},
+		onUnload() {
+			if(this.isplay){
+				this.endLiveStatus(true);
+			}
+		},
 		onShow() { 			
 		},
 		 onReady() {
@@ -106,7 +111,7 @@
 										console.log("直播已开始")
 										var that = this;
 										uni.request({
-											url: "http://www.huaxiakangfu.com:8090/live/live/startLive",
+											url: "http://kfy.huaxiakangfu.com/live/live/startLive",
 											data: {
 												live_id: that.liveId
 												 
@@ -132,11 +137,11 @@
 										});
 									},
 									//修改直播状态结束直播
-									endLiveStatus(){
+									endLiveStatus(flag = false){
 										console.log('stop')
 										var that = this;
 										uni.request({
-											url: "http://www.huaxiakangfu.com:8090/live/live/stopLive",
+											url: "http://kfy.huaxiakangfu.com/live/live/stopLive",
 											data: {
 												live_id: that.liveId
 												 
@@ -148,9 +153,11 @@
 												
 												if (res.data.code ==200) {
 						 						
-												  uni.navigateBack({
-												  	
-												  })
+												  if(!flag){
+													  uni.navigateBack({
+													  	
+													  })
+												  }
 												  uni.showToast({
 												  	title:'直播已结束',
 												  	icon:'none',

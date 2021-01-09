@@ -515,7 +515,7 @@
 						column: 'createTime',
 						order: 'asc',
 						pageNo: 1,
-						pageSize: 30
+						pageSize: 300
 					}
 				}, true, true).then(data => {
 					that.messageList = data.records;
@@ -532,7 +532,8 @@
 				if (this.detailInfo.couponCount == this.detailInfo.couponUsedCount) {
 					couponCode = 0
 				}
-				console.log(`http://jskf.huaxiakangfu.com/app_share/index.html#/?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}`)
+				let name = uni.getStorageSync('name');
+				let that = this;
 				return request({
 					url:getApp().$api.share.rebate,
 					data:{
@@ -545,8 +546,8 @@
 					let shareData = {
 						type: 0,
 						shareUrl: `http://jskf.huaxiakangfu.com/app_share/index.html#/?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}&rebateCode=${result}`,
-						shareTitle: "分享的标题",
-						shareContent: "分享的描述",
+						shareTitle: `${name}: 分享了课程《${that.detailInfo.name}》`,
+						shareContent: "课程简介: "+that.detailInfo.presentation,
 					};
 					// 调用
 					let shareObj = appShare(shareData, res => {
@@ -1056,6 +1057,8 @@
 		position: relative;
 		width: 100%;
 		min-height: 500rpx;
+		max-height: 800rpx;
+		overflow-y: scroll;
 		padding-bottom: 120rpx;
 		background-color: #FFF7F7;
 	}

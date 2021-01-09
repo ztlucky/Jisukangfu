@@ -137,7 +137,14 @@
 			})
 			//获取直播拉流地址
 			 this.getPullurl();
-			 this.getmessageList()
+			 this.getmessageList();
+			 this.time = setInterval(()=>{
+				 this.getmessageList();
+			 },2000);
+			 this.addEvent();
+		},
+		onUnload() {
+			clearInterval(this.time);
 		},
 		onReady() {
 			
@@ -147,8 +154,8 @@
 				let shareData = {
 					type: 0,
 					shareUrl: `http://jskf.huaxiakangfu.com/app_share/index.html#/`,
-					shareTitle: "分享的标题",
-					shareContent: "分享的描述",
+					shareTitle: "极速康复",
+					shareContent: "极速康复",
 				};
 				// 调用
 				let shareObj = appShare(shareData, res => {
@@ -255,7 +262,7 @@
 					data: {
 						c_id:uni.getStorageSync('clientInfo').clientid,
 						type:getApp().globalData.livesku,
-						sendId:getApp().globalData.userId,
+						// sendId:getApp().globalData.userId,
 						condition:true,
 						objectId:that.liveid,
 						column:'createTime',
@@ -273,6 +280,7 @@
 					fail: res => {
 					},
 					complete: res => {
+						
 					}
 				});
 			},
@@ -303,6 +311,13 @@
 					complete: res => {
 					}
 				});
+			},
+			addEvent(){
+				let that = this;
+				uni.$on('setMessageData',data=>{
+					that.getmessageList();
+				});
+				console.log(' 开始监听')
 			}
 		}
 	}

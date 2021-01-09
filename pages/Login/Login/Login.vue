@@ -117,7 +117,7 @@
 				} else {
 
 					uni.request({
-						url: 'http://www.huaxiakangfu.com:8090/app/msg/sendcode',
+						url: 'http://kfy.huaxiakangfu.com/app/msg/sendcode',
 
 						header: {
 							'content-type': 'application/json',
@@ -193,8 +193,8 @@
 				console.log(unionid)
 
 				uni.request({
-					//url: 'http://www.huaxiakangfu.com:8090/app/user/loginByWX',
-                  url:'http://www.huaxiakangfu.com:8090/user/user/loginByWX',
+					//url: 'http://kfy.huaxiakangfu.com/app/user/loginByWX',
+                  url:'http://kfy.huaxiakangfu.com/user/user/loginByWX',
 					header: {
 						'content-type': 'application/json',
 					},
@@ -300,7 +300,7 @@
 				} else {
 					plus.runtime.getProperty(plus.runtime.appid,(wgtinfo)=>{
 					    uni.request({
-					    	url: 'http://www.huaxiakangfu.com:8090/user/user/loginByPhoneCode',
+					    	url: 'http://kfy.huaxiakangfu.com/user/user/loginByPhoneCode',
 					    
 					    	header: {
 					    		'content-type': 'application/json',

@@ -81,8 +81,8 @@
 				</zzx-tabs>
 				<view class="detailText" v-show="current === 0">{{detailInfo.presentation}}</view>
 				<view v-show="current === 1">
-					<view class="messageView">
-						<view v-for="(item , index) in messageList" :key="index">
+					<scroll-view id="scrollview" :scroll-top="scrollTop" class="messageView" scroll-y="true" :scroll-into-view="intoView">
+						<view class="m-item" v-for="(item , index) in messageList" :key="index" :id="index == messageList.length -1?'end':'aa'+index">
 							<view class="messageItem messageLeft" v-if="item.sendUser.id != userid">
 								<image :src="item.sendUser.headUrl" mode="aspectFill" class="messageItemImage"></image>
 								<view class="messageItemName">
@@ -98,7 +98,8 @@
 										<view class="messageItemNameText">{{item.content}}</view>
 									</view>
 								</view>
-								<image :src="item.sendUser.headUrl?item.sendUser.headUrl:item.sendUser.sex == 1 ?'../../../static/gongzuotai/icon_nan.png':'../../../static/gongzuotai/icon_nv.png'" mode="aspectFill" class="messageItemImage"></image>
+								<image :src="item.sendUser.headUrl?item.sendUser.headUrl:item.sendUser.sex == 1 ?'../../../static/gongzuotai/icon_nan.png':'../../../static/gongzuotai/icon_nv.png'"
+								 mode="aspectFill" class="messageItemImage"></image>
 
 							</view>
 
@@ -108,9 +109,10 @@
 							<input placeholder="请输入您的留言" v-model="messageValue" />
 							<view class="sendMessage" :class="messageValue?'sendMessage_':''" @click="sendMessage">发送</view>
 						</view>
-					</view>
-
+					</scroll-view>
 				</view>
+
+
 
 			</view>
 		</scroll-view>
@@ -165,7 +167,13 @@
 				showVideo: false,
 				messageValue: '',
 				messageList: [],
-				userid: ''
+				userid: '',
+				intoView: 'end',
+				scrollTop: 0,
+				style:{
+					pageHeight:0,
+					contentViewHeight:0
+				}
 			}
 		},
 		onLoad: function(e) {
@@ -174,6 +182,8 @@
 			this.getLivedetail();
 			this.getMessageList();
 			this.userid = getApp().globalData.userId;
+			this.style.pageHeight = 500;
+			this.style.contentViewHeight = 500;
 		},
 		onShow: function(e) {
 			this.videoImageHeight = this.$app.getwindowWidth() * 0.763 - 44
@@ -238,9 +248,9 @@
 					} else {
 						if (data.isBuy == true) {
 							this.buyBtnText = "已购买"
-							if(this.detailInfo.status == 1){
+							if (this.detailInfo.status == 1) {
 								this.buyBackColor = '#ff0000'
-							}else{
+							} else {
 								this.buyBackColor = '#999999'
 							}
 
@@ -278,264 +288,297 @@
 					console.log(that.videoFile, that.pdfFile)
 				})
 			},
-			setVideoUrl(f, src) {
-				if(!this.isbuy&& getApp().globalData.userId != this.detailInfo.userId){
-					uni.showToast({
-						title:'请购买后进行查看',
-						duration:1500,
-						icon:'none'
-					});
-					return false;
-				}
-				if (f) {
-					this.videoUrl = src;
-				}
-				console.log(this.videoUrl);
-				this.showVideo = f;
-			},
-			getUrlName(url) {
-				let name = url.split('/')[url.split('/').length - 1];
-				return name.split('.')[1];
-			},
-
-			//添加收藏
-			favAction() {
+			scrollToBottom() {
 				let that = this;
-				if (that.isfav == true) {
-					//取消收藏
-					this.$app.request({
-						url: getApp().$api.zhibo.unfavLivecourse,
-						method: 'POST',
-						data: {
-							userid: getApp().globalData.userId,
-							bindtype: 1,
-							liveid: that.courseID
-						},
-						dataType: 'json',
-						success: res => {
-							if (res.code == 200) {
-								that.isfav = false;
-								uni.showToast({
-									title: res.message,
-									icon: 'none'
-								})
-							} else {
-								uni.showToast({
-									title: res.message,
-									icon: 'none'
-								})
-							}
-						},
-						complete: res => {}
-					});
+				let query = uni.createSelectorQuery();
+				query.selectAll('.m-item').boundingClientRect();
+				query.select('#scrollview').boundingClientRect();
+				query.exec((res) => {
+							that.style.mitemHeight = 0;
+							
+							res[0].forEach((rect) => that.style.mitemHeight = that.style.mitemHeight + rect.height + 100) //获取所有内部子元素的高度
+							// 因为vue的虚拟DOM 每次生成的新消息都是之前的，所以采用异步setTimeout    主要就是添加了这红字
+							
+							setTimeout(() => {
 
-				} else {
+								if (that.style.mitemHeight > (that.style.contentViewHeight - 80)) { //判断子元素高度是否大于显示高度
+									that.scrollTop = that.style.mitemHeight - that.style.contentViewHeight //用子元素的高度减去显示的高度就获益获得序言滚动的高度
+								}
+							}, 400)
+						})
+					},
+					setVideoUrl(f, src) {
+						if (!this.isbuy && getApp().globalData.userId != this.detailInfo.userId) {
+							uni.showToast({
+								title: '请购买后进行查看',
+								duration: 1500,
+								icon: 'none'
+							});
+							return false;
+						}
+						if (f) {
+							this.videoUrl = src;
+						}
+						console.log(this.videoUrl);
+						this.showVideo = f;
+					},
+					getUrlName(url) {
+						let name = url.split('/')[url.split('/').length - 1];
+						return name.split('.')[1];
+					},
+
 					//添加收藏
+					favAction() {
+						let that = this;
+						if (that.isfav == true) {
+							//取消收藏
+							this.$app.request({
+								url: getApp().$api.zhibo.unfavLivecourse,
+								method: 'POST',
+								data: {
+									userid: getApp().globalData.userId,
+									bindtype: 1,
+									liveid: that.courseID
+								},
+								dataType: 'json',
+								success: res => {
+									if (res.code == 200) {
+										that.isfav = false;
+										uni.showToast({
+											title: res.message,
+											icon: 'none'
+										})
+									} else {
+										uni.showToast({
+											title: res.message,
+											icon: 'none'
+										})
+									}
+								},
+								complete: res => {}
+							});
 
-					this.$app.request({
-						url: getApp().$api.zhibo.favLivecourse,
-						method: 'POST',
-						data: {
-							userid: getApp().globalData.userId,
-							bindtype: 1,
-							liveid: that.courseID
-						},
-						dataType: 'json',
-						success: res => {
-							if (res.code == 200) {
-								that.isfav = true;
-								uni.showToast({
-									title: res.message,
-									icon: 'none'
-								})
-							} else {
-								uni.showToast({
-									title: res.message,
-									icon: 'none'
-								})
+						} else {
+							//添加收藏
+
+							this.$app.request({
+								url: getApp().$api.zhibo.favLivecourse,
+								method: 'POST',
+								data: {
+									userid: getApp().globalData.userId,
+									bindtype: 1,
+									liveid: that.courseID
+								},
+								dataType: 'json',
+								success: res => {
+									if (res.code == 200) {
+										that.isfav = true;
+										uni.showToast({
+											title: res.message,
+											icon: 'none'
+										})
+									} else {
+										uni.showToast({
+											title: res.message,
+											icon: 'none'
+										})
+									}
+								},
+								complete: res => {}
+							});
+
+						}
+
+					},
+
+					onClickItem(e) {
+						if (this.current !== e.currentIndex) {
+							this.current = e.currentIndex;
+							if (this.current == 1) {
+								this.scrollToBottom();
 							}
-						},
-						complete: res => {}
-					});
+						}
 
-				}
-
-			},
-
-			onClickItem(e) {
-				if (this.current !== e.currentIndex) {
-					this.current = e.currentIndex;
-				}
-			},
-			openFile(url) {
-				if(!this.isbuy && getApp().globalData.userId != this.detailInfo.userId){
-					uni.showToast({
-						title:'请购买后进行查看',
-						duration:1500,
-						icon:'none'
-					});
-					return false;
-				}
-				uni.showModal({
-					title: '操作提示',
-					content: '是否查看这个文件',
-					success(res) {
-						if (res.confirm) {
-							uni.downloadFile({
-								url,
-								success: function(res) {
-									var filePath = res.tempFilePath;
-									uni.openDocument({
-										filePath: filePath,
-										success: function(res) {}
+					},
+					openFile(url) {
+						if (!this.isbuy && getApp().globalData.userId != this.detailInfo.userId) {
+							uni.showToast({
+								title: '请购买后进行查看',
+								duration: 1500,
+								icon: 'none'
+							});
+							return false;
+						}
+						uni.showModal({
+							title: '操作提示',
+							content: '是否查看这个文件',
+							success(res) {
+								if (res.confirm) {
+									uni.downloadFile({
+										url,
+										success: function(res) {
+											var filePath = res.tempFilePath;
+											uni.openDocument({
+												filePath: filePath,
+												success: function(res) {}
+											});
+										}
 									});
 								}
-							});
+							}
+						})
+					},
+					//确认订单	传递所需的参数
+					comfirmOrder() {
+						if (getApp().globalData.userId == this.detailInfo.userId) {
+							uni.navigateTo({
+								url: '../../Zhibo/StarLive/StarLive?streamName=' + this.detailInfo.streamName + '&liveid=' + this.courseID,
+								animationType: 'slide-in-right',
+								animationDuration: 300
+							})
+							return false;
 						}
-					}
-				})
-			},
-			//确认订单	传递所需的参数
-			comfirmOrder() {
-				console.log(this.$api.zhibo.livePushurl)
-				if (this.buyBtnText == "开始直播") {
-					console.log(this.courseID)
-					uni.navigateTo({
-						url: '../../Zhibo/StarLive/StarLive?streamName=' + this.detailInfo.streamName + '&liveid=' + this.courseID,
-						animationType: 'slide-in-right',
-						animationDuration: 300
-					})
+						if (this.buyBtnText == "开始直播") {
+							console.log(this.courseID)
+							uni.navigateTo({
+								url: '../../Zhibo/StarLive/StarLive?streamName=' + this.detailInfo.streamName + '&liveid=' + this.courseID,
+								animationType: 'slide-in-right',
+								animationDuration: 300
+							})
 
-				} else if (this.buyBtnText == "立即购买") {
+						} else if (this.buyBtnText == "立即购买") {
 
-					const item = {
-						sku: getApp().globalData.livesku,
-						courseID: this.courseID,
-						cover: this.detailInfo.cover,
-						cost: this.detailInfo.cost,
-						title: this.detailInfo.title,
-						time: this.detailInfo.beginTime
-					}
-					uni.navigateTo({
-						url: '../../Order/ConfirmOrder/ConfirmOrder?item=' + encodeURIComponent(JSON.stringify(item)),
-						animationType: 'slide-in-right',
-						animationDuration: 300
-					})
+							const item = {
+								sku: getApp().globalData.livesku,
+								courseID: this.courseID,
+								cover: this.detailInfo.cover,
+								cost: this.detailInfo.cost,
+								title: this.detailInfo.title,
+								time: this.detailInfo.beginTime
+							}
+							uni.navigateTo({
+								url: '../../Order/ConfirmOrder/ConfirmOrder?item=' + encodeURIComponent(JSON.stringify(item)),
+								animationType: 'slide-in-right',
+								animationDuration: 300
+							})
 
 
-				} else if (this.buyBtnText == '已购买') {
-					if (this.detailInfo.status == 1) {
-						const item = {
-							liveid: this.courseID,
-							streamName: this.detailInfo.streamName,
-							title: this.detailInfo.title
+						} else if (this.buyBtnText == '已购买') {
+							if (this.detailInfo.status == 1) {
+								const item = {
+									liveid: this.courseID,
+									streamName: this.detailInfo.streamName,
+									title: this.detailInfo.title
+								}
+								uni.navigateTo({
+									url: '../../Zhibo/WatchLive/WatchLive?item=' + encodeURIComponent(JSON.stringify(item)),
+									animationType: 'slide-in-right',
+									animationDuration: 300
+								})
+							} else {
+								uni.showToast({
+									title: '直播未开始',
+									icon: 'none'
+								})
+							}
+
+
 						}
+
+
+
+					},
+					openInfo(index) {
 						uni.navigateTo({
-							url: '../../Zhibo/WatchLive/WatchLive?item=' + encodeURIComponent(JSON.stringify(item)),
-							animationType: 'slide-in-right',
+							url: '/pages/Daxue/TeacherDetail/TeacherDetail?id=' + index,
+							animationType: "slide-in-right",
 							animationDuration: 300
 						})
-					} else {
-						uni.showToast({
-							title: '直播未开始',
-							icon: 'none'
+					},
+					share() {
+						let goodsId = this.courseID;
+						let rebateType = getApp().globalData.livesku;
+						let couponCode = this.detailInfo.coupon;
+						let invitationCode = this.detailInfo.invitationCode;
+						if (this.detailInfo.invitationCodeCount == this.detailInfo.invitationCodeUsedCount) {
+							invitationCode = 0
+						}
+						if (this.detailInfo.couponCount == this.detailInfo.couponUsedCount) {
+							couponCode = 0
+						}
+						let name = uni.getStorageSync('name');
+						let that = this;
+						return request({
+							url: getApp().$api.share.rebate,
+							data: {
+								goodsId,
+								rebateType
+							},
+							type: "POST"
+						}, false).then(res => {
+							let result = res.result;
+							let shareData = {
+								type: 0,
+								shareUrl: `http://jskf.huaxiakangfu.com/app_share/index.html#/?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}&rebateCode=${result}`,
+								shareTitle: `${name}: 分享了直播《${that.detailInfo.name}》`,
+								shareContent: "直播简介: " + that.detailInfo.presentation,
+							};
+							console.log(shareData)
+							// 调用
+							let shareObj = appShare(shareData, res => {
+								console.log("分享成功回调", res);
+								// 分享成功后关闭弹窗
+								// 第一种关闭弹窗的方式
+								closeShare();
+							});
+							// setTimeout(() => {
+							// 	// 第二种关闭弹窗的方式
+							// 	shareObj.close();
+							// }, 5000);
+						})
+
+					},
+					sendMessage() {
+						if (this.messageValue == '') return false;
+						let that = this;
+						return request({
+							url: getApp().$api.zhibo.sendMessage,
+							data: {
+								type: getApp().globalData.livesku,
+								content: that.messageValue,
+								sendId: getApp().globalData.userId,
+								createBy: getApp().globalData.userName,
+								objectId: that.id,
+							},
+							type: "POST"
+						}, true, true).then(data => {
+							that.messageValue = '';
+							that.getMessageList();
+						})
+					},
+					getMessageList() {
+						let that = this;
+						return request({
+							url: getApp().$api.zhibo.getMessageList,
+							type: "GET",
+							data: {
+								c_id: uni.getStorageSync('clientInfo').clientid,
+								type: getApp().globalData.livesku,
+								// sendId: getApp().globalData.userId,
+								condition: true,
+								objectId: that.id,
+								column: 'createTime',
+								order: 'asc',
+								pageNo: 1,
+								pageSize: 300
+							}
+						}, true, true).then(data => {
+							that.messageList = data.records;
+							that.scrollToBottom();
 						})
 					}
-
-
-				}
-
-
-
-			},
-			openInfo(index) {
-				uni.navigateTo({
-					url: '/pages/Daxue/TeacherDetail/TeacherDetail?id=' + index,
-					animationType: "slide-in-right",
-					animationDuration: 300
-				})
-			},
-			share() {
-				let goodsId = this.courseID;
-				let rebateType = getApp().globalData.livesku;
-				let couponCode = this.detailInfo.coupon;
-				let invitationCode = this.detailInfo.invitationCode;
-				if (this.detailInfo.invitationCodeCount == this.detailInfo.invitationCodeUsedCount) {
-					invitationCode = 0
-				}
-				if (this.detailInfo.couponCount == this.detailInfo.couponUsedCount) {
-					couponCode = 0
-				}
-				return request({
-					url:getApp().$api.share.rebate,
-					data:{
-						goodsId,
-						rebateType
-					},
-					type:"POST"
-				},false).then(res=>{
-					let result = res.result;
-					let shareData = {
-						type: 0,
-						shareUrl: `http://jskf.huaxiakangfu.com/app_share/index.html#/?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}&rebateCode=${result}`,
-						shareTitle: "分享的标题",
-						shareContent: "分享的描述",
-					};
-					console.log(shareData)
-					// 调用
-					let shareObj = appShare(shareData, res => {
-						console.log("分享成功回调", res);
-						// 分享成功后关闭弹窗
-						// 第一种关闭弹窗的方式
-						closeShare();
-					});
-					// setTimeout(() => {
-					// 	// 第二种关闭弹窗的方式
-					// 	shareObj.close();
-					// }, 5000);
-				})
-				
-			},
-			sendMessage() {
-				if (this.messageValue == '') return false;
-				let that = this;
-				return request({
-					url: getApp().$api.zhibo.sendMessage,
-					data: {
-						type: getApp().globalData.livesku,
-						content: that.messageValue,
-						sendId: getApp().globalData.userId,
-						createBy: getApp().globalData.userName,
-						objectId: that.id,
-					},
-					type: "POST"
-				}, true, true).then(data => {
-					that.messageValue = '';
-					that.getMessageList();
-				})
-			},
-			getMessageList() {
-				let that = this;
-				return request({
-					url: getApp().$api.zhibo.getMessageList,
-					type: "GET",
-					data: {
-						c_id: uni.getStorageSync('clientInfo').clientid,
-						type: getApp().globalData.livesku,
-						// sendId: getApp().globalData.userId,
-						condition: true,
-						objectId: that.id,
-						column: 'createTime',
-						order: 'asc',
-						pageNo: 1,
-						pageSize: 30
-					}
-				}, true, true).then(data => {
-					that.messageList = data.records;
-				})
 			}
 		}
-	}
 </script>
 <style>
 	page {
@@ -1034,7 +1077,9 @@
 		position: relative;
 		width: 100%;
 		min-height: 500rpx;
-		padding-bottom: 120rpx;
+		max-height: 800rpx;
+		// overflow-y: scroll;
+		// padding-bottom: 120rpx;
 		background-color: #FFF7F7;
 	}
 
@@ -1084,8 +1129,8 @@
 	}
 
 	.messageInput {
-		width:690rpx;
-		padding:20rpx 30rpx;
+		width: 690rpx;
+		padding: 20rpx 30rpx;
 		position: fixed;
 		// width: 100%;
 		bottom: 0rpx;

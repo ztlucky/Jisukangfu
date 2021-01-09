@@ -1,15 +1,15 @@
 <template>
-	<view class="contentView" >
-	 <view class="navview" :style="[{paddingTop: statusBarHeight+5 + 'px',paddingBottom: statusBarHeight+5 + 'px'}]">
-	 	<image class="imageview" src="../../static/Huanzhexiangqing/fanhui.png" mode="" @click="returnBack"></image>
-		<text class="title">患者详情</text>
-		<view class="navRight" @click="endZhiliao" v-if="zhiliaoStaut == 0">
-			结束治疗
+	<view class="contentView">
+		<view class="navview" :style="[{paddingTop: statusBarHeight+5 + 'px',paddingBottom: statusBarHeight+5 + 'px'}]">
+			<image class="imageview" src="../../static/Huanzhexiangqing/fanhui.png" mode="" @click="returnBack"></image>
+			<text class="title">患者详情</text>
+			<view class="navRight" @click="endZhiliao(1)" v-if="zhiliaoStaut == 0">
+				结束治疗
+			</view>
+			<view class="navRight" @click="endZhiliao(0)" v-if="zhiliaoStaut == 1">
+				治疗已结束
+			</view>
 		</view>
-		<view class="navRight" v-if="zhiliaoStaut == 1">
-			治疗已结束
-		</view>
-	 </view>
 		<scroll-view scroll-y="true" @scroll="scroll" :style="[{height:viewHeight + 'px'}]">
 			<view class="huanzheview">
 				<view class="huanzheTopview">
@@ -125,7 +125,7 @@
 
 				</view>
 				<view class="xiangmuList" v-if="info.treatmentList.length>=1 && info.treatmentList[0].subproject">
-					<view class="xiangmuItem"  v-for="(v,k) in info.treatmentList[0].subproject" :key="k">
+					<view class="xiangmuItem" v-for="(v,k) in info.treatmentList[0].subproject" :key="k">
 						<view class="dot"></view>
 						<view class="xiangmuItemRight">
 							<view style="display: flex;align-items: center;">
@@ -139,7 +139,7 @@
 					</view>
 				</view>
 				<view class="notData" v-if="info.treatmentList.length == 0">暂无数据</view>
-				  <!-- <view class="hview">
+				<!-- <view class="hview">
 					<text>时间</text>
 					<view class="v_lineView">
 					</view>
@@ -148,8 +148,8 @@
 
 					</view>
 					<text>状态</text>
-				</view> -->  
-				  <!-- <view v-for='(item,index) in kangfuxiangmu' :key='index'>
+				</view> -->
+				<!-- <view v-for='(item,index) in kangfuxiangmu' :key='index'>
 					<view class="zhiliaoxiangmu">
 						<text class="time">{{item.time}}</text>
 						<view class="v_lineView1">
@@ -168,7 +168,7 @@
 
 					</view>
 
-				</view> -->  
+				</view> -->
 
 			</view>
 			<!-- //康复评定 -->
@@ -189,7 +189,8 @@
 
 				</view>
 				<view class="xiangmuList">
-					<view class="xiangmuItem" @click="toPage('/pages/HuanzheDetail/evaluation/evaluation',v.id)" v-for="(v,k) in info.assessResults" :key="k">
+					<view class="xiangmuItem" @click="toPage('/pages/HuanzheDetail/evaluation/evaluation',v.id)" v-for="(v,k) in info.assessResults"
+					 :key="k">
 						<view class="dot"></view>
 						<view class="xiangmuItemRight">
 							<view class="itemRightTitle itemRightTitle1 hidden">{{v.ratingScaleName}}</view>
@@ -216,7 +217,7 @@
 					</view>
 					<text class="mubiaodetail">患者身体比较虚弱，需要谨慎治疗。。</text>
 				</view> -->
-			
+
 			</view>
 			<!-- //患者记录-->
 			<view class="kangfubgview">
@@ -235,7 +236,8 @@
 				<view class="lineview">
 
 				</view>
-				<view class="mubiaoview" @click="toPage('/pages/HuanzheDetail/recordInfo/recordInfo',v.id)" v-for="(v,k) in info.patientRecords" :key="k">
+				<view class="mubiaoview" @click="toPage('/pages/HuanzheDetail/recordInfo/recordInfo',v.id)" v-for="(v,k) in info.patientRecords"
+				 :key="k">
 					<view class="upview">
 						<view class="dot">
 						</view>
@@ -259,33 +261,34 @@
 			<text class="huanzhepingding" @click="toPage('/pages/KangfuPingdingListPage/KangfuPingdingListPage')">患者评定</text>
 			<text class="kangfujilu" @click="toPage('/pages/HuanzheDetail/record/record')">康复记录</text>
 		</view>
-		<xiangmu v-if="isShowPerformWindow" :short="short" :long="long" :number="number" @setNumber="setNumber" @setShowPerformWindowStatus="setShowPerformWindowStatus" @stopProgress="stopProgress" @setShowFinishWindowStatus="setShowFinishWindowStatus"></xiangmu>
+		<xiangmu v-if="isShowPerformWindow" :short="short" :long="long" :number="number" @setNumber="setNumber"
+		 @setShowPerformWindowStatus="setShowPerformWindowStatus" @stopProgress="stopProgress" @setShowFinishWindowStatus="setShowFinishWindowStatus"></xiangmu>
 		<complete-target v-if="isShowFinishWindow" @confirmFinish="confirmFinish" :number="nowScore"></complete-target>
-		<view class="controlview"  :style="[{top:navheight+statusBarHeight+ 'px'}]" @click="endZhiListTips"  v-show="zhiliaoStaut == 1">
-		
-	</view>
+		<view class="controlview" :style="[{top:navheight+statusBarHeight+ 'px'}]" @click="endZhiListTips" v-show="zhiliaoStaut == 1">
+
+		</view>
 	</view>
 </template>
 
 <script>
 	import request from '../../utils/util.js'
 	import tool from "../../utils/tool.js"
-	import	xiangmu from "@/components/confirmTarget/confirmTarget.vue"
+	import xiangmu from "@/components/confirmTarget/confirmTarget.vue"
 	import completeTarget from "@/components/completeTarget/completeTarget.vue"
 	export default {
-		components:{
+		components: {
 			xiangmu,
 			completeTarget
 		},
 		data() {
 			return {
-				statusBarHeight:20,
-				navheight:34,
-				isShowPerformWindow:false,
-				number:1,
-				isShowFinishWindow:false,
-				short:'',
-				long:'',
+				statusBarHeight: 20,
+				navheight: 34,
+				isShowPerformWindow: false,
+				number: 1,
+				isShowFinishWindow: false,
+				short: '',
+				long: '',
 				switchColor: '#4CD964',
 				viewHeight: 0,
 				kangfuxiangmu: [{
@@ -307,43 +310,43 @@
 					}
 				],
 				bgColor: "rgba(49, 216, 128, 1)",
-				id:0,
-				nowIndex:0,
-				info:{},
-				zhiliaoStaut:0,
-				nowScore:0
+				id: 0,
+				nowIndex: 0,
+				info: {},
+				zhiliaoStaut: 0,
+				nowScore: 0
 			}
 		},
 		onShow: function() {
 			this.viewHeight = this.$app.getwindowHeight() - 69;
 			this.statusBarHeight = uni.getSystemInfoSync()['statusBarHeight'];
 			//this.navheight = this.navheight+this.statusBarHeight;
-			if(this.id){
+			if (this.id) {
 				this.init();
 			}
 
 		},
 		onLoad(options) {
-			this.id = options.id?options.id:1;
-			
+			this.id = options.id ? options.id : 1;
+
 		},
 		methods: {
-			endZhiListTips(){
+			endZhiListTips() {
 				uni.showToast({
-					title:'治疗已结束',
-					duration:1500,
-					icon:'none'
+					title: '治疗已结束',
+					duration: 1500,
+					icon: 'none'
 				})
 			},
-			init(){
+			init() {
 				this.getInfo();
 			},
-			returnBack(){
+			returnBack() {
 				uni.navigateBack({
-					
+
 				});
 			},
-			runXiangMu(k){
+			runXiangMu(k) {
 				let item = this.info.treatmentList[0];
 				this.short = item.shortGoals;
 				this.long = item.longGoals;
@@ -352,63 +355,98 @@
 				this.nowScore = item.subproject[k].score;
 				this.setShowPerformWindowStatus();
 			},
-				//结束治疗
-			endZhiliao(){
-				console.log(this.id);
+			//结束治疗
+			endZhiliao(status) {
 				let that = this;
-				return request({
-					url:that.$api.huanzhe.editHuanZhe,
-					type:"PUT",
-					data:{
-						id:that.id,
-						status:1,
-						
-					}
-				},true,true).then(data=>{
-					 uni.showToast({
-					 	title:'编辑成功',
-						icon:'none'
-					 })
-				    that.zhiliaoStaut  = 1;
-					});
+				if (status == 1) {
+					uni.showModal({
+						title: '温馨提示',
+						content: '是否结束本次治疗',
+						success(res) {
+							if (res.confirm) {
+								return request({
+									url: that.$api.huanzhe.editHuanZhe,
+									type: "PUT",
+									data: {
+										id: that.id,
+										status,
+
+									}
+								}, true, true).then(data => {
+									uni.showToast({
+										title: '编辑成功',
+										icon: 'none'
+									})
+									that.zhiliaoStaut = status;
+								});
+							}
+						}
+					})
+				}else{
+					uni.showModal({
+						title: '温馨提示',
+						content: '是否重新开始本次治疗',
+						success(res) {
+							if (res.confirm) {
+								return request({
+									url: that.$api.huanzhe.editHuanZhe,
+									type: "PUT",
+									data: {
+										id: that.id,
+										status,
+					
+									}
+								}, true, true).then(data => {
+									uni.showToast({
+										title: '编辑成功',
+										icon: 'none'
+									})
+									that.zhiliaoStaut = status;
+								});
+							}
+						}
+					})
+				}
+
+
 			},
-			getInfo(){
+			getInfo() {
 				let that = this;
 				return request({
-					url:that.$api.huanzhe.getInfo,
-					type:"GET",
-					data:{
-						id:that.id
+					url: that.$api.huanzhe.getInfo,
+					type: "GET",
+					data: {
+						id: that.id
 					}
-				},true,true).then(data=>{
+				}, true, true).then(data => {
 					console.log(data.status)
-					if(data.status !=null){
+					if (data.status != null) {
 						that.zhiliaoStaut = data.status;
-						
+
 					}
 					console.log(that.zhiliaoStaut)
-					
- 					if(data.file){
+
+					if (data.file) {
 						data.file = JSON.parse(data.file);
 					}
-					if(data.treatmentList.length>=1){
-						if(data.treatmentList[0].subproject){
+					if (data.treatmentList.length >= 1) {
+						if (data.treatmentList[0].subproject) {
 							data.treatmentList[0].subproject = JSON.parse(data.treatmentList[0].subproject);
-							data.treatmentList[0].subproject.map((v,k)=>{
-							let time = new Date(v.value).getTime() + v.time * 60*1000;
-							let start = new tool().formDate(new Date(v.value),4);
-							let end = new tool().formDate(new Date(time),4);
-							data.treatmentList[0].subproject[k].start = start;
-							data.treatmentList[0].subproject[k].end = end;
-						})
+							data.treatmentList[0].subproject.map((v, k) => {
+								let time = new Date(v.value).getTime() + v.time * 60 * 1000;
+								let start = new tool().formDate(new Date(v.value), 4);
+								let end = new tool().formDate(new Date(time), 4);
+								data.treatmentList[0].subproject[k].start = start;
+								data.treatmentList[0].subproject[k].end = end;
+							})
 						}
-						
+
 					}
 					// if(data.patientRecords.length >=1){
-						// data.patientRecords.map((v,k)=>{
-							// console.log(data.patientRecords[k].createTime);
-							// data.patientRecords[k].createTime = new tool().formDate(new Date(data.patientRecords[k].createTime),'2')
-						// })
+					// data.patientRecords.map((v,k)=>{
+					// console.log(data.patientRecords[k].createTime);
+					// data.patientRecords[k].createTime = new tool().formDate(new Date(data.patientRecords[k].createTime),'2')
+					// })
 					// }
 					that.info = data;
 					console.log(that.info);
@@ -420,60 +458,60 @@
 				// let color = (top/100);
 				// this.bgColor = `rgba(49, 216, 128, ${color == 0?1:color})`;
 			},
-			toPage(url,id) {
+			toPage(url, id) {
 				let that = this;
-				switch(url){
+				switch (url) {
 					case '/pages/HuanzheDetail/addCaseHistory/addCaseHistory':
 						url = `/pages/HuanzheDetail/addCaseHistory/addCaseHistory`
 						let file = that.info.file;
 						let data = {
 							file,
-							title:that.info.diagnose,
-							content:that.info.medicalOpinion
+							title: that.info.diagnose,
+							content: that.info.medicalOpinion
 						}
-						uni.setStorageSync("cases",{
+						uni.setStorageSync("cases", {
 							data
 						});
-					break;
+						break;
 					case '/pages/HuanzheDetail/kangfuxiangmu/kangfuxiangmu':
 						let data1 = {
-							name:that.info.name,
-							sex:that.info.sex,
-							age:that.info.age,
-							illnessName:that.info.illnessName,
-							userId:that.info.userId
+							name: that.info.name,
+							sex: that.info.sex,
+							age: that.info.age,
+							illnessName: that.info.illnessName,
+							userId: that.info.userId
 						};
-							uni.setStorageSync("huanZheInfo",{
-								huanZheInfo:data1
-							});
-					break;
+						uni.setStorageSync("huanZheInfo", {
+							huanZheInfo: data1
+						});
+						break;
 				}
 				console.log(url);
-				if(url == '/pages/HuanzheDetail/recordInfo/recordInfo'){
+				if (url == '/pages/HuanzheDetail/recordInfo/recordInfo') {
 					uni.navigateTo({
-						url:`${url}?id=${this.info.id}&illnessid=${this.info.illnessId}&recordid=${id}`,
+						url: `${url}?id=${this.info.id}&illnessid=${this.info.illnessId}&recordid=${id}`,
 						animationDuration: 300,
 						animationType: 'slide-in-right'
 					})
-				}else if(url == '/pages/HuanzheDetail/evaluation/evaluation'){
+				} else if (url == '/pages/HuanzheDetail/evaluation/evaluation') {
 					uni.navigateTo({
-						url:`${url}?id=${this.info.id}&illnessid=${this.info.illnessId}&assessid=${id}`,
+						url: `${url}?id=${this.info.id}&illnessid=${this.info.illnessId}&assessid=${id}`,
 						animationDuration: 300,
 						animationType: 'slide-in-right'
 					})
-				} else{
+				} else {
 					uni.navigateTo({
-					url:`${url}?id=${this.info.id}&illnessid=${this.info.illnessId}`,
-					animationDuration: 300,
-					animationType: 'slide-in-right'
-				})
+						url: `${url}?id=${this.info.id}&illnessid=${this.info.illnessId}`,
+						animationDuration: 300,
+						animationType: 'slide-in-right'
+					})
 				}
-				
+
 			},
-			setShowPerformWindowStatus(){
+			setShowPerformWindowStatus() {
 				this.isShowPerformWindow = !this.isShowPerformWindow;
 			},
-			endXiangMu(index){
+			endXiangMu(index) {
 				this.nowIndex = index;
 				this.number = 1;
 				this.setShowPerformWindowStatus();
@@ -481,62 +519,62 @@
 				this.long = this.list[index].longGoals;
 				console.log(this.list[index]);
 			},
-			setNumber(data){
+			setNumber(data) {
 				this.number = data.num;
 			},
-			confirmProgress(){
+			confirmProgress() {
 				this.setShowPerformWindowStatus();
 				this.setShowFinishWindowStatus();
 			},
-			stopProgress(){
-					this.setProgress(false).then(()=>{
-						this.getInfo();
-					})
-					this.setShowPerformWindowStatus();
+			stopProgress() {
+				this.setProgress(false).then(() => {
+					this.getInfo();
+				})
+				this.setShowPerformWindowStatus();
 			},
-			setShowFinishWindowStatus(){
-					this.setProgress().then(()=>{
-						this.getInfo();
+			setShowFinishWindowStatus() {
+				this.setProgress().then(() => {
+					this.getInfo();
 					this.isShowFinishWindow = !this.isShowFinishWindow;
 				})
-				
+
 			},
-			confirmFinish(){
+			confirmFinish() {
 				this.isShowFinishWindow = !this.isShowFinishWindow;
 				// this.setShowFinishWindowStatus();
 			},
-			completeXiangMu(f = true){
+			completeXiangMu(f = true) {
 				let that = this;
 				let id = this.info.treatmentList[0].subproject[this.nowIndex].id;
 				return request({
-					url:getApp().$api.huanzhe.editProgram,
-					type:"PUT",
-					data:{
-						doctorId:that.info.userId,
-						patientId:that.info.id,
-						treatmentId:id,
-						tscore:that.number,
-						result:f?1:2
+					url: getApp().$api.huanzhe.editProgram,
+					type: "PUT",
+					data: {
+						doctorId: that.info.userId,
+						patientId: that.info.id,
+						treatmentId: id,
+						tscore: that.number,
+						result: f ? 1 : 2
 					}
-				}).then(data=>{
+				}).then(data => {
 					console.log(data);
 				})
 			},
-			setProgress(f = true){
+			setProgress(f = true) {
 				let that = this;
-				this.info.treatmentList[0].subproject[this.nowIndex].type = f?1:2
+				this.info.treatmentList[0].subproject[this.nowIndex].type = f ? 1 : 2
 				let id = this.info.treatmentList[0].id;
 				let subproject = JSON.stringify(this.info.treatmentList[0].subproject);
 				return request({
-					url:getApp().$api.huanzhe.editProgram,
-					type:"PUT",
-					data:{
+					url: getApp().$api.huanzhe.editProgram,
+					type: "PUT",
+					data: {
 						id,
 						subproject
 					}
-				},false)
+				}, false)
 			},
-			save(){
+			save() {
 				console.log('治疗结束')
 			}
 		}
@@ -552,37 +590,42 @@
 		display: flex;
 		flex-direction: column;
 	}
-	.controlview{
+
+	.controlview {
 		z-index: 999;
 		width: 100%;
-		background-color:rgba(1,1,1,0);
+		background-color: rgba(1, 1, 1, 0);
 		position: fixed;
 		height: 100vh;
-		
-		
+
+
 	}
-	.navview{
+
+	.navview {
 		position: relative;
-		background-color:#31D880;
+		background-color: #31D880;
 		display: flex;
 		// flex-direction: row;
 		align-items: center;
 		justify-content: space-between;
-		height:68rpx;
- 		.imageview{
-			width:36rpx;
-			height:36rpx ;
+		height: 68rpx;
+
+		.imageview {
+			width: 36rpx;
+			height: 36rpx;
 			// margin-top: 10rpx;
 			margin-left: 30rpx;
 		}
-		.title{
+
+		.title {
 			position: absolute;
-			top:50%;
-			transform: translate(-50%,-50%);
+			top: 50%;
+			transform: translate(-50%, -50%);
 			left: 50%;
 			font-size: 36rpx;
 			color: #FFFFFF;
 		}
+
 		.navRight {
 			width: 134rpx;
 			height: 48rpx;
@@ -594,17 +637,19 @@
 			border-radius: 8rpx;
 			margin-right: 30rpx;
 		}
-		
-		
+
+
 	}
-	.notData{
+
+	.notData {
 		text-align: center;
 		line-height: 60rpx;
-		color:#ccc;
-		padding-top:20rpx;
+		color: #ccc;
+		padding-top: 20rpx;
 	}
+
 	.bottomview {
-		width:100%;
+		width: 100%;
 		height: 69px;
 		display: flex;
 		flex-direction: row;
@@ -714,6 +759,7 @@
 						margin-top: 9rpx;
 						padding-top: 5rpx;
 						display: flex;
+
 						.zhenduanimage {
 							width: 28rpx;
 							height: 28rpx;
@@ -723,7 +769,7 @@
 						}
 
 						text {
-							width:200rpx;
+							width: 200rpx;
 							font-size: 20rpx;
 							font-family: PingFangSC-Medium, PingFang SC;
 							font-weight: 500;
@@ -851,7 +897,7 @@
 				}
 
 				.huanzhejiluTitle {
-					width:580rpx;
+					width: 580rpx;
 					font-size: 26rpx;
 					font-family: PingFangSC-Regular, PingFang SC;
 					font-weight: 400;
@@ -1085,6 +1131,7 @@
 				color: #FFFFFF;
 				font-size: 24rpx;
 			}
+
 			.itemRightRun1 {
 				width: 80rpx;
 				height: 40rpx;
@@ -1096,6 +1143,7 @@
 				color: #31D880;
 				font-size: 24rpx;
 			}
+
 			.itemRightRun2 {
 				width: 80rpx;
 				height: 40rpx;
@@ -1109,7 +1157,8 @@
 			}
 		}
 	}
-	.num{
+
+	.num {
 		display: inline-block;
 		margin-top: 10rpx;
 		margin-left: 16rpx;
