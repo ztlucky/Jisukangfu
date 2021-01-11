@@ -162,8 +162,8 @@
  				   <image :lazy-load="true" :src="headimgurl" class="head-avatar" mode=""></image>
  			<!-- <image   src="../../static/gongzuotai/icon_nan.png" class="head-avatar" mode=""></image> -->
 				<view class="headright">
-					<text class="live-online">{{online}}人在观看</text>
-					<text class="head_time">已播 {{result}}</text>
+					<text class="live-online">{{onlineCount}}人在观看</text>
+					<text class="head_time">已播 {{time}}</text>
 					 			 
 					
 				</view>
@@ -206,28 +206,33 @@
 			},
 			anchor_uid: {
 				default: false
+			},
+			time:{
+				default:false
+			},
+			onlineCount:{
+				default: 0
 			}
 		},
 		data() {
 			return {
 				online: '0',
 				online_list: [],
-				secondNumber:0,
-				result:'',
+				 
 				 
 				
 			}
 		},
 		created() {
 		 
-			setInterval(() => {
-				this.getOnline();
+			// setInterval(() => {
+			// 	this.getOnline();
 				
-				this.addSecondNumber();
-			},   1000)
+			// 	//this.addSecondNumber();
+			// },   1000)
 		},
 		destroyed() {
-			clearInterval(timer);
+			// clearInterval(timer);
 		},
 		computed: {
 			...mapState([
@@ -235,45 +240,45 @@
 			]),
 		},
 		methods: {
-			addSecondNumber(){
-				this.secondNumber ++
- 				 var theTime = this.secondNumber; // 秒
-				  // 时
+			// addSecondNumber(){
+			// 	this.secondNumber ++
+ 		// 		 var theTime = this.secondNumber; // 秒
+			// 	  // 时
 				 
-				  var HH =  theTime /  3600;
+			// 	  var HH =  theTime /  3600;
 				
-				  // 分
+			// 	  // 分
 				 
-				  var mm = theTime %  3600 / 60;
+			// 	  var mm = theTime %  3600 / 60;
 				 
-				  // 秒
+			// 	  // 秒
 				 
-				  var SS = theTime %  60;
-				   var  secStr =""   ; 
-					   var  mmStr =""   ;
-					   var  hhStr =""   ;
+			// 	  var SS = theTime %  60;
+			// 	   var  secStr =""   ; 
+			// 		   var  mmStr =""   ;
+			// 		   var  hhStr =""   ;
 					   
 					   
- 				if(parseInt(SS)<10){
-					secStr = "0"+parseInt(SS).toString()
-				}else{
-					secStr =  parseInt(SS)
-				}
+ 		// 		if(parseInt(SS)<10){
+			// 		secStr = "0"+parseInt(SS).toString()
+			// 	}else{
+			// 		secStr =  parseInt(SS)
+			// 	}
 					
-				if(parseInt(mm)<10){
-					mmStr = "0"+parseInt(mm)
-				}else{
-					mmStr = parseInt(mm)
+			// 	if(parseInt(mm)<10){
+			// 		mmStr = "0"+parseInt(mm)
+			// 	}else{
+			// 		mmStr = parseInt(mm)
 					
-				}
-				if(parseInt(HH)<10){
-					hhStr = "0"+parseInt(HH)
-				}else{
-					hhStr = parseInt(HH)
+			// 	}
+			// 	if(parseInt(HH)<10){
+			// 		hhStr = "0"+parseInt(HH)
+			// 	}else{
+			// 		hhStr = parseInt(HH)
 					
-				}
-  				this.result =hhStr+":"+mmStr+ ":"+secStr
-			},
+			// 	}
+  	// 			this.result =hhStr+":"+mmStr+ ":"+secStr
+			// },
 			animationDian: function() {
 				// this.$nextTick(() => {
 				// 	animation.transition(
@@ -328,7 +333,8 @@
 						dataType: 'json',
 						data:{
 							count:0,
-							live_id:this.room_id 
+							live_id:this.room_id ,
+							user_id:getApp().globalData.userId
 						},
 						success: res => {
 							//console.log(res)

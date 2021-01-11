@@ -179,6 +179,7 @@
 		onLoad: function(e) {
 			//获取直播详情
 			this.courseID = this.id = e.id;
+			console.log(this.courseID)
 			this.getLivedetail();
 			this.getMessageList();
 			this.userid = getApp().globalData.userId;

@@ -260,7 +260,7 @@ const request = function(req) {
 				//bindMobile(); //绑定手机号码
 			} else {
 				if (req.success) {
-					console.log(res)
+					//console.log(res)
 					req.success(res.data);
 				}
 			}

@@ -299,7 +299,7 @@
 			}
 		},
 		globalData: {
-			userId: uni.getStorageSync('userid') ? uni.getStorageSync('userid') : null,
+			userId: uni.getStorageSync('userid') ? uni.getStorageSync('userid') : 1,
 			userName: uni.getStorageSync('name') ? uni.getStorageSync('name') : '用户' + uni.getStorageSync('userid') ? uni.getStorageSync(
 				'userid') : null,
 			livesku: "ZB78965", //zhibo
@@ -308,7 +308,8 @@
 			member: 'HY32522',
 			reword: 'DS12546',
 			clientid: '',
-			BaseUrl:"http://3237632k3k.goho.co/jeecg-boot/",
+			// BaseUrl:"http://3237632k3k.goho.co/jeecg-boot/",
+ 		 BaseUrl:'http://kfy.huaxiakangfu.com/',
  			
 
 		}

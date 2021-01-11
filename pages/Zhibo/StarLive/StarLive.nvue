@@ -6,6 +6,8 @@
 		 	<live-head @back="closeLive" ref="live-head" 
 			:headimgurl="headimgurl" 
 			:nickname="name" 
+			:onlineCount="onlineCount"
+			:time = "totallivetime"
 			:room_id="liveId"
 		 	 :style="{'margin-top':systemInfo.statusBarHeight+ 'px'}"
 			 ></live-head>
@@ -14,12 +16,17 @@
 		 	<view class="" style="bottom: 40;position: absolute;width: 750rpx;">
 		 		<live-msg ref="live-msg"></live-msg>
  		 		 <!-- <live-menu :room_id="room_id"></live-menu> -->
-				 <view class="playbtn" :style="[{width:viewWidth +'px'}]"  @click="clickplayBtn" >
-				  <image src="../../../static/zhibo/icon_tingzhizhibo.png" class="playbtnimage"   ></image>
+				 <view class="playbtn" :style="[{width:viewWidth +'px'}]" 
+				  @click="clickplayBtn" >
+   				  <image  :src="isplay == true? 
+				  '../../../static/zhibo/icon_tingzhizhibo.png'
+				  :'../../../static/zhibo/icon_kaishizhibo.png'"   class="playbtnimage"  
+				   ></image>
 				 			   
 				 			   
 				 </view>
-				 <image src="../../../static/zhibo/icon_fanzhuangjingtou.png" class="cameraBtn" mode=""></image>
+				 <image src="../../../static/zhibo/icon_fanzhuangjingtou.png"
+				  class="cameraBtn" mode="" @click="switchCamera"></image>
 		 	</view>
 		 </view>
 			 
@@ -36,6 +43,8 @@
 	import {
 		mapState
 	} from 'vuex';
+ 	var socketLive = null;
+ 	var timer;
  	
 	export default {
 		components:{
@@ -54,12 +63,22 @@
 				viewHeight:'0',
 				viewWidth:'0',
 				isplay:false,//是否开始直播
+				totallivetime:'',
+				secondNumber:0,//直播秒数
+				onlineCount:0
 				 
 			}
 		},
 		 
 		onLoad:function(option){
 			console.log(option)
+			if(uni.getStorageSync("headurl").length>0){
+				this.headimgurl = uni.getStorageSync("headurl")
+				
+			}else{
+				this.headimgurl = "../../../static/wodehuanzhe/img_touxiang.png"
+			}
+ 			
 			if (option.item != null) {
  			
 				let objClone = JSON.parse(decodeURIComponent(option.item))
@@ -68,7 +87,8 @@
 				this.name = objClone.title;
 				 
 			}
- 			
+ 			this.loadLiveurl()
+			this.connectSocket()
 
 		},
 		computed: {
@@ -77,33 +97,17 @@
 			]),
 		},
 		onShow() { 	
-			let el = this.$refs['live-msg'];
-			var ms = {
-				uid:1,
-				nickname:"ssddd",
-				content:"第一条"
-			}
-			var ms1 = {
-				uid:1,
-				nickname:"ssddd",
-				content:"讲的真好，讲的不错 讲的真好，讲的不错 讲的真好，讲的不错讲的真好，讲的不错"
-			}
-			var ms2 = {
-				uid:1,
-				nickname:"ssddd",
-				content:"第一条"
-			}
-			console.log(el)
-			if (el) {
-				el.addMsg(ms);
-				console.log(ms)
-			}
+			 
 		 
 		},
 		 onReady() {
+			 uni.setKeepScreenOn({
+			 	keepScreenOn: true
+			 });//保持屏幕常亮
 		            // 注意：需要在onReady中 或 onLoad 延时
 		           // this.context = uni.createLivePusherContext("livePusher", this);
 					var that = this;
+					
 					uni.getSystemInfo({
 					    success: function (res) {
 					    that.viewHeight = res.windowHeight; 
@@ -111,7 +115,76 @@
 					    }
 					});
 		        },
+				onUnload() {
+					uni.$off('updateLiveSwitchCamera');
+					if (socketLive) {
+						socketLive.close();
+					}
+				},
+				onResize() {
+					console.log("fffff")
+					uni.getSystemInfo({
+					    success: function (res) {
+					   if (res.windowWidth > res.windowHeight) {  
+					                           console.log('横屏');  
+					                       } else {  
+					                           console.log('竖屏');  
+					                       }  
+					    }
+					});
+				},
+				onBackPress() {
+					this.stopLive()
+					return true
+				},
 		methods: {
+			addtime(){
+				this.secondNumber ++
+				 var theTime = this.secondNumber; // 秒
+				  // 时
+				 
+				  var HH =  theTime /  3600;
+				
+				  // 分
+				 
+				  var mm = theTime %  3600 / 60;
+				 
+				  // 秒
+				 
+				  var SS = theTime %  60;
+				   var  secStr =""   ; 
+					   var  mmStr =""   ;
+					   var  hhStr =""   ;
+					   
+					   
+				if(parseInt(SS)<10){
+					secStr = "0"+parseInt(SS).toString()
+				}else{
+					secStr =  parseInt(SS)
+				}
+					
+				if(parseInt(mm)<10){
+					mmStr = "0"+parseInt(mm)
+				}else{
+					mmStr = parseInt(mm)
+					
+				}
+				if(parseInt(HH)<10){
+					hhStr = "0"+parseInt(HH)
+				}else{
+					hhStr = parseInt(HH)
+					
+				}
+				this.totallivetime =hhStr+":"+mmStr+ ":"+secStr
+			},
+			addSecondNumber(){
+				setInterval(() => {
+					this.addtime();
+					
+					//this.addSecondNumber();
+				},   1000)
+				
+			},
 			//返回
 						returnAction(){
 							 //退出直播
@@ -124,11 +197,122 @@
 								this.isplay = true
 							}else{
 								this.stopLive()
-								
+ 								
 							}
 						},
-						//获取推流地址
-					loadLiveurl(){
+						//链接soket
+	connectSocket: function() {
+		var that = this
+		console.log(getApp().globalData.userId)
+		socketLive = uni.connectSocket({
+			
+			url: "http://3237632k3k.goho.co/jeecg-boot/webSocket/"+getApp().globalData.userId,
+			header: {},
+			success: () => {
+				console.log("connectSocket:初始化成功");
+			},
+			fail: (err) => {
+				console.log("connectSocket:初始化失败");
+				
+				console.err(err);
+			},
+			complete: () => {}
+		});
+		uni.onSocketOpen(function(res){
+			      console.log('WebSocket连接已打开！');
+
+		})
+		  uni.onSocketError(function (res) {
+			  console.log(res);
+			  
+		      console.log('WebSocket连接打开失败，请检查！');
+		    });
+		socketLive.onOpen((res) => {
+			console.log("打开连接成功");
+			var data = JSON.stringify({
+				event: "live",
+				data: {
+					type: 'login',
+					token: uni.getStorageSync('token'),
+				}
+			});
+			socketLive.send({
+				// data: data,
+				success: (res) => {
+					console.log("直播间连接成功", res);
+					let el = this.$refs['live-msg'];
+					var ms = {
+						uid:getApp().globalData.userId,
+						nickname:getApp().globalData.name,
+						content:"直播间连接成功"
+					}
+					 
+					console.log(el)
+					if (el) {
+						el.addMsg(ms);
+					}
+					timer = setInterval(() => {
+						uni.sendSocketMessage({
+ 							success: () => {
+ 							}
+						});
+					}, 2 * 1000);
+				}
+			})
+		});
+		socketLive.onMessage((res) => {
+		
+ 			console.log("收到消息", res);
+			var data = JSON.parse(res.data);
+			console.log(data.type)
+			if (data.type == 'ZB78965') {
+				
+				let el = this.$refs['live-msg'];
+				var ms = {
+					uid:data.id,
+					nickname:data.sendUser.name,
+					content: data.content
+				}
+				 
+				console.log(el)
+				if (el) {
+					el.addMsg(ms);
+				}
+			}
+			if (data.type == 'LP244') {
+				//直播人数
+				console.log(data)
+				
+				that.onlineCount =  data.content
+				console.log(data)
+ 			}
+			if (data.type == 'room-betting') {
+				console.log("下注消息");
+				this.addRoomMsg(data.data);
+			}
+			if (data.type == 'room-gift') {
+				this.addRoomMsg(data.data);
+			}
+			if (data.type == 'room-back') {
+				this.updateRoomOnline();
+			}
+			if (data.type == 'room-end') {
+				this.closeLive();
+			}
+			if (data.type == 'ping') {
+				//发送心跳
+			}
+		});
+		socketLive.onClose((res) => {
+			console.log("直播间onClose");
+		})
+		socketLive.onError((res) => {
+			console.log(res);
+			
+ 		})
+	},					
+					//获取推流地址
+loadLiveurl(){
  			 
 			       uni.showLoading({
 			 	 title: "加载中",
@@ -151,12 +335,16 @@
 												   that.liveurl =  res.data.result;
 												   let el = that.$refs['live-push'];
 												   el.playLive()
-  												 
+  												 that.isplay = true
 												}
 											},
-											fail: res => {												
+											fail: res => {	
+												uni.hideLoading();
+												
 											},
-											complete: res => {											
+											complete: res => {
+												uni.hideLoading();
+												
 											}
 										})
 										 
@@ -164,11 +352,12 @@
 									//修改直播状态开始直播
 									startLiveStatus(){
 										console.log("直播已开始")
+										
 										var that = this;
 										uni.request({
 											url: getApp().globalData.BaseUrl+"/live/live/startLive",
 											data: {
-												live_id: that.liveId
+												live_id:this.liveId
 												 
 											},
 											method: 'GET',
@@ -177,6 +366,8 @@
 												
 												if (res.data.code ==200) {
 												   that.isplay =  true;
+												   that.addSecondNumber()
+												   console.log(res)
  												 uni.showToast({
 												 	title:'直播已开始',
 													icon:'none'
@@ -193,26 +384,28 @@
 									},
 									//修改直播状态结束直播
 									endLiveStatus(){
-										console.log('stop')
+										console.log(this.liveId)
 										var that = this;
 										uni.request({
-											url: getApp().globalData.BaseUrl+'/live/live/stopLive',
+											url: getApp().globalData.BaseUrl+'live/live/stopLive',
 											data: {
-												live_id: that.liveId
+												live_id: this.liveId
 												 
 											},
 											method: 'GET',
 											dataType: 'json',
 											success: res => {
 												console.log(res)
-												
+											
 												if (res.data.code ==200) {
-						 						
-												   uni.navigateTo({
-												   	url:'../EndLive/EndLive',
-													animationDuration:'300',
-													animationType:'slide-in-right'
-												   })
+													that.isplay = false
+ 													
+													that.$set(res.data.result,'time',that.totallivetime)
+												   uni.redirectTo({
+												   	url:'../EndLive/EndLive?item='+encodeURIComponent(JSON.stringify(res.data.result)),
+												   	animationDuration:'300',
+												   	animationType:'slide-in-right'
+												   }); 
 												  
 												}
 											},
@@ -223,54 +416,7 @@
 										});
 									},
 			
-			 // statechange(e) {
-			 //                //console.log("statechange:" + JSON.stringify(e));
-			 //            },
-			 //            netstatus(e) {
-			 //               // console.log("netstatus:" + JSON.stringify(e));
-			 //            },
-			 //            error(e) {
-			 //                //console.log("error:" + JSON.stringify(e));
-			 //            },
-		// 	            start: function() {
-		// 					var that = this;
-		// 	                this.context.start({
-		// 	                    success: (a) => {
-		// 							console.log("start")
-		// 							that.startLiveStatus();
-		// 							that.isplay = true;
-  
- 	// 		                    }
-		// 	                });
-		// 	            },
-		// 	            close: function() {
-		// 	                this.context.close({
-		// 	                    success: (a) => {
-		// 	                       // console.log("livePusher.close:" + JSON.stringify(a));
-		// 	                    }
-		// 	                });
-		// 	            },
-		// 	            snapshot: function() {
-		// 	                this.context.snapshot({
-		// 	                    success: (e) => {
-		// 	                       // console.log(JSON.stringify(e));
-		// 	                    }
-		// 	                });
-		// 	            },
-		// 	            resume: function() {
-		// 	                this.context.resume({
-		// 	                    success: (a) => {
-		// 	                      //  console.log("livePusher.resume:" + JSON.stringify(a));
-		// 	                    }
-		// 	                });
-		// 	            },
-		// 	            pause: function() {
-		// 	                this.context.pause({
-		// 	                    success: (a) => {
-		// 	                       // console.log("livePusher.pause:" + JSON.stringify(a));
-		// 	                    }
-		// 	                });
-		// 	            },
+ 
 			         	//结束直播
 						stopLive(){
 							if(this.isplay == true){
@@ -301,21 +447,15 @@
 			         stop: function() {
 						 console.log("stop")
 						 var that = this;
- 						this.context.stop({
-						    success: (a) => {
-								  that.endLiveStatus();
-						    console.log(JSON.stringify(a));
-						    }
-						     });
+						 
+ 					  that.endLiveStatus()
 			       },
-
-			            // switchCamera: function() {
-			            //     this.context.switchCamera({
-			            //         success: (a) => {
-			            //             console.log("livePusher.switchCamera:" + JSON.stringify(a));
-			            //         }
-			            //     });
-			            // },
+//切换摄像头
+			    switchCamera: function() {
+			                uni.$emit('updateLiveSwitchCamera', {
+			                	 
+			                });
+			            },
 			            // startPreview: function() {
 			            //     this.context.startPreview({
 			            //         success: (a) => {

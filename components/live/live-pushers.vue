@@ -2,10 +2,12 @@
 
 </style>
 <template>
-	<live-pusher id='livePusher'
+	<live-pusher
+	 id='livePusher'
 	 ref="livePusher" 
 	 class="livePusher" 
-	 :url="push_url" mode="FHD" 
+	 :url="push_url"
+	  mode="FHD" 
 	 :muted="muted"
 	 :enable-camera="true" 
 	 :auto-focus="true" 
@@ -38,8 +40,8 @@
 		},
 		data() {
 			return {
-				whiteness: 9,
-				beauty: 9,
+				whiteness: 2,
+				beauty: 2,
 				muted: false,
 				screenHeight:0
 			}

@@ -57,6 +57,8 @@
 	import zzxTabs from "@/components/zzx-tabs/zzx-tabs.vue"
 	import Prompt from '@/components/zz-prompt/index.vue'
 	import appShare from "@/plugins/share/index.js"
+	var socketLive;
+	var timer;
 	export default {
 		components: {
 			Prompt
@@ -135,21 +137,139 @@
 					 
 				}
 			})
+			//增加看直播的人数
+			this.refreshLiveCount();
 			//获取直播拉流地址
 			 this.getPullurl();
 			 this.getmessageList();
 			 this.time = setInterval(()=>{
 				 this.getmessageList();
-			 },2000);
+			 },1000*60);
 			 this.addEvent();
+			 this.connectSocket()
 		},
 		onUnload() {
 			clearInterval(this.time);
+			if (socketLive) {
+				socketLive.close();
+			}
 		},
 		onReady() {
 			
 		},
 		methods: {
+				connectSocket: function() {
+					console.log(getApp().globalData.userId)
+					socketLive = uni.connectSocket({
+						
+						url: "http://3237632k3k.goho.co/jeecg-boot/webSocket/"+getApp().globalData.userId,
+						header: {},
+						success: () => {
+							console.log("connectSocket:初始化成功");
+						},
+						fail: (err) => {
+							console.log("connectSocket:初始化失败");
+							
+							console.err(err);
+						},
+						complete: () => {}
+					});
+					uni.onSocketOpen(function(res){
+						      console.log('WebSocket连接已打开！');
+				
+					})
+					  uni.onSocketError(function (res) {
+						  console.log(res);
+						  
+					      console.log('WebSocket连接打开失败，请检查！');
+					    });
+					socketLive.onOpen((res) => {
+						console.log("打开连接成功");
+						var data = JSON.stringify({
+							event: "live",
+							data: {
+								type: 'login',
+								token: uni.getStorageSync('token'),
+							}
+						});
+						socketLive.send({
+							// data: data,
+							success: (res) => {
+								console.log("直播间连接成功", res);
+								timer = setInterval(() => {
+									uni.sendSocketMessage({
+										success: () => {
+											//console.log("心跳发送成功");
+										}
+									});
+								}, 2 * 1000);
+							}
+						})
+					});
+					socketLive.onMessage((res) => {
+					
+ 					 
+							//var data = JSON.parse(res.data);
+						console.log("收到消息", res);
+						
+						  var data = JSON.parse(res.data);
+						if (data.type == 'LS234') {
+							 uni.showToast({
+							 	title:'直播已结束',
+								icon:'none'
+							 })
+						}
+						if (data.type == 'ZB78965') {
+							this.messageList.push(data)
+							 
+						}
+						  
+						// if (data.type == 'room-betting') {
+						// 	console.log("下注消息");
+						// 	this.addRoomMsg(data.data);
+						// }
+						// if (data.type == 'room-gift') {
+						// 	this.addRoomMsg(data.data);
+						// }
+						// if (data.type == 'room-back') {
+						// 	this.updateRoomOnline();
+						// }
+						// if (data.type == 'room-end') {
+						// 	this.closeLive();
+						// }
+						// if (data.type == 'ping') {
+						// 	//发送心跳
+						// }
+					});
+					socketLive.onClose((res) => {
+						console.log("直播间onClose");
+					})
+					socketLive.onError((res) => {
+						console.log(res);
+						
+					})
+				},					
+			refreshLiveCount(){
+				var that = this;
+				this.$app.request({
+					url: this.$api.zhibo.getOnlineNumber,	
+					data: {
+						count:1,
+						live_id:that.liveid ,
+						user_id:getApp().globalData.userId
+					},
+					method: 'GET',
+					dataType: 'json',
+					success: res => {
+ 						console.log(res)
+						 
+					},
+					fail: res => {
+					},
+					complete: res => {
+					}
+				});
+			},
 			share() {
 				let shareData = {
 					type: 0,
@@ -272,8 +392,7 @@
 					method: 'GET',
 					dataType: 'json',
 					success: res => {
-						console.log(res)
-						if (res.code ==200) {
+ 						if (res.code ==200) {
 						   that.messageList =  res.result.records;
  						}
 					},
