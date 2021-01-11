@@ -117,8 +117,8 @@
 			setEditStatus(){
 				console.log('--------------------')
 				if(this.isRun){
-					this.dataprops.imgList = JSON.stringify(this.dataprops.imgList);
-					let str = `?index=${this.dataprops.index}&title=${this.dataprops.title}&text=${this.dataprops.text}&text1=${this.dataprops.text1}&imglist=${this.dataprops.imgList}`;
+					let imgList = JSON.stringify(this.dataprops.imgList);
+					let str = `?index=${this.dataprops.index}&title=${this.dataprops.title}&text=${this.dataprops.text}&text1=${this.dataprops.text1}&imglist=${imgList}`;
 					uni.navigateTo({
 						url:"/pages/work/createProblemInfo/createProblemInfo"+str,
 						animationDuration: 300,
