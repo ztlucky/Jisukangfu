@@ -74,9 +74,20 @@
 					data:{
 						paseNo:1,
 						pageSize:200,
-						c_r:true
+						c_r:true,
+						c_s:false
 					}
 				},true,true).then(data=>{
+					let ratingScaleSize = 0;
+					if(data.records){
+						data.records.map(v=>{
+							ratingScaleSize+=v.ratingScaleSize;
+						})
+					}
+					data.records.unshift({
+						name:'全部',
+						ratingScaleSize
+					})
 					that.kangdinglist = data.records;
 				})
 			},
@@ -227,8 +238,10 @@
 
 .bottomView{
 	position: fixed;
-	bottom: 30rpx;
+	bottom: 0rpx;
 	right: 30rpx;
+	padding-bottom: 30rpx;
+	background-color: #fff;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
