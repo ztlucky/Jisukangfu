@@ -1,7 +1,7 @@
 <template>
 	<view class="viewPage">
 		<view class="list">
-			<expert :isshow="(k == expertList.length-1)" v-for="(v,k) in expertList" :key="k"></expert>
+			<expert :info="v"  :isshow="(k == expertList.length-1)" v-for="(v,k) in expertList" :key="k"></expert>
 		</view>
 	</view>
 </template>
@@ -52,7 +52,7 @@
 					data:{
 						pageNo:that.index,
 						pageSize:that.size,
-						phone:that.phone
+						phone:15158853174
 					}
 				},true,true).then(data=>{
 					if(data.records && data.records.length>=that.size){

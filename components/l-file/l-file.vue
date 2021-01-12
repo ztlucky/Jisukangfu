@@ -158,7 +158,6 @@ export default {
 		 type: temporary=返回临时地址，local=长期保存到本地
 		 */
 		download(url,type = 'temporary') {
-			console.log(url)
 			if (this.loading) {
 				this.toast('还有个文件玩命处理中，请稍候..');
 				return;

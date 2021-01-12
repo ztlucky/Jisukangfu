@@ -92,14 +92,17 @@
 					this.list = [];
 				}
 				let that = this;
-				return request({
-					url:getApp().$api.pingdingliangbiao.getList,
-					type:'GET',
-					data:{
-						typeId:that.id,
+				let data = {
 						pageNo:that.index,
 						pageSize:that.size
 					}
+					if(that.id && that.id != "null"){
+						data.typeId = that.id
+					}
+				return request({
+					url:getApp().$api.pingdingliangbiao.getList,
+					type:'GET',
+					data
 				},true,true).then(data=>{
 					console.log(data);
 					if(data.records.length>=that.size){

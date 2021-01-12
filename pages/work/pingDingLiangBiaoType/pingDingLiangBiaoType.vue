@@ -53,8 +53,8 @@
 			save() {
 				this.setNowStatus();
 			},
-			init() {
-				this.getList();
+			init(f) {
+				this.getList(f);
 			},
 			getList(f = false) {
 				
@@ -80,6 +80,10 @@
 					}
 					f = true;
 					if (f) {
+						data.records.unshift({
+							id:null,
+							name:'全部'
+						});
 						that.list = (data.records);
 					} else {
 						that.list = that.list.concat(data.records);
@@ -296,5 +300,8 @@
 	.rightView1 image {
 		background-color: #DDDDDD;
 		border-radius: 50%;
+	}
+	.list .item:nth-child(1){
+		font-weight: bold;
 	}
 </style>

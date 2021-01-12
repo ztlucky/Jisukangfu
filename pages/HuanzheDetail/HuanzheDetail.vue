@@ -78,7 +78,7 @@
 						<image class="image1" src="../../static/Huanzhexiangqing/icon_mubiao.png"></image>
 						<text>康复目标</text>
 					</view>
-					<view class="rightview" @click="toPage('/pages/KangfuMubiao/KangfuMubiao')">
+					<view class="rightview" @click="toPage('/pages/KangfuMubiao/KangfuMubiao')" v-if="my != 1">
 						<image src="../../static/Huanzhexiangqing/icon_tiaozhengmubiao.png" class="image2"></image>
 
 						<text>调整目标</text>
@@ -124,19 +124,22 @@
 				<view class="lineview">
 
 				</view>
-				<view class="xiangmuList" v-if="info.treatmentList.length>=1 && info.treatmentList[0].subproject">
-					<view class="xiangmuItem" v-for="(v,k) in info.treatmentList[0].subproject" :key="k">
-						<view class="dot"></view>
-						<view class="xiangmuItemRight">
-							<view style="display: flex;align-items: center;">
-								<view class="itemRightTitle hidden">{{v.name}}</view>
-								<view class="itemRightTime">{{v.start}} - {{v.end}}</view>
+				<view class="xiangmuList" v-if="info.treatmentList.length>=1">
+					<view v-for="(item , index) in info.treatmentList" :key="index">
+						<view class="xiangmuItem" v-for="(v,k) in item.subproject" :key="k">
+							<view class="dot"></view>
+							<view class="xiangmuItemRight">
+								<view style="display: flex;align-items: center;">
+									<view class="itemRightTitle hidden">{{v.name}}</view>
+									<view class="itemRightTime">{{v.start}} - {{v.end}}</view>
+								</view>
+								<view class="itemRightRun itemRightRun1" v-if="v.type == 1" >完成</view>
+								<view class="itemRightRun itemRightRun2" v-else-if="v.type == 2" >暂停</view>
+								<view class="itemRightRun" v-else @click="runXiangMu(k,index)">执行</view>
 							</view>
-							<view class="itemRightRun itemRightRun1" v-if="v.type == 1" @click="runXiangMu(k,1)">完成</view>
-							<view class="itemRightRun itemRightRun2" v-else-if="v.type == 2" @click="runXiangMu(k,2)">暂停</view>
-							<view class="itemRightRun" v-else @click="runXiangMu(k,0)">执行</view>
 						</view>
 					</view>
+
 				</view>
 				<view class="notData" v-if="info.treatmentList.length == 0">暂无数据</view>
 				<!-- <view class="hview">
@@ -172,7 +175,7 @@
 
 			</view>
 			<!-- //康复评定 -->
-			<view class="kangfubgview">
+			<view class="kangfubgview" v-if="my != 1">
 				<view class="titleView">
 					<view class="leftview">
 						<image class="image1" src="../../static/Huanzhexiangqing/icon_pingding.png"></image>
@@ -220,7 +223,7 @@
 
 			</view>
 			<!-- //患者记录-->
-			<view class="kangfubgview">
+			<view class="kangfubgview" v-if="my != 1">
 				<view class="titleView">
 					<view class="leftview">
 						<image class="image1" src="../../static/Huanzhexiangqing/icon_jilu.png"></image>
@@ -251,7 +254,7 @@
 				</view>
 				<view class="notData" v-if="info.patientRecords.length == 0">暂无数据</view>
 			</view>
-			<view class="kejianview">
+			<view class="kejianview" v-if="my != 1">
 				<text>其他人可见</text>
 				<switch class="switchView" checked="true" style='zoom:.75;' :color="switchColor" />
 			</view>
@@ -346,11 +349,12 @@
 
 				});
 			},
-			runXiangMu(k) {
-				let item = this.info.treatmentList[0];
+			runXiangMu(k, index) {
+				let item = this.info.treatmentList[index];
 				this.short = item.shortGoals;
 				this.long = item.longGoals;
 				this.nowIndex = k;
+				this.nowIndex__ = index;
 				this.number = 1;
 				this.nowScore = item.subproject[k].score;
 				this.setShowPerformWindowStatus();
@@ -382,7 +386,7 @@
 							}
 						}
 					})
-				}else{
+				} else {
 					uni.showModal({
 						title: '温馨提示',
 						content: '是否重新开始本次治疗',
@@ -394,7 +398,7 @@
 									data: {
 										id: that.id,
 										status,
-					
+
 									}
 								}, true, true).then(data => {
 									uni.showToast({
@@ -430,16 +434,19 @@
 						data.file = JSON.parse(data.file);
 					}
 					if (data.treatmentList.length >= 1) {
-						if (data.treatmentList[0].subproject) {
-							data.treatmentList[0].subproject = JSON.parse(data.treatmentList[0].subproject);
-							data.treatmentList[0].subproject.map((v, k) => {
-								let time = new Date(v.value).getTime() + v.time * 60 * 1000;
-								let start = new tool().formDate(new Date(v.value), 4);
-								let end = new tool().formDate(new Date(time), 4);
-								data.treatmentList[0].subproject[k].start = start;
-								data.treatmentList[0].subproject[k].end = end;
-							})
-						}
+						data.treatmentList.map((vv, kk) => {
+							if (data.treatmentList[kk].subproject) {
+								data.treatmentList[kk].subproject = JSON.parse(data.treatmentList[kk].subproject);
+								data.treatmentList[kk].subproject.map((v, k) => {
+									let time = new Date(v.value).getTime() + v.time * 60 * 1000;
+									let start = new tool().formDate(new Date(v.value), 4);
+									let end = new tool().formDate(new Date(time), 4);
+									data.treatmentList[kk].subproject[k].start = start;
+									data.treatmentList[kk].subproject[k].end = end;
+								})
+							}
+						})
+
 
 					}
 					// if(data.patientRecords.length >=1){
@@ -527,13 +534,13 @@
 				this.setShowFinishWindowStatus();
 			},
 			stopProgress() {
-				this.setProgress(false).then(() => {
+				this.setResults(false).then(() => {
 					this.getInfo();
 				})
 				this.setShowPerformWindowStatus();
 			},
 			setShowFinishWindowStatus() {
-				this.setProgress().then(() => {
+				this.setResults().then(() => {
 					this.getInfo();
 					this.isShowFinishWindow = !this.isShowFinishWindow;
 				})
@@ -545,7 +552,7 @@
 			},
 			completeXiangMu(f = true) {
 				let that = this;
-				let id = this.info.treatmentList[0].subproject[this.nowIndex].id;
+				let id = this.info.treatmentList[that.nowIndex__].subproject[this.nowIndex].id;
 				return request({
 					url: getApp().$api.huanzhe.editProgram,
 					type: "PUT",
@@ -560,11 +567,35 @@
 					console.log(data);
 				})
 			},
-			setProgress(f = true) {
+			setResults(f){
 				let that = this;
-				this.info.treatmentList[0].subproject[this.nowIndex].type = f ? 1 : 2
-				let id = this.info.treatmentList[0].id;
-				let subproject = JSON.stringify(this.info.treatmentList[0].subproject);
+				let subprojectId = this.info.treatmentList[that.nowIndex__].subproject[this.nowIndex].id;
+				let treatmentId = this.info.treatmentList[that.nowIndex__].id;
+				let tscore = f?this.number:0;
+				let patientId = getApp().globalData.userId;
+				let pscore = f?this.info.treatmentList[that.nowIndex__].subproject[this.nowIndex].score:0;
+				
+				return request({
+					url:getApp().$api.huanzhe.endXiangMu,
+					type:"POST",
+					data:{
+						subprojectId,
+						treatmentId,
+						tscore,
+						patientId,
+						pscore,
+						result: f ? 1 : 2
+					}
+				}).then(data=>{
+					that.setProgress(f);
+				})
+			},
+			setProgress(f = true) {
+				
+				let that = this;
+				this.info.treatmentList[that.nowIndex__].subproject[this.nowIndex].type = f ? 1 : 2
+				let id = this.info.treatmentList[that.nowIndex__].id;
+				let subproject = JSON.stringify(this.info.treatmentList[that.nowIndex__].subproject);
 				return request({
 					url: getApp().$api.huanzhe.editProgram,
 					type: "PUT",
