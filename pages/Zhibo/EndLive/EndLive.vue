@@ -70,6 +70,9 @@
 			});
 		},
 		onLoad(option) {
+			// #ifdef APP-PLUS
+				   plus.screen.lockOrientation('portrait-primary');
+				// #endif
 			this.username = uni.getStorageSync("name")
 			this.userIcon = uni.getStorageSync("headurl")
 			console.log(this.userIcon)

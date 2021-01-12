@@ -56,9 +56,9 @@
 				</view>
 			</view>
 			<view v-show="current === 2">
-				<scroll-view id="scrollview" :scroll-top="scrollTop" class="messageView" scroll-y="true" >
+				<scroll-view id="scrollview" :scroll-top="scrollTop" class="messageView" scroll-y="true" @scroll="scroll" @scrolltolower="lower">
 					<view v-for="(item , index) in messageList" :key="index" class="m-item">
-						<view class="messageItem messageLeft" v-if="item.sendUser.id != userid">
+						<view class="messageItem messageLeft" v-if="item.sendId != userid">
 							<image :src="item.sendUser.headUrl" mode="aspectFill" class="messageItemImage"></image>
 							<view class="messageItemName">
 								<view class="messageItemNameTitle hidden">{{item.sendUser.name}}</view>
@@ -66,7 +66,7 @@
 							</view>
 						</view>
 
-						<view class="messageItem messageRight" v-if="item.sendUser.id == userid">
+						<view class="messageItem messageRight" v-if="item.sendId == userid">
 							<view class="messageItemName">
 								<view class="messageItemName">
 									<view class="messageItemNameTitle hidden">我</view>
@@ -137,6 +137,8 @@
 				line_width: "8%",
 				line_color: '#31D880',
 				scrollTop: 0,
+				page:1,
+				scrollbottom:false,
 				style:{
 					pageHeight:0,
 					contentViewHeight:0
@@ -154,11 +156,25 @@
 			this.userid = getApp().globalData.userId;
 			this.style.pageHeight = 500;
 			this.style.contentViewHeight = 500;
+			this.scrollbottom = true
 		},
 		onShow() {
 			this.getInfo();
 		},
 		methods: {
+			lower: function(e) {
+			 				  this.scrollbottom = true;
+							 // this.page = 1;
+							  this.getMessageList()
+			      },
+			scroll(event) {
+							//距离每个边界距离
+							if(event.detail.scrollTop == 0){
+								this.page=this.page+1
+							this.scrollbottom =false
+							this.getMessageList()
+							}
+						},
 			onClickItem(e) {
 				if (this.current !== e.currentIndex) {
 					this.current = e.currentIndex;
@@ -336,13 +352,17 @@
 						condition: true,
 						objectId: that.id,
 						column: 'createTime',
-						order: 'asc',
+						order: 'desc',
 						pageNo: 1,
-						pageSize: 300
+						pageSize: that.page*20
 					}
 				}, true, true).then(data => {
 					that.messageList = data.records;
-					that.scrollToBottom();
+						
+					if(that.scrollbottom == true){
+						that.scrollToBottom();
+						
+					}
 				})
 			},
 			share() {

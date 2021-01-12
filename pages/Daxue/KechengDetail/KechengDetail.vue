@@ -76,9 +76,9 @@
 
 				</view>
 				<view v-show="current === 1">
-					<scroll-view id="scrollview" :scroll-top="scrollTop" class="messageView" scroll-y="true" >
+					<scroll-view id="scrollview" :scroll-top="scrollTop" class="messageView" scroll-y="true"   @scroll="scroll" @scrolltolower="lower" >
 						<view class="m-item" v-for="(item , index) in messageList" :key="index">
-							<view class="messageItem messageLeft" v-if="item.sendUser.id != userid">
+							<view class="messageItem messageLeft" v-if="item.sendId != userid">
 								<image :src="item.sendUser.headUrl" mode="aspectFill" class="messageItemImage"></image>
 								<view class="messageItemName">
 									<view class="messageItemNameTitle hidden">{{item.sendUser.name}}</view>
@@ -86,7 +86,7 @@
 								</view>
 							</view>
 
-							<view class="messageItem messageRight" v-if="item.sendUser.id == userid">
+							<view class="messageItem messageRight" v-if="item.sendId == userid">
 								<view class="messageItemName">
 									<view class="messageItemName">
 										<view class="messageItemNameTitle hidden">我</view>
@@ -160,6 +160,9 @@
 				messageList: [],
 				userid: '',
 				scrollTop: 0,
+				page:1,
+				scrollBottom :false,
+				
 				style:{
 					pageHeight:0,
 					contentViewHeight:0
@@ -175,6 +178,7 @@
 			this.userId = getApp().globalData.userId;
 			this.getMessageList();
 			this.userid = getApp().globalData.userId;
+			this.scrollBottom = true
 			this.style.pageHeight = 500;
 			this.style.contentViewHeight = 400;
 		},
@@ -186,6 +190,19 @@
 		},
 
 		methods: {
+			lower: function(e) {
+			 				  this.scrollBottom = true;
+							 // this.page = 1;
+							  this.getMessageList()
+			      },
+			scroll(event) {
+							//距离每个边界距离
+							if(event.detail.scrollTop == 0){
+								this.page=this.page+1
+							this.scrollbottom =false
+							this.getMessageList()
+							}
+						},
 			getHeight() {
 				uni.getSystemInfo({
 					success: (e) => {
@@ -540,13 +557,18 @@
 						condition: true,
 						objectId: that.id,
 						column: 'createTime',
-						order: 'asc',
-						pageNo: 1,
-						pageSize: 300
+						order: 'desc',
+						pageNo:1,
+						pageSize: that.page *20,
+						
 					}
 				}, true, true).then(data => {
+					console.log(data)
 					that.messageList = data.records;
-					that.scrollToBottom();
+					if(that.scrollBottom == true){
+						that.scrollToBottom();
+						
+					}
 				})
 			},
 			share() {
@@ -1146,6 +1168,7 @@
 		display: flex;
 		height: 70rpx;
 		align-items: center;
+	 
 	}
 
 	.messageInput input {

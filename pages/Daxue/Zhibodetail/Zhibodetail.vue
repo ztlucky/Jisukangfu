@@ -3,7 +3,7 @@
 		<nav-bar bgColor="#FFFFFF" fontColor="#333333" title="直播详情">
 			<image slot="right" class="rightImage" @click="share" src="/static/share.png"></image>
 		</nav-bar>
-		<scroll-view scroll-y="true" :style="[{height:scrollviewHeight + 'px',paddingBottom:'120rpx'}]">
+		  <scroll-view scroll-y="true" :style="[{height:scrollviewHeight + 'px',paddingBottom:'120rpx'}]"   >  
 			<view class="videoImageview" :style="[{height:videoImageHeight + 'px'}]">
 				<image v-if="!showVideo" :src="detailInfo.cover" mode="aspectFill" :style="[{height:videoImageHeight + 'px'}]"></image>
 				<!-- <video v-else :src="videoUrl" initial-time='0'></video> -->
@@ -81,9 +81,9 @@
 				</zzx-tabs>
 				<view class="detailText" v-show="current === 0">{{detailInfo.presentation}}</view>
 				<view v-show="current === 1">
-					<scroll-view id="scrollview" :scroll-top="scrollTop" class="messageView" scroll-y="true" >
+					<scroll-view id="scrollview" :scroll-top="scrollTop" class="messageView"   scroll-y="true"   @scroll="scroll" @scrolltolower="lower">
 						<view class="m-item" v-for="(item , index) in messageList" :key="index" :id="index == messageList.length -1?'end':'aa'+index">
-							<view class="messageItem messageLeft" v-if="item.sendUser.id != userid">
+							<view class="messageItem messageLeft" v-if="item.sendId != userid">
 								<image :src="item.sendUser.headUrl" mode="aspectFill" class="messageItemImage"></image>
 								<view class="messageItemName">
 									<view class="messageItemNameTitle hidden">{{item.sendUser.name}}</view>
@@ -91,7 +91,7 @@
 								</view>
 							</view>
 
-							<view class="messageItem messageRight" v-if="item.sendUser.id == userid">
+							<view class="messageItem messageRight" v-if="item.sendId == userid">
 								<view class="messageItemName">
 									<view class="messageItemName">
 										<view class="messageItemNameTitle hidden">我</view>
@@ -115,7 +115,7 @@
 
 
 			</view>
-		</scroll-view>
+		  </scroll-view>  
 		<view class="bottomview" v-if="current == 0">
 			<text class="price">原价 ¥ {{detailInfo.cost}}/会员价 ¥ {{detailInfo.memberCost}}</text>
 			<view class="favview" @click="favAction">
@@ -170,6 +170,9 @@
 				userid: '',
 				intoView: 'end',
 				scrollTop: 0,
+				mainscrolltop:0,
+				page:1,
+				scrollbottom:false,
 				style:{
 					pageHeight:0,
 					contentViewHeight:0
@@ -183,16 +186,22 @@
 			this.getLivedetail();
 			this.getMessageList();
 			this.userid = getApp().globalData.userId;
-			this.style.pageHeight = 500;
-			this.style.contentViewHeight = 500;
+			
 		},
 		onShow: function(e) {
 			this.videoImageHeight = this.$app.getwindowWidth() * 0.763 - 44
 			this.scrollviewHeight = this.$app.getwindowHeight() - 44;
+		this.style.pageHeight = 500;
+		this.style.contentViewHeight = 500;
 			this.getLivedetail();
 		},
 
 		methods: {
+			lower: function(e) {
+			 				  this.scrollbottom = true;
+							 // this.page = 1;
+							  this.getMessageList()
+			      },
 			/*获取直播详情*/
 			getLivedetail() {
 				let that = this;
@@ -205,6 +214,7 @@
 						user_id: getApp().globalData.userId
 					}
 				}, true, true).then(data => {
+					console.log("eee")
 					that.detailInfo = data.data;
 					that.isbuy = data.isBuy;
 					that.isfav = data.isCollect;
@@ -289,23 +299,44 @@
 					console.log(that.videoFile, that.pdfFile)
 				})
 			},
+			scroll(event) {
+							//距离每个边界距离
+ 							if(event.detail.scrollTop == 0){
+								this.page=this.page+1
+							this.scrollbottom =false
+							this.getMessageList()
+							}
+						},
 			scrollToBottom() {
-				let that = this;
+ 				let that = this;
 				let query = uni.createSelectorQuery();
 				query.selectAll('.m-item').boundingClientRect();
 				query.select('#scrollview').boundingClientRect();
 				query.exec((res) => {
 							that.style.mitemHeight = 0;
-							
-							res[0].forEach((rect) => that.style.mitemHeight = that.style.mitemHeight + rect.height + 100) //获取所有内部子元素的高度
+							console.log(res[0])
+							if(res[0].length==0){
+                           setTimeout(() => {
+                          that.scrollToBottom()
+                          	 
+                          }, 400)
+								 return
+								}
+							res[0].forEach((rect) =>
+							 that.style.mitemHeight = that.style.mitemHeight + rect.height + 100) //获取所有内部子元素的高度
 							// 因为vue的虚拟DOM 每次生成的新消息都是之前的，所以采用异步setTimeout    主要就是添加了这红字
 							
 							setTimeout(() => {
-
+								
+						 
 								if (that.style.mitemHeight > (that.style.contentViewHeight - 80)) { //判断子元素高度是否大于显示高度
-									that.scrollTop = that.style.mitemHeight - that.style.contentViewHeight //用子元素的高度减去显示的高度就获益获得序言滚动的高度
+   									 that.scrollTop = that.style.mitemHeight - that.style.contentViewHeight //用子元素的高度减去显示的高度就获益获得序言滚动的高度
+									 console.log("高度", that.scrollTop)
+								}else{
+  									
 								}
 							}, 400)
+							
 						})
 					},
 					setVideoUrl(f, src) {
@@ -393,9 +424,11 @@
 					},
 
 					onClickItem(e) {
+						var that = this
 						if (this.current !== e.currentIndex) {
 							this.current = e.currentIndex;
 							if (this.current == 1) {
+								that.mainscrolltop = 5000
 								this.scrollToBottom();
 							}
 						}
@@ -564,29 +597,39 @@
 							},
 							type: "POST"
 						}, true, true).then(data => {
+							console.log(data)
 							that.messageValue = '';
 							that.getMessageList();
+							that.scrollbottom = true
 						})
 					},
 					getMessageList() {
 						let that = this;
+						let mess= []
 						return request({
 							url: getApp().$api.zhibo.getMessageList,
 							type: "GET",
 							data: {
 								c_id: uni.getStorageSync('clientInfo').clientid,
 								type: getApp().globalData.livesku,
-								// sendId: getApp().globalData.userId,
+								  //sendId: getApp().globalData.userId,
 								condition: true,
 								objectId: that.id,
 								column: 'createTime',
-								order: 'asc',
+								order: 'desc',
 								pageNo: 1,
-								pageSize: 300
+								pageSize: that.page *20
 							}
 						}, true, true).then(data => {
-							that.messageList = data.records;
-							that.scrollToBottom();
+							console.log(data)
+							
+							console.log(mess.length)
+ 								that.messageList = data.records
+								 
+							 if(that.scrollbottom == true){
+								 that.scrollToBottom();
+								 
+							 }
 						})
 					}
 			}
@@ -605,8 +648,7 @@
 	}
 
 	.secondView {
-
-		background: #FFFFFF;
+ 		background: #FFFFFF;
 		border-radius: 4rpx;
 		margin-left: 30rpx;
 		margin-right: 30rpx;
@@ -745,8 +787,7 @@
 		margin-top: 30rpx;
 		display: flex;
 		flex-direction: column;
-
-		.sectionview {
+ 		.sectionview {
 			display: flex;
 			flex-direction: row;
 			align-items: center;
@@ -816,8 +857,7 @@
 		border-radius: 4px;
 		flex-direction: column;
 		position: relative;
-
-		.sectionview {
+ 		.sectionview {
 			display: flex;
 			flex-direction: row;
 			align-items: center;
@@ -904,7 +944,7 @@
 	}
 
 	.lastview {
-		margin-left: 30rpx;
+ 		margin-left: 30rpx;
 		margin-right: 30rpx;
 		margin-bottom: 30rpx;
 		margin-top: 30rpx;
@@ -1089,22 +1129,21 @@
 		position: relative;
 		width: 100%;
 		height: 500rpx;
-		// overflow-y: scroll;
+		background-color: #F7F7F7;
+ 		// overflow-y: scroll;
 		// padding-bottom: 120rpx;
-		background-color: #FFF7F7;
-	}
-
+ 	}
+ 
 	.messageView .messageItem {
 		padding-top: 40rpx;
 		display: flex;
-	}
+ 	}
 
 	.messageItemImage {
 		width: 68rpx;
 		height: 68rpx;
 		border-radius: 50%;
-		background-color: red;
-		margin-right: 20rpx;
+ 		margin-right: 20rpx;
 	}
 
 	.messageItemNameTitle {

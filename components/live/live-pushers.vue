@@ -13,12 +13,12 @@
 	 :auto-focus="true" 
 	 :beauty="beauty" 
 	 :whiteness="whiteness" 
-	 aspect="9:16" device-position="front"
+	 :orientation="orientation"
+  	  device-position="front"
 	 @statechange="statechange"
 	  @netstatus="netstatus" 
 	  @error="error" 
-	  style="width: 750rpx;position: absolute;" 
-	  :style="{height:systemInfo.screenHeight + 'px'}"
+ 	  :style="{height:p_height + 'px'}"
 	  ></live-pusher>
 </template>
 <script>
@@ -34,6 +34,18 @@
 			]),
 		},
 		props: {
+			orientation:{
+				default:false
+			},
+			p_height:{
+				default: false
+				
+			},
+			 
+			p_width:{
+				default: false
+				
+			},
 			push_url: {
 				default: false
 			}

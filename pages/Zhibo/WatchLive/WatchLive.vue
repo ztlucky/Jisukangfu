@@ -14,8 +14,9 @@
 					 添加关注</text>	 -->	  
 		</view>
 		<view class="xiaoxiview" :style="[{height:bottomheight+ 'px'}]" v-if="current == 0" >
-			<scroll-view :scroll-y="true"  :style="[{height:scrollviewHeight+ 'px'}]" class="scrollview">
-			  <view  class="item" v-for="(item, index) in messageList" :key="index" >
+			<scroll-view  scroll-with-animation="true" @scroll="scroll"
+			 id="scrollview" scroll-y="true"  :style="[{height:scrollviewHeight+ 'px'}]" class="scrollview" :scroll-top="scrollTop" @scrolltolower="lower">
+			  <view  class="m-item" v-for="(item, index) in messageList" :key="index" >
 				<view class="itemviewLeft" v-if="item.sendId != userID" >
 					<image src="../../../static/gongzuotai/icon_nan.png" mode="" class="messageIconView"></image>
 					<view class="messageDetailview">
@@ -84,9 +85,15 @@
 			    messageList:[],
 				inputvalue:"",
 				promptVisible: false,
+				scrollBottom:false,
 				dashangMoney:'',
 				livetitle:'',
-				
+				page:1,
+				scrollTop:0,
+				style:{
+					pageHeight:0,
+					contentViewHeight:0
+				}
 				
 				 
 				
@@ -119,14 +126,16 @@
 		},
 		onLoad:function(option){
 			// const item = {courseID:2,cover:this.cover,cost:this.detailInfo.cost,title:this.detailInfo.title,time:this.detailInfo.beginTime}
-			  
-			let objClone=  JSON.parse(decodeURIComponent(option.item))
- 			this.liveid =   objClone.liveid
- 			this.livetitle = objClone.title;
- 			this.streamName = objClone.streamName;
- 			this.userID = getApp().globalData.userId
+			  if(option.item){
+				  let objClone=  JSON.parse(decodeURIComponent(option.item))
+				  this.liveid =   objClone.liveid
+				  this.livetitle = objClone.title;
+				  this.streamName = objClone.streamName;
+				  this.userID = getApp().globalData.userId
+			  }
+			
   			var that = this;
-   			
+   		
 			uni.getSystemInfo({
 				success(res) {
 					 that.videoWidth = res.screenWidth
@@ -134,7 +143,8 @@
   					 that.windowHeight = res.windowHeight
 					 that.bottomheight = res.windowHeight-that.videoHeight-50
 					 that.scrollviewHeight = that.bottomheight - 45
-					 
+					 that.style.pageHeight = that.scrollviewHeight;
+					 that.style.contentViewHeight = that.scrollviewHeight;
 				}
 			})
 			//增加看直播的人数
@@ -142,9 +152,9 @@
 			//获取直播拉流地址
 			 this.getPullurl();
 			 this.getmessageList();
-			 this.time = setInterval(()=>{
-				 this.getmessageList();
-			 },1000*60);
+			 // this.time = setInterval(()=>{
+				//  this.getmessageList();
+			 // },1000*60);
 			 this.addEvent();
 			 this.connectSocket()
 		},
@@ -158,11 +168,25 @@
 			
 		},
 		methods: {
+			  lower: function(e) {
+ 				  this.scrollBottom = true;
+				 // this.page = 1;
+				  this.getmessageList()
+ 			        },
+			scroll(event) {
+ 							//距离每个边界距离
+							if(event.detail.scrollTop == 0){
+								this.page=this.page+1
+							this.scrollBottom = false,
+							this.getmessageList()
+							}
+						},
 				connectSocket: function() {
 					console.log(getApp().globalData.userId)
+					var that = this
 					socketLive = uni.connectSocket({
 						
-						url: "http://3237632k3k.goho.co/jeecg-boot/webSocket/"+getApp().globalData.userId,
+						url: getApp().globalData.BaseUrl+"webSocket/"+getApp().globalData.userId,
 						header: {},
 						success: () => {
 							console.log("connectSocket:初始化成功");
@@ -174,15 +198,7 @@
 						},
 						complete: () => {}
 					});
-					uni.onSocketOpen(function(res){
-						      console.log('WebSocket连接已打开！');
-				
-					})
-					  uni.onSocketError(function (res) {
-						  console.log(res);
-						  
-					      console.log('WebSocket连接打开失败，请检查！');
-					    });
+					 
 					socketLive.onOpen((res) => {
 						console.log("打开连接成功");
 						var data = JSON.stringify({
@@ -196,6 +212,8 @@
 							// data: data,
 							success: (res) => {
 								console.log("直播间连接成功", res);
+								that.scrollToBottom()
+								
 								timer = setInterval(() => {
 									uni.sendSocketMessage({
 										success: () => {
@@ -213,6 +231,8 @@
 						console.log("收到消息", res);
 						
 						  var data = JSON.parse(res.data);
+						  console.log("收到消息", data);
+						  
 						if (data.type == 'LS234') {
 							 uni.showToast({
 							 	title:'直播已结束',
@@ -220,7 +240,9 @@
 							 })
 						}
 						if (data.type == 'ZB78965') {
-							this.messageList.push(data)
+							that.messageList.push(data)
+							console.log(that.messageList)
+							 that.scrollToBottom()
 							 
 						}
 						  
@@ -337,6 +359,37 @@
 				});
 			 
 			    },
+			scrollToBottom() {
+				let that = this;
+				let query = uni.createSelectorQuery();
+				query.selectAll('.m-item').boundingClientRect();
+				query.select('#scrollview').boundingClientRect();
+				query.exec((res) => {
+							that.style.mitemHeight = 0;
+							console.log(res)
+							if(res[0].length==0){
+															console.log("oooo")
+							setTimeout(() => {
+							that.scrollToBottom()
+								 
+							}, 400)
+							 return
+							}
+							res[0].forEach((rect) =>
+							that.style.mitemHeight = that.style.mitemHeight + rect.height + 40
+						
+							) //获取所有内部子元素的高度
+							// 因为vue的虚拟DOM 每次生成的新消息都是之前的，所以采用异步setTimeout    主要就是添加了这红字
+ 							
+							setTimeout(() => {
+ 			console.log(that.style.contentViewHeight )
+ 								if (that.style.mitemHeight > (that.style.contentViewHeight - 100)) { //判断子元素高度是否大于显示高度
+ 								
+									that.scrollTop = that.style.mitemHeight - that.style.contentViewHeight //用子元素的高度减去显示的高度就获益获得序言滚动的高度
+								}
+							}, 1000)
+						})
+					},	
 			sendMessage(){
 					
 				if(this.inputvalue.length == 0){
@@ -365,7 +418,7 @@
 								title:'发送成功',
 								icon:'none'
 							})
-							that.getmessageList()
+							//that.getmessageList()
 												 
 						}
 					},
@@ -377,28 +430,47 @@
 			},
 			getmessageList(){
 				var that = this;
+				let mess = [];
+				uni.showLoading({
+					 
+				});
+				console.log(this.page)
+				 
 				this.$app.request({
 					url: this.$api.zhibo.getMessageList,
-					data: {
+					data: {  
 						c_id:uni.getStorageSync('clientInfo').clientid,
 						type:getApp().globalData.livesku,
-						// sendId:getApp().globalData.userId,
-						condition:true,
-						objectId:that.liveid,
+					    //sendId:getApp().globalData.userId,
+ 						objectId:that.liveid,
 						column:'createTime',
-						order:'asc'
+						order:'desc',
+						page:1,
+						pageSize: that.page*20,
+						condition:true
 						
 					},
 					method: 'GET',
 					dataType: 'json',
 					success: res => {
+						console.log(res)
+						uni.hideLoading()
  						if (res.code ==200) {
-						   that.messageList =  res.result.records;
+ 								that.messageList = res.result.records
+							 
+ 						   if(that.scrollBottom == true){
+							    that.scrollToBottom()
+							   
+						   }
  						}
 					},
 					fail: res => {
+						uni.hideLoading()
+						
 					},
 					complete: res => {
+						uni.hideLoading()
+						
 						
 					}
 				});
@@ -503,7 +575,7 @@
 		.scrollview{
 			background-color: #F7F7F7;
 		}
-		.item{
+		.m-item{
 			.itemviewLeft{
  				margin-top: 20rpx;
 					display: flex;

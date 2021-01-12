@@ -1,8 +1,10 @@
 <template>
 	<view class="page">
-		 <view class="" style="position: relative;width: 750rpx;" 
-		 :style="{height: systemInfo.screenHeight + 'px'}" v-if="start == '2'">
-		 	<live-pushers  ref="live-push" :push_url="liveurl"></live-pushers>
+		 <view class="bgview" style="position: relative;" 
+		 :style="[{height:viewHeight + 'px'},{width:viewWidth + 'px'},]"
+		   v-if="start == '2'">
+		 	<live-pushers  ref="live-push" :push_url="liveurl" :p_height="viewHeight" 
+			:p_width="viewWidth"   ></live-pushers>
 		 	<live-head @back="closeLive" ref="live-head" 
 			:headimgurl="headimgurl" 
 			:nickname="name" 
@@ -11,12 +13,10 @@
 			:room_id="liveId"
 		 	 :style="{'margin-top':systemInfo.statusBarHeight+ 'px'}"
 			 ></live-head>
-		 	<view class="" style="width: 100rpx;height: 100rpx;background-color: #007AFF;"
-			 @tap="loginSocket" v-if="false"></view>
+		 	 
 		 	<view class="" style="bottom: 40;position: absolute;width: 750rpx;">
 		 		<live-msg ref="live-msg"></live-msg>
- 		 		 <!-- <live-menu :room_id="room_id"></live-menu> -->
-				 <view class="playbtn" :style="[{width:viewWidth +'px'}]" 
+ 				 <view class="playbtn" :style="[{width:viewWidth +'px'}]" 
 				  @click="clickplayBtn" >
    				  <image  :src="isplay == true? 
 				  '../../../static/zhibo/icon_tingzhizhibo.png'
@@ -60,17 +60,23 @@
 			    headimgurl:'',
 				streamName:'',//流名称，根据流名称获取直播推流地址
 				liveurl:'',
-				viewHeight:'0',
-				viewWidth:'0',
+				viewHeight:200 ,
+				viewWidth: 200,
 				isplay:false,//是否开始直播
 				totallivetime:'',
 				secondNumber:0,//直播秒数
-				onlineCount:0
+				onlineCount:0,
+				liveheight:0,
+				// orientation:'horizontal'
 				 
 			}
 		},
-		 
+	 
 		onLoad:function(option){
+			// #ifdef APP-PLUS
+			// portrait-primary
+				   plus.screen.lockOrientation('portrait-primary');
+  				// #endif
 			console.log(option)
 			if(uni.getStorageSync("headurl").length>0){
 				this.headimgurl = uni.getStorageSync("headurl")
@@ -87,6 +93,14 @@
 				this.name = objClone.title;
 				 
 			}
+			var that = this
+			uni.getSystemInfo({
+			    success: function (res) {
+			   
+ 									   that.viewHeight = res.windowHeight;
+									   that.viewWidth = res.windowWidth		                    
+			    }
+			});
  			this.loadLiveurl()
 			this.connectSocket()
 
@@ -108,26 +122,35 @@
 		           // this.context = uni.createLivePusherContext("livePusher", this);
 					var that = this;
 					
-					uni.getSystemInfo({
-					    success: function (res) {
-					    that.viewHeight = res.windowHeight; 
-						that.viewWidth = res.windowWidth
-					    }
-					});
+					 
 		        },
+				
 				onUnload() {
 					uni.$off('updateLiveSwitchCamera');
+					// #ifdef APP-PLUS
+						   plus.screen.lockOrientation('portrait-primary');
+						// #endif
 					if (socketLive) {
 						socketLive.close();
 					}
 				},
 				onResize() {
 					console.log("fffff")
+					var that = this
 					uni.getSystemInfo({
 					    success: function (res) {
 					   if (res.windowWidth > res.windowHeight) {  
 					                           console.log('横屏');  
+											   that.viewHeight = res.windowHeight;
+											   that.viewWidth = res.windowWidth
+											   console.log(that.viewHeight)
+											   console.log(that.viewWidth)
+											   
 					                       } else {  
+											   that.viewHeight = res.windowHeight;
+											   that.viewWidth = res.windowWidth
+											   console.log(that.viewHeight)
+											   console.log(that.viewWidth)
 					                           console.log('竖屏');  
 					                       }  
 					    }
@@ -136,6 +159,11 @@
 				onBackPress() {
 					this.stopLive()
 					return true
+				},
+				onHide() {
+					// // #ifdef APP-PLUS
+					// 	   plus.screen.lockOrientation('portrait-primary');
+					// 	// #endif
 				},
 		methods: {
 			addtime(){
@@ -204,9 +232,10 @@
 	connectSocket: function() {
 		var that = this
 		console.log(getApp().globalData.userId)
+		console.log(getApp().globalData.BaseUrl+"webSocket/"+getApp().globalData.userId)
+		
 		socketLive = uni.connectSocket({
-			
-			url: "http://3237632k3k.goho.co/jeecg-boot/webSocket/"+getApp().globalData.userId,
+			url: getApp().globalData.BaseUrl+"webSocket/"+getApp().globalData.userId,
 			header: {},
 			success: () => {
 				console.log("connectSocket:初始化成功");
@@ -254,7 +283,7 @@
 					timer = setInterval(() => {
 						uni.sendSocketMessage({
  							success: () => {
- 							}
+  							}
 						});
 					}, 2 * 1000);
 				}
@@ -305,6 +334,7 @@
 		});
 		socketLive.onClose((res) => {
 			console.log("直播间onClose");
+			this.connectSocket()
 		})
 		socketLive.onError((res) => {
 			console.log(res);
@@ -357,7 +387,8 @@ loadLiveurl(){
 										uni.request({
 											url: getApp().globalData.BaseUrl+"/live/live/startLive",
 											data: {
-												live_id:this.liveId
+												live_id:this.liveId,
+												userId:getApp().globalData.userId
 												 
 											},
 											method: 'GET',
@@ -389,7 +420,8 @@ loadLiveurl(){
 										uni.request({
 											url: getApp().globalData.BaseUrl+'live/live/stopLive',
 											data: {
-												live_id: this.liveId
+												live_id: this.liveId,
+												 userId:getApp().globalData.userId
 												 
 											},
 											method: 'GET',
@@ -481,6 +513,9 @@ loadLiveurl(){
 	 left: 40rpx;
 	 width: 40rpx;
 	 height: 40rpx;
+  }
+  .bgview{
+	  background-color: #FF0000;
   }
 		.playbtn{
 			width: 360px;
