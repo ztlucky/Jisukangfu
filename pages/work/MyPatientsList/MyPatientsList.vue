@@ -95,6 +95,10 @@
 					this.isGetMoreHuanZheList = true;
 				}
 				let that = this;
+				
+				if(!(that.nowPhone?that.nowPhone:that.phone)){
+					return false;
+				}
 				return request({
 					url: that.$api.huanzhe.getMyPatientsList,
 					data: {

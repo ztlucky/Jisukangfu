@@ -33,6 +33,12 @@ function request(options = {},isShowLoading = true,isBackData = false,isAddUserI
 					
 				},
 				fail:(err) => {
+					setTimeout(()=>{
+						uni.showToast({
+							title:'服务器繁忙，请稍后重试!',
+							icon:'none'
+						})
+					},100)
 					rejected(err);
 				},
 				complete(data) {
