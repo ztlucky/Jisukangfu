@@ -87,6 +87,8 @@
 								<image :src="item.sendUser.headUrl" mode="aspectFill" class="messageItemImage"></image>
 								<view class="messageItemName">
 									<view class="messageItemNameTitle hidden">{{item.sendUser.name}}</view>
+									<view class="messageleftTime">{{item.createTime}}</view>
+									
 									<view class="messageItemNameText">{{item.content}}</view>
 								</view>
 							</view>
@@ -95,6 +97,7 @@
 								<view class="messageItemName">
 									<view class="messageItemName">
 										<view class="messageItemNameTitle hidden">我</view>
+										<view class="messageTime">{{item.createTime}}</view>
 										<view class="messageItemNameText">{{item.content}}</view>
 									</view>
 								</view>
@@ -122,7 +125,8 @@
 				<image :src="isfav == true ?'../../../static/zhibo/icon_yishoucang.png':'../../../static/zhibo/icon_shoucang.png'"></image>
 				<text>收藏本课</text>
 			</view>
-			<text class="buy" :style="{background:buyBackColor}" @click="comfirmOrder">{{buyBtnText == '已购买'?detailInfo.status == 1?'进入直播':buyBtnText:buyBtnText}}</text>
+			<text class="buy" :style="{background:buyBackColor}" 
+			@click="comfirmOrder">{{buyBtnText == '已购买'?detailInfo.status == 1?'进入直播':buyBtnText:buyBtnText}}</text>
 		</view>
 		<!-- <view class="showVideo" v-if="showVideo">
 			<view class="showVideoView" @click="setVideoUrl(false)"></view>
@@ -215,6 +219,8 @@
 					}
 				}, true, true).then(data => {
 					console.log("eee")
+					console.log(data)
+					
 					that.detailInfo = data.data;
 					that.isbuy = data.isBuy;
 					that.isfav = data.isCollect;
@@ -464,6 +470,8 @@
 					},
 					//确认订单	传递所需的参数
 					comfirmOrder() {
+							
+						 
 						if (getApp().globalData.userId == this.detailInfo.userId) {
 							console.log("ttttt")
 							const item = {
@@ -513,7 +521,8 @@
 								const item = {
 									liveid: this.courseID,
 									streamName: this.detailInfo.streamName,
-									title: this.detailInfo.title
+									title: this.detailInfo.title,
+									isCollect:this.isfav
 								}
 								uni.navigateTo({
 									url: '../../Zhibo/WatchLive/WatchLive?item=' + encodeURIComponent(JSON.stringify(item)),
@@ -1167,11 +1176,29 @@
 
 	.messageRight {
 		justify-content: flex-end;
-	}
+ 	}
 
 	.messageRight .messageItemNameTitle {
 		text-align: right;
 	}
+.messageTime{
+ 	width: 450rpx;
+  	font-size:20rpx;
+	font-family: PingFangSC-Regular, PingFang SC;
+	font-weight: 400;
+	color: #656565;
+	text-align: right;
+	
+}
+.messageleftTime{
+ 	width: 450rpx;
+  	font-size:20rpx;
+	font-family: PingFangSC-Regular, PingFang SC;
+	font-weight: 400;
+	color: #656565;
+	text-align: left;
+	
+}
 
 	.messageRight .messageItemImage {
 		margin-right: 0;

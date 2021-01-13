@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<nav-bar bgColor="#FFFFFF" fontColor="#333333" title="个人信息">
-			<image slot="right" class="rightImage" @click="toPage('/pages/Wode/customerInfo/customerInfo?type=2')" src="/static/tips.png"></image>
+			<!-- <image slot="right" class="rightImage" @click="toPage('/pages/Wode/customerInfo/customerInfo?type=2')" src="/static/tips.png"></image> -->
 		</nav-bar>
 		<view class="contentview">
 			<view class="itemImageView" @click="getImages()">
@@ -32,12 +32,23 @@
 				<text class="content">{{info.phone}}</text>
 				<image src="/static/icon_jiantou.png" mode="" class="rightIcon"></image>
 			</view>
-			<view class="itemView" style="margin-top: 15px;" @click="resetPassword">
+			<view class="lineview"></view>
+			
+			<view class="itemView" @click="bangdingweixin">
+				<text class="title">微信</text>
+				<text class="content">{{weixintext}}</text>
+				<image src="/static/icon_jiantou.png" mode="" class="rightIcon"></image>
+			</view>
+			<view class="itemView" style="margin-top: 10px;" @click="resetPassword">
 				<text class="title">修改密码</text>
  				<image src="/static/icon_jiantou.png" mode="" class="rightIcon"></image>
 			</view>
-			<view class="itemView" style="margin-top: 15px;" @click="toPage('/pages/Wode/certification/certification')">
+			<view class="itemView" style="margin-top: 10px;" @click="toPage('/pages/Wode/certification/certification')">
 				<text class="title">资质认证</text>
+				<image src="static/icon_jiantou.png" mode="" class="rightIcon"></image>
+			</view>
+			<view class="itemView" style="margin-top: 10px;" @click="toPage('/pages/Wode/customerInfo/customerInfo?type=2')">
+				<text class="title">关于我们</text>
 				<image src="static/icon_jiantou.png" mode="" class="rightIcon"></image>
 			</view>
 			<view class="itemView itemView-" style="margin-top: 15px;" @click="loggedOut">
@@ -53,6 +64,10 @@
         :options="selectorList"
         @confirm="onConfirm($event,'selector')"
         ref="selector" ></w-picker>
+ 		<prompt :visible.sync="promptVisible" title="提示" type="text" :password = password 
+		placeholder="请输入密码" @confirm="clickPromptConfirm" 
+		mainColor="#0ED482">
+		</prompt>
 	</view>
 </template>
 
@@ -60,9 +75,12 @@
 	import request from "../../../utils/util.js"
 	import onloadImage from '../../../utils/loadImage.js'
 	import wPicker from "@/components/w-picker/w-picker.vue"
+	import Prompt from '@/components/zz-prompt/index.vue'
+	
 	export default {
 		components:{
-			wPicker
+			wPicker,
+			Prompt
 		},
 		data() {
 			return {
@@ -70,7 +88,11 @@
 				tempFile:[],
 				visible:false,
 				info:{},
+				password:true,
+				weixintext:'绑定',
 				defaultProps:{"label":"name","value":"id"},
+				promptVisible:false ,
+				newWeixinID:'',
 				selectorList:[
 					{
 						id:1,
@@ -93,6 +115,84 @@
 			this.getUserInfo();
 		},
 		methods: {
+			bangdingweixin(){
+				var that = this;
+				uni.getProvider({
+				    service: 'oauth',
+				    success: function(res) {
+				        console.log(res.provider);	
+				        if (~res.provider.indexOf('weixin')) {
+				            uni.login({
+				              provider: 'weixin',
+				              success: function (loginRes) {
+				
+				 that.newWeixinID = loginRes.authResult.openid;
+				                  
+				that.promptVisible = true
+				              },
+				
+				              fail:function(res){
+					     uni.showToast({
+						title:"授权失败",
+						icon:'none'
+					})							
+				    }								
+				   })							
+				  }								
+				    }								
+				});
+			},
+			clickPromptConfirm(val){
+				console.log(val)
+				 this.refreshweixinId(this.newWeixinID,val)
+			},
+			//更新用户的微信ID
+			refreshweixinId(wxid,pwd) {
+				uni.showLoading({
+					title: "绑定中..."
+				})
+				var that = this;
+				this.$app.request({
+					url: this.$api.user.bindWeixin,
+					data: {
+						pwd:pwd,
+						user_id: getApp().globalData.userId,
+						wx_id: wxid,
+					},
+					method: 'GET',
+					dataType: 'json',
+					success: res => {
+						uni.hideLoading()
+						console.log(res)
+						
+						if (res.code == 200) {
+							that.promptVisible = false
+							//绑定成功后刷新本地wxid数据
+							uni.setStorageSync("wxid",wxid);
+			
+							uni.showToast({
+								title: res.message,
+								icon: 'none'
+							})
+			
+						} else {
+							uni.showToast({
+								title: res.message,
+								icon: 'none'
+							})
+			
+						}
+					},
+					fail: res => {
+						uni.hideLoading()
+			
+					},
+					complete: res => {
+						uni.hideLoading()
+			
+					}
+				});
+			},
 			loggedOut(){
 				let that = this;
 				uni.showModal({
@@ -192,6 +292,14 @@
 					}
 				},true,true).then(data=>{
 					that.info = data;
+					if(data.wxId.length>0){
+						that.weixintext = "更换"
+					}else{
+						that.weixintext = "绑定"
+						
+					}
+					
+					
 					console.log(data);
 				})
 			},
@@ -296,11 +404,11 @@
 		}
 	}
 	.itemView-{
-		position: absolute !important;
+		//position: absolute !important;
 		width: 750rpx;
 		display: flex;
-		bottom: 40rpx;
-		justify-content: center;
+		text-align: center;
+ 		justify-content: center;
 		align-items: center;
 		left: 50%;
 		transform: translateX(-50%);

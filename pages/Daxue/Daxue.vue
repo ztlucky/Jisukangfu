@@ -71,7 +71,7 @@
 					<!-- 				  //横向滚动 朋友在看				  -->
 					<view class="bookshelf" v-show="pengyouzaikanList.length>0">
 						<view class="sectiontitleview">
-							<text class="sectiontitle">朋友在看</text>
+							<text class="sectiontitle">可能认识的人</text>
 						</view>
 						<scroll-view scroll-x="true" class="bookshelf-content">
 							<block v-for="(item, index) in pengyouzaikanList" :key="index">

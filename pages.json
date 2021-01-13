@@ -137,7 +137,7 @@
 		{
 			"path": "pages/work/addSymptoms/addSymptoms",
 			"style": {
-				"navigationBarTitleText": "添加分类",
+				"navigationBarTitleText": "添加症状",
 				"navigationBarBackgroundColor": "#31D880",
 				"navigationBarTextStyle": "white"
 

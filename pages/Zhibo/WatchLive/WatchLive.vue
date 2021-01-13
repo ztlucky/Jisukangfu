@@ -10,8 +10,10 @@
 			<zzx-tabs  style="width:100%; height: 40px;margin-top: 10px;" :items="items" :current="current" @clickItem="onClickItem" ref="mytabs" :activeColor="activeColor"
 			:lineWidth="line_width" :lineColor="line_color">
 			           </zzx-tabs>
-				<!-- <text class="guanzhuview" style="width: 30%;height: 50px;">
-					 添加关注</text>	 -->	  
+				<text class="guanzhuview" style="width: 30%;height: 50px;" v-if="isCollect ==false" @click="favAction()">
+					 + 关注</text>	
+						   <text class="guanzhuview" style="width: 30%;height: 50px;" v-if="isCollect ==true" @click="favAction()">
+						   	 已关注</text>
 		</view>
 		<view class="xiaoxiview" :style="[{height:bottomheight+ 'px'}]" v-if="current == 0" >
 			<scroll-view  scroll-with-animation="true" @scroll="scroll"
@@ -21,6 +23,8 @@
 					<image src="../../../static/gongzuotai/icon_nan.png" mode="" class="messageIconView"></image>
 					<view class="messageDetailview">
 						 <text class="messageName"> {{item.createBy}}</text>
+						 <view class="messageleftTime">{{item.createTime}}</view>
+						 
 						 <view class="messageContent"> {{item.content}}</view>
 						
 					</view>
@@ -32,6 +36,8 @@
 					 
 					<view class="messageDetailview">
 						 <text class="messageName"> 我</text>
+						 <view class="messageTime">{{item.createTime}}</view>
+						 
 						 <view class="messageContent">  {{item.content}}</view>
 						
 					</view>
@@ -93,7 +99,8 @@
 				style:{
 					pageHeight:0,
 					contentViewHeight:0
-				}
+				},
+				isCollect:false,
 				
 				 
 				
@@ -132,6 +139,8 @@
 				  this.livetitle = objClone.title;
 				  this.streamName = objClone.streamName;
 				  this.userID = getApp().globalData.userId
+				  this.isCollect = objClone.isCollect
+				  
 			  }
 			
   			var that = this;
@@ -168,6 +177,69 @@
 			
 		},
 		methods: {
+			//添加收藏
+			favAction() {
+				let that = this;
+				if (that.isCollect == true) {
+					//取消收藏
+					this.$app.request({
+						url: getApp().$api.zhibo.unfavLivecourse,
+						method: 'POST',
+						data: {
+							userid: getApp().globalData.userId,
+							bindtype: 1,
+							liveid: that.liveid
+						},
+						dataType: 'json',
+						success: res => {
+							if (res.code == 200) {
+								that.isCollect = false;
+								uni.showToast({
+									title: res.message,
+									icon: 'none'
+								})
+							} else {
+								uni.showToast({
+									title: res.message,
+									icon: 'none'
+								})
+							}
+						},
+						complete: res => {}
+					});
+			
+				} else {
+					//添加收藏
+			
+					this.$app.request({
+						url: getApp().$api.zhibo.favLivecourse,
+						method: 'POST',
+						data: {
+							userid: getApp().globalData.userId,
+							bindtype: 1,
+							liveid: that.liveid
+						},
+						dataType: 'json',
+						success: res => {
+							if (res.code == 200) {
+								that.isCollect = true;
+								uni.showToast({
+									title: res.message,
+									icon: 'none'
+								})
+							} else {
+								uni.showToast({
+									title: res.message,
+									icon: 'none'
+								})
+							}
+						},
+						complete: res => {}
+					});
+			
+				}
+			
+			},
 			  lower: function(e) {
  				  this.scrollBottom = true;
 				 // this.page = 1;
@@ -594,13 +666,23 @@
 					display: flex;
 					flex-direction: column;
  					 margin-left: 28rpx;
-					 
+					 .messageleftTime{
+					  	width: 450rpx;
+					   	font-size:20rpx;
+					 	font-family: PingFangSC-Regular, PingFang SC;
+					 	font-weight: 400;
+					 	color: #656565;
+					 	text-align: left;
+					 	margin-top: 10rpx;
+					 	
+					 }
 					.messageName{
 						font-size: 24rpx;
 						font-family: PingFangSC-Regular, PingFang SC;
 						font-weight: 400;
 						color: #666666;
-						line-height: 34px;
+						line-height: 34rpx;
+						margin-top: 20rpx;
 						
 					}
 					.messageContent{
@@ -613,6 +695,7 @@
 						background: #FFFFFF;
 						border-radius: 8rpx;
 						padding: 20rpx;
+						margin-top: 10rpx;
 						
 					}
 				}
@@ -643,9 +726,21 @@
 					font-family: PingFangSC-Regular, PingFang SC;
 					font-weight: 400;
 					color: #666666;
-					line-height: 34px;
+					line-height: 34rpx;
+					margin-top: 10rpx;
+ 					
+				}
+				.messageTime{
+				 	width: 450rpx;
+				  	font-size:20rpx;
+					font-family: PingFangSC-Regular, PingFang SC;
+					font-weight: 400;
+					color: #656565;
+					text-align: right;
+					margin-top: 10rpx;
 					
 				}
+				
 				.messageContent{
 					font-size: 24rpx;
 					font-family: PingFangSC-Regular, PingFang SC;
@@ -656,6 +751,7 @@
 					background: #FFFFFF;
 					border-radius: 8rpx;
 					padding: 20rpx;
+					margin-top: 10rpx;
 					
 				}
 			}

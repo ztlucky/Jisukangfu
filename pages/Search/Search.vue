@@ -3,7 +3,7 @@
 		<view class="header header1">
 			<view class="sousuo">
 				<image src="/static/homesearch.png"></image>
-				<input placeholder="搜索" v-model="value" focus="true" @blur="getList()"/>
+				<input placeholder="搜索" v-model="value" focus="true" @blur="getList()" confirm-type="搜索"  @confirm="getList()"  @input="getList()" />
 			</view>
 			<view class="allList">
 				<view class="list" v-if="allList.user.records.length !=0">
@@ -96,10 +96,21 @@
 			}
 		},
 		methods: {
+			
 			getList(){
-				if(this.value == '')return false;
-				this.name = this.value;
 				let that = this;
+				
+				if(this.value == ''){
+					that.allList.class.records = []
+					that.allList.course.records = []
+					that.allList.live.records = []
+					that.allList.user.records = []
+					
+					return false;
+					
+				}
+				this.name = this.value;
+				console.log("搜索")
 				return request({
 					url:getApp().$api.shouye.search,
 					type:"GET",
@@ -109,7 +120,9 @@
 						name:that.name
 					}
 				},true,true).then(data=>{
+					console.log(data)
 					that.allList = data;
+					 
 				})
 			},
 			openInfo(index){

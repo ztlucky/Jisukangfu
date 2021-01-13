@@ -78,7 +78,6 @@
 			console.log(this.userIcon)
 			this.windowHeight = this.$app.getwindowHeight()
 		if (option.item != null) {
- 		
 			let objClone = JSON.parse(decodeURIComponent(option.item))
 			console.log(objClone)
 			 this.result = objClone

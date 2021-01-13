@@ -2,7 +2,7 @@
 	<view class="view">
 		<view class="content">
 			<view class="title">症状名称</view>
-			<input placeholder="请输入要创建的症状名称" v-model="title"/>
+			<input placeholder="请输入症状名称" v-model="title"/>
 		</view>
 		<view class="bottom" @click="save">保存</view>
 	</view>

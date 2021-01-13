@@ -142,7 +142,9 @@ let api = {
 		isUseWorkbench:`${apiRoot}doctor/doctor/isUseWorkbench`,//是否有权限使用工作台
 		getTicketList:`${apiRoot}ticket/appTicket/list`,
 		addConcern:`${apiRoot}concern/concern/add`,
-		deleteConcern:`${apiRoot}concern/concern/unfollow`
+		deleteConcern:`${apiRoot}concern/concern/unfollow`,
+		//绑定微信
+		bindWeixin:apiRoot + "user/user/bindWX"
 		
 	},
 	huanzhe:{

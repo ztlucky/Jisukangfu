@@ -191,7 +191,8 @@
 			}
 		},
 		onShow: function() {
-			if (getApp().globalData.userId) {
+			console.log(getApp().globalData.userId )
+			if (getApp().globalData.userId  && getApp().globalData.userId != -2) {
 				this.decideQualification(1).then(()=>{
 					this.decideQualification(2).then(()=>{
 						this.decideQualification(4).then(()=>{

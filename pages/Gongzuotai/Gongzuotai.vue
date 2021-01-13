@@ -205,13 +205,13 @@
 					success: function(e) {
 
 						if (e.confirm) {
-							uni.setStorageSync('userid', null)
+							uni.setStorageSync('userid', -2)
 							uni.setStorageSync('name', null)
 							uni.setStorageSync('roletype', null)
 							uni.setStorageSync('headurl', null)
 							uni.setStorageSync('phone', null)
 							uni.setStorageSync("wxid", null);
-							getApp().globalData.userId = null;
+							getApp().globalData.userId = -2;
 
 
 						} else if (e.cancel) {

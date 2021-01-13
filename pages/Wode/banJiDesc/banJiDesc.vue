@@ -62,6 +62,8 @@
 							<image :src="item.sendUser.headUrl" mode="aspectFill" class="messageItemImage"></image>
 							<view class="messageItemName">
 								<view class="messageItemNameTitle hidden">{{item.sendUser.name}}</view>
+								<view class="messageleftTime">{{item.createTime}}</view>
+								
 								<view class="messageItemNameText">{{item.content}}</view>
 							</view>
 						</view>
@@ -70,6 +72,8 @@
 							<view class="messageItemName">
 								<view class="messageItemName">
 									<view class="messageItemNameTitle hidden">我</view>
+									<view class="messageTime">{{item.createTime}}</view>
+									
 									<view class="messageItemNameText">{{item.content}}</view>
 								</view>
 							</view>
@@ -779,7 +783,24 @@
 		font-weight: 400;
 		color: #666666;
 	}
-
+.messageTime{
+ 	width: 450rpx;
+  	font-size:20rpx;
+	font-family: PingFangSC-Regular, PingFang SC;
+	font-weight: 400;
+	color: #656565;
+	text-align: right;
+	
+}
+.messageleftTime{
+ 	width: 450rpx;
+  	font-size:20rpx;
+	font-family: PingFangSC-Regular, PingFang SC;
+	font-weight: 400;
+	color: #656565;
+	text-align: left;
+	
+}
 	.messageItemNameText {
 		margin-top: 16rpx;
 		width: 450rpx;

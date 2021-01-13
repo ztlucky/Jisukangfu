@@ -13,7 +13,7 @@
 	 :auto-focus="true" 
 	 :beauty="beauty" 
 	 :whiteness="whiteness" 
-	 :orientation="orientation"
+	
   	  device-position="front"
 	 @statechange="statechange"
 	  @netstatus="netstatus" 

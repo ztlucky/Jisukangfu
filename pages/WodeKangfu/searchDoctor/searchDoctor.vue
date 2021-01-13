@@ -4,7 +4,7 @@
 			<view class="title">搜索</view>
 			<view class="sousuo">
 				<image src="/static/homesearch.png"></image>
-				<input :auto-focus="true" placeholder="搜索医生" @confirm="getList(true)" @blur="getList(true)" v-model="value"/>
+				<input :auto-focus="true" placeholder="搜索医生" @confirm="getList(true)" @blur="getList(true)" v-model="value" @input="getList(true)"/>
 			</view>
 		</view>
 		<view class="header header2" :style="'padding-top:'+topheight+'px'">
@@ -56,6 +56,11 @@
 				this.topheight += this.statusBarHeight;
 			},
 			getList(){
+				if(this.value.length == 0){
+					that.expertList = [];
+					return
+					
+				}
 				let that = this;
 				let data = {
 					pageNo:1,
@@ -67,6 +72,7 @@
 					type:"GET",
 					data
 				},true,true).then(data=>{
+					console.log(data)
 					that.expertList = data.records;
 				})
 			}

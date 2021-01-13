@@ -3,7 +3,7 @@
     <view class="prompt">
       <view class="prompt-top">
         <text class="prompt-title">{{title}}</text>
-        <input v-if="!isMutipleLine" class="prompt-input" :style="inputStyle" type="number" :placeholder="placeholder" v-model="value">
+        <input v-if="!isMutipleLine" class="prompt-input" :style="inputStyle" :type="type" :placeholder="placeholder" v-model="value" :password="password">
         <textarea v-else class="prompt-input" :style="inputStyle" type="text" :placeholder="placeholder" v-model="value"></textarea>
       </view>
       <slot></slot>
@@ -24,6 +24,14 @@
         default: false,
         required: true,
       },
+	  password:{
+		  type: Boolean,
+		  default: false,
+	  },
+	  type:{
+		  type: String,
+		  default: 'number',
+	  },
       title: {
         type: String,
         default: '提示',

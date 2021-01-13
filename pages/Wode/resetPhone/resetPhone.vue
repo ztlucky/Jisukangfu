@@ -1,6 +1,6 @@
 <template>
 	<view class="viewPage">
-		<nav-bar :bgColor="bgColor" fontColor="#000000" title="修改手机号">
+		<nav-bar :bgColor="bgColor" fontColor="#000000" :title= "nowStatus==2?'绑定手机号':'修改手机号'">
 			<view slot="right" @click="save" class="navRight">确认</view>
 		</nav-bar>
 		<view class="header">
@@ -29,8 +29,8 @@
 				phone: '',
 				code: '',
 				time: 0,
-				nowStatus:1
-			}
+				nowStatus:1,
+ 			}
 		},
 		components: {
 			navBar
@@ -43,6 +43,7 @@
 				this.nowStatus = 2;
 			}
 			this.setTime();
+			console.log(this.nowStatus)
 		},
 		onUnload() {
 			this.time = 0;

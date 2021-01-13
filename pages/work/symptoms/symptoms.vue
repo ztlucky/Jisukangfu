@@ -14,7 +14,7 @@
 					<view class="rightText hidden">{{v.name}}</view>
 					<view class="rightView" v-if="!isEdit">
 						<view>{{v.value}}</view>
-						<image src="../../../static/f_my_kecheng_arrow.png"></image>
+						<!-- <image src="../../../static/f_my_kecheng_arrow.png"></image> -->
 					</view>
 					<view class="rightView rightView1" v-else>
 						<image :src="v.isSelected?'/static/order/icon_xuanzhong.png':' '"></image>
