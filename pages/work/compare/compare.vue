@@ -17,7 +17,7 @@
 							<view class="name hidden">{{v.name}}</view>
 							<view class="nameType">
 								<image src="../../../static/gongzuotai/icon_zhenduan1.png"></image>
-								<view class="typeText hidden">诊断：心脏病</view>
+								<view class="typeText hidden">诊断：{{v.illnessName?v.illnessName:''}}</view>
 							</view>
 						</view>
 						<view class="nameRight">{{v.bunk}}床</view>
@@ -27,7 +27,7 @@
 						<view class>年龄：{{v.age}}</view>
 					</view>
 					<view class="rightItemId">
-						<view class="id">编号：{{v.idNo?v.idNo:''}}</view>
+						<view class="id">编号：{{v.num?v.num:''}}</view>
 						<view class="itemIdButton" @click="toPage('/pages/HuanzheDetail/huanZheInfo/huanZheInfo',k)">查看患者</view>
 					</view>
 					<view class="rightItemDate">诊疗周期：{{v.createTime}}-{{v.endTime}}</view>
@@ -120,7 +120,7 @@
 							condition:true,
 							pageNo:that.huanZheInde,
 							pageSize:that.huanZheSize,
-							symptomIds:`,${id},`
+							symptomId:`,${id},`
 						}
 					},true,true).then(data=>{
 						console.log(data);
