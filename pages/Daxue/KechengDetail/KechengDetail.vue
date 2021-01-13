@@ -489,19 +489,30 @@
 
 				} else if (this.buyBtnText == "立即购买") {
 
-					const item = {
-						sku: getApp().globalData.course,
-						courseID: this.courseID,
-						cover: this.detailInfo.coverUrl,
-						cost: this.detailInfo.cost,
-						title: this.detailInfo.name,
-						time: this.detailInfo.createTime
-					}
-					uni.navigateTo({
-						url: '../../Order/ConfirmOrder/ConfirmOrder?item=' + encodeURIComponent(JSON.stringify(item)),
-						animationType: 'slide-in-right',
-						animationDuration: 300
-					})
+if (getApp().globalData.userId  && getApp().globalData.userId != -2) {
+				 
+              const item = {
+              	sku: getApp().globalData.course,
+              	courseID: this.courseID,
+              	cover: this.detailInfo.coverUrl,
+              	cost: this.detailInfo.cost,
+              	title: this.detailInfo.name,
+              	time: this.detailInfo.createTime
+              }
+              uni.navigateTo({
+              	url: '../../Order/ConfirmOrder/ConfirmOrder?item=' + encodeURIComponent(JSON.stringify(item)),
+              	animationType: 'slide-in-right',
+              	animationDuration: 300
+              })
+			} else {
+ 				//未登陆
+				uni.navigateTo({
+					url: '../../Login/Login/Login?type='+'detail',
+					animationType: 'slide-in-bottom',
+					animationDuration: 300
+				});
+			}
+					
 
 
 				} else if (this.buyBtnText == '已购买') {

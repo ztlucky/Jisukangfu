@@ -500,8 +500,10 @@
 							})
 
 						} else if (this.buyBtnText == "立即购买") {
-
-							const item = {
+							 
+if (getApp().globalData.userId  && getApp().globalData.userId != -2) {
+				 
+                const item = {
 								sku: getApp().globalData.livesku,
 								courseID: this.courseID,
 								cover: this.detailInfo.cover,
@@ -514,6 +516,16 @@
 								animationType: 'slide-in-right',
 								animationDuration: 300
 							})
+			} else {
+				console.log("登陆")
+				//未登陆
+				uni.navigateTo({
+					url: '../../Login/Login/Login?type='+'detail',
+					animationType: 'slide-in-bottom',
+					animationDuration: 300
+				});
+			}
+							
 
 
 						} else if (this.buyBtnText == '已购买') {

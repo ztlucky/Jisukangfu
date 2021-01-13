@@ -42,7 +42,8 @@
 				remainingd: '', //数据返回时间秒
 				timer: '',
 				mobile: '',
-				code: ''
+				code: '',
+				type:''
 			}
 		},
 		//物理键返回
@@ -60,13 +61,26 @@
 			//                     }
 			//                 }
 			//             });
-			uni.switchTab({
-				url: '/pages/Daxue/Daxue'
-			})
-			return true;
+			if(this.type == 'detail'){
+				// uni.navigateBack({
+					
+				// })
+			}else{
+				uni.switchTab({
+					url: '/pages/Daxue/Daxue'
+				})
+				return true;
+				
+			}
+			
 		},
 		onShow: function() {
 			this.viewHeight = this.$app.getwindowHeight()
+		},
+		onLoad(e) {
+			if(e.type !=null){
+				this.type = e.type
+			}
 		},
 		onUnload() {
 			clearInterval(this.timer);
@@ -99,9 +113,16 @@
 			 },
 			//返回
 			returnBack() {
-				uni.switchTab({
-					url: '/pages/Daxue/Daxue'
-				})
+				if(this.type == 'detail'){
+					uni.navigateBack({
+						
+					})
+				}else{
+					uni.switchTab({
+						url: '/pages/Daxue/Daxue'
+					})
+				}
+				
 			},
 			//获取验证码
 			getcodeAction() {

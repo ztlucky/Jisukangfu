@@ -235,22 +235,35 @@
 			},
 			comfirmOrder() {
 				if (this.buyBtnText == "立即购买") {
-					const item = {
-						sku: getApp().globalData.classsku,
-						courseID: this.id,
-						cover: this.info.coverUrl,
-						cost: this.info.cost,
-						title: this.info.name,
-						time: this.info.createTime
-					}
-					console.log(item)
-					uni.navigateTo({
-						url: '../../Order/ConfirmOrder/ConfirmOrder?item=' + encodeURIComponent(JSON.stringify(item)),
-						animationType: 'slide-in-right',
-						animationDuration: 300
-					})
-
-
+					if (getApp().globalData.userId  && getApp().globalData.userId != -2) {
+									 
+					              const item = {
+					              	sku: getApp().globalData.classsku,
+					              	courseID: this.id,
+					              	cover: this.info.coverUrl,
+					              	cost: this.info.cost,
+					              	title: this.info.name,
+					              	time: this.info.createTime
+					              }
+					              console.log(item)
+					              uni.navigateTo({
+					              	url: '../../Order/ConfirmOrder/ConfirmOrder?item=' + encodeURIComponent(JSON.stringify(item)),
+					              	animationType: 'slide-in-right',
+					              	animationDuration: 300
+					              })
+					              
+					              
+								} else {
+									console.log("登陆")
+									//未登陆
+									uni.navigateTo({
+										url: '../../Login/Login/Login?type='+'detail',
+										animationType: 'slide-in-bottom',
+										animationDuration: 300
+									});
+								}
+												
+				
 				} else if (this.buyBtnText == '已购买') {
 
 
