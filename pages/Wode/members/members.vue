@@ -70,50 +70,50 @@
 	export default {
 		data() {
 			return {
-				info:{},
+				info: {},
 				cardList: [],
 				otherCardList: [],
-				list:[],
-				type:1,
-				nowMemberIndex:0,
+				list: [],
+				type: 1,
+				nowMemberIndex: 0,
 			}
 		},
 		onLoad() {
-				this.getUserInfo().then((data)=>{
-					this.getMemberList();
-				});
+			this.getUserInfo().then((data) => {
+				this.getMemberList();
+			});
 		},
 		methods: {
-			getUserInfo(){
+			getUserInfo() {
 				let that = this;
 				return request({
-					url:getApp().$api.user.getUserInfo,
-					type:"GET",
-					data:{
-						condition:true,
-						id:getApp().globalData.userId
+					url: getApp().$api.user.getUserInfo,
+					type: "GET",
+					data: {
+						condition: true,
+						id: getApp().globalData.userId
 					}
-				},true,true).then(data=>{
+				}, true, true).then(data => {
 					that.info = data.data;
 				})
 			},
-			getMemberList(){
+			getMemberList() {
 				let that = this;
 				return request({
-					url:getApp().$api.user.getMemberList,
-					type:"GET",
-					data:{
-						pageNo:1,
-						pageSize:50
+					url: getApp().$api.user.getMemberList,
+					type: "GET",
+					data: {
+						pageNo: 1,
+						pageSize: 50
 					}
-				},true,true).then(data=>{
+				}, true, true).then(data => {
 					let cardList = [];
 					let otherCardList = [];
-					if(data.records){
-						data.records.map(v=>{
-							if(v.type == 1){
+					if (data.records) {
+						data.records.map(v => {
+							if (v.type == 1) {
 								cardList.push(v);
-							}else if(v.type == 2){
+							} else if (v.type == 2) {
 								otherCardList.push(v);
 							}
 						});
@@ -122,64 +122,74 @@
 						that.cardList = cardList;
 						that.otherCardList = otherCardList;
 						that.list = cardList;
-						
+
 					}
 				})
 			},
-			
-			setVipType(type){
-				if(this.type == type )return false;
+
+			setVipType(type) {
+				if (this.type == type) return false;
 				this.type = type;
-				if(type == 1){
+				if (type == 1) {
 					this.list = this.cardList;
-				}else{
+				} else {
 					this.list = this.otherCardList;
 				}
 				console.log(this.list);
 			},
-			setItemStatus(index){
-				if(this.type == 1){
-					this.cardList.map((v,k)=>{
+			setItemStatus(index) {
+				if (this.type == 1) {
+					this.cardList.map((v, k) => {
 						this.cardList[k].isSelected = false;
-						this.$set(this.list,k,this.cardList[k])
+						this.$set(this.list, k, this.cardList[k])
 					});
 					this.cardList[index].isSelected = true;
 					this.list[index].isSelected = true;
-					this.$set(this.list,index,this.cardList[index])
-				}else{
-					this.otherCardList.map((v,k)=>{
+					this.$set(this.list, index, this.cardList[index])
+				} else {
+					this.otherCardList.map((v, k) => {
 						this.otherCardList[k].isSelected = false;
 						this.list[k].isSelected = false;
-						this.$set(this.list,k,this.otherCardList[k])
+						this.$set(this.list, k, this.otherCardList[k])
 					});
 					this.otherCardList[index].isSelected = true;
 					this.list[index].isSelected = true;
-					this.$set(this.list,index,this.otherCardList[index])
+					this.$set(this.list, index, this.otherCardList[index])
 				}
 				this.nowMemberIndex = index;
 			},
-			pay(){
+			pay() {
+				let that = this;
 				// customerId:getApp().globalData.userId,
 				// goodsId:this.liveid,
 				// goodsSku:getApp().globalData.reword,
 				// originalPrice:parseFloat(this.dashangMoney)
-				let that = this;
-				return request({
-					url:getApp().$api.dingdan.creatOrder,
-					type:"POST",
-					data:{
-						customerId:getApp().globalData.userId,
-						goodsId:that.list[that.nowMemberIndex].id,
-						goodsSku:getApp().globalData.member
+				uni.showModal({
+					title: '温馨提示',
+					content: '是否购买该会员!',
+					success(res) {
+						if (res.confirm) {
+							return request({
+								url: getApp().$api.dingdan.creatOrder,
+								type: "POST",
+								data: {
+									customerId: getApp().globalData.userId,
+									goodsId: that.list[that.nowMemberIndex].id,
+									goodsSku: getApp().globalData.member
+								}
+							}, true, true, false).then(data => {
+								uni.showToast({
+									title: '购买成功'
+								})
+								setTimeout(() => {
+									that.getUserInfo();
+								}, 1000)
+							})
+						}
 					}
-				},true,true,false).then(data=>{
-					uni.showToast({
-						title:'购买成功'
-					})
-					setTimeout(()=>{
-						that.getUserInfo();
-					},1000)
 				})
+
+
 			}
 		}
 	}
@@ -412,7 +422,7 @@
 
 	.pay {
 		margin: 0 auto;
-		margin-top:30rpx;
+		margin-top: 30rpx;
 		width: 602rpx;
 		height: 80rpx;
 		background: linear-gradient(90deg, #EEC987 0%, #D3A45E 100%);

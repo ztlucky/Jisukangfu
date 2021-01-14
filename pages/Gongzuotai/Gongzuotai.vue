@@ -162,9 +162,14 @@
 			this.topImageHeight = this.$app.getwindowWidth() * 0.73
 			this.zhiboimagewidth = this.$app.getwindowWidth() * 0.4;
 			this.zhiboimageheight = this.zhiboimagewidth * 0.5
-			if (getApp().globalData.userId) {
-
-
+			if (getApp().globalData.userId  && getApp().globalData.userId != -2) {
+				this.isUseWorkbench().then(() => {
+						
+					})
+					this.getInfo().then(() => {
+						this.getHuanZheList();
+					})
+			
 			} else {
 				//未登陆
 				uni.navigateTo({
@@ -173,21 +178,16 @@
 					animationDuration: 300
 				});
 			}
-	    this.isUseWorkbench().then(() => {
-				
-			})
-			this.getInfo().then(() => {
-				this.getHuanZheList();
-			})
+	   
 	
 		},
 		onLoad() {
-			this.isUseWorkbench().then(() => {
+			// this.isUseWorkbench().then(() => {
 				
-			})
-			this.getInfo().then(() => {
-				this.getHuanZheList();
-			})
+			// })
+			// this.getInfo().then(() => {
+			// 	this.getHuanZheList();
+			// })
 	
 		},
 		methods: {
