@@ -125,7 +125,7 @@
 		<view class="showVideoView" @click="setVideoUrl(false)"></view>
 		<video :src="videoUrl" initial-time='0'></video>
 	</view> -->
-	</view>
+ 	</view>
 
 </template>
 
@@ -587,6 +587,8 @@ if (getApp().globalData.userId  && getApp().globalData.userId != -2) {
 				})
 			},
 			share() {
+				console.log("++++++")
+				console.log("sghare")
 				let goodsId = this.courseID;
 				let rebateType = getApp().globalData.livesku;
 				let couponCode = this.detailInfo.coupon;
@@ -613,6 +615,7 @@ if (getApp().globalData.userId  && getApp().globalData.userId != -2) {
 						shareUrl: `http://jskf.huaxiakangfu.com/app_share/index.html#/?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}&rebateCode=${result}`,
 						shareTitle: `${name}: 分享了课程《${that.detailInfo.name}》`,
 						shareContent: "课程简介: "+that.detailInfo.presentation,
+						shareImg:'../../../static/logo.png'
 					};
 					// 调用
 					let shareObj = appShare(shareData, res => {

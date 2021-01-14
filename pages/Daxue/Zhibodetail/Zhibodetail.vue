@@ -18,7 +18,7 @@
 				</view>
 				<view class="tipview">
 					<text class="tiptext">会员价¥ {{detailInfo.memberCost}}</text>
-					<text class="tiptext">直播结束后可回放</text>
+					<!-- <text class="tiptext">直播结束后可回放</text> -->
 				</view>
 				<view class="timeview">
 					<image src="../../../static/zhibo/icon_shijian.png"></image>
@@ -176,6 +176,7 @@
 				scrollTop: 0,
 				mainscrolltop:0,
 				page:1,
+				isConcern:false,
 				scrollbottom:false,
 				style:{
 					pageHeight:0,
@@ -224,6 +225,7 @@
 					that.detailInfo = data.data;
 					that.isbuy = data.isBuy;
 					that.isfav = data.isCollect;
+					that.isConcern = data.isConcern;
 					if (data.data.file != '') {
 						let file = JSON.parse(data.data.file);
 						let videoFileId = [];
@@ -250,40 +252,48 @@
 					}
 
 					if (data.data.userId == getApp().globalData.userId) {
+						console.log("sssss")
 						if (data.data.status == 1) {
 
-							this.buyBtnText = "直播中"
-							this.buyBackColor = '#999999'
+							that.buyBtnText = "直播中"
+							that.buyBackColor = '#999999'
 
 						} else {
-							this.buyBtnText = "开始直播"
-							this.buyBackColor = '#ff0000'
+							that.buyBtnText = "开始直播"
+							that.buyBackColor = '#ff0000'
 
 						}
 
 						//判断时间
 					} else {
+						
 						if (data.isBuy == true) {
-							this.buyBtnText = "已购买"
-							if (this.detailInfo.status == 1) {
-								this.buyBackColor = '#ff0000'
+							console.log(data.isBuy)
+							
+							that.buyBtnText = "已购买"
+							if (that.detailInfo.status == 1) {
+								that.buyBackColor = '#ff0000'
 							} else {
-								this.buyBackColor = '#999999'
+								that.buyBackColor = '#999999'
 							}
+							console.log(data.isBuy)
 
 						} else {
-							this.buyBtnText = "立即购买"
-							this.buyBackColor = '#ff0000'
+							that.buyBtnText = "立即购买"
+							that.buyBackColor = '#ff0000'
 
 
 						}
+ 						
 					}
+					console.log(that.buyBtnText)
+					
 					uni.showToast({
 						title: data,
 						icon: null
 					})
 				})
-
+				
 			},
 			getVideoUrlList(file) {
 				let that = this;
@@ -530,12 +540,22 @@ if (getApp().globalData.userId  && getApp().globalData.userId != -2) {
 
 						} else if (this.buyBtnText == '已购买') {
 							if (this.detailInfo.status == 1) {
+							 
 								const item = {
 									liveid: this.courseID,
 									streamName: this.detailInfo.streamName,
 									title: this.detailInfo.title,
-									isCollect:this.isfav
+									isConcern:this.isConcern,
+								    concern_id:this.detailInfo.userId,
+									couponCode:this.detailInfo.coupon,
+									invitationCode:this.detailInfo.invitationCode,
+									invitationCodeCount:this.detailInfo.invitationCodeCount,
+									invitationCodeUsedCount:this.detailInfo.invitationCodeUsedCount,
+									couponCount:this.detailInfo.couponCount,
+									couponUsedCount:this.detailInfo.couponUsedCount,
+									presentation:this.detailInfo.presentation
 								}
+								console.log(item)
 								uni.navigateTo({
 									url: '../../Zhibo/WatchLive/WatchLive?item=' + encodeURIComponent(JSON.stringify(item)),
 									animationType: 'slide-in-right',
@@ -585,9 +605,11 @@ if (getApp().globalData.userId  && getApp().globalData.userId != -2) {
 							let result = res.result;
 							let shareData = {
 								type: 0,
-								shareUrl: `http://jskf.huaxiakangfu.com/app_share/index.html#/?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}&rebateCode=${result}`,
+								shareUrl: ` http://jskf.huaxiakangfu.com/app_share/index.html#/?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}&rebateCode=${result}`,
 								shareTitle: `${name}: 分享了直播《${that.detailInfo.name}》`,
 								shareContent: "直播简介: " + that.detailInfo.presentation,
+								shareImg:'../../../static/logo.png'
+								
 							};
 							console.log(shareData)
 							// 调用

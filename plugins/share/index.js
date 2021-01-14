@@ -36,6 +36,8 @@ function onMore(item, shareInfo,callback) {
 }
 // 分享
 function onShare(item, shareInfo,callback) {
+	console.log(item,shareInfo)
+	
 	if (shareInfo.type == undefined) {
 		shareInfo.type = item.type;
 	}
@@ -124,7 +126,9 @@ function onShare(item, shareInfo,callback) {
 	if (item.scene) {
 		shareObj.scene = item.scene;
 	}
-	uni.share(shareObj);
+	// shareObj.imageUrl = '../../../static/zhibo/icon_yishoucang.png'
+	console.log(shareObj)
+ 	uni.share(shareObj);
 }
 let otherShareList = [
 	{

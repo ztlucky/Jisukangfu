@@ -173,7 +173,13 @@
 					animationDuration: 300
 				});
 			}
-
+	    this.isUseWorkbench().then(() => {
+				
+			})
+			this.getInfo().then(() => {
+				this.getHuanZheList();
+			})
+	
 		},
 		onLoad() {
 			this.isUseWorkbench().then(() => {
@@ -186,6 +192,7 @@
 		},
 		methods: {
 			isUseWorkbench() {
+				console.log(getApp().globalData.userId)
 				let that = this;
 				return request({
 					url: getApp().$api.user.isUseWorkbench,
@@ -194,6 +201,7 @@
 						user_id:getApp().globalData.userId
 					}
 				}).then(data => {
+					console.log(data)
 					that.permissions = 1;
 				})
 			},
@@ -239,7 +247,7 @@
 			huanzheAction(index) {
 				if((index == 0 || index == 2) && this.permissions == 2){
 					uni.showToast({
-						title:'请购买会员，获取工作台使用权限',
+						title:'请购买至尊会员，获取工作台使用权限',
 						icon:'none',
 						duration:1500
 					})
@@ -302,7 +310,7 @@
 			wodehuanzheAction(index) {
 				if((index == 1 || index == 2 || index == 3) && this.permissions == 2){
 					uni.showToast({
-						title:'请购买会员，获取工作台使用权限',
+						title:'请购买至尊会员，获取工作台使用权限',
 						duration:1500,
 						icon:'none'
 					})

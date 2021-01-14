@@ -88,7 +88,8 @@
 		methods: {
 			//协议
 			 protolpage(){
-				  const item = {url:"http://www.huaxiakangfu.com/privacy/yinsi.html",
+				 
+				  const item = {url:"http://jskf.huaxiakangfu.com/privacy/yinsi.html",
 				                title: "用户协议"
 				                     }
 
@@ -101,7 +102,7 @@
 			 //隐私政策
 			 
 			 privicypage(){
-				const item = {url:"http://www.huaxiakangfu.com/privacy/yinsi-.html",
+				const item = {url:"http://jskf.huaxiakangfu.com/privacy/yinsi-.html",
 				               title: "隐私政策"
 				                 }
 				
@@ -138,7 +139,8 @@
 				} else {
 
 					uni.request({
-						url: 'http://kfy.huaxiakangfu.com/app/msg/sendcode',
+						
+						url: getApp().globalData.BaseUrl+'app/msg/sendcode',
 
 						header: {
 							'content-type': 'application/json',
@@ -212,10 +214,19 @@
 				console.log(info.nickName)
 				console.log(info.gender)
 				console.log(unionid)
+				let data = {
+					   name:info.nickName,
+					   wxId: unionid,
+					   sex:info.gender,
+					   headUrl:info.avatarUrl,
+					   appVersionNumber:plus.runtime.version
+					}
+					console.log(data)
+					console.log(getApp().globalData.BaseUrl+'user/user/loginByWX')
 
 				uni.request({
 					//url: 'http://kfy.huaxiakangfu.com/app/user/loginByWX',
-                  url:'http://kfy.huaxiakangfu.com/user/user/loginByWX',
+                  url:getApp().globalData.BaseUrl+'user/user/loginByWX',
 					header: {
 						'content-type': 'application/json',
 					},
@@ -287,6 +298,7 @@
 								uni.login({
 									provider: 'weixin',
 									success: function(loginRes) {
+										console.log(loginRes)
 										// 获取用户信息
 										uni.getUserInfo({
 											provider: 'weixin',
@@ -321,7 +333,8 @@
 				} else {
 					plus.runtime.getProperty(plus.runtime.appid,(wgtinfo)=>{
 					    uni.request({
-					    	url: 'http://kfy.huaxiakangfu.com/user/user/loginByPhoneCode',
+							
+					    	url:getApp().globalData.BaseUrl+'user/user/loginByPhoneCode',
 					    
 					    	header: {
 					    		'content-type': 'application/json',

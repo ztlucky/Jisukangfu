@@ -19,6 +19,8 @@
 </template>
 
 <script>
+	let md5 = require('md5');
+	
  	export default {
 		data() {
 			return {
@@ -48,13 +50,14 @@
 										icon:'none'
 									})
 								}else{
+								 let passwd = md5(this.password + 'JSKF1234');
 								 
 									this.$app.request({
 											
 											url: this.$api.user.setPwd,
 											data: {
  												id: getApp().globalData.userId,
-												passwd: this.password
+												passwd: passwd
 											},
 											method: 'POST',
  											success: res => {
