@@ -10,9 +10,9 @@
 			<zzx-tabs  style="width:100%; height: 40px;margin-top: 10px;" :items="items" :current="current" @clickItem="onClickItem" ref="mytabs" :activeColor="activeColor"
 			:lineWidth="line_width" :lineColor="line_color">
 			           </zzx-tabs>
-				<text class="guanzhuview" style="width: 30%;height: 50px;" v-if="isCollect ==false" @click="favAction()">
+				<text class="guanzhuview" style="width: 30%;height: 50px;" v-if="isConcern ==false" @click="favAction()">
 					 + 关注</text>	
-						   <text class="guanzhuview" style="width: 30%;height: 50px;" v-if="isCollect ==true" @click="favAction()">
+						   <text class="guanzhuview" style="width: 30%;height: 50px;" v-if="isConcern ==true" @click="favAction()">
 						   	 已关注</text>
 		</view>
 		<view class="xiaoxiview" :style="[{height:bottomheight+ 'px'}]" v-if="current == 0" >
@@ -53,7 +53,7 @@
 
 		</view>
 		<image  class="dashangimgeview" src ="../../../static/zhibo/icon_dashang.png" mode="" @click="dashangAction"></image>
-		<image  class="yaoqingimgeview" src ="../../../static/zhibo/icon_yaoqing.png" mode=""></image>
+		<image  class="yaoqingimgeview" src ="../../../static/zhibo/icon_yaoqing.png" mode="" @click="share"></image>
 		<prompt :visible.sync="promptVisible" title="提示"  placeholder="请输入打赏金额" @confirm="clickPromptConfirm" mainColor="#0ED482">
  		</prompt>
 	</view>
@@ -64,6 +64,8 @@
 	import zzxTabs from "@/components/zzx-tabs/zzx-tabs.vue"
 	import Prompt from '@/components/zz-prompt/index.vue'
 	import appShare from "@/plugins/share/index.js"
+	import request from '../../../utils/util.js'
+	
 	var socketLive;
 	var timer;
 	export default {
@@ -96,12 +98,19 @@
 				livetitle:'',
 				page:1,
 				scrollTop:0,
+				concern_id:'',
 				style:{
 					pageHeight:0,
 					contentViewHeight:0
 				},
-				isCollect:false,
-				
+				isConcern:false,
+				couponCode:'',
+				invitationCode:'',
+				invitationCodeCount:'',
+				invitationCodeUsedCount:'',
+				couponCount:0,
+				couponUsedCount:0,
+				presentation:''
 				 
 				
 			}
@@ -132,6 +141,7 @@
 			
 		},
 		onLoad:function(option){
+			console.log(option.item)
 			// const item = {courseID:2,cover:this.cover,cost:this.detailInfo.cost,title:this.detailInfo.title,time:this.detailInfo.beginTime}
 			  if(option.item){
 				  let objClone=  JSON.parse(decodeURIComponent(option.item))
@@ -139,7 +149,18 @@
 				  this.livetitle = objClone.title;
 				  this.streamName = objClone.streamName;
 				  this.userID = getApp().globalData.userId
-				  this.isCollect = objClone.isCollect
+				  this.isConcern = objClone.isConcern
+				  this.concern_id = objClone.concern_id
+				  this.couponCode = objClone.couponCode
+				  this.invitationCode = objClone.invitationCode
+				  this.invitationCodeCount = objClone.invitationCodeCount
+				  this.invitationCodeUsedCount = objClone.invitationCodeUsedCount
+				  this.couponCount = objClone.couponCount
+				  this.couponUsedCount = objClone.couponUsedCount
+				  this.presentation = objClone.presentation
+				   
+				 
+				  
 				  
 			  }
 			
@@ -180,20 +201,19 @@
 			//添加收藏
 			favAction() {
 				let that = this;
-				if (that.isCollect == true) {
-					//取消收藏
+				if (that.isConcern == true) {
+					//取消关注
 					this.$app.request({
-						url: getApp().$api.zhibo.unfavLivecourse,
-						method: 'POST',
+						url: getApp().$api.zhibo.cancelGuanzhu,
+						method: 'GET',
 						data: {
-							userid: getApp().globalData.userId,
-							bindtype: 1,
-							liveid: that.liveid
-						},
+							user_id: getApp().globalData.userId,
+							concern_id:this.concern_id
+ 						},
 						dataType: 'json',
 						success: res => {
 							if (res.code == 200) {
-								that.isCollect = false;
+								that.isConcern = false;
 								uni.showToast({
 									title: res.message,
 									icon: 'none'
@@ -210,19 +230,19 @@
 			
 				} else {
 					//添加收藏
-			
+			console.log(getApp().globalData.userId)
+			console.log( this.concern_id)
 					this.$app.request({
-						url: getApp().$api.zhibo.favLivecourse,
+						url: getApp().$api.zhibo.guanzhu,
 						method: 'POST',
 						data: {
-							userid: getApp().globalData.userId,
-							bindtype: 1,
-							liveid: that.liveid
-						},
+							userId: getApp().globalData.userId,
+							concernId: this.concern_id,
+ 						},
 						dataType: 'json',
 						success: res => {
 							if (res.code == 200) {
-								that.isCollect = true;
+								that.isConcern = true;
 								uni.showToast({
 									title: res.message,
 									icon: 'none'
@@ -365,19 +385,49 @@
 				});
 			},
 			share() {
-				let shareData = {
-					type: 0,
-					shareUrl: `http://jskf.huaxiakangfu.com/app_share/index.html#/`,
-					shareTitle: "极速康复",
-					shareContent: "极速康复",
-				};
-				// 调用
-				let shareObj = appShare(shareData, res => {
-					console.log("分享成功回调", res);
-					// 分享成功后关闭弹窗
-					// 第一种关闭弹窗的方式
-					closeShare();
-				});
+				let goodsId = this.liveid;
+				let rebateType = getApp().globalData.livesku;
+				
+				let couponCode = this.couponCode;
+				let invitationCode = this.invitationCode;
+				if (this.invitationCodeCount == this.invitationCodeUsedCount) {
+					invitationCode = 0
+				}
+				if (this.couponCount == this.couponUsedCount) {
+					couponCode = 0
+				}
+				let name = uni.getStorageSync('name');
+				let that = this;
+				return request({
+					url: getApp().$api.share.rebate,
+					data: {
+						goodsId,
+						rebateType
+					},
+					type: "POST"
+				}, false).then(res => {
+					let result = res.result;
+					let shareData = {
+						type: 0,
+						shareUrl: ` http://jskf.huaxiakangfu.com/app_share/index.html#/?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}&rebateCode=${result}`,
+						shareTitle: `${name}: 分享了直播《${that.livetitle}》`,
+						shareContent: "直播简介: " + that.presentation,
+						shareImg:'../../../static/logo.png'
+						
+					};
+					console.log(shareData)
+					// 调用
+					let shareObj = appShare(shareData, res => {
+						console.log("分享成功回调", res);
+						// 分享成功后关闭弹窗
+						// 第一种关闭弹窗的方式
+						closeShare();
+					});
+					// setTimeout(() => {
+					// 	// 第二种关闭弹窗的方式
+					// 	shareObj.close();
+					// }, 5000);
+				})
 				
 			},
 			dashangAction(){

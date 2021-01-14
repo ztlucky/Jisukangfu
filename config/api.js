@@ -1,5 +1,5 @@
  
-    let apiRoot = 'http://kfy.huaxiakangfu.com/';
+    let apiRoot = 'http://kfy.huaxiakangfu.com:8090/';
     // let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
  
 let api = {
@@ -63,8 +63,9 @@ let api = {
 		//获取消息列表
 		getMessageList:apiRoot +"message/message/list",
 		//获取在看观看直播人数
-		
-		getOnlineNumber:apiRoot+"live/live/seeLiveCount"
+		getOnlineNumber:apiRoot+"live/live/seeLiveCount",
+		guanzhu:apiRoot+"concern/concern/add",
+		cancelGuanzhu:apiRoot+"concern/concern/unfollow"
 		
 	},
 	dingdan:{

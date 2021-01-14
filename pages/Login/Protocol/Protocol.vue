@@ -21,7 +21,7 @@
 			    this.title = objClone.title
 			}
 
-		
+		console.log(this.title)
 			uni.setNavigationBarTitle({
 			    title:  this.title
 			});

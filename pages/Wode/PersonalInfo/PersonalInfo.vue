@@ -76,6 +76,7 @@
 	import onloadImage from '../../../utils/loadImage.js'
 	import wPicker from "@/components/w-picker/w-picker.vue"
 	import Prompt from '@/components/zz-prompt/index.vue'
+	let md5 = require('md5');
 	
 	export default {
 		components:{
@@ -152,10 +153,17 @@
 					title: "绑定中..."
 				})
 				var that = this;
+				let passwd = md5(pwd + 'JSKF1234');
+				let data = {
+						pwd:pwd,
+						user_id: passwd,
+						wx_id: wxid,
+					}
+					console.log(data)
 				this.$app.request({
 					url: this.$api.user.bindWeixin,
 					data: {
-						pwd:pwd,
+						pwd:passwd,
 						user_id: getApp().globalData.userId,
 						wx_id: wxid,
 					},
@@ -164,9 +172,9 @@
 					success: res => {
 						uni.hideLoading()
 						console.log(res)
+						that.promptVisible = false
 						
 						if (res.code == 200) {
-							that.promptVisible = false
 							//绑定成功后刷新本地wxid数据
 							uni.setStorageSync("wxid",wxid);
 			

@@ -409,6 +409,8 @@
 						shareUrl: `http://jskf.huaxiakangfu.com/app_share/index.html#/?id=${goodsId}&rebateType=${rebateType}&couponCode=${couponCode}&invitationCode=${invitationCode}&rebateCode=${result}`,
 						shareTitle: `${name}: 分享了班级《${that.detailInfo.name}》`,
 						shareContent: "班级简介: "+that.detailInfo.presentation,
+						shareImg:'../../../static/logo.png'
+						
 					};
 					console.log(shareData)
 					// 调用
