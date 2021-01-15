@@ -27,7 +27,9 @@
 			<view class="addItem" @click="addItem">添加项目</view>
 		</view>
 		<w-picker :visible.sync="visibleTime" mode="selector" :second="false" :value="`${list.length>=1 && list.length < nowIndex?list[nowIndex].time:''}`"
-		 :current="false" @confirm="onConfirmTime" :default-props="defaultProps" :options="itemList" :disabled-after="false" ref="time"></w-picker>
+		 :current="false" @confirm="onConfirmTime" :default-props="defaultProps" :options="itemList" :disabled-after="false" ref="time"   
+
+		 ></w-picker>
 		 <view class="bottom" @click="save">保存</view>
 	</view>
 </template>
@@ -49,46 +51,7 @@
 					time:''
 				}],
 				itemList:[
-					{
-						id:'1',
-						value:'10min'
-					},
-					{
-						id:'2',
-						value:'20min'
-					},
-					{
-						id:'3',
-						value:'30min'
-					},
-					{
-						id:'4',
-						value:'40min'
-					},
-					{
-						id:'5',
-						value:'50min'
-					},
-					{
-						id:'6',
-						value:'60min'
-					},
-					{
-						id:'7',
-						value:'90min'
-					},
-					{
-						id:'8',
-						value:'120min'
-					},
-					{
-						id:'9',
-						value:'180min'
-					},
-					{
-						id:'10',
-						value:'240min'
-					}
+				 
 				],
 				defaultProps:{"label":"value","value":"id"},
 				
@@ -97,7 +60,21 @@
 				visibleTime:false
 			}
 		},
+		onLoad() {
+			var time = 0;
+			for (var i = 0; i < 40; i++) {
+				time = time+5;
+				var item = {}
+				this.$set(item,"id",i)
+				this.$set(item,'value',time+'min')
+				this.itemList.push(item)
+				
+			}
+			console.log(this.itemList)
+		},
 		methods: {
+			 
+			 
 			onConfirmTime(e){
 				console.log(e);
 				this.list[this.nowIndex].time = e.result;

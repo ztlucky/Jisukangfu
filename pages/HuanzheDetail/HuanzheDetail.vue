@@ -130,7 +130,7 @@
 							<view class="dot"></view>
 							<view class="xiangmuItemRight">
 								<view style="display: flex;align-items: center;">
-									<view class="itemRightTitle hidden">{{v.name}}</view>
+									<view class="itemRightTitle">{{v.name}} </view>
 									<view class="itemRightTime">{{v.start}} - {{v.end}}</view>
 								</view>
 								<view class="itemRightRun itemRightRun1" v-if="v.type == 1" >完成</view>
@@ -1107,7 +1107,7 @@
 
 	.xiangmuItem {
 		width: 690rpx;
-		height: 100rpx;
+		//height: 100rpx;
 		display: flex;
 		align-items: center;
 
@@ -1123,17 +1123,18 @@
 		.xiangmuItemRight {
 			flex: 1;
 			display: flex;
-			height: 100rpx;
-			align-items: center;
+ 			align-items: center;
 			justify-content: space-between;
 			border-bottom: 2rpx solid #f5f5f5;
 			font-size: 28rpx;
 			color: #333;
-
+padding-top: 10rpx;
+padding-bottom: 10rpx;
 			.itemRightTitle {
-				max-width: 164rpx;
+				display: flex;
+				max-width: 250rpx;
 				margin-right: 22rpx;
-			}
+  			}
 
 			.itemRightTitle1 {
 				width: 500rpx;
