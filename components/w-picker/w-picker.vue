@@ -234,7 +234,7 @@
 				if(this.timeout){
 					this.confirmFlag=false;
 				}
-			},
+ 			},
 			touchEnd(){
 				if(this.timeout){
 					setTimeout(()=>{
@@ -244,7 +244,7 @@
 			},
 			handlerChange(res){
 				let _this=this;
-				this.result={...res};
+ 				this.result={...res};
 			},
 			show(){
 				this.$emit("update:visible",true);
