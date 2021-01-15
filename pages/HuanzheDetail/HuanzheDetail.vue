@@ -262,7 +262,7 @@
 		</scroll-view>
 		<view class="bottomview" v-if="my != 1">
 			<text class="huanzhepingding" @click="toPage('/pages/KangfuPingdingListPage/KangfuPingdingListPage')">患者评定</text>
-			<text class="kangfujilu" @click="toPage('/pages/HuanzheDetail/record/record')">康复记录</text>
+			<text class="kangfujilu" @click="toPage('/pages/HuanzheDetail/addRecord/addRecord',0)">添加康复记录</text>
 		</view>
 		<xiangmu v-if="isShowPerformWindow" :short="short" :long="long" :number="number" @setNumber="setNumber"
 		 @setShowPerformWindowStatus="setShowPerformWindowStatus" @stopProgress="stopProgress" @setShowFinishWindowStatus="setShowFinishWindowStatus"></xiangmu>
@@ -494,7 +494,7 @@
 						break;
 				}
 				console.log(url);
-				if (url == '/pages/HuanzheDetail/recordInfo/recordInfo') {
+				if (url == '/pages/HuanzheDetail/recordInfo/recordInfo' || url =='/pages/HuanzheDetail/addRecord/addRecord') {
 					uni.navigateTo({
 						url: `${url}?id=${this.info.id}&illnessid=${this.info.illnessId}&recordid=${id}`,
 						animationDuration: 300,

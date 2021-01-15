@@ -5,7 +5,7 @@
 			<view v-for="(v,index) in info.file">
 				<image :src="v.url" v-if="v.type == 'image'"></image>
 				<view class="video" v-if="v.type == 'video'">
-					<video object-fit="cover" poster="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1605501411332&di=6e6844ccb5e722e457c8c7ae5f3cb10d&imgtype=0&src=http%3A%2F%2Fa0.att.hudong.com%2F30%2F29%2F01300000201438121627296084016.jpg" src="" :show-center-play-btn="true"></video>
+					<video object-fit="cover"  :src="v.url" :show-center-play-btn="true"></video>
 				</view>
 			</view>
 		</view>
@@ -17,7 +17,8 @@
 	export default {
 		data() {
 			return {
-				info:{}
+				info:{},
+				videoIdList:[]
 			}
 		},
 		onLoad(options) {
@@ -34,8 +35,43 @@
 						id:that.id
 					}
 				},true,true).then(data=>{
-					data.file = JSON.parse(data.file)
-					that.info = data;
+					data.file = JSON.parse(data.file);
+					if(data.file.length >=1){
+						let ids= [];
+						data.file.map((v,k)=>{
+							if(v.type == 'video'){
+								that.videoIdList.push({
+									index:k,
+									id:v.url
+								});
+								ids.push(v.url);
+							}
+						});
+						that.getVideoUrl(ids,data);
+					}else{
+						that.info = data;
+					}
+					
+				})
+			},
+			getVideoUrl(v_ids,data_){
+				if(v_ids.length == 0)return this.info = data_;
+				let that = this;
+				return request({
+					url: getApp().$api.oss.getVideoUrl,
+					data: {
+						v_ids
+					},
+					type: "POST"
+				}, false, true).then(data => {
+					console.log(data);
+					that.videoFile = [];
+					data.map((v, k) => {
+						data_.file[that.videoIdList[k].index].url = v[0].url;
+					});
+					that.$forceUpdate();
+					that.info = data_;
+					console.log(that.info)
 				})
 			}
 		}

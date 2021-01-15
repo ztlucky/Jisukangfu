@@ -6,7 +6,7 @@
 			<view class="contentText">
 				<view class="text">{{short}}</view>
 				<view class="contentCenter">
-					<view class="title"> 请为本次治疗打分</view>
+					<view class="title"> 请为患者本次治疗打分</view>
 					<view class="setNumber">
 						<view class="numberBotton" @click="setNumber(-1)">-</view>
 						<input :disabled="true" :value="number" />

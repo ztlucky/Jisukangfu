@@ -69,7 +69,7 @@
 				return request({
 					url:getApp().$api.work.workEndDate,
 					data:{
-						id:getApp().globalData.userId
+						// id:getApp().globalData.userId
 					},
 					type:"GET"
 				},true,true).then(data=>{

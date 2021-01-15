@@ -1,8 +1,8 @@
 <template>
 	<view class="page">
 		<view class="item" v-for="(item , index) in list" :key="index" v-if="list.length >=1">
-			<view class="title">公司名称</view>
-			<input placeholder="请输入公司名称" v-model="item.company" placeholder-class="input-placeholder" />
+			<view class="title">工作单位</view>
+			<input placeholder="请输入工作单位" v-model="item.company" placeholder-class="input-placeholder" />
 			<view class="border"></view>
 			<view class="title">所在行业</view>
 			<input placeholder="请输入所在行业" v-model="item.industry" placeholder-class="input-placeholder" />

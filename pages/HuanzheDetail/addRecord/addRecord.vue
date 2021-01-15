@@ -1,10 +1,11 @@
 <template>
 	<view class="viewPage">
 		<view class="viewHeader">
-			<yealuo placeholder="请选择标签" checkType="checkbox" @getBackVal1="getBackVal" width="690" :binData="listText" padding="20rpx" :isShowAllBack="true" :selectIco="true"></yealuo>
+			<yealuo placeholder="请选择标签" checkType="checkbox" @getBackVal1="getBackVal" width="690" :binData="listText" padding="20rpx"
+			 :isShowAllBack="true" :selectIco="true"></yealuo>
 		</view>
 		<input placeholder="请输入内容..." v-model="text" />
-		<view class="list" >
+		<view class="list">
 			<view :class="((k)%3 == 1?'imageItem imageItem1':'imageItem')" v-if="list.length >=1" v-for="(v,k) in list" :key="k">
 				<image class="deleteImage" @click="deleteImage(k)" src="../../../static/close.png"></image>
 				<image mode="aspectFill" :src="v" v-if="tempFile[k].type == 'image'" class=""></image>
@@ -30,17 +31,17 @@
 				listText: [],
 				list: [],
 				tempFile: [],
-				isAddImage:true,
-				isAddVideo:false,
-				isAddPDF:false,
-				count:1,
-				text:'',
-				nowListTextId:0
+				isAddImage: true,
+				isAddVideo: false,
+				isAddPDF: false,
+				count: 1,
+				text: '',
+				nowListTextId: 0
 			}
 		},
 		onLoad(options) {
-			this.illnessId = options.illnessid?options.illnessid:'';
-			this.patientId = options.id?options.id:''
+			this.illnessId = options.illnessid ? options.illnessid : '';
+			this.patientId = options.id ? options.id : ''
 			this.addEvent();
 			this.getList();
 		},
@@ -48,72 +49,70 @@
 			uni.$off();
 		},
 		methods: {
-			addEvent(){
+			addEvent() {
 				let that = this;
-				uni.$on("getImage",res=>{
-					console.log("----------------------------")
-					console.log(res);
-					console.log("----------------------------")
+				uni.$on("getImage", res => {
 					that.list = that.list.concat(res.res.tempFilePaths);
 					let tempFile = [];
-					res.res.tempFiles.map(v=>{
+					res.res.tempFiles.map(v => {
 						tempFile.push({
-							type:'image',
-							value:v
+							type: 'image',
+							value: v
 						})
 					})
 					that.tempFile = that.tempFile.concat(tempFile);
 					console.log(that.tempFile);
 				})
-				uni.$on("getVideo",res=>{
+				uni.$on("getVideo", res => {
 					that.list.push(res.res.tempFilePath);
 					that.tempFile.push({
-						type:'video',
-						value:res.res.tempFile
+						value: res.res,
+						type: 'video',
+						name: res.res.tempFilePath.split('/')[res.res.tempFilePath.split('/').length - 1]
 					});
 				})
-				
+
 			},
-			getBackVal(e){
+			getBackVal(e) {
 				console.log(e);
-				if(e.value.length == 0){
+				if (e.value.length == 0) {
 					this.nowListTextId = 0
-				}else{
+				} else {
 					let list = [];
-					e.value.map(v=>{
+					e.value.map(v => {
 						list.push(v.split("|")[1])
 					});
 					this.nowListTextId = list.join(",")
 				}
 				// this.nowListTextId = e.value.split("|")[1]
 			},
-			getList(){
+			getList() {
 				let that = this;
 				return request({
-					url:getApp().$api.huanzhe.getSymptomsList,
-					type:"GET",
-					data:{
-						pageNo:1,
-						pageSize:200,
-						illnessId:that.illnessId
+					url: getApp().$api.huanzhe.getSymptomsList,
+					type: "GET",
+					data: {
+						pageNo: 1,
+						pageSize: 200,
+						illnessId: that.illnessId
 					}
-				},true,true).then(data=>{
+				}, true, true).then(data => {
 					let list = data.records;
 					let list1 = [];
-					list.map(v=>{
+					list.map(v => {
 						list1.push({
-							id:v.id,
-							value:v.name
+							id: v.id,
+							value: v.name
 						})
 					})
-					 that.listText = list1;
-					 console.log(that.listText)
+					that.listText = list1;
+					console.log(that.listText)
 				})
 			},
-			showChoose(){
+			showChoose() {
 				this.$refs.chooesFile.cancel(true);
 			},
-			getValue(){
+			getValue() {
 				this.isAddImage = true;
 				this.isAddVideo = true;
 				this.isAddPDF = false;
@@ -145,52 +144,52 @@
 				this.tempFile.splice(index, 1);
 				this.list.splice(index, 1);
 			},
-			save(){
+			save() {
 				let str = '';
 				let that = this;
-				if(this.nowListTextId == 0){
+				if (this.nowListTextId == 0) {
 					str = '请选择标签'
-				}else if(this.text == ''){
+				} else if (this.text == '') {
 					str = '请输入内容'
-				}else if(this.list.length == 0){
+				} else if (this.list.length == 0) {
 					str = '请选择文件'
 				}
-				if(str){
+				if (str) {
 					uni.showToast({
-						title:str,
-						duration:1500,
-						icon:"none"
+						title: str,
+						duration: 1500,
+						icon: "none"
 					});
 					return false;
 				}
 				onloadImage.init({
-					tempFiles:that.tempFile,
-					tempFilePaths:that.list
-				},(data,str)=>{
-					console.log(data.imageUrl,str);
+					tempFiles: that.tempFile,
+					tempFilePaths: that.list
+				}, (data, str) => {
+					console.log(data.imageUrl, str);
 					return request({
-						url:getApp().$api.huanzhe.addRecord,
-						data:{
-							userId:getApp().globalData.userId,
-							illnessId:that.illnessId,
-							file:str,
-							patientId:that.patientId,
-							symptomIds:that.nowListTextId,
-							content:that.text
+						url: getApp().$api.huanzhe.addRecord,
+						data: {
+							userId: getApp().globalData.userId,
+							illnessId: that.illnessId,
+							file: str,
+							patientId: that.patientId,
+							symptomIds: that.nowListTextId,
+							content: that.text
 						},
-						type:"POST"
-					}).then(data=>{
+						type: "POST"
+					}).then(data => {
 						uni.showToast({
-							title:'保存成功',
-							duration:1500
+							title: '保存成功',
+							duration: 1500
 						})
-						setTimeout(()=>{
+						setTimeout(() => {
 							uni.navigateBack();
-						},1500)
+						}, 1500)
 						console.log(data);
 					})
 				}).upload();
-				
+
 			}
 		},
 		components: {
