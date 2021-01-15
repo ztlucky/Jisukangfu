@@ -205,6 +205,8 @@
 				}).then(data => {
 					console.log(data)
 					that.permissions = 1;
+				}).catch(err=>{
+					that.message = err.message;
 				})
 			},
 			//退出登录
@@ -249,7 +251,7 @@
 			huanzheAction(index) {
 				if ((index == 0 || index == 2) && this.permissions == 2) {
 					uni.showToast({
-						title: '请购买至尊会员，获取工作台使用权限',
+						title: this.message,
 						icon: 'none',
 						duration: 1500
 					})
@@ -312,7 +314,7 @@
 			wodehuanzheAction(index) {
 				if ((index == 1 || index == 2 || index == 3) && this.permissions == 2) {
 					uni.showToast({
-						title: '请购买至尊会员，获取工作台使用权限',
+						title: this.message,
 						duration: 1500,
 						icon: 'none'
 					})
