@@ -158,7 +158,7 @@
 				}
 			},
 			setNowStatus(){
-				if(this.list && this.list[0].isDel == -1){
+				if(this.list && this.list.length !=0 && this.list[0].isDel == -1){
 					uni.showToast({
 						title:'系统内容不支持该操作!',
 						icon:'none'
@@ -171,7 +171,7 @@
 				this.setNowStatus();
 			},
 			toPage(url,f = true,index = 0){
-				if(this.list && this.list[0].isDel == -1){
+				if(this.list && this.list.length !=0 && this.list[0].isDel == -1){
 					uni.showToast({
 						title:'系统内容不支持该操作!',
 						icon:'none'

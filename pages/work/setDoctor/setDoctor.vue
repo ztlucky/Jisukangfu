@@ -73,7 +73,7 @@
 					},
 					type:"GET"
 				},true,true).then(data=>{
-					that.date = data.workbenchExpire;
+					that.date = data.records[0].workbenchExpire;
 				})
 			},
 			save(){

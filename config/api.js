@@ -198,7 +198,7 @@ let api = {
  
 		'getInfo':`${apiRoot}patient/patient/YSWorkbench`,
 		'getCompareList':`${apiRoot}patient/patient/queryAKeyToCompare`,
-		'workEndDate':`${apiRoot}doctor/doctor/queryById`,
+		'workEndDate':`${apiRoot}doctor/doctor/list`,
 		'editForte':`${apiRoot}doctor/doctor/editForte`
 	},
 	course:{
