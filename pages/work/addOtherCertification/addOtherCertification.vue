@@ -1,7 +1,7 @@
 <template>
 	<view class="viewPage" >
 		<nav-bar :bgColor="bgColor" fontColor="#000000" title="认证信息">
-			<view slot="right" @click="save" class="navRight">保存</view>
+			<view slot="right" @click="save" class="navRight" :style="'background:'+(value?'#0091FF;color:#ffffff':'')">确认</view>
 		</nav-bar>
 		<view class="input">
 			<input  :name="value" v-model="value" placeholder="请输入内容"  />
@@ -28,11 +28,23 @@
 		},
 		methods: {
 			save(){
+				if(this.key == 'idNo' && !this.check(this.value)){
+					uni.showToast({
+						title:'身份证格式异常，请检查后重试!',
+						icon:'none'
+					})
+					return false;
+				}
 				uni.$emit("addInfoText",{
 					key:this.key,
 					value:this.value
 				});
 				uni.navigateBack();
+			},
+			check(id) {
+				var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+				if (reg.test(id) === false) return false;
+				return true;
 			}
 		}
 	}
