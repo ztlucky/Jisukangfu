@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<scroll-view  scroll-y="true" :style="[{height:viewHeight + 'px'}]">
+		<scroll-view scroll-y="true" :style="[{height:viewHeight + 'px'}]">
 
 
 			<view class="bgview">
@@ -73,34 +73,36 @@
 					<text class="listrighttitle" @click="toPage('/pages/work/patientsList/patientsList')">查看更多 > </text>
 				</view>
 
-
-				<view class="huanzheview" v-for="(item,index) in list" :key="index" @click="huanzheXiangqing(item.id)">
-					<view class="huanzheTopview">
-						<image :src="item.sex == 1?'../../static/gongzuotai/icon_nan.png':'../../static/gongzuotai/icon_nv.png'"></image>
-						<view class="huanzherightview">
-							<view class="firstView">
-								<text class="name">{{item.name}}</text>
-								<text class="detail">性别：{{item.sex == 1?'男':'女'}} 年龄：{{item.age?item.age:''}}</text>
-							</view>
-							<view class="zhenduanview">
-								<image class="zhenduanimage" src="../../static/gongzuotai/icon_zhenduan1.png"></image>
-								<text>诊断：{{item.illnessName}}</text>
+				<block v-for="(item,index) in list" :key="index" @click="huanzheXiangqing(item.id)">
+					<view class="huanzheview" v-if="item.status != 1">
+						<view class="huanzheTopview">
+							<image :src="item.sex == 1?'../../static/gongzuotai/icon_nan.png':'../../static/gongzuotai/icon_nv.png'"></image>
+							<view class="huanzherightview">
+								<view class="firstView">
+									<text class="name">{{item.name}}</text>
+									<text class="detail">性别：{{item.sex == 1?'男':'女'}} 年龄：{{item.age?item.age:''}}</text>
+								</view>
+								<view class="zhenduanview">
+									<image class="zhenduanimage" src="../../static/gongzuotai/icon_zhenduan1.png"></image>
+									<text>诊断：{{item.illnessName}}</text>
+								</view>
 							</view>
 						</view>
-					</view>
-					<view class="Hlinew">
+						<view class="Hlinew">
 
-					</view>
-					<view class="huanzheBottomView">
-
-						<view class="timeview">
-							<image src="../../static/gongzuotai/icon_shijian_hong.png" mode=""></image>
-							<text>输入时间：{{item.createTime}}</text>
 						</view>
-						<text class="bianhao">编号：{{item.num}}</text>
-					</view>
+						<view class="huanzheBottomView">
 
-				</view>
+							<view class="timeview">
+								<image src="../../static/gongzuotai/icon_shijian_hong.png" mode=""></image>
+								<text>输入时间：{{item.createTime}}</text>
+							</view>
+							<text class="bianhao">编号：{{item.num}}</text>
+						</view>
+
+					</view>
+				</block>
+
 			</view>
 
 		</scroll-view>
@@ -162,14 +164,14 @@
 			this.topImageHeight = this.$app.getwindowWidth() * 0.73
 			this.zhiboimagewidth = this.$app.getwindowWidth() * 0.4;
 			this.zhiboimageheight = this.zhiboimagewidth * 0.5
-			if (getApp().globalData.userId  && getApp().globalData.userId != -2) {
+			if (getApp().globalData.userId && getApp().globalData.userId != -2) {
 				this.isUseWorkbench().then(() => {
-						
-					})
-					this.getInfo().then(() => {
-						this.getHuanZheList();
-					})
-			
+
+				})
+				this.getInfo().then(() => {
+					this.getHuanZheList();
+				})
+
 			} else {
 				//未登陆
 				uni.navigateTo({
@@ -178,17 +180,17 @@
 					animationDuration: 300
 				});
 			}
-	   
-	
+
+
 		},
 		onLoad() {
 			// this.isUseWorkbench().then(() => {
-				
+
 			// })
 			// this.getInfo().then(() => {
 			// 	this.getHuanZheList();
 			// })
-	
+
 		},
 		methods: {
 			isUseWorkbench() {
@@ -198,7 +200,7 @@
 					url: getApp().$api.user.isUseWorkbench,
 					type: "GET",
 					data: {
-						user_id:getApp().globalData.userId
+						user_id: getApp().globalData.userId
 					}
 				}).then(data => {
 					console.log(data)
@@ -245,11 +247,11 @@
 			},
 			//新增患者 历史患者  添加笔记 等响应方法
 			huanzheAction(index) {
-				if((index == 0 || index == 2) && this.permissions == 2){
+				if ((index == 0 || index == 2) && this.permissions == 2) {
 					uni.showToast({
-						title:'请购买至尊会员，获取工作台使用权限',
-						icon:'none',
-						duration:1500
+						title: '请购买至尊会员，获取工作台使用权限',
+						icon: 'none',
+						duration: 1500
 					})
 					return false;
 				}
@@ -308,11 +310,11 @@
 			},
 			//我的患者 一键比较 学习笔记本 后台设置
 			wodehuanzheAction(index) {
-				if((index == 1 || index == 2 || index == 3) && this.permissions == 2){
+				if ((index == 1 || index == 2 || index == 3) && this.permissions == 2) {
 					uni.showToast({
-						title:'请购买至尊会员，获取工作台使用权限',
-						duration:1500,
-						icon:'none'
+						title: '请购买至尊会员，获取工作台使用权限',
+						duration: 1500,
+						icon: 'none'
 					})
 					return false;
 				}
@@ -832,11 +834,12 @@
 		left: 0;
 		z-index: 900;
 	}
-	.backView view{
-		width:300rpx;
-		background-color: rgba(0,0,0,.4);
-		border-radius:16rpx;
-		padding:30rpx;
+
+	.backView view {
+		width: 300rpx;
+		background-color: rgba(0, 0, 0, .4);
+		border-radius: 16rpx;
+		padding: 30rpx;
 		font-size: 22rpx;
 		font-family: PingFangSC-Medium, PingFang SC;
 		font-weight: 500;

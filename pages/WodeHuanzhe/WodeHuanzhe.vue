@@ -52,46 +52,50 @@
 				<!-- 			//患者列表 -->
 				<text class="huanzheliebiaoTitle">患者列表</text>
 
-				<view class="huanzheview" v-for="(item,index) in huanzhelist" :key='index'>
-					<view class="huanzheTopview">
-						<image src="../../static/gongzuotai/icon_nv.png"></image>
-						<view class="huanzherightview">
-							<view class="firstView">
-								<text class="name">{{item.name}}</text>
-								<text class="detail">性别：{{item.sex== 1?'男':'女'}} 年龄：{{item.age}}</text>
-							</view>
-							<view class="zhenduanview">
-								<image class="zhenduanimage" src="/static/gongzuotai/icon_zhenduan1.png"></image>
-								<text>诊断：{{item.illnessName?item.illnessName:''}}</text>
-
-							</view>
-							<text class="bianhao">编号：{{item.num}}</text>
-							<text class="chakanhuanzheview" @click="huanzheXiangqing(index)">查看患者</text>
-						</view>
-					</view>
-					<view class="Hlinew">
-
-					</view>
-					<uni-grid v-if="item.treatmentList.length >=1&&item.treatmentList[0].subproject" :column="2" :square="false" :showBorder="false" @change="" :highlight="false">
-						<uni-grid-item v-for="(Item ,Index) in item.treatmentList[0].subproject" :key="Index" :index="Index">
-							<view class="huanzheBottomItem">
-								<view class="greendot"></view>
-								<view class="title">
-									<view class="hidden">{{Item.name}}</view>
-									<view>{{Item.start}}-{{Item.end}}</view>
+				<block v-for="(item,index) in huanzhelist" :key='index'>
+					<view class="huanzheview" v-if="item.status != 1">
+						<view class="huanzheTopview">
+							<image src="../../static/gongzuotai/icon_nv.png"></image>
+							<view class="huanzherightview">
+								<view class="firstView">
+									<text class="name">{{item.name}}</text>
+									<text class="detail">性别：{{item.sex== 1?'男':'女'}} 年龄：{{item.age}}</text>
 								</view>
-								<view class="zhixing zhixing1" v-if="Item.type == 1">完成</view>
-								<view class="zhixing zhixing2" v-else-if="Item.type == 2">暂停</view>
-								<view class="zhixing" v-else @click="runXiangMu(index,Index)">执行</view>
-							</view>
-						</uni-grid-item>
-					</uni-grid>
+								<view class="zhenduanview">
+									<image class="zhenduanimage" src="/static/gongzuotai/icon_zhenduan1.png"></image>
+									<text>诊断：{{item.illnessName?item.illnessName:''}}</text>
 
-				</view>
+								</view>
+								<text class="bianhao">编号：{{item.num}}</text>
+								<text class="chakanhuanzheview" @click="huanzheXiangqing(index)">查看患者</text>
+							</view>
+						</view>
+						<view class="Hlinew">
+
+						</view>
+						<uni-grid v-if="item.treatmentList.length >=1&&item.treatmentList[0].subproject" :column="2" :square="false"
+						 :showBorder="false" @change="" :highlight="false">
+							<uni-grid-item v-for="(Item ,Index) in item.treatmentList[0].subproject" :key="Index" :index="Index">
+								<view class="huanzheBottomItem">
+									<view class="greendot"></view>
+									<view class="title">
+										<view class="hidden">{{Item.name}}</view>
+										<view>{{Item.start}}-{{Item.end}}</view>
+									</view>
+									<view class="zhixing zhixing1" v-if="Item.type == 1">完成</view>
+									<view class="zhixing zhixing2" v-else-if="Item.type == 2">暂停</view>
+									<view class="zhixing" v-else @click="runXiangMu(index,Index)">执行</view>
+								</view>
+							</uni-grid-item>
+						</uni-grid>
+
+					</view>
+				</block>
 			</view>
 
 		</scroll-view>
-		<xiangmu v-if="isShowPerformWindow" :short="short" :long="long" :number="number" @setNumber="setNumber" @setShowPerformWindowStatus="setShowPerformWindowStatus" @stopProgress="stopProgress" @setShowFinishWindowStatus="setShowFinishWindowStatus"></xiangmu>
+		<xiangmu v-if="isShowPerformWindow" :short="short" :long="long" :number="number" @setNumber="setNumber"
+		 @setShowPerformWindowStatus="setShowPerformWindowStatus" @stopProgress="stopProgress" @setShowFinishWindowStatus="setShowFinishWindowStatus"></xiangmu>
 		<complete-target v-if="isShowFinishWindow" @confirmFinish="confirmFinish" :number="nowScore"></complete-target>
 	</view>
 </template>
@@ -99,20 +103,20 @@
 <script>
 	import request from "../../utils/util.js";
 	import tool from "../../utils/tool.js"
-	import	xiangmu from "@/components/confirmTarget/confirmTarget.vue"
+	import xiangmu from "@/components/confirmTarget/confirmTarget.vue"
 	import completeTarget from "@/components/completeTarget/completeTarget.vue"
 	export default {
-		components:{
+		components: {
 			xiangmu,
 			completeTarget
 		},
 		data() {
 			return {
-				isShowPerformWindow:false,
-				number:1,
-				isShowFinishWindow:false,
-				short:'',
-				long:'',
+				isShowPerformWindow: false,
+				number: 1,
+				isShowFinishWindow: false,
+				short: '',
+				long: '',
 				viewHeight: 0,
 				currentHuanzhetongji: [],
 				zhixing: ["1", "2", "3", "4"],
@@ -122,10 +126,10 @@
 				index: 1,
 				size: 10,
 				isGetMoreHuanZheList: true,
-				nowIndex:0,
-				nowIndex1:0,
-				nowScore:0,
-				info:{}
+				nowIndex: 0,
+				nowIndex1: 0,
+				nowScore: 0,
+				info: {}
 			}
 		},
 		onShow: function() {
@@ -153,51 +157,51 @@
 			init() {
 				this.getMyPatientsList();
 			},
-			setShowPerformWindowStatus(){
+			setShowPerformWindowStatus() {
 				this.isShowPerformWindow = !this.isShowPerformWindow;
 			},
-			setNumber(data){
+			setNumber(data) {
 				this.number = data.num;
 			},
-			confirmProgress(){
+			confirmProgress() {
 				this.setShowPerformWindowStatus();
 				this.setShowFinishWindowStatus();
 			},
-			stopProgress(){
-					this.setProgress(false).then(()=>{
-						this.getMyPatientsList(true);
-					})
-					this.setShowPerformWindowStatus();
+			stopProgress() {
+				this.setProgress(false).then(() => {
+					this.getMyPatientsList(true);
+				})
+				this.setShowPerformWindowStatus();
 			},
-			setShowFinishWindowStatus(){
-					this.setProgress().then(()=>{
-						this.isShowFinishWindow = !this.isShowFinishWindow;
-						
-						this.getMyPatientsList(true);
-					})
-				
+			setShowFinishWindowStatus() {
+				this.setProgress().then(() => {
+					this.isShowFinishWindow = !this.isShowFinishWindow;
+
+					this.getMyPatientsList(true);
+				})
+
 			},
-			confirmFinish(){
+			confirmFinish() {
 				this.isShowFinishWindow = !this.isShowFinishWindow;
 				// this.setShowFinishWindowStatus();
 			},
-			setProgress(f = true){
+			setProgress(f = true) {
 				let that = this;
-				this.huanzhelist[this.nowIndex].treatmentList[0].subproject[this.nowIndex1].type = f?1:2
+				this.huanzhelist[this.nowIndex].treatmentList[0].subproject[this.nowIndex1].type = f ? 1 : 2
 				let id = this.huanzhelist[this.nowIndex].treatmentList[0].id;
 				let subproject = JSON.stringify(this.huanzhelist[this.nowIndex].treatmentList[0].subproject);
 				return request({
-					url:getApp().$api.huanzhe.editProgram,
-					type:"PUT",
-					data:{
+					url: getApp().$api.huanzhe.editProgram,
+					type: "PUT",
+					data: {
 						id,
 						subproject
 					}
-				},false).then(()=>{
-					
+				}, false).then(() => {
+
 				})
 			},
-			runXiangMu(k,kk){
+			runXiangMu(k, kk) {
 				let item = this.huanzhelist[k].treatmentList[0];
 				this.short = item.shortGoals;
 				this.long = item.longGoals;
@@ -220,7 +224,7 @@
 			},
 			getMyPatientsList(f = false) {
 				let that = this;
-				if(f){
+				if (f) {
 					this.isGetMoreHuanZheList = true;
 					this.huanzhelist = [];
 					this.index = 1;
@@ -231,25 +235,25 @@
 						pageNo: that.index,
 						pageSize: that.size,
 						userId: getApp().globalData.userId,
-						condition:true
+						condition: true
 					},
 					type: 'GET'
 				}, true, true).then(data => {
 					data.records = data.data.records;
-					if(data.records){
-						data.records.map((vv,kk)=>{
-							if(vv.treatmentList.length>=1){
-								if(vv.treatmentList[0].subproject){
+					if (data.records) {
+						data.records.map((vv, kk) => {
+							if (vv.treatmentList.length >= 1) {
+								if (vv.treatmentList[0].subproject) {
 									data.records[kk].treatmentList[0].subproject = JSON.parse(data.records[kk].treatmentList[0].subproject);
-									vv.treatmentList[0].subproject.map((v,k)=>{
-									let time = new Date(v.value).getTime() + v.time * 60*1000;
-									let start = new tool().formDate(new Date(v.value),4);
-									let end = new tool().formDate(new Date(time),4);
-									data.records[kk].treatmentList[0].subproject[k].start = start;
-									data.records[kk].treatmentList[0].subproject[k].end = end;
-								})
+									vv.treatmentList[0].subproject.map((v, k) => {
+										let time = new Date(v.value).getTime() + v.time * 60 * 1000;
+										let start = new tool().formDate(new Date(v.value), 4);
+										let end = new tool().formDate(new Date(time), 4);
+										data.records[kk].treatmentList[0].subproject[k].start = start;
+										data.records[kk].treatmentList[0].subproject[k].end = end;
+									})
 								}
-								
+
 							}
 						})
 					}
@@ -309,7 +313,7 @@
 			},
 			resetData() {
 				this.currentHuanzhetongji = [];
-				if (this.ishowMore || this.huanzhetongji.length <=4) {
+				if (this.ishowMore || this.huanzhetongji.length <= 4) {
 					this.currentHuanzhetongji = this.huanzhetongji
 				} else {
 					for (var i = 0; i < 4; i++) {
@@ -667,7 +671,7 @@
 				}
 
 				.title {
-					width:240rpx;
+					width: 240rpx;
 					display: flex;
 					font-size: 16rpx;
 					font-family: PingFangSC-Regular, PingFang SC;
@@ -677,10 +681,12 @@
 					margin-right: 90rpx;
 
 				}
-				.title >view:nth-child(1){
+
+				.title>view:nth-child(1) {
 					max-width: 100rpx;
 					margin-right: 10rpx;
 				}
+
 				.zhixing {
 					width: 72rpx;
 					height: 24rpx;
@@ -695,10 +701,12 @@
 					position: absolute;
 					right: 15rpx;
 				}
+
 				.zhixing1 {
 					background-color: #FFFFFF;
 					color: #28D165;
 				}
+
 				.zhixing2 {
 					background-color: #CCCCCC;
 					color: #FFFFFF;

@@ -12,7 +12,8 @@
 		</view> -->
 		<view class="headerBack" v-if="isShowTimeType" @click="setHeaderStatus()"></view>
 		<view class="list" v-if="huanzhelist.length>=1">
-			<view class="item" v-for="(v,k) in huanzhelist" :key="k">
+			<block v-for="(v,k) in huanzhelist" :key="k">
+				<view class="item" v-if="v.status != 1" >
 				<view class="itemTop">
 						<image class="left" :src="v.sex==1?'../../../static/gongzuotai/icon_nan.png':'../../../static/gongzuotai/icon_nv.png'"></image>
 						<view class="right">
@@ -40,6 +41,8 @@
 					诊疗周期：{{v.createTime}} - {{v.endTime?v.endTime:''}}
 				</view>
 			</view>
+			</block>
+			
 		</view>
 	</view>
 </template>
