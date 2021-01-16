@@ -5,6 +5,8 @@
         <text class="prompt-title">{{title}}</text>
         <input v-if="!isMutipleLine" class="prompt-input" :style="inputStyle" :type="type" :placeholder="placeholder" v-model="value" :password="password">
         <textarea v-else class="prompt-input" :style="inputStyle" type="text" :placeholder="placeholder" v-model="value"></textarea>
+		<text class="tiptext" v-if="showTip == true">{{tiptext}}</text>
+		
       </view>
       <slot></slot>
        <view  class="prompt-buttons">
@@ -24,6 +26,14 @@
         default: false,
         required: true,
       },
+	  showTip:{
+		 type: Boolean,
+		 default: false, 
+	  },
+	  tiptext:{
+		  type: String,
+		  default: '',
+	  },
 	  password:{
 		  type: Boolean,
 		  default: false,
@@ -129,7 +139,14 @@
     margin: 25upx 0;
     color: #333;
   }
-
+.tiptext{
+	font-size: 9px;
+	color: #999999;
+	width: 600upx;
+	margin-top: 15rpx;
+	padding-left: 90rpx;
+ 	
+}
   .prompt-input {
     width: 520upx;
     min-height: 72upx;

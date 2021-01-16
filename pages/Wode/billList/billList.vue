@@ -5,13 +5,17 @@
 				<!-- <image class="itemLeft" src=""></image> -->
 				<view class="itemRight">
 					<view class="itemRightName hidden2">{{item.remark}}</view>
+					<view  class="itemStatus" v-if="item.status == 100">未支付</view>
+					<view  class="itemStatus" v-if="item.status == 101">支付成功</view>
+					<view  class="itemStatus"v-if="item.status == 102">支付失败</view>
+					
 					<view class="itemRightTime">{{item.createTime}}</view>
 					<view class="itemPrice">
 						<view class="priceTips">
 							<!-- <view class="">¥</view> -->
 							<view class="">{{item.money}}¥</view>
 						</view>
-						<!-- <view class="pay" v-if="nowIndex == 0">付款</view> -->
+						
 					</view>
 				</view>
 			</view>
@@ -134,7 +138,7 @@
 	.item{
 		width:630rpx;
 		height: 160rpx;
-		padding:30rpx;
+		padding:20rpx;
 		background-color: #FFFFFF;
 		border-radius: 16rpx;
 		display: flex;
@@ -149,6 +153,15 @@
 	}
 	.itemRight{
 		width:608rpx;
+		display: flex;
+		position: relative;
+		flex-direction: column;
+	}
+	.itemStatus{
+		color: #31D880;
+		position: absolute;
+ 		right: 0rpx;
+		font-size: 28rpx;
 	}
 	.itemRightName{
 		margin-top:4rpx;
@@ -192,10 +205,10 @@
 		line-height: 40rpx;
 	}
 	.pay{
-		width: 98rpx;
-		height: 40rpx;
+		width: 150rpx;
+		height: 45rpx;
 		background: #E02020;
-		border-radius: 20rpx;
+		border-radius: 23rpx;
 		display: flex;
 		justify-content: center;
 		align-items: center;

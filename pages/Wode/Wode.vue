@@ -154,7 +154,7 @@
 		<prompt :visible.sync="tixianVisble" title="提示" placeholder="请输入提现金额" @confirm="clicktixianPromptConfirm" mainColor="#0ED482">
 		</prompt>
 		<prompt :visible.sync="passwordpromptVisible" title="提示" type="text" :password = password
-		placeholder="请输入密码" @confirm="passwordclickPromptConfirm" 
+		placeholder="请输入密码" @confirm="passwordclickPromptConfirm" :showTip="showTip" tiptext="* 用户初始登陆密码为12345678"
 		mainColor="#0ED482">
 		</prompt>
 	</view>
@@ -173,6 +173,8 @@
 		},
 		data() {
 			return {
+				showTip:true,
+				
 				ticketCount:0,
 				promptVisible: false,
 				tongjidata: [
