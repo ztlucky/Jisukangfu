@@ -87,6 +87,7 @@
 				this.initHeight();
 				this.phone = uni.getStorageSync('phone');
 				if(this.phone !=''){
+					console.log(this.phone)
 					this.getInfo();
 				}
 			},

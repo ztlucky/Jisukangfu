@@ -155,8 +155,8 @@
 				var that = this;
 				let passwd = md5(pwd + 'JSKF1234');
 				let data = {
-						pwd:pwd,
-						user_id: passwd,
+						pwd:passwd,
+						user_id: getApp().globalData.userId,
 						wx_id: wxid,
 					}
 					console.log(data)
