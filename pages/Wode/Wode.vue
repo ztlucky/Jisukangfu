@@ -153,6 +153,10 @@
 		</prompt>
 		<prompt :visible.sync="tixianVisble" title="提示" placeholder="请输入提现金额" @confirm="clicktixianPromptConfirm" mainColor="#0ED482">
 		</prompt>
+		<prompt :visible.sync="passwordpromptVisible" title="提示" type="text" :password = password
+		placeholder="请输入密码" @confirm="passwordclickPromptConfirm" 
+		mainColor="#0ED482">
+		</prompt>
 	</view>
 </template>
 
@@ -160,6 +164,7 @@
 	
 	import request from "../../utils/util.js"
 	import Prompt from '@/components/zz-prompt/index.vue'
+	let md5 = require('md5');
 
 	export default {
 		components: {
@@ -187,7 +192,11 @@
 				tixianMoney:'',
 				isLive:false,
 				isCourse:false,
-				isBanJi:false
+				isBanJi:false,
+				password:'',
+				passwordpromptVisible:false,
+				weixinID:''
+				
 			}
 		},
 		onShow: function() {
@@ -273,9 +282,10 @@
 						            uni.login({
 						              provider: 'weixin',
 						              success: function (loginRes) {
-						                   that.refreshweixinId(loginRes.authResult.openid)
+							               that.passwordpromptVisible = true
+										   that.weixinID = loginRes.authResult.openid;
 
-						              },
+						              }, 
 
 						              fail:function(res){
 							     uni.showToast({
@@ -297,46 +307,52 @@
 				}
 			},
 			//更新用户的微信ID
-			refreshweixinId(wxid) {
+			refreshweixinId(wxid,password) {
+				
 				uni.showLoading({
 					title: "绑定中..."
 				})
 				var that = this;
+				let passwd = md5(password + 'JSKF1234');
+		 
 				this.$app.request({
-					url: this.$api.user.editUserInfo,
+					url: this.$api.user.bindWeixin,
 					data: {
-						id: getApp().globalData.userId,
-						wxId: wxid,
+						pwd:passwd,
+						user_id: getApp().globalData.userId,
+						wx_id: wxid,
 					},
-					method: 'PUT',
+					method: 'GET',
 					dataType: 'json',
 					success: res => {
 						uni.hideLoading()
 						console.log(res)
+						that.passwordpromptVisible = false
+						
 						if (res.code == 200) {
 							//绑定成功后刷新本地wxid数据
- 							uni.setStorageSync("wxid",wxid);
-
+							uni.setStorageSync("wxid",wxid);
+							
 							uni.showToast({
 								title: res.message,
 								icon: 'none'
 							})
-
+							
 						} else {
 							uni.showToast({
 								title: res.message,
 								icon: 'none'
 							})
-
+							
 						}
 					},
 					fail: res => {
 						uni.hideLoading()
-
+							
 					},
 					complete: res => {
 						uni.hideLoading()
-
+							
 					}
 				});
 			},
@@ -374,6 +390,10 @@
 					fail: res => {},
 					complete: res => {}
 				});
+			},
+			passwordclickPromptConfirm(val){
+ 				
+				this.refreshweixinId(this.weixinID,val)
 			},
 			clickPromptConfirm(val) {
 				if (val.length == 0) {
