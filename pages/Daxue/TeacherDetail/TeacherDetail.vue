@@ -7,7 +7,7 @@
 						<view class="nameText hiden">{{info.name}}</view>
 						<view class="nameType">{{info.jobTitle}}</view>
 					</view>
-					<view class="text">{{info.role == 2?'康复师':'普通用户'}}</view>
+					<view class="text">{{info.roleName?info.roleName:'用户'}}</view>
 					<view class="text text2">
 						<!-- <view>好评率：95%</view>
 						<view>1万+预约方案</view> -->

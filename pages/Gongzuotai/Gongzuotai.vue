@@ -73,8 +73,8 @@
 					<text class="listrighttitle" @click="toPage('/pages/work/patientsList/patientsList')">查看更多 > </text>
 				</view>
 
-				<block v-for="(item,index) in list" :key="index" @click="huanzheXiangqing(item.id)">
-					<view class="huanzheview" v-if="item.status != 1">
+				<block v-for="(item,index) in list" :key="index" >
+					<view class="huanzheview" v-if="item.status != 1" @click="huanzheXiangqing(item.id)">
 						<view class="huanzheTopview">
 							<image :src="item.sex == 1?'../../static/gongzuotai/icon_nan.png':'../../static/gongzuotai/icon_nv.png'"></image>
 							<view class="huanzherightview">

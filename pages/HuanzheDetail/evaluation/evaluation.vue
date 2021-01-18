@@ -9,8 +9,8 @@
 				<view v-for="(v,k) in info.selectedProblemList" :key="k">
 					<view class="problem" v-if="v.content.type == 1|| v.content.type == 2">
 						<text class="title">问题</text>
-						<view class="text">{{v.content.title}}</view>
-						<image class="image" :src="item" v-for="(item,index) in v.content.file" :key="index"></image>
+						<view class="text text_">{{v.content.title}}</view>
+						<image class="image" mode="aspectFill" :src="item" v-for="(item,index) in v.content.file" :key="index"></image>
 						<view class="title">选项</view>
 						<view class="options">
 							<view v-for="(vv,kk) in v.content.content" :key="kk">
@@ -23,6 +23,7 @@
 					</view>
 					<view class="problem" v-if="v.content.type == 3" style="padding-bottom: 40rpx;">
 						<text class="title">问题</text>
+						<view class="text text_">{{v.content.title}}</view>
 						<view class="text">{{v.content.content}}</view>
 					</view>
 				</view>
@@ -189,5 +190,8 @@
 	}
 	.itemView .problem1:last-child{
 		border: none;
+	}
+	.text_{
+		font-weight: 600;
 	}
 </style>

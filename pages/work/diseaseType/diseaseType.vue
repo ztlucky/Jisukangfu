@@ -22,7 +22,7 @@
 		<view class="bottom" v-if="!isEdit" @click="setNowStatus">编辑疾病诊断分类</view>
 		<view class="bottomNav" v-else>
 			<view class="" @click="deleteItem">删除选中的分类({{num}})</view>
-			<view class="" @click="toPage('/pages/work/addPingDingLiangBiaoType/addPingDingLiangBiaoType')">添加新的分类</view>
+			<view class="" @click="toPage('/pages/work/addPingDingLiangBiaoType/addPingDingLiangBiaoType?type=1')">添加新的分类</view>
 		</view>
 	</view>
 </template>

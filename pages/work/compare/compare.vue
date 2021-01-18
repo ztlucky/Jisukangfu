@@ -91,7 +91,8 @@
 						data:{
 							pageNo:that.illnessIndex,
 							pageSize:that.illnessSize,
-							userId:getApp().globalData.userId
+							userId:getApp().globalData.userId,
+							type:2
 						}
 					},true,true).then(data=>{
 						if(data.records.length == that.illnessSize){

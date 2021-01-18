@@ -317,7 +317,8 @@
 				nowIndex: 0,
 				info: {},
 				zhiliaoStaut: 0,
-				nowScore: 0
+				nowScore: 0,
+				my:0
 			}
 		},
 		onShow: function() {
@@ -350,6 +351,7 @@
 				});
 			},
 			runXiangMu(k, index) {
+				if(this.my == 1) return false;
 				let item = this.info.treatmentList[index];
 				this.short = item.shortGoals;
 				this.long = item.longGoals;
@@ -508,7 +510,7 @@
 					})
 				} else {
 					uni.navigateTo({
-						url: `${url}?id=${this.info.id}&illnessid=${this.info.illnessId}`,
+						url: `${url}?id=${this.info.id}&illnessid=${this.info.illnessId}&my=${this.my}`,
 						animationDuration: 300,
 						animationType: 'slide-in-right'
 					})
@@ -572,7 +574,7 @@
 				let subprojectId = this.info.treatmentList[that.nowIndex__].subproject[this.nowIndex].id;
 				let treatmentId = this.info.treatmentList[that.nowIndex__].id;
 				let tscore = f?this.number:0;
-				let patientId = getApp().globalData.userId;
+				let patientId = this.info.id;
 				let pscore = f?this.info.treatmentList[that.nowIndex__].subproject[this.nowIndex].score:0;
 				
 				return request({

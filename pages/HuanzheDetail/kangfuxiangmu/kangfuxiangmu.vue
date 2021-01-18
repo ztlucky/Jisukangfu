@@ -32,12 +32,14 @@
 				<view class="itemBottom">
 					<view class="" v-if="v.doctorAdviceType == '短嘱'">剩余时间：{{v.days<=0?0:v.days}}天</view>
 					<view class="" v-if="v.doctorAdviceType == '长嘱'">长期</view>
-					<view class="" v-if="v.type != 2" @click="endXiangMu(k)">结束</view>
-					<view class="endXiangMu" v-else>已结束</view>
+					<block v-if="my !=1">
+						<view class="" v-if="v.type != 2" @click="endXiangMu(k)">结束</view>
+						<view class="endXiangMu" v-else>已结束</view>
+					</block>
 				</view>
 			</view>
 		</view>
-		<view class="bottom" @click="toPage('/pages/HuanzheDetail/addXiangMu/addXiangMu?id='+id)">添加项目</view>
+		<view class="bottom" v-if="my !=1" @click="toPage('/pages/HuanzheDetail/addXiangMu/addXiangMu?id='+id)">添加项目</view>
 		<xiangmu v-if="isShowPerformWindow" :short="short" :long="long" :number="number" @setNumber="setNumber" @setShowPerformWindowStatus="setShowPerformWindowStatus" @setShowFinishWindowStatus="setShowFinishWindowStatus"></xiangmu>
 		<complete-target v-if="isShowFinishWindow" @confirmFinish="confirmFinish" :number="number"></complete-target>
 	</view>
@@ -78,6 +80,7 @@
 		},
 		onLoad(options) {
 			this.id = options.id?options.id:0;
+			this.my = options.my;
 			this.init();
 		},
 		onShow() {

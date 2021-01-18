@@ -9,7 +9,7 @@
 				</view>
 				<!-- <view class="price">19526.23元</view> -->
 			</view>
-			<view class="text text1">{{info.role == 2?'康复师':'普通用户'}}</view>
+			<view class="text text1">{{info.roleName == 2?info.roleName:'用户'}}</view>
 			<!-- <view class="text text2">
 				<view >好评率：95%</view>
 				<view >1万+预约方案</view>

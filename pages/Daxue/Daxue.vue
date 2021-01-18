@@ -79,7 +79,7 @@
 									<view class="img">
 										<image :src="item.headUrl" mode="aspectFill">
 										</image>
-										<text class="biaoqian">医师</text>
+										<text class="biaoqian">{{item.roleName?item.roleName:'用户'}}</text>
 									</view>
 									<text class="item-title text-over-1">{{item.name}}</text>
 									<text class="item-subtitle">{{item.jobTitle}}</text>
@@ -213,7 +213,7 @@
 					}
 
 				],
-				category_id: 0,
+				category_id: null,
 				category_index: 0,
 				scroll_category_id: 'scroll_category_id_0',
 				currentSliderIndex: 0,
@@ -365,7 +365,7 @@
 						if (res.code == 200) {
 							res.result.records.unshift({
 								name: '全部',
-								id: 0
+								id: null
 							
 							})
 							that.category = res.result.records;

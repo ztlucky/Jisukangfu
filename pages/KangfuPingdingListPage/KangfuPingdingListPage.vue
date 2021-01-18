@@ -75,7 +75,8 @@
 						paseNo:1,
 						pageSize:200,
 						c_r:true,
-						c_s:false
+						c_s:false,
+						type:2
 					}
 				},true,true).then(data=>{
 					let ratingScaleSize = 0;

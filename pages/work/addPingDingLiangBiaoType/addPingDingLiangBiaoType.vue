@@ -16,6 +16,9 @@
 				title:"",
 				}
 		},
+		created(options) {
+			this.type = options.type?options.type:2;
+		},
 		methods: {
 			save(){
 				let that = this;
@@ -33,7 +36,8 @@
 					url:getApp().$api.huanzhe.addIllness,
 					data:{
 						name:that.title,
-						userId:getApp().globalData.userId
+						userId:getApp().globalData.userId,
+						type:that.type
 					}
 				}).then(data=>{
 					uni.showToast({

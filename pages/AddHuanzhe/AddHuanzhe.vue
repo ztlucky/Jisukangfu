@@ -214,7 +214,8 @@
 				 data:{
 					 pageNo:1,
 					 pageSize:40,
-					 userId:getApp().globalData.userId
+					 userId:getApp().globalData.userId,
+					 type:1
 				 }
 			 },true,true).then(data=>{
 				 let list = [];

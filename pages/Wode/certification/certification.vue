@@ -43,13 +43,13 @@
 					<image src="/static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
-			<!-- <view class="item" @click="showSelectView_">
+			<view class="item" @click="showSelectView_">
 				<view class="itemTitle">认证类型</view>
 				<view class="itemRight">
 					<view :class="positionItem_ && positionItem_.id?'itemRightText':'itemRightText itemRightText1'  ">{{positionItem_ && positionItem_.id?positionItem_.value:'请选择您的认证类型'}}</view>
 					<image src="/static/icon/me_lise_more.png"></image>
 				</view>
-			</view> -->
+			</view>
 			<view class="item" @click="toPage('/pages/Wode/uploadCertificate/uploadCertificate')">
 				<view class="itemTitle">资质证书</view>
 				<view class="itemRight">
@@ -83,7 +83,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="save" v-if="info && info.result == null">审核中</view>
+		<view class="save" v-if="info && info.result == 0">审核中</view>
 		<view class="save" v-else @click="save_tips()">{{info && info.result && info.result == 0?'未审核':info &&info.result == 1?'审核成功':info &&info.result == 2?'审核失败':'提交审核	'}}</view>
 		<w-picker mode="selector" :visible.sync="visible" value="住院医师" default-type="name" :default-props="defaultProps"
 		 :options="position" @confirm="onConfirm($event,'selector')" ref="selector"></w-picker>
@@ -157,25 +157,38 @@
 				binData1: [],
 				qualificationFile: null,
 				workFile: null,
-				positionItem_: {
-					id: 3,
-					value: '全部'
-				},
+				positionItem_: {},
 				typeList: [{
-						id: 1,
-						value: '直播'
-					},
-					{
 						id: 2,
-						value: '班级'
-					},
-					{
-						id: 4,
-						value: '课程'
+						value: '康复师'
 					},
 					{
 						id: 3,
-						value: '全部'
+						value: '主任康复师'
+					},
+					{
+						id: 4,
+						value: '医师'
+					},
+					{
+						id: 5,
+						value: '助理医师'
+					},
+					{
+						id: 6,
+						value: '康复医师'
+					},
+					{
+						id: 7,
+						value: '特教老师'
+					},
+					{
+						id: 8,
+						value: '主任医师'
+					},
+					{
+						id: 9,
+						value: '其他'
 					}
 				]
 			}
@@ -243,7 +256,7 @@
 				})
 			},
 			save_tips() {
-				if (this.info.result == 1) {
+				if (this.info &&(this.info.result == 1 || this.info.result == 0)) {
 					let that = this;
 					uni.showModal({
 						title: '温馨提示',
@@ -262,7 +275,7 @@
 			save() {
 				let str = '';
 
-				if (!this.info && this.info.result !== 2) return;
+				// if (this.info && this.info.result == ) return;
 				let uploadCertificate = uni.getStorageSync('uploadCertificate');
 				let company = uni.getStorageSync('workUnits');
 				if (company) {
@@ -317,7 +330,6 @@
 					tempFiles.push(v);
 					tempFilePaths.push(v.fullPath)
 				});
-				console.log("(>>>>>>>>>>>>>>>>>>)")
 				onloadImage.init({
 					tempFiles,
 					tempFilePaths
@@ -338,7 +350,8 @@
 							type: that.positionItem_.id,
 							jobTitle: that.positionItem,
 							file,
-							company
+							company,
+							name:uni.getStorageSync('name')?uni.getStorageSync('name'):''
 						}
 					}).then(data => {
 						uni.showToast({
