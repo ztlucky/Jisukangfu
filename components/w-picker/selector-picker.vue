@@ -1,6 +1,6 @@
 <template>
 	<view class="w-picker-view">
-		<picker-view class="d-picker-view" :indicator-style="itemHeight" :value="pickVal" @change="handlerChange">
+		<picker-view class="d-picker-view" :indicator-style="itemHeight" :value="pickVal" @change="handlerChange" >
 			<picker-view-column>
 				<view class="w-picker-item" v-for="(item,index) in range" :key="index">{{item[nodeKey]}}</view>
 			</picker-view-column>

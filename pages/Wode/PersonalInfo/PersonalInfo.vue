@@ -65,7 +65,7 @@
         @confirm="onConfirm($event,'selector')"
         ref="selector" ></w-picker>
  		<prompt :visible.sync="promptVisible" title="提示" type="text" :password = password 
-		placeholder="请输入密码" @confirm="clickPromptConfirm" 
+		placeholder="请输入密码" @confirm="clickPromptConfirm" :showTip="showTip" tiptext="* 用户初始登陆密码为12345678"
 		mainColor="#0ED482">
 		</prompt>
 	</view>
@@ -91,6 +91,7 @@
 				info:{},
 				password:true,
 				weixintext:'绑定',
+				showTip:true,
 				defaultProps:{"label":"name","value":"id"},
 				promptVisible:false ,
 				newWeixinID:'',

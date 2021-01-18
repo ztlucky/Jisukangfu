@@ -3,6 +3,7 @@
 		<image class="bgimage" src="../../../static/Login/denglu_beijing.png"  ></image>  
 		<image src="../../../static/Login/icon-guanbi.png" class="closeview" @click="returnBack"></image>
 		<text class="title">账号密码登陆</text>
+		<text class="tiptext">* 用户初始登陆密码为12345678</text>
 		<!-- <text class="title1">未注册过的手机号将自动创建账号</text> -->
 		<input type="text" class="input"  placeholder="请输入账号或手机号" v-model="mobile"/>
 		<view class="lineview">
@@ -152,6 +153,14 @@
 		margin-left:54rpx ;
 		margin-top: 84rpx;
  	}
+	.tiptext{
+		font-size: 9px;
+		color: #999999;
+		width: 600upx;
+		margin-top: 15rpx;
+		padding-left: 60rpx;
+	 	
+	}
 	.title1{
 		
 		font-size: 24rpx;
