@@ -50,11 +50,17 @@
 		},
 		methods: {
 			getBackVal1(e){
+				console.log(e)
+				this.forteName = ""
 				this.list = []
+				 this.name = [];
 				e.map(v=>{
 					this.list.push(v.split('|')[1])
-				})
-			},
+					this.name.push(v.split('|')[0])
+ 				})
+				this.forteName = this.name.join(',')
+				console.log(this.forteName)
+ 			},
 			getList(){
 				let that = this;
 				return request({
@@ -66,6 +72,7 @@
 					},
 					type:'data'
 				},true,true).then(data=>{
+ 					
 					// that.binData1 = data.records;
 					let list = [];
 					data.records.map((v,k)=>{
@@ -79,6 +86,7 @@
 						data.records[k].value = v.name;
 					})
 					that.binData1 = data.records;
+ 					
 					// that.binData1 = list;
 				})
 			},
@@ -87,7 +95,8 @@
 				return request({
 					url:getApp().$api.work.workEndDate,
 					data:{
-						// id:getApp().globalData.userId
+ 						 
+ 						
 					},
 					type:"GET"
 				},true,true).then(data=>{

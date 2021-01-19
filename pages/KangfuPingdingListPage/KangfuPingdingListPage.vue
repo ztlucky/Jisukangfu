@@ -23,7 +23,7 @@
 				 <!-- </uni-grid-item>
 			</uni-grid> -->
 			<view class="bottomView">
-				<view class="viewItem">结束</view>
+				<!-- <view class="viewItem">结束</view> -->
 				<view class="viewItem" @click="toPage('/pages/KangfuMubiao/KangfuMubiao?id='+id)">设定康复目标</view>
 			</view>
 		</view>
@@ -247,7 +247,7 @@
 	align-items: center;
 	justify-content: space-between;
 	width:480rpx;
-	padding-left: 20rpx;
+ 	padding-left: 20rpx;
 	.viewItem{
 		width:222rpx;
 		height: 80rpx;
@@ -259,6 +259,7 @@
 		border: 2rpx solid #2AD36B;
 		line-height: 80rpx;
 		text-align: center;
+		margin-left: 150rpx;
 	}
 	.viewItem:nth-child(2){
 		width:226rpx;
