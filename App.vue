@@ -299,7 +299,7 @@
 			}
 		},
 		globalData: {
-			userId: uni.getStorageSync('userid') ? uni.getStorageSync('userid') :26,
+			userId: uni.getStorageSync('userid') ? uni.getStorageSync('userid') :null,
 			userName: uni.getStorageSync('name') ? uni.getStorageSync('name') :
 			 '用户' + uni.getStorageSync('userid') ? uni.getStorageSync(
 				'userid') : null,
