@@ -1,7 +1,7 @@
  
     // let apiRoot = 'http://kfy.huaxiakangfu.com:8090/';
-	// let apiRoot = 'http://kfy.huaxiakangfu.com:8095/jeecg-boot/';//正式
-    let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
+	  let apiRoot = 'http://kfy.huaxiakangfu.com:8095/jeecg-boot/';//正式
+    // let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
  
 let api = {
 	common: {

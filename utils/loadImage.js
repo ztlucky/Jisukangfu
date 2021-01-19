@@ -32,6 +32,7 @@ class loadImage {
 	    
 	}
 	init(data, fn = () => {}) {
+		console.log(data)
 		this.imageList = data.tempFiles;
 		this.imagePathList = data.tempFilePaths;
 		this.author = data.author ? data.author : 'labi'
@@ -74,6 +75,7 @@ class loadImage {
 				}
 				this.uploadVideo();
 			} else {
+				console.log(this.imagePathList[this.nowCount].substring(0, 5))
 				if (this.imagePathList[this.nowCount].substring(0, 5) == 'https') {
 					this.imageUrl.push(this.imagePathList[this.nowCount]);
 					this.nowCount++;
@@ -90,7 +92,7 @@ class loadImage {
 		//查看文件大小
 		let size = 0;
 		this.imageList.map((v,i)=>{
-			size+=v.value?Number.parseInt(v.value.size):Number.parseFloat(v.size)
+			size+=v.value?Number.parseInt(v.value.size):Number.parseFloat(v.size)?Number.parseFloat(v.size):0
 		});
 		console.log(size);
 		size = (size/1024).toFixed(2);
