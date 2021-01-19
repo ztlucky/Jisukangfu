@@ -39,7 +39,11 @@
 			subproject_:{//停止
 				type:String,
 				default:''
-			}
+			},
+			 referrer:{
+				 type:Number,
+				 default:0
+			 }
 		},
 		data() {
 			return {

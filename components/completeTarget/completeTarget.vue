@@ -7,7 +7,8 @@
 				<image src="/static/work/bg_neibu.png" class="scoreImage"></image>
 				<view class="scoreText">{{number}}</view>
 			</view>
-			<view class="title">您的本次项目得分为</view>
+			<view class="title" v-if="referrer == 0">您的本次项目得分为</view>
+			<view class="title" v-else>本次项目{{referrer != 0?'已执行'+ referrer+'次':''}}</view>
 			<view class="text">恭喜您完成本次项目</view>
 			<view class="finishConfirm" @click="confirmFinish">确定</view>
 		</view>
@@ -17,7 +18,11 @@
 <script>
 	export default {
 		props:{
-			number:Number
+			number:Number,
+			 referrer:{
+				 type:Number,
+				 default:0
+			 }
 		},
 		data() {
 			return {

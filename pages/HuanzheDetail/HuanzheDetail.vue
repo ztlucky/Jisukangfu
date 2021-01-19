@@ -264,9 +264,9 @@
 			<text class="huanzhepingding" @click="toPage('/pages/KangfuPingdingListPage/KangfuPingdingListPage')">患者评定</text>
 			<text class="kangfujilu" @click="toPage('/pages/HuanzheDetail/addRecord/addRecord',0)">添加康复记录</text>
 		</view>
-		<xiangmu v-if="isShowPerformWindow" :short="short" :long="long" :number="number" @setNumber="setNumber"
+		<xiangmu v-if="isShowPerformWindow"  :referrer="referrer" :short="short" :long="long" :number="number" @setNumber="setNumber"
 		 @setShowPerformWindowStatus="setShowPerformWindowStatus" @stopProgress="stopProgress" @setShowFinishWindowStatus="setShowFinishWindowStatus"></xiangmu>
-		<complete-target v-if="isShowFinishWindow" @confirmFinish="confirmFinish" :number="nowScore"></complete-target>
+		<complete-target v-if="isShowFinishWindow" @confirmFinish="confirmFinish" :number="nowScore" :referrer="referrer"></complete-target>
 		<view class="controlview" :style="[{top:navheight+statusBarHeight+ 'px'}]" @click="endZhiListTips" v-show="zhiliaoStaut == 1">
 
 		</view>
@@ -294,6 +294,7 @@
 				long: '',
 				switchColor: '#4CD964',
 				viewHeight: 0,
+				referrer:0,
 				kangfuxiangmu: [{
 						time: '2020-06-13',
 						title: '治疗项目1',
@@ -590,7 +591,8 @@
 						result: f ? 1 : 2
 					}
 				},true,true).then(data=>{
-					if(data == 1){
+					that.referrer = data.referrer;
+					if(data.referrer == data.total){
 						 that.setProgress(f);
 					}else{
 						
@@ -599,7 +601,7 @@
 				})
 			},
 			setProgress(f = true) {
-				
+				console.log('修改当前状态');
 				let that = this;
 				this.info.treatmentList[that.nowIndex__].subproject[this.nowIndex].type = f ? 1 : 2
 				let id = this.info.treatmentList[that.nowIndex__].id;
