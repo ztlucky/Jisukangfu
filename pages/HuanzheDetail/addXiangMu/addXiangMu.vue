@@ -8,8 +8,16 @@
 			<Select placeholder="请选择医嘱类型" width="590" :binData="list1" @getBackVal1="getBackVal" uid="1" padding="20rpx"
 			 :isShowAllBack="true"></Select>
 			<view class="title">医嘱频次</view>
-			<Select placeholder="请选择医嘱频次" width="590" :binData="list2" @getBackVal1="getBackVal" uid="2" padding="20rpx"
-			 :isShowAllBack="true"></Select>
+			<view class="numberView">
+				<view class="numberViewItem">
+					<input maxlength="5" type="number" v-model="dayFrequency" placeholder="天"/>
+					<view >天</view>
+				</view>
+				<view class="numberViewItem">
+					<input maxlength="5" type="number" v-model="frequency" placeholder="次"/>
+					<view >次</view>
+				</view>
+			</view>
 			<view v-if="!listValue1 || listValue1.id != 2" class="title">短期医嘱天数</view>
 			<Select v-if="!listValue1 || listValue1.id != 2" placeholder="请选择医嘱天数" width="590" :binData="list3" @getBackVal1="getBackVal"
 			 uid="3" padding="20rpx" :isShowAllBack="true"></Select>
@@ -100,6 +108,8 @@
 	export default {
 		data() {
 			return {
+				dayFrequency:'',
+				frequency:'',
 				list: [{
 						value: '中航沈飞',
 						id: 1,
@@ -461,7 +471,8 @@
 					data:{
 						days:that.listValue3.value,
 						doctorAdviceType:that.listValue1.value,
-						frequency:that.listValue2.id,
+						frequency:that.frequency,
+						dayFrequency:that.dayFrequency,
 						patientId:that.id,
 						treatmentProgramId:that.listValue.id,
 						treatmentProgramName:that.listValue.value,
@@ -517,8 +528,10 @@
 					str = '请选择项目名称'
 				} else if (!this.listValue1.id) {
 					str = '请选择医嘱类型'
-				} else if (!this.listValue2.id) {
-					str = '请选择医嘱频次'
+				} else if (!this.dayFrequency) {
+					str = '请选择医嘱频次的天数'
+				} else if (!this.frequency) {
+					str = '请选择医嘱的频次'
 				} else if (!this.listValue3.id && this.listValue1.id ==1) {
 					str = '请选择医嘱天数'
 				} else if (!this.start_time) {
@@ -895,6 +908,26 @@
 		color: #FFFFFF;
  		//bottom: 60rpx;
  	}
+}
+.numberView{
+	display: flex;
+	// justify-content: space-between;
+	width:550rpx;
+	height: 80rpx;
+	background-color:rgb(245, 245, 245);
+	padding:0 20rpx;
+	border-radius: 8rpx;
+}
+.numberView .numberViewItem{
+	width: 150rpx;
+	display: flex;
+	align-items: center;
+	height: 80rpx;
+	
+}
+.numberViewItem input{
+	width: 100rpx;
+	text-align: center;
 }
 
 </style>

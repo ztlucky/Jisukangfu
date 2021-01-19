@@ -569,7 +569,7 @@
 					console.log(data);
 				})
 			},
-			setResults(f){
+			setResults(f = true){
 				let that = this;
 				let subprojectId = this.info.treatmentList[that.nowIndex__].subproject[this.nowIndex].id;
 				let treatmentId = this.info.treatmentList[that.nowIndex__].id;
@@ -586,10 +586,16 @@
 						tscore,
 						patientId,
 						pscore,
+						doctorId:getApp().globalData.userId,
 						result: f ? 1 : 2
 					}
-				}).then(data=>{
-					that.setProgress(f);
+				},true,true).then(data=>{
+					if(data == 1){
+						 that.setProgress(f);
+					}else{
+						
+					}
+					
 				})
 			},
 			setProgress(f = true) {
