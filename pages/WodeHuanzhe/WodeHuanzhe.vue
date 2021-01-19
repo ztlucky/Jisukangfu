@@ -45,7 +45,7 @@
 							<text class="defenText">{{info.month?info.month:0}}</text>
 							<text class="benyuedefen">本月得分</text>
 						</view>
-						<text class="jinridefen">今日得分 {{info.day?info.data:0}} 分</text>
+						<text class="jinridefen">今日得分 {{info.day?info.day:0}} 分</text>
 					</view>
 
 				</view>
@@ -239,6 +239,7 @@
 					},
 					type: 'GET'
 				}, true, true).then(data => {
+					console.log(data)
 					data.records = data.data.records;
 					if (data.records) {
 						data.records.map((vv, kk) => {
@@ -262,8 +263,8 @@
 					} else {
 						that.isGetMoreHuanZheList = false;
 					}
-					that.huanzhelist = that.huanzhelist.concat(data.records);
-					that.info = data;
+					  that.huanzhelist = that.huanzhelist.concat(data.records);
+ 					  that.info = data;
 					that.huanzhetongji = data.illness_total;
 					that.resetData();
 					this.index++;

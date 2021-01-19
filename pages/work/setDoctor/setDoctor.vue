@@ -44,8 +44,14 @@
 		},
 		onShow() {
 			let data = uni.getStorageSync('chooseData');
-			this.selectedList = data && data.selectedList?  data.selectedList:[];
-			this.binData1 = data && data.list ?data.list:[];
+			if(data && data.selectedList){
+				this.selectedList = data && data.selectedList?  data.selectedList:[];
+			}
+			if(data && data.list){
+				this.binData1 = data && data.list ?data.list:[];
+				
+			}
+		
 			this.$forceUpdate();
 		},
 		methods: {
