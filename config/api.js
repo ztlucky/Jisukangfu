@@ -1,7 +1,7 @@
  
     // let apiRoot = 'http://kfy.huaxiakangfu.com:8090/';
-	  let apiRoot = 'http://kfy.huaxiakangfu.com:8095/jeecg-boot/';//正式
-    // let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
+	  // let apiRoot = 'http://kfy.huaxiakangfu.com:8095/jeecg-boot/';//正式
+    let apiRoot = 'http://3237632k3k.goho.co/jeecg-boot/';
  
 let api = {
 	common: {
@@ -100,7 +100,8 @@ let api = {
 		getInfo:`${apiRoot}rating_scale/ratingScale/queryById`,
 		addResult:`${apiRoot}assess_result/assessResult/add`,
 		getResult:`${apiRoot}assess_result/assessResult/queryById`,
-		getResultList:`${apiRoot}assess_result/assessResult/list`
+		getResultList:`${apiRoot}assess_result/assessResult/list`,
+		editResult:`${apiRoot}assess_result/assessResult/edit`
 		
 	},
 	user: {
@@ -200,7 +201,7 @@ let api = {
 		'getInfo':`${apiRoot}patient/patient/YSWorkbench`,
 		'getCompareList':`${apiRoot}patient/patient/queryAKeyToCompare`,
 		'workEndDate':`${apiRoot}doctor/doctor/list`,
-		'editForte':`${apiRoot}doctor/doctor/editForte`
+		'editForte':`${apiRoot}doctor/doctor/edit`
 	},
 	course:{
 		"addCourse":`${apiRoot}course/course/add`,

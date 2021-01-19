@@ -64,13 +64,12 @@
 					<image src="/static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
-			<view class="item">
+			<view class="item" @click="toPage('/pages/Search/choose/choose')">
 				<view class="itemTitle">擅长领域</view>
 				<view class="itemRight">
-					<view class="itemRightText">
-						<yealuo @getBackVal="getBackVal1" the-style="font-size: 46upx;" :isShowIcon="false" backColor="#FFFFFF"
-						 :selectIco="false" overflow="hide" :isSetUrl="true" placeholder="请选择" width="400" :binData="binData1"
-						 :isShowAllBack="false" checkType="checkbox" padding="0rpx" textAlign="right"></yealuo>
+					<view class="itemRightText itemRightText_not" v-if="selectedList.length ==0">请选择</view>
+					<view class="itemRightText itemRightText_" v-else>
+						<text v-for="(v,k) in selectedList">{{v.name}} {{k< selectedList.length-1?'、':''}}</text>
 					</view>
 					<image src="/static/icon/me_lise_more.png"></image>
 				</view>
@@ -158,6 +157,7 @@
 				qualificationFile: null,
 				workFile: null,
 				positionItem_: {},
+				selectedList:[],
 				typeList: [{
 						id: 2,
 						value: '康复师'
@@ -194,12 +194,20 @@
 			}
 		},
 		onLoad() {
+			uni.removeStorageSync('chooseData');
 			this.addEvent();
 			this.getIllnessList();
 			this.getInfo();
 		},
 		onUnload() {
 			uni.$off();
+			uni.removeStorageSync('chooseData');
+		},
+		onShow() {
+			let data = uni.getStorageSync('chooseData');
+			this.selectedList = data?data.selectedList:[];
+			this.binData1 = data?data.list:[];
+			this.$forceUpdate();
 		},
 		methods: {
 			addEvent() {
@@ -241,6 +249,14 @@
 						animationType: 'slide-in-right'
 					})
 					return false;
+				}else if(key == '/pages/Search/choose/choose'){
+					uni.setStorageSync('chooseData',this.binData1)
+					uni.navigateTo({
+						url: key,
+						animationDuration: 300,
+						animationType: 'slide-in-right'
+					})
+					return false;
 				}
 				uni.navigateTo({
 					url: '/pages/work/addOtherCertification/addOtherCertification?key=' + key + '&value=' + this[key],
@@ -249,6 +265,7 @@
 				})
 			},
 			toPage_(url) {
+				
 				uni.navigateTo({
 					url,
 					animationDuration: 300,
@@ -305,8 +322,10 @@
 					str = '请选择您的职称'
 				} else if (this.positionItem_ == null) {
 					str = '请选择您的认证类型'
-				} else if (this.shanChangLingYu == null) {
+				} else if (this.selectedList.length == 0) {
 					str = '请选择您的擅长领域'
+				}else if(this.qualificationFile.length == 0){
+					str = '请上传资质证书'
 				}
 				if (str) {
 					uni.showToast({
@@ -316,7 +335,7 @@
 					return false;
 				}
 				let forte = [];
-				that.shanChangLingYu.map(v => {
+				that.selectedList.map(v => {
 					forte.push(v.name)
 				})
 				forte = forte.join(',');
@@ -530,5 +549,8 @@
 		width: 40rpx;
 		height: 40rpx;
 		margin-right: 30rpx;
+	}
+	.itemRightText_not{
+		color: grey;
 	}
 </style>

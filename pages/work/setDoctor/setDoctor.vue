@@ -5,9 +5,11 @@
 		</nav-bar>
 		<view class="title title_">工作台到期时间：{{date}}</view>
 		<view class="title">设置擅长项目</view>
-		<view class="content">
-			<yealuo @getBackVal="getBackVal1" the-style="font-size: 46upx;" :isShowIcon="false"  :selectIco="false" overflow="hide" :isSetUrl="true" placeholder="请选择" width="690" :binData="binData1"
-			 :isShowAllBack="false" checkType="checkbox" padding="30rpx" textAlign="right"></yealuo>
+		<view class="content" @click="toPage()">
+			<view class="itemRightText itemRightText_not" v-if="selectedList.length ==0">请选择</view>
+			<view class="itemRightText itemRightText_" v-else>
+				<text v-for="(v,k) in selectedList">{{v.name}} {{k< selectedList.length-1?'、':''}}</text>
+			</view>
 		</view>
 		<view class="save" @click="save()">保存</view>
 	</view>
@@ -29,13 +31,22 @@
 					id:0
 				}],
 				date:'',
-				list:[]
+				list:[],
+				selectedList:[],
 				
 			}
 		},
 		onLoad() {
-			this.getInfo();
-			this.getList();
+			this.getInfo().then(()=>{
+				this.getList();
+			});
+			
+		},
+		onShow() {
+			let data = uni.getStorageSync('chooseData');
+			this.selectedList = data && data.selectedList?  data.selectedList:[];
+			this.binData1 = data && data.list ?data.list:[];
+			this.$forceUpdate();
 		},
 		methods: {
 			getBackVal1(e){
@@ -50,7 +61,7 @@
 					url:getApp().$api.shouye.getcourseCategoryList,
 					data:{
 						pageNo:1,
-						pageSize:50,
+						pageSize:300,
 						type:2
 					},
 					type:'data'
@@ -58,6 +69,13 @@
 					// that.binData1 = data.records;
 					let list = [];
 					data.records.map((v,k)=>{
+						if(that.selectedList && that.selectedList.length !=0){
+							that.selectedList.map(vv=>{
+								if(vv.id == v.id){
+									data.records[k].isSelected = true
+								}
+							})
+						}
 						data.records[k].value = v.name;
 					})
 					that.binData1 = data.records;
@@ -73,18 +91,28 @@
 					},
 					type:"GET"
 				},true,true).then(data=>{
+					that.info = data.records[0];
 					that.date = data.records[0].workbenchExpire;
+					that.selectedList = data.records[0].forteName?JSON.parse(data.records[0].forteName):[];
 				})
 			},
 			save(){
-				if(this.list.length !=0){
+				console.log(this.selectedList);
+				console.log(JSON.stringify(this.selectedList))
+				if(this.selectedList.length !=0){
+					let selectedList = [];
+					this.selectedList.map(v=>{
+						selectedList.push(v.id);
+					})
 					return request({
 						url:getApp().$api.work.editForte,
 						data:{
-							forte:this.list.join(','),
-							user_id:getApp().globalData.userId
+							id:this.info.id,
+							forte:selectedList.join(','),
+							user_id:getApp().globalData.userId,
+							forteName:JSON.stringify(this.selectedList)
 						},
-						type:'GET'
+						type:'PUT'
 					}).then(data=>{
 						uni.showToast({
 							title:'保存成功',
@@ -102,6 +130,15 @@
 						duration:1500
 					})
 				}
+			},
+			toPage() {
+					uni.setStorageSync('chooseData',this.binData1)
+					uni.navigateTo({
+						url: '/pages/Search/choose/choose',
+						animationDuration: 300,
+						animationType: 'slide-in-right'
+					})
+				
 			}
 		}
 	}
@@ -109,7 +146,15 @@
 
 <style>
 	.content{
-		padding:30rpx;
+		margin: 30rpx;
+		width:650rpx;
+		text-align: right;
+		height: 100rpx;
+		line-height: 100rpx;
+		overflow-x: scroll;
+		padding:0 20rpx;
+		border-radius: 6rpx;
+		background-color: #f6f6f6;
 	}
 	.title{
 		font-size: 32rpx;
@@ -136,5 +181,8 @@
 		color: #FFFFFF;
 		text-align: center;
 		line-height: 80rpx;
+	}
+	.itemRightText_not{
+		color: #999999;
 	}
 </style>

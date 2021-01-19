@@ -504,7 +504,7 @@
 					})
 				} else if (url == '/pages/HuanzheDetail/evaluation/evaluation') {
 					uni.navigateTo({
-						url: `${url}?id=${this.info.id}&illnessid=${this.info.illnessId}&assessid=${id}`,
+						url: `${url}?id=${this.info.id}&illnessid=${this.info.illnessId}&assessid=${id}&my=${this.my}`,
 						animationDuration: 300,
 						animationType: 'slide-in-right'
 					})

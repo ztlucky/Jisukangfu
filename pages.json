@@ -83,6 +83,12 @@
 			}
 		},
 		{
+			"path": "pages/Search/choose/choose",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
 			"path": "pages/work/addNotes/addNotes",
 			"style": {
 				"navigationBarTitleText": "学习笔记",
