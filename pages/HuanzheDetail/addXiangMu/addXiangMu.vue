@@ -18,7 +18,7 @@
 				<view class="dateLeft">{{start_time}}</view>
 				<image :src='!visible? "/static/wodehuanzhe/below.png":"/static/wodehuanzhe/top.png"'></image>
 			</view>
-			<view class="contentview">
+			<!-- <view class="contentview">
 				<view class="bgview">
 					<text class="title">短期目标</text>
 					<textarea @blur="bindTextAreaBlur" class="duanqimubiao" placeholder="请输入患者的短期目标" style="height: 100px;" maxlength="-1"
@@ -56,7 +56,8 @@
 					</view>
 				</view>
 			</view>
-			</view>
+			</view> -->
+			
 			<!-- 
 			<view class="title">项目开始时间</view>
 			<view class="dateView" :style="'color:'+(xiangmu_start_time == '请选择项目开始时间'?'#999999':'#333333')" @click="showDateSelect(true,1)">
@@ -523,14 +524,14 @@
 					str = '请选择医嘱天数'
 				} else if (!this.start_time) {
 					str = '请选择开始时间'
-				}else if(this.duanqimubiao == ''){
-					str = '请填写短期目标';
-				}else if(this.changqimubiao == ''){
-					str = '请填写长期目标'
 				}else if(isCompleteListValue){
 					str = '请完善项目时间'
 				}
-				
+				// else if(this.duanqimubiao == ''){
+				// 	str = '请填写短期目标';
+				// }else if(this.changqimubiao == ''){
+				// 	str = '请填写长期目标'
+				// }
 				if (str) {
 					uni.showToast({
 						title: str,

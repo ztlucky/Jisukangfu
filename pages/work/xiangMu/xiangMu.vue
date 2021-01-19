@@ -21,7 +21,7 @@
 						</view>
 						<view class="xiangMuzItem">
 							<view class="dot"></view>
-							<view class="itemText">费用：{{item.price}}</view>
+							<view class="itemText">费用：{{item.cost}}</view>
 						</view>
 						<view class="xiangMuzItem">
 							<view class="dot"></view>

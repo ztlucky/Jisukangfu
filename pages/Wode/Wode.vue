@@ -263,50 +263,51 @@
 			 },
 			//充值
 			chongzhi() {
-				//判断是否存储Wxid
-				  if(uni.getStorageSync('wxid') !=null ){
 				this.promptVisible = true;
+				//判断是否存储Wxid
+				  // if(uni.getStorageSync('wxid') !=null ){
+			            	this.promptVisible = true;
 
-				  }else{
-				var that=this
+				//   }else{
+				// var that=this
 
-				uni.showModal({
-					title: "提示",
-					content: '您需要先绑定微信',
-					success: function(e) {
+				// uni.showModal({
+				// 	title: "提示",
+				// 	content: '您需要先绑定微信',
+				// 	success: function(e) {
 
-						if (e.confirm) {
-						uni.getProvider({
-						    service: 'oauth',
-						    success: function(res) {
-						        console.log(res.provider);	
-						        if (~res.provider.indexOf('weixin')) {
-						            uni.login({
-						              provider: 'weixin',
-						              success: function (loginRes) {
-							               that.passwordpromptVisible = true
-										   that.weixinID = loginRes.authResult.openid;
+				// 		if (e.confirm) {
+				// 		uni.getProvider({
+				// 		    service: 'oauth',
+				// 		    success: function(res) {
+				// 		        console.log(res.provider);	
+				// 		        if (~res.provider.indexOf('weixin')) {
+				// 		            uni.login({
+				// 		              provider: 'weixin',
+				// 		              success: function (loginRes) {
+				// 			               that.passwordpromptVisible = true
+				// 						   that.weixinID = loginRes.authResult.openid;
 
-						              }, 
+				// 		              }, 
 
-						              fail:function(res){
-							     uni.showToast({
-								title:"授权失败",
-								icon:'none'
-							})							
-						    }								
-						   })							
-						  }								
-						    }								
-						});
+				// 		              fail:function(res){
+				// 			     uni.showToast({
+				// 				title:"授权失败",
+				// 				icon:'none'
+				// 			})							
+				// 		    }								
+				// 		   })							
+				// 		  }								
+				// 		    }								
+				// 		});
 
-						} else if (e.cancel) {
-							console.log('用户点击取消');
+				// 		} else if (e.cancel) {
+				// 			console.log('用户点击取消');
 
-						}
-					}
-				})
-				}
+				// 		}
+				// 	}
+				// })
+				// }
 			},
 			//更新用户的微信ID
 			refreshweixinId(wxid,password) {

@@ -6,8 +6,9 @@
 		<view class="title title_">工作台到期时间：{{date}}</view>
 		<view class="title">设置擅长项目</view>
 		<view class="content">
-			<yealuo @getBackVal="getBackVal1" the-style="font-size: 46upx;" :isShowIcon="false"  :selectIco="false" overflow="hide" :isSetUrl="true" placeholder="请选择" width="690" :binData="binData1"
-			 :isShowAllBack="false" checkType="checkbox" padding="30rpx" textAlign="right"></yealuo>
+			<yealuo @getBackVal="getBackVal1" the-style="font-size: 46upx;" :isShowIcon="false"  
+			:selectIco="false" overflow="hide" :isSetUrl="true" placeholder="请选择" width="690" :binData="binData1"
+			 :isShowAllBack="false" checkType="checkbox" padding="30rpx" textAlign="right" ></yealuo>
 		</view>
 		<view class="save" @click="save()">保存</view>
 	</view>
@@ -29,7 +30,9 @@
 					id:0
 				}],
 				date:'',
-				list:[]
+				list:[],
+				name:[],
+				forteName:''
 				
 			}
 		},
@@ -39,11 +42,17 @@
 		},
 		methods: {
 			getBackVal1(e){
+				console.log(e)
+				this.forteName = ""
 				this.list = []
+				 this.name = [];
 				e.map(v=>{
 					this.list.push(v.split('|')[1])
-				})
-			},
+					this.name.push(v.split('|')[0])
+ 				})
+				this.forteName = this.name.join(',')
+				console.log(this.forteName)
+ 			},
 			getList(){
 				let that = this;
 				return request({
@@ -55,12 +64,14 @@
 					},
 					type:'data'
 				},true,true).then(data=>{
+ 					
 					// that.binData1 = data.records;
 					let list = [];
 					data.records.map((v,k)=>{
 						data.records[k].value = v.name;
 					})
 					that.binData1 = data.records;
+ 					
 					// that.binData1 = list;
 				})
 			},
@@ -69,20 +80,26 @@
 				return request({
 					url:getApp().$api.work.workEndDate,
 					data:{
-						// id:getApp().globalData.userId
+ 						 
+ 						
 					},
 					type:"GET"
 				},true,true).then(data=>{
-					that.date = data.records[0].workbenchExpire;
+					console.log(data)
+ 					that.date = data.records[0].workbenchExpire;
+					this.forteName = data.records[0].forteName
 				})
 			},
 			save(){
+				console.log(this.forteName)
+				
 				if(this.list.length !=0){
 					return request({
 						url:getApp().$api.work.editForte,
 						data:{
 							forte:this.list.join(','),
-							user_id:getApp().globalData.userId
+ 							user_id:getApp().globalData.userId,
+							forteName:this.name.join(',')
 						},
 						type:'GET'
 					}).then(data=>{
