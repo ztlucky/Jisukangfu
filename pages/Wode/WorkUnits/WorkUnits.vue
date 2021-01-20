@@ -55,10 +55,15 @@
 			}
 		},
 		onLoad() {
-			let list = uni.getStorageSync('workUnits');
-			if(list){
-				this.list = list;
-			}
+				let list = uni.getStorageSync('workUnits');
+				console.log(list);
+				console.log(list[0]);
+				
+				if(list){
+					this.list = list;
+				}
+			 
+			
 		},
 		methods: {
 			showTime(index,type) {

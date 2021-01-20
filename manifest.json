@@ -140,7 +140,7 @@
                 }
             },
             "splashscreen" : {
-                "androidStyle" : "common",
+                "androidStyle" : "default",
                 "iosStyle" : "common"
             }
         }

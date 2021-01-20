@@ -577,7 +577,15 @@
 				let tscore = f?this.number:0;
 				let patientId = this.info.id;
 				let pscore = f?this.info.treatmentList[that.nowIndex__].subproject[this.nowIndex].score:0;
-				
+				console.log({
+						subprojectId,
+						treatmentId,
+						tscore,
+						patientId,
+						pscore,
+						doctorId:getApp().globalData.userId,
+						result: f ? 1 : 2
+					})
 				return request({
 					url:getApp().$api.huanzhe.endXiangMu,
 					type:"POST",
@@ -591,6 +599,7 @@
 						result: f ? 1 : 2
 					}
 				},true,true).then(data=>{
+					console.log(data)
 					that.referrer = data.referrer;
 					if(data.status == 0 ||data.referrer == data.total){
 						 that.setProgress(f);

@@ -86,6 +86,9 @@
 					<image src="/static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
+			<view class="item"  >
+				 
+			</view>
 		</view>
 		<view class="save" v-if="info && info.result == 0">审核中</view>
 		<view class="save" v-else @click="save_tips()">{{info && info.result && info.result == 0?'未审核':info &&info.result == 1?'审核成功':info &&info.result == 2?'审核失败':'提交审核	'}}</view>
@@ -119,6 +122,7 @@
 				school: '',
 				remark: '',
 				work: '',
+				company:{},
 				binData: [{
 					id: 1,
 					value: '初中'
@@ -249,10 +253,11 @@
 					console.log(data)
 					if(data.records.length>0){
 						that.info = data.records[0];
+ 						uni.setStorageSync('workUnits', JSON.parse(that.info.company))
 						that.school = that.info.school
 						that.idNo = that.info.idNo
 						that.xueLi ={
-							id:0,
+							id:that.info.education,
 							value:that.info.education_dictText
 							
 						} 
@@ -283,7 +288,7 @@
 			toPage(key) {
 				if (key == '/pages/Wode/WorkUnits/WorkUnits') {
 					uni.navigateTo({
-						url: key,
+						url:key,
 						animationDuration: 300,
 						animationType: 'slide-in-right'
 					})
