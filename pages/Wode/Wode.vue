@@ -238,7 +238,7 @@
 						type
 					}
 				},false,true).then(data=>{
-					if(data == '有资质！'){
+ 					if(data == 1){
 						if(type == 1){
 							that.isLive = true;
 						}else if(type == 2){
