@@ -592,7 +592,7 @@
 					}
 				},true,true).then(data=>{
 					that.referrer = data.referrer;
-					if(data.referrer == data.total){
+					if(data.status == 0 ||data.referrer == data.total){
 						 that.setProgress(f);
 					}else{
 						

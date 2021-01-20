@@ -22,8 +22,11 @@
 				<view class="itemTitle">学历</view>
 				<view class="itemRight">
 					<view class="itemRightText">
-						<yealuo @getBackVal="getBackVal" the-style="font-size: 46upx;" :isShowIcon="false" backColor="#FFFFFF" :selectIco="false"
-						 overflow="hide" :isSetUrl="true" placeholder="请选择" width="400" :binData="binData" :isShowAllBack="false" padding="0rpx"
+						<yealuo @getBackVal="getBackVal"  :value="xueLi.value"
+						the-style="font-size: 46upx;" :isShowIcon="false" backColor="#FFFFFF" :selectIco="false"
+						 overflow="hide" :isSetUrl="true" 
+						 placeholder="请选择" width="400" :binData="binData" 
+						 :isShowAllBack="false" padding="0rpx"
 						 textAlign="right"></yealuo>
 					</view>
 					<image src="/static/icon/me_lise_more.png"></image>
@@ -46,7 +49,8 @@
 			<view class="item" @click="showSelectView_">
 				<view class="itemTitle">认证类型</view>
 				<view class="itemRight">
-					<view :class="positionItem_ && positionItem_.id?'itemRightText':'itemRightText itemRightText1'  ">{{positionItem_ && positionItem_.id?positionItem_.value:'请选择您的认证类型'}}</view>
+					<view :class="positionItem_ && positionItem_.id?'itemRightText':'itemRightText itemRightText1'  "
+					>{{positionItem_ && positionItem_.id?positionItem_.value:'请选择您的认证类型'}}</view>
 					<image src="/static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
@@ -70,6 +74,7 @@
 					<view class="itemRightText itemRightText_not" v-if="selectedList.length ==0">请选择</view>
 					<view class="itemRightText itemRightText_" v-else>
 						<text v-for="(v,k) in selectedList">{{v.name}} {{k< selectedList.length-1?'、':''}}</text>
+						<text v-if="selectedList.length == 0">{{info.forte}}</text>
 					</view>
 					<image src="/static/icon/me_lise_more.png"></image>
 				</view>
@@ -150,7 +155,7 @@
 					value: '主任医师'
 				}],
 				positionItem: '',
-				xueLi: null,
+				xueLi: {},
 				info: {},
 				shanChangLingYu: null,
 				binData1: [],
@@ -194,18 +199,19 @@
 			}
 		},
 		onLoad() {
-			uni.removeStorageSync('chooseData');
+			//uni.removeStorageSync('chooseData');
 			this.addEvent();
 			this.getIllnessList();
 			this.getInfo();
 		},
 		onUnload() {
 			uni.$off();
-			uni.removeStorageSync('chooseData');
+			//uni.removeStorageSync('chooseData');
 		},
 		onShow() {
-			let data = uni.getStorageSync('chooseData');
-			if(data && data.selectedList){
+			
+ 			let data = uni.getStorageSync('chooseData');
+ 			if(data && data.selectedList){
 				this.selectedList = data && data.selectedList?  data.selectedList:[];
 			}
 			if(data && data.list){
@@ -219,7 +225,10 @@
 			addEvent() {
 				let that = this;
 				uni.$on('addInfoText', function(data) {
+					console.log(data)
 					that[data.key] = data.value;
+					uni.setStorageSync(data.key,data.value);
+					
 				})
 				uni.$on('result', function(data) {
 					console.log(data);
@@ -237,7 +246,38 @@
 						order: 'desc'
 					}
 				}, true, true).then(data => {
-					that.info = data.records[0];
+					console.log(data)
+					if(data.records.length>0){
+						that.info = data.records[0];
+						that.school = that.info.school
+						that.idNo = that.info.idNo
+						that.xueLi ={
+							id:0,
+							value:that.info.education_dictText
+							
+						} 
+ 						
+						that.positionItem_.id = that.info.type;
+  						
+ 						that.positionItem_.value = that.typeList[parseInt(that.info.type)-2].value;
+ 						 
+						 
+  						//that.info.education_dictText;
+						that.remark = that.info.remark;
+						 that.positionItem= that.info.jobTitle
+						
+					}else{
+						this.school =  uni.getStorageSync('school')
+						this.idNo = uni.getStorageSync('idNo')
+						this.positionItem = uni.getStorageSync('positionItem')
+						this.remark = uni.getStorageSync('remark')
+						this.xueLi = uni.getStorageSync("xueli");
+						this.positionItem_ = uni.getStorageSync("renzhengleixing")
+					}
+ 					
+					
+					
+					
 				})
 			},
 			toPage(key) {
@@ -279,7 +319,8 @@
 				})
 			},
 			save_tips() {
-				if (this.info &&(this.info.result == 1 || this.info.result == 0)) {
+ 				if (this.info &&(this.info.result == 1 || this.info.result == 0)) {
+ 					
 					let that = this;
 					uni.showModal({
 						title: '温馨提示',
@@ -304,6 +345,8 @@
 				if (company) {
 					company = JSON.stringify(company);
 				}
+				console.log(uploadCertificate)
+				
 				if (uploadCertificate) {
 					console.log(uploadCertificate)
 					if (uploadCertificate.work.length == 0) {
@@ -406,6 +449,8 @@
 					id: data.split("|")[1],
 					value: data.split("|")[0]
 				}
+		   uni.setStorageSync('xueli',this.xueLi);
+				
 			},
 			getBackVal1(data) {
 				console.log(data);
@@ -451,6 +496,8 @@
 			},
 			onConfirm_(data) {
 				this.positionItem_ = data.obj;
+				uni.setStorageSync("renzhengleixing",this.positionItem_)
+				
 			},
 			getIllnessList() {
 				let that = this;

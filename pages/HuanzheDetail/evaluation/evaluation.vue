@@ -112,14 +112,15 @@
 				listIndex = listIndex == -1 ? this.listIndex : listIndex;
 				let data = this.info;
 				if (f) {
-
-					if (listIndex = 1) {
+ 
+					if (listIndex == 1) {
 						data.selectedList[index][0].isSelected = true;
 						let item = data.selectedList[index];
 						this.$set(this.info.selectedList, index, item)
 					} else {
 						data.selectedList1[index][0].isSelected = true;
 						let item = data.selectedList1[index];
+						console.log(item)
 						this.$set(this.info.selectedList1, index, item)
 					}
 

@@ -81,7 +81,9 @@
 					data: {
 						pageNo: that.index,
 						pageSize: that.size,
-						userId: getApp().globalData.userId
+						userId: getApp().globalData.userId,
+						type:1
+						
 					}
 				}, true, true).then(data => {
 					console.log(data.records);

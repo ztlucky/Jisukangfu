@@ -29,7 +29,10 @@
 		},
 		onLoad(options) {
 			this.type = options.type?options.type:2;
+		},
+		onShow() {
 			this.getData()
+			
 		},
 		methods: {
 			setNowStatus(index){

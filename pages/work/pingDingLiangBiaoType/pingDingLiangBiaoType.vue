@@ -69,11 +69,11 @@
 					data: {
 						pageNo: that.index,
 						pageSize: that.size,
-						userId: getApp().globalData.userId
+						userId: getApp().globalData.userId,
+						type:2
 					}
 				}, true, true).then(data => {
-					console.log(data.records.length);
-					if (data.records.length >= that.size) {
+ 					if (data.records.length >= that.size) {
 						this.isGetMoreList = true;
 					} else {
 						this.isGetMoreList = false;

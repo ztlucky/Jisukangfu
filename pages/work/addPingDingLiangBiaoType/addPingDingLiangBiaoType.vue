@@ -21,6 +21,8 @@
 		},
 		methods: {
 			save(){
+				console.log("ddd")
+				console.log(this.type)
 				let that = this;
 				if(!this.title){
 					uni.showToast({

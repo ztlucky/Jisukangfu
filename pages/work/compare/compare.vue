@@ -1,14 +1,16 @@
 <template>
 	<view class="view">
 		<scroll-view class="leftList" @scrolltolower="getIllness" :scroll-y="true">
-			<view :class="k != nowIllnessIndex?'leftItem':'leftItem leftItem1'" v-for="(item,k) in illnessList"  :key="k" @click="setIllnessStatus(k)">
+			<view :class="k != nowIllnessIndex?'leftItem':'leftItem leftItem1'" v-for="(item,k) in illnessList" 
+			 :key="k" @click="setIllnessStatus(k)">
 				<view class="itemBorder"></view>
 				<view class="itemText hidden2">{{item.name}}</view>
 			</view>
 		</scroll-view>
 		<view class="rightContent">
 			<view class="rightTop">
-				<view :class="nowSymptomIndex == index?'selected':''" @click="setSymptomIndex(index)" v-for="(item,index) in illnessList[nowIllnessIndex].symptomList">{{item.name}}</view>
+				<view :class="nowSymptomIndex == index?'selected':''" @click="setSymptomIndex(index)" v-for="(item,index)
+				 in illnessList[nowIllnessIndex].symptomList">{{item.name}}</view>
 			</view>
 			<view class="rightList">
 				<view class="rightItem" v-for="(v,k) in huanZheList" :key="k">
@@ -92,9 +94,12 @@
 							pageNo:that.illnessIndex,
 							pageSize:that.illnessSize,
 							userId:getApp().globalData.userId,
-							type:2
-						}
+							type:1,
+							c_s:true
+							
+ 						}
 					},true,true).then(data=>{
+						console.log(data)
 						if(data.records.length == that.illnessSize){
 							that.isGetMoreIllnessData = true;
 						}else{
