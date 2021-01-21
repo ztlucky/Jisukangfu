@@ -63,6 +63,7 @@
 					url:getApp().$api.user.getcode,
 					type:"GET",
 					data:{
+						type:that.nowStatus==1?4:3,
 						phone:that.phone
 					}
 				}).then(data=>{

@@ -69,7 +69,7 @@
 						},
 						
 						data:{
-							codetype:1,
+							codetype:2,
 							phone:this.mobile
 						 				
 						},

@@ -309,7 +309,7 @@
 			member: 'HY32522',
 			reword: 'DS12546',
 			clientid: '',
-		  // BaseUrl:"http://3237632k3k.goho.co/jeecg-boot/",
+		   // BaseUrl:"http://3237632k3k.goho.co/jeecg-boot/",
  		    // BaseUrl:'http://kfy.huaxiakangfu.com:8090/',
 			BaseUrl:'http://kfy.huaxiakangfu.com:8095/jeecg-boot/'
  			

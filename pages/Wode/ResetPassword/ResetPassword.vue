@@ -74,6 +74,7 @@
 					url:getApp().$api.user.getcode,
 					type:"GET",
 					data:{
+						type:2,
 						phone:that.phone
 					}
 				}).then(data=>{

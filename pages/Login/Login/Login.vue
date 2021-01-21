@@ -137,7 +137,12 @@
 					})
 
 				} else {
+console.log(getApp().globalData.BaseUrl+'app/msg/sendcode')
+console.log({
+							type: 1,
+							phone: this.mobile
 
+						})
 					uni.request({
 						
 						url: getApp().globalData.BaseUrl+'app/msg/sendcode',
@@ -147,7 +152,7 @@
 						},
 
 						data: {
-							codetype: 1,
+							type: 1,
 							phone: this.mobile
 
 						},
