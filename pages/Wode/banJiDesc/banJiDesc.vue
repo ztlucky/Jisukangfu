@@ -6,12 +6,13 @@
 		<view class="desc">
 			<view class="title">班级简介</view>
 			<view class="descText">{{info.presentation}}</view>
-		</view>
-		<view class="live" v-if="info.liveList.length !=0">
+		</view> 
+ 		 <view class="live" v-if="info.liveList &&info.liveList.length>0"> 
 			<view class="title">直播</view>
-			<live :list="info.liveList" :notpay="!isbuy"></live>
-		</view>
-		<view class="course" v-if="info.courseList.length >= 0">
+			  <live :list="info.liveList" :notpay="!isbuy"></live>  
+	  </view>  
+	
+		<view class="course" v-if="info.courseList&& info.courseList.length >= 0">
 			<view class="title">课程</view>
 			<view class="list">
 				<view class="item" v-for="(v,k) in info.courseList">
@@ -19,6 +20,7 @@
 				</view>
 			</view>
 		</view>
+			
 		<view class="teacherView" v-if="info.expertList !=null">
 			<view class="sectionview">
 				<view class="iconview">
@@ -26,6 +28,7 @@
 				</view>
 				<text>老师</text>
 			</view>
+			
 			<scroll-view scroll-x="true" class="teacherscrollview">
 				<block v-for="(item, index) in info.expertList" :key="index">
 					<view class="item" @click="openInfo(item.id)">
@@ -38,6 +41,7 @@
 				</block>
 			</scroll-view>
 		</view>
+	 
 		<view class="lastview">
 			<zzx-tabs :items="items" :current="current" @clickItem="onClickItem" ref="mytabs" :activeColor="activeColor"
 			 :lineWidth="line_width" :lineColor="line_color">
@@ -110,14 +114,14 @@
 			</view>
 
 		</view>
-		<view class="bottom" v-if="current == 0">
+		  <view class="bottom" v-if="current == 0  && userid != info.createUserId ">
 			<view>原价¥{{info.cost}}/会员价¥{{info.memberCost}}</view>
 			<view class="" @click="favAction">
 				<image :src="isfav == true ?'../../../static/zhibo/icon_yishoucang.png':'../../../static/zhibo/icon_shoucang.png'"></image>
 				<view class="">收藏本课</view>
 			</view>
 			<view class="buy" :style="{background:buyBackColor}" @click="comfirmOrder">{{buyBtnText}}</view>
-		</view>
+		</view>  
 	</view>
 </template>
 
@@ -216,10 +220,12 @@
 						user_id: getApp().globalData.userId
 					}
 				}, true, true).then(data => {
+					console.log(data)
 					data.data.classTable = JSON.parse(data.data.classTable);
 					this.info = this.detailInfo = data.data;
 					that.isbuy = data.isBuy;
 					that.isfav = data.isCollect;
+					console.log(this.info)
 
 					if (data.isBuy == true) {
 						this.buyBtnText = "已购买"

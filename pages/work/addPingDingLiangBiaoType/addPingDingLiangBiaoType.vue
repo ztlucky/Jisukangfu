@@ -14,15 +14,16 @@
 		data() {
 			return {
 				title:"",
-				}
+				// type:"",
+ 				}
 		},
-		created(options) {
-			this.type = options.type?options.type:2;
+		onLoad(options) {
+ 				this.type = options.type?options.type:2;
 		},
+	 
 		methods: {
 			save(){
-				console.log("ddd")
-				console.log(this.type)
+ 				console.log(this.type)
 				let that = this;
 				if(!this.title){
 					uni.showToast({

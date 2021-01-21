@@ -203,6 +203,9 @@
 		},
 		onShow: function() {
 			console.log(getApp().globalData.userId )
+			this.isLive = false;
+			this.isCourse = false;
+			this.isBanJi = false;
 			if (getApp().globalData.userId  && getApp().globalData.userId != -2) {
 				this.decideQualification(1).then(()=>{
 					this.decideQualification(2).then(()=>{

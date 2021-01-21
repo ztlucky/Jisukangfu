@@ -22,7 +22,8 @@
 		<view class="bottom" v-if="!isEdit" @click="setNowStatus">编辑评定量表分类</view>
 		<view class="bottomNav" v-else>
 			<view class="" @click="deleteItem">删除选中的分类({{num}})</view>
-			<view class="" @click="toPage('/pages/work/addPingDingLiangBiaoType/addPingDingLiangBiaoType')">添加新的分类</view>
+			<view class="" @click="toPage('/pages/work/addPingDingLiangBiaoType/addPingDingLiangBiaoType')">
+				添加新的分类</view>
 		</view>
 	</view>
 </template>
@@ -106,7 +107,7 @@
 					if(index !=-1){
 						uni.setStorageSync('pingDingLiangBiaoType',this.list[index]);
 					}
-					uni.navigateTo({
+ 					uni.navigateTo({
 						url,
 						animationDuration: 300,
 						animationType: 'slide-in-right'
