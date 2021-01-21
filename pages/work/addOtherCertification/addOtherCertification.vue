@@ -39,11 +39,8 @@
 					key:this.key,
 					value:this.value
 				});
-				setTimeout(function() {
 					// 登录成功
 					uni.navigateBack();
-					
-				}, 1000)
 			},
 			check(id) {
 				var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;

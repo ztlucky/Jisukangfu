@@ -13,7 +13,7 @@
 				</view>
 			</view>
 			<view class="infoRight">
-				<view class="">{{total}}</view>
+				<view class="">{{score}}</view>
 				<view class="">得分</view>
 			</view>
 		</view>
@@ -64,7 +64,7 @@
 				size:10,
 				short:'',
 				long:'',
-				total:0
+				score:0
 			}
 		},
 		onReachBottom() {
@@ -104,10 +104,14 @@
 					data:{
 						pageNo:that.index,
 						pageSize:that.size,
-						patientId:that.id
+						patientId:that.id,
+						condition:true
 					}
 				},true,true).then(data=>{
-					that.total = data.total;
+					
+					that.score = data.score;
+					console.log(data);
+					data = data.data;
 					if(data.records.length >=that.size){
 						that.isGetMoreList = true;
 					}else{
