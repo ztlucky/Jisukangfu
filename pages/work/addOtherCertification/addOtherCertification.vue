@@ -1,7 +1,8 @@
 <template>
 	<view class="viewPage" >
 		<nav-bar :bgColor="bgColor" fontColor="#000000" title="认证信息">
-			<view slot="right" @click="save" class="navRight" :style="'background:'+(value?'#0091FF;color:#ffffff':'')">确认</view>
+			<view slot="right" @click="save" class="navRight" 
+			:style="'background:#31D880;color:#ffffff'">确认</view>
 		</nav-bar>
 		<view class="input">
 			<input  :name="value" v-model="value" placeholder="请输入内容"  />
@@ -39,8 +40,10 @@
 					key:this.key,
 					value:this.value
 				});
+				 
 					// 登录成功
 					uni.navigateBack();
+			 
 			},
 			check(id) {
 				var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
@@ -68,7 +71,7 @@
 		border-radius: 8rpx;
 		margin-right: 30rpx;
 		border-radius: 8rpx;
-		border: 2rpx solid #979797;
+		border: 2rpx solid #31D880;
 	}
 	.input{
 		width:690rpx;

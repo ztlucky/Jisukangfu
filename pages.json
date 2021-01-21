@@ -971,6 +971,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/Wode/ShenheResult/ShenheResult",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "审核结果",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

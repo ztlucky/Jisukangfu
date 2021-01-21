@@ -573,11 +573,10 @@
 												tempFiles,
 												tempFilePaths
 											},(res,str)=>{
-												let coverUrl = res.imageUrl[0];
+ 												let coverUrl = res.imageUrl[0];
 												let file = [];
 												let pdfFile = [];
-												let videoFile = [];
-												if(that.material.pdfFile){
+ 												if(that.material.pdfFile){
 													that.material.pdfFile.map((v,k)=>{
 														pdfFile.push({
 															type:'pdf',
@@ -597,6 +596,7 @@
 												}
 												file = pdfFile.concat(videoFile);
 												file = JSON.stringify(file);
+												console.log(file)
 												this.creatCourse(coverUrl,file);
 											}).upload();
 					}
@@ -649,8 +649,15 @@
 						  setTimeout(()=>{
 							  uni.navigateBack();
 						  },500)
-			   		} else {
-			   			this.$alert(res.msg);
+			   		}else {
+						 
+							uni.showToast({
+								title: res.message,
+								icon:'none',
+								duration:2500
+							})
+						 
+			   			//this.$alert(res.msg);
 			   		}
 			   	},
 			   	complete: res => {}

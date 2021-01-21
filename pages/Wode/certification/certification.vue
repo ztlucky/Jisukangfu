@@ -86,12 +86,22 @@
 					<image src="/static/icon/me_lise_more.png"></image>
 				</view>
 			</view>
-			<view class="item"  >
-				 
+			<view class="item" @click="toPage_('/pages/Wode/ShenheResult/ShenheResult?info='+info.resultExplain)" v-if="info.result!=0">
+				<view class="itemTitle">审核结果说明</view>
+				<view class="itemRight">
+					<view class="itemRightText hidden"></view>
+					<image src="/static/icon/me_lise_more.png"></image>
+				</view>
 			</view>
+			 
+			 <view class="bottom">
+			 	
+			 </view>
 		</view>
 		<view class="save" v-if="info && info.result == 0">审核中</view>
-		<view class="save" v-else @click="save_tips()">{{info && info.result && info.result == 0?'未审核':info &&info.result == 1?'审核成功':info &&info.result == 2?'审核失败':'提交审核	'}}</view>
+		<view class="save" v-else @click="save_tips()">
+		{{info && info.result && info.result == 0?'未审核':info &&info.result == 1?'审核成功':info &&info.result == 2?'审核失败':'提交审核	'}}
+		</view>
 		<w-picker mode="selector" :visible.sync="visible" value="住院医师" default-type="name" :default-props="defaultProps"
 		 :options="position" @confirm="onConfirm($event,'selector')" ref="selector"></w-picker>
 		<w-picker mode="selector" :visible.sync="visible_" value="直播" default-type="name" :default-props="defaultProps"
@@ -203,13 +213,13 @@
 			}
 		},
 		onLoad() {
-			//uni.removeStorageSync('chooseData');
+			uni.removeStorageSync('chooseData');
 			this.addEvent();
 			this.getIllnessList();
 			this.getInfo();
 		},
 		onUnload() {
-			uni.$off();
+ 			uni.$off();
 			//uni.removeStorageSync('chooseData');
 		},
 		onShow() {
@@ -223,14 +233,14 @@
 				
 			}
 			 
-			this.$forceUpdate();
+			 this.$forceUpdate();
 		},
 		methods: {
 			addEvent() {
+				  
 				let that = this;
 				uni.$on('addInfoText', function(data) {
-					console.log(data)
-					that[data.key] = data.value;
+ 					that[data.key] = data.value;
 					uni.setStorageSync(data.key,data.value);
 					
 				})
@@ -308,15 +318,16 @@
 						animationType: 'slide-in-right'
 					})
 					return false;
-				}
+				} 
 				uni.navigateTo({
 					url: '/pages/work/addOtherCertification/addOtherCertification?key=' + key + '&value=' + this[key],
 					animationDuration: 300,
 					animationType: 'slide-in-right'
 				})
+				
 			},
 			toPage_(url) {
-				
+ 			 
 				uni.navigateTo({
 					url,
 					animationDuration: 300,
@@ -355,9 +366,9 @@
 				if (uploadCertificate) {
 					console.log(uploadCertificate)
 					if (uploadCertificate.work.length == 0) {
-						str = '请选择工作证书'
+						//str = '请选择工作证书'
 					} else if (uploadCertificate.qualification.length == 0) {
-						str = '请选择资质证书'
+						//str = '请选择资质证书'
 					} else {
 						this.qualificationFile = uploadCertificate.qualification;
 						this.workFile = uploadCertificate.work
@@ -378,9 +389,10 @@
 					str = '请选择您的认证类型'
 				} else if (this.selectedList.length == 0) {
 					str = '请选择您的擅长领域'
-				}else if(this.qualificationFile.length == 0){
-					str = '请上传资质证书'
 				}
+				// else if(this.qualificationFile.length == 0){
+				// 	str = '请上传资质证书'
+				// }
 				if (str) {
 					uni.showToast({
 						title: str,
@@ -395,14 +407,21 @@
 				forte = forte.join(',');
 				let tempFiles = [];
 				let tempFilePaths = [];
-				this.qualificationFile.map((v, k) => {
-					tempFiles.push(v);
-					tempFilePaths.push(v.fullPath)
-				});
-				this.workFile.map((v, k) => {
-					tempFiles.push(v);
-					tempFilePaths.push(v.fullPath)
-				});
+					
+				if(this.qualificationFile!=null){
+					this.qualificationFile.map((v, k) => {
+						tempFiles.push(v);
+						tempFilePaths.push(v.fullPath)
+					});
+				}
+					
+				if(this.workFile!=null){
+					this.workFile.map((v, k) => {
+						tempFiles.push(v);
+						tempFilePaths.push(v.fullPath)
+					});
+				}
+				
 				onloadImage.init({
 					tempFiles,
 					tempFilePaths
@@ -542,7 +561,10 @@
 		width: 750rpx;
 		background-color: #FFFFFF;
 	}
-
+.bottom{
+	width: 690rpx;
+	height: 200rpx;
+ }
 	.item {
 		margin-left: 30rpx;
 		width: 690rpx;

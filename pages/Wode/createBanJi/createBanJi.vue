@@ -709,7 +709,7 @@
 						memberCost: that.memberCost,
 						cover: that.uploadImageUrls[0],
 						expertIds: lecIds, //主持人
-						title: that.zhiboTitle,
+						name: that.zhiboTitle,
 						userId: getApp().globalData.userId,
 						presentation: that.value,
 						type: type,

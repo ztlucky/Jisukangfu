@@ -668,7 +668,13 @@
 							  uni.navigateBack();
 						  },500)
 			   		} else {
-			   			this.$alert(res.msg);
+			   			 
+			   				uni.showToast({
+			   					title: res.message,
+			   					icon:'none',
+			   					duration:2500
+			   				})
+			   			 
 			   		}
 			   	},
 			   	complete: res => {

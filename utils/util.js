@@ -18,7 +18,7 @@ function request(options = {},isShowLoading = true,isBackData = false,isAddUserI
 					if(res.data.code !== 200){
 						uni.showToast({
 							title:res.data.message,
-							duration:1500,
+							duration:2500,
 							icon:'none'
 						})
 						rejected(res.data)
