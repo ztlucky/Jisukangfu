@@ -58,7 +58,7 @@
 			}
 		},
 		onUnload(){
-			uni.$off();
+			//uni.$off();
 		},
 		methods: {
 			lookFileInfo(type,str,index){
