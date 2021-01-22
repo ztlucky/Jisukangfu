@@ -2,7 +2,7 @@
 	<view class="item" @click="toPage('/pages/Wode/banJiDesc/banJiDesc?id='+itemObject.id)">
 		<view class="banJiInfo">
 			<image class="infoIcon" :src="itemObject.coverUrl" mode="aspectFill"></image>
-			<view class="banJiInfoTips">课程</view>
+			<view class="banJiInfoTips">班级</view>
 			<view class="banJiInfoText">
 				<view class="textTitle hidden">{{itemObject.name}}</view>
 				<view class="textPrice">¥{{itemObject.cost}}元/会员价¥{{itemObject.memberCost}}元</view>
