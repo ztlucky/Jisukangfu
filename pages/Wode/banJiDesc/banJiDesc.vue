@@ -9,14 +9,14 @@
 		</view> 
  		 <view class="live" v-if="info.liveList &&info.liveList.length>0"> 
 			<view class="title">直播</view>
-			  <live :list="info.liveList" :notpay="!isbuy"></live>  
+			  <live :list="info.liveList" :notpay="userid == info.createUserId?false:!isbuy"></live>  
 	  </view>  
 	
 		<view class="course" v-if="info.courseList&& info.courseList.length >= 0">
 			<view class="title">课程</view>
 			<view class="list">
 				<view class="item" v-for="(v,k) in info.courseList">
-					<course :info="v" :notpay="!isbuy"></course>
+					<course :info="v" :notpay="userid == info.createUserId?false:!isbuy"></course>
 				</view>
 			</view>
 		</view>
@@ -88,7 +88,7 @@
 
 					</view>
 
-					<view class="messageInput" v-if="isbuy || info.userId == userid">
+					<view class="messageInput" v-if="isbuy || info.createUserId == userid">
 						<input placeholder="请输入您的留言" v-model="messageValue" />
 						<view class="sendMessage" :class="messageValue?'sendMessage_':''" @click="sendMessage">发送</view>
 					</view>
@@ -97,13 +97,13 @@
 			</view>
 
 		</view>
-		<view class="lecture" v-if="info.classTable && info.classTable.length !=0">
+		<view class="lecture" v-if="jiangzuo && jiangzuo.length !=0">
 			<view class="title">线下讲座</view>
 			<view class="lectureList">
-				<view class="lectureItem" v-for="(v,k) in info.classTable" :key="k">
+				<view class="lectureItem" v-for="(v,k) in jiangzuo" :key="k">
 					<view class="lectureTitle">
 						<view class="dot"></view>
-						<view class="">{{v.name}}</view>
+						<view class="">{{v.title}}</view>
 					</view>
 					<view class="lectureText">时间：{{v.date}}</view>
 					<view class="lectureTypes">
@@ -150,7 +150,11 @@
 				style:{
 					pageHeight:0,
 					contentViewHeight:0
-				}
+				},
+				isbuy:false,
+				buyBackColor:'',
+				buyBtnText:'立即购买',
+				jiangzuo:[],
 			}
 		},
 		components: {
@@ -212,7 +216,8 @@
 					},
 			getInfo() {
 				let that = this;
-				return request({
+				console.log(this.id)
+ 				return request({
 					url: getApp().$api.banji.getInfo,
 					type: "GET",
 					data: {
@@ -222,11 +227,12 @@
 				}, true, true).then(data => {
 					console.log(data)
 					data.data.classTable = JSON.parse(data.data.classTable);
-					this.info = this.detailInfo = data.data;
+					that.info = this.detailInfo = data.data;
 					that.isbuy = data.isBuy;
 					that.isfav = data.isCollect;
 					console.log(this.info)
-
+                     that.jiangzuo = JSON.parse(JSON.stringify(that.info.classTable));
+					 console.log(that.jiangzuo )
 					if (data.isBuy == true) {
 						this.buyBtnText = "已购买"
 						this.buyBackColor = '#999999'
