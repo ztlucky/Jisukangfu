@@ -78,9 +78,8 @@
 				phone:''
 			}
 		},
-		onLoad() {
-			
-			this.init();
+		onLoad() {	
+ 			this.init();
 		},
 		methods: {
 			init() {
@@ -111,10 +110,10 @@
 					url:getApp().$api.huanzhe.getHomeInfo,
 					type:"GET",
 					data:{
-						phone:that.phone
+						 phone:that.phone
 					}
 				},true,true).then(data=>{
-					that.hot = data.hot;
+ 					that.hot = data.hot;
 					that.expertList = data.recommend;
 					
 				})
