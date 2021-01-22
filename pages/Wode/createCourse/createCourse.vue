@@ -576,6 +576,8 @@
  												let coverUrl = res.imageUrl[0];
 												let file = [];
 												let pdfFile = [];
+												let videoFile = [];
+												
  												if(that.material.pdfFile){
 													that.material.pdfFile.map((v,k)=>{
 														pdfFile.push({
