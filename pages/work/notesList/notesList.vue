@@ -46,6 +46,17 @@
 				})
 			}
 		},
+		onPullDownRefresh() {
+ 			this.index = 1;
+			this.list= []
+			this.getList();
+			
+		},
+		onShow() {
+			this.index = 1;
+			this.list= []
+			this.getList();
+		},
 		methods: {
 			toPage(url,id) {
 				if(url == "/pages/work/notesInfo/notesInfo"){
@@ -73,6 +84,7 @@
 						userId: getApp().globalData.userId
 					}
 				},true,true).then(data => {
+					uni.stopPullDownRefresh()
 					if(data.records.length >= that.size){
 						that.isGetMoreList = true;
 					}else{
@@ -83,6 +95,8 @@
 					that.isOnLoad = false;
 				}).catch(err => {
 					that.isOnLoad = false;
+					uni.stopPullDownRefresh()
+					
 				})
 			}
 		}
