@@ -91,22 +91,33 @@
 						}
 					})
 					ids = ids.join(",");
-					return request({
-						url:getApp().$api.pingdingliangbiao.deleteQuestionType+`?ids=${ids}`,
-						type:"DELETE",
-						data:{
-							
+					uni.showModal({
+						title: '温馨提示',
+						content: '您确定要删除所选分类？',
+						confirmColor: '#31D880',
+						success: function(res) {
+							if (res.confirm) {
+								
+								return request({
+									url:getApp().$api.pingdingliangbiao.deleteQuestionType+`?ids=${ids}`,
+									type:"DELETE",
+									data:{
+										
+									}
+								}).then(data=>{
+									uni.showToast({
+										title:'操作成功',
+										duration:1500
+									});
+									setTimeout(()=>{
+										that.isEdit = false;
+										that.getList(true);
+									},1000);
+								})
+							}
 						}
-					}).then(data=>{
-						uni.showToast({
-							title:'操作成功',
-							duration:1500
-						});
-						setTimeout(()=>{
-							that.isEdit = false;
-							that.getList(true);
-						},1000);
 					})
+					
 				}
 			},
 			addEvent(){

@@ -93,7 +93,8 @@ let api = {
 		getQuestionType:`${apiRoot}question_classify/questionClassify/list`,
 		add:`${apiRoot}rating_scale/ratingScale/add`,
 		addQuestionType:`${apiRoot}question_classify/questionClassify/add`,
-		deleteQuestionType:`${apiRoot}rating_scale_classify/ratingScaleClassify/deleteBatch`,
+		// deleteQuestionType:`${apiRoot}rating_scale_classify/ratingScaleClassify/deleteBatch`,
+		deleteQuestionType:`${apiRoot}question_classify/questionClassify/deleteBatch`,
 		deleteQuestion:`${apiRoot}question/question/deleteBatch`,
 		getQuestionInfo:`${apiRoot}question/question/queryById`,
 		editQuestionInfo:`${apiRoot}question/question/edit`,
@@ -101,7 +102,8 @@ let api = {
 		addResult:`${apiRoot}assess_result/assessResult/add`,
 		getResult:`${apiRoot}assess_result/assessResult/queryById`,
 		getResultList:`${apiRoot}assess_result/assessResult/list`,
-		editResult:`${apiRoot}assess_result/assessResult/edit`
+		editResult:`${apiRoot}assess_result/assessResult/edit`,
+		deletePingDingItem:`${apiRoot}rating_scale/ratingScale/deleteBatch`
 		
 	},
 	user: {

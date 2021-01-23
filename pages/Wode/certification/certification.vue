@@ -215,8 +215,10 @@
 		onLoad() {
 			uni.removeStorageSync('chooseData');
 			this.addEvent();
-			this.getIllnessList();
-			this.getInfo();
+			this.getIllnessList().then(()=>{
+				this.getInfo();
+			});
+			
 		},
 		onUnload() {
  			uni.$off();
@@ -262,7 +264,7 @@
 				}, true, true).then(data => {
 					console.log(data)
 					if(data.records.length>0){
-						that.info = data.records[0];
+						that.info = that.fromData(data.records[0]);
  						uni.setStorageSync('workUnits', JSON.parse(that.info.company))
 						that.school = that.info.school
 						that.idNo = that.info.idNo
@@ -294,6 +296,33 @@
 					
 					
 				})
+			},
+			fromData(data){
+				let that = this;
+				let forte = data.forte;
+				let file = data.file;
+				let selectedList = [];
+				if(forte && forte.length >=2){
+					forte = forte.split(',');
+					forte.map(v=>{
+						that.binData1.map((vv,kk)=>{
+							if(vv.name == v){
+								that.binData1[kk].isSelected = true;
+								selectedList.push(vv)
+							}
+						})
+					});
+					this.selectedList = selectedList;
+					that.$forceUpdate();
+				}
+				if(file && file.length >=2){
+					file = file.split(',');
+					uni.setStorageSync('uploadCertificate',{
+						work:file[0],
+						qualification:file[1]
+					})
+				}
+				return data;
 			},
 			toPage(key) {
 				if (key == '/pages/Wode/WorkUnits/WorkUnits') {

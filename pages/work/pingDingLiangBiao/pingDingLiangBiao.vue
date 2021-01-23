@@ -20,7 +20,7 @@
 		</view>
 		<view class="bottom" v-if="!isEdit" @click="setNowStatus">编辑评定量表</view>
 		<view class="bottomNav" v-else>
-			<view class="">删除选中的量表({{num}})</view>
+			<view class="" @click="deleteItem">删除选中的量表({{num}})</view>
 			<view class="" @click="toPage('/pages/work/createTitleType/createTitleType')">添加新的量表</view>
 		</view>
 	</view>
@@ -61,8 +61,12 @@
 			setNowStatus(){
 				this.isEdit = !this.isEdit;
 			},
+			init(f) {
+				this.getList(f);
+			},
 			save(){
 				this.setNowStatus();
+				// this.num = 0;
 			},
 			toPage(url,f = true,index = 0){
 				let that = this;
@@ -113,6 +117,51 @@
 					that.list = that.list.concat(data.records);
 					that.index++;
 				})
+			},
+			deleteItem() {
+				let that = this;
+				if (this.num == 0) {
+					uni.showToast({
+						title: '请选择要删除的量表',
+						duration: 1500,
+						icon: "none",
+						mask: true
+					})
+				} else {
+					let ids = [];
+					this.list.map(v => {
+						if (v.isSelected) {
+							ids.push(v.id)
+						}
+					});
+					ids = ids.join(",");
+					uni.showModal({
+						title: '温馨提示',
+						content: '您确定要删除所选量表？',
+						confirmColor: '#31D880',
+						success: function(res) {
+							if (res.confirm) {
+								
+								return request({
+									type: "DELETE",
+									url: getApp().$api.pingdingliangbiao.deletePingDingItem+`?ids=${ids}`
+								}).then(data => {
+									uni.showToast({
+										title: '删除成功',
+										duration: 1500,
+										mask: true
+									})
+									setTimeout(() => {
+										that.init(true);
+										that.isEdit = false;
+										that.num = 0;
+									}, 1000)
+								})
+							}
+						}
+					})
+
+				}
 			}
 		}
 	}
