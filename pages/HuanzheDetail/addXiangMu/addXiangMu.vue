@@ -94,11 +94,12 @@
 			</view> -->
 			<view class="save" @click="save()">保存</view>
 		</view>
-		<w-picker :visible.sync="visible" mode="date" startYear="2017" endYear="2029" value="2020-04-07" :current="true"
-		 fields="day" @confirm="onConfirm" @cancel="onCancel" :disabled-after="false" ref="date"></w-picker>
+		<w-picker :visible.sync="visible" mode="date" startYear="2017" endYear="2029" :value="start_time" :current="iscurrent"
+		 fields="day" @confirm="onConfirm" @cancel="onCancel" :disabled-after="false" ref="date" ></w-picker>
 
 		<w-picker :visible.sync="visibleTime" mode="date" :second="false" startYear="2017" endYear="2029" :value="`${xiangMuTimeList.length>=1?xiangMuTimeList[nowIndex].value:''}`"
-		 :current="false" fields="minute" @confirm="onConfirmTime" @cancel="onCancelTime" :disabled-after="false" ref="time"></w-picker>
+		 :current="false" fields="minute" @confirm="onConfirmTime"
+		  @cancel="onCancelTime" :disabled-after="false" ref="time"></w-picker>
 	</view>
 </template>
 
@@ -111,6 +112,7 @@
 			return {
 				dayFrequency:'',
 				frequency:'',
+				iscurrent:true,
 				list: [{
 						value: '中航沈飞',
 						id: 1,
@@ -360,10 +362,26 @@
 		onLoad(options) {
 			this.id = options.id?options.id:0;
 			this.getAllItem();	
-		},
+			let curDate=new Date();
+			let curYear=curDate.getFullYear();
+			let curMonth=curDate.getMonth()+1;
+ 			let curDay=curDate.getDate();
+			if(curMonth<10){
+				this.start_time = curYear+'-0'+curMonth
+			}else{
+				this.start_time = curYear+'-'+curMonth
+			}
+			if(curDay<10){
+				this.start_time = this.start_time+'-0'+curDay
+				
+ 			}else{
+				this.start_time = this.start_time+'-'+curDay
+				
+			}
+ 		},
 		methods: {
 			getBackVal(data) {
-				let uid = data.uid;
+ 				let uid = data.uid;
 				let value = data.value;
 				let item = this[`list${uid == 0?'':uid}`];
 				let list = null;
@@ -416,6 +434,7 @@
 				this.visible = f;
 			},
 			onConfirm(data) {
+				console.log(data.value)
 				this.start_time = data.value;
 
 			},
@@ -428,7 +447,7 @@
 				this.visibleTime = true;
 			},
 			onConfirmTime(data) {
-				this.listValue.list[this.nowIndex].value = data.result;
+ 				this.listValue.list[this.nowIndex].value = data.result;
 			},
 			onCancelTime(e) {
 				console.log(e);
@@ -466,6 +485,7 @@
 				let that = this;
 				if (!nowXiangMuTimeList) return false;
 				let endTime = JSON.stringify(nowXiangMuTimeList);
+				console.log(endTime)
 				return request({
 					url:getApp().$api.huanzhe.addTreatment,
 					type:'POST',
@@ -480,7 +500,8 @@
 						type:0,
 						shortGoals:that.duanqimubiao,
 						longGoals:that.changqimubiao,
-						subproject:endTime
+						subproject:endTime,
+						doctorAdviceTime:that.start_time	
 					}
 				}).then(data=>{
 					uni.showToast({

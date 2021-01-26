@@ -1,9 +1,9 @@
 <template>
 	<view class="viewPage">
 		<view class="content">
-			<view class="title">诊断</view>
+			<view class="title">其他诊断</view>
 			<input placeholder="请填写诊断" v-model="title" />
-			<view class="title">诊疗意见</view>
+			<view class="title">病程记录</view>
 			<textarea  placeholder="请填写诊疗意见" v-model="content"></textarea>
 			<view class="title">上传图片</view>
 			<view class="list">

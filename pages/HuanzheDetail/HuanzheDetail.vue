@@ -48,7 +48,9 @@
 				<view class="lineview">
 
 				</view>
-				<view class="mubiaoview">
+				<view class="notData" v-if="info.diagnose==null && info.medicalOpinion == null ">暂无数据</view>
+				
+ 				<view class="mubiaoview" v-if="info.diagnose !=null">
 					<view class="upview">
 						<view class="dot">
 
@@ -57,7 +59,7 @@
 					</view>
 					<text class="mubiaodetail">{{info.diagnose?info.diagnose:'无'}}</text>
 				</view>
-				<view class="mubiaoview">
+				<view class="mubiaoview" v-if="info.medicalOpinion !=null">
 					<view class="upview">
 						<view class="dot">
 
@@ -88,7 +90,9 @@
 				<view class="lineview">
 
 				</view>
-				<view class="mubiaoview">
+				<view class="notData" v-if="info.shortTermGoals==null && info.longTermGoals == null ">暂无数据</view>
+				
+				<view class="mubiaoview" v-if="info.shortTermGoals !=null">
 					<view class="upview">
 						<view class="dot">
 
@@ -97,7 +101,7 @@
 					</view>
 					<text class="mubiaodetail">{{info.shortTermGoals?info.shortTermGoals:'暂未设置'}}</text>
 				</view>
-				<view class="mubiaoview">
+				<view class="mubiaoview" v-if="info.longTermGoals!=null">
 					<view class="upview">
 						<view class="dot">
 
@@ -133,9 +137,8 @@
 									<view class="itemRightTitle">{{v.name}} </view>
 									<view class="itemRightTime">{{v.start}} - {{v.end}}</view>
 								</view>
-								<view class="itemRightRun itemRightRun1" v-if="v.type == 1" >完成</view>
-								<view class="itemRightRun itemRightRun2" v-else-if="v.type == 2" >暂停</view>
-								<view class="itemRightRun" v-else @click="runXiangMu(k,index)">执行</view>
+								<view class="itemRightRun itemRightRun1" v-if="v.type == 1 ||v.type == 2" >完成</view>
+  								<view class="itemRightRun" v-else @click="runXiangMu(k,index)">执行</view>
 							</view>
 						</view>
 					</view>
@@ -608,7 +611,7 @@
 				},true,true).then(data=>{
 					console.log(data)
 					that.referrer = data.referrer;
-					if(data.status == 0 ||data.referrer == data.total){
+					if(data.status == 0 ||data.referrer == data.total ){
 						 that.setProgress(f);
 					}else{
 						

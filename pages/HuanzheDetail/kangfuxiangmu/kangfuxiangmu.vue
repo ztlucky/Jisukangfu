@@ -24,10 +24,17 @@
 					<view class="">开始时间：{{v.createTime}}</view>
 				</view>
 				<view class="itemText">
-					<text>短期目标：{{v.shortGoals}}</text>
+					<text>医嘱类型：{{v.doctorAdviceType}}</text>
+					<text style="margin-left: 10px;">医嘱频次：{{v.dayFrequency}}天 {{v.frequency}}次</text>
+					
+				</view>
+			 
+				<view class="itemText">
+					<text>短期医嘱天数：{{v.days}}天</text>
+					<text style="margin-left: 10px;">开始时间：{{v.doctorAdviceTime}} </text>
+					
 				</view>
 				<view class="itemText">
-					<text>长期目标：{{v.longGoals}}</text>
 				</view>
 				<view class="itemBottom">
 					<view class="" v-if="v.doctorAdviceType == '短嘱'">剩余时间：{{v.days<=0?0:v.days}}天</view>
@@ -353,7 +360,7 @@
 		font-family: PingFangSC-Regular, PingFang SC;
 		font-weight: 400;
 	}
-
+ 
 	.itemText text {
 		/* flex:auto; */
 		display: inline-block;
@@ -361,12 +368,12 @@
 		color: #666666;
 		line-height: 32rpx;
 		background: #F4F4F4;
-		border-radius: 8rpx;
-		padding-left: 14rpx;
+		border-radius: 5rpx;
+		padding-left: 5rpx;
 		padding-right: 12rpx;
 		padding-top: 8rpx;
 		padding-bottom: 8rpx;
-		margin-bottom: 12rpx;
+		margin-bottom: 20rpx;
 		font-weight: 400;
 		font-family: PingFangSC-Medium, PingFang SC;
 	}

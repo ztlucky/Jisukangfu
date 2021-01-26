@@ -55,7 +55,7 @@
 				<block v-for="(item,index) in huanzhelist" :key='index'>
 					<view class="huanzheview" v-if="item.status != 1">
 						<view class="huanzheTopview">
-							<image src="../../static/gongzuotai/icon_nv.png"></image>
+							<image :src="item.sex== 1?'../../static/gongzuotai/icon_nan.png' :'../../static/gongzuotai/icon_nv.png'"></image>
 							<view class="huanzherightview">
 								<view class="firstView">
 									<text class="name">{{item.name}}</text>
