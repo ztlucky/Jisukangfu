@@ -3,7 +3,7 @@
 		<view class="content" @click="resetAll">
 			<view class="title">问题标题</view>
 			<silding @editTitle="editTitle" :isRun="false" ref="sildTitle" @reset="resetAll" :dataprops="title"></silding>
-			<view class="title">评定量表选择题</view>
+			<view class="title">选项</view>
 			<silding @editTitle="editTitle" @deleteItem="deleteItem" ref="sild" @reset="resetAll" v-for="(v,i) in checkbox" :key="i"
 			 :dataprops="v" :index="i"></silding>
 			<view class="addItem" @click="addItem">添加新的选项</view>

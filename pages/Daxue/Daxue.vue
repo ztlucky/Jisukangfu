@@ -6,7 +6,6 @@
 			<view class="search">
 				<navigator class="input" url="../Search/Search" hover-class="none" open-type="navigate">
 					<image mode="aspectFill" class="searchImage" src="../../static/icon_search.png"></image>
-
 					<text>搜索</text>
 				</navigator>
 				<!-- <navigator class="user" url="../Message/Message" hover-class="none">
@@ -14,8 +13,6 @@
 					<text v-if="messageCount > 0">{{messageCount}}</text>
 				</navigator> -->
 			</view>
-
-
 			<!-- 导航 -->
 			<view class="navbar" :class="showNavFloat ? 'floatbar' : ''">
 				<view class="menu" v-if="category.length > 0">

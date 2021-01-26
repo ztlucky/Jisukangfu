@@ -180,6 +180,9 @@ let api = {
 		getHomeInfo:`${apiRoot}user/user/hzHomePageData`,//获取咨询首页数据
 		getDoctorList:`${apiRoot}user/user/queryYS`,
 		getAllDoutorList:`${apiRoot}doctor/doctor/list`,
+		//编辑患者基本信息
+		editHuanzheInfo:`${apiRoot}patient/patient/edit`,
+		
  	},
 	wechat: {
 		miniAppLogin: apiRoot + 'wechat/miniAppLogin',

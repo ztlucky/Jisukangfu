@@ -40,10 +40,11 @@
 
 					</pickers>
 					<text class="name">地址</text>
-					<textarea @blur="bindTextAreaBlur" class="detailAdressView" placeholder="请输入详细地址" style="height: 130px;" maxlength="-1"
-					 adjust-position="true" />
+					<textarea @blur="bindTextAreaBlur" class="detailAdressView" 
+					placeholder="请输入详细地址" style="height: 130px;" maxlength="-1"
+					 adjust-position="true" v-model="detailAdress"/>
 					<text class="name">患者来源</text>
-					 <yealuo-select class="inputview" 
+					 <yealuo-select class="inputview"  :value= "sourceValue!=null?sourceValue.value:''"
 					 the-style="margin: 20upx auto;font-size: 46upx;  " 
 					       
 					         placeholder='请选择患者来源' 
@@ -51,6 +52,7 @@
 					         overflow="hide"
 					         @getBackVal="getBackVal2"
 					         :selectIco="false"
+							
 					         >
 					         </yealuo-select>
 					 <text class="name">床位</text>
@@ -68,6 +70,7 @@
   		        overflow="hide"
 		        @getBackVal="getBackVal"
 		        :selectIco="false"
+				:value= "illnessValue!=null?illnessValue.value:''"
 		        >
 		        </yealuo-select>
 				<text class="name">症状</text>
@@ -80,11 +83,12 @@
 				        @getBackVal="getBackVal1"
 				        :selectIco="false"
 						checkType="checkbox"
+						:value = "symptomsValue!=null? symptomsValue.value:''"
 				        >
 				        </yealuo-select>
 				<view class="bottomview">
 					<text class="baocun" @click="save()">保存</text>
-					<text class="jixupingding" @click="pingdingAction">继续评定</text>
+					<text class="jixupingding" @click="pingdingAction" v-if="isedit == false">继续评定</text>
 				</view>
 		 
 
@@ -135,11 +139,42 @@
  				//选中后的显示值
 				res:"请选择省市区",
 				selecValue: '双皮奶',
-				beds:''//床位
+				beds:'',//床位
+				isedit:false,//是否是编辑患者
+				huanzheId:''
 
 			}
 		},
 		onLoad:function(e){
+			if (e.item != null) {
+                 this.isedit = true;
+				let objClone = JSON.parse(decodeURIComponent(e.item))
+				uni.setNavigationBarTitle({
+					title:'患者详情'
+				})
+				this.huanzheId = objClone.id
+				this.huanzhename = objClone.name
+				this.selectIndex = objClone.sex
+				this.huanzheIDNumber = objClone.idNo
+				this.huanzheMobile = objClone.phoneNumber
+				this.res = objClone.province +"-"+objClone.city+"-"+objClone.county 
+				this.detailAdress = objClone.detailedAddress
+				console.log(objClone.patientsSource-1)
+ 				this.sourceValue =  this.sourceData[objClone.patientsSource-1] ;
+				console.log(this.sourceValue)
+				this.beds = objClone.bunk
+				this.illnessValue = {
+					id:objClone.illnessId,
+					value:objClone.illnessName
+				}
+				console.log(this.illnessValue)
+				 this.symptomsValue={
+					 id:objClone.symptomId,
+					 value:objClone.symptomName
+				 }
+				 
+				 console.log(objClone)
+			}
 			this.getillnessUserList();
 			
 		},
@@ -180,7 +215,7 @@
 				id:data.split('|')[1],
 				value:data.split('|')[0]
 			}
-		},
+ 		},
 		//获取症状列表
 		getSymptomsData(){
 			let that = this;
@@ -326,6 +361,7 @@
 				 
 			 },
 			 save(f = true){
+				 
 			 		 let str = "";
 			 		//  if(!this.huanzhename){
 			 		// 	 str = '请输入患者姓名'
@@ -348,6 +384,7 @@
 			 		//  }else if(!this.symptomsValue){
 			 		// 	 str = "请选择症状结果"
 			 		//  }
+					
 					if(!this.sourceValue){
 						str = "请选择患者来源"
 					}else if(this.sourceValue.id == 2 &&!this.beds){
@@ -362,10 +399,8 @@
 			 		 }else{
 						 let that = this;	 
 			 		 let age = that.discriCard(that.huanzheIDNumber);
-					 return request({
-						 url:that.$api.huanzhe.addHuanZhe,
-						 type:"POST",
-						 data:{
+					 let requestData={
+						        
 								 name:that.huanzhename,
 								 age,
 								 sex:that.selectIndex,
@@ -381,27 +416,74 @@
 								 province:that.res?that.res.split("-")[0]:'',
 								 city:that.res?that.res.split("-")[1]:'',
 								 county:that.res?that.res.split("-")[2]:'',
-								 userId:getApp().globalData.userId
+								 userId:getApp().globalData.userId,
+								 id:that.huanzheId
+						 };
+						 console.log(requestData)
+						 if(this.isedit == true){
+							 return request({
+							 						 url:that.$api.huanzhe.editHuanzheInfo,
+							 						 type:"PUT",
+							 						 data:requestData
+							 }).then(data=>{
+							 						 uni.showToast({
+							 						 	title:data.message,
+							 						 	duration:1500,
+							 						 	success(data) {
+							 						 		setTimeout(()=>{
+							 									if(f){
+							 										uni.navigateBack();
+							 									}else{
+							 										 
+							 									}
+							 						 		},1500);
+							 						 	}
+							 						 })
+							 })
+						 }else{
+							 return request({
+							 						 url:that.$api.huanzhe.addHuanZhe,
+							 						 type:"POST",
+							 						 data:{
+						        
+								 name:that.huanzhename,
+								 age,
+								 sex:that.selectIndex,
+								 bunk:that.beds,
+								 idNo:that.huanzheIDNumber,
+								 phoneNumber:that.huanzheMobile,
+								 detailedAddress:that.detailAdress,
+								 patientsSource:that.sourceValue?that.sourceValue.id:'',
+								 illnessId:Number.parseInt(that.illnessValue?that.illnessValue.id:'0'),
+								 symptomId:that.symptomsValue?that.symptomsValue.id:'',
+								 illnessName:that.illnessValue?that.illnessValue.value:'',
+								 symptomName:that.symptomsValue?that.symptomsValue.value:'',
+								 province:that.res?that.res.split("-")[0]:'',
+								 city:that.res?that.res.split("-")[1]:'',
+								 county:that.res?that.res.split("-")[2]:'',
+								 userId:getApp().globalData.userId,
+ 						 }
+							 }).then(data=>{
+							 						 uni.showToast({
+							 						 	title:data.message,
+							 						 	duration:1500,
+							 						 	success(data) {
+							 						 		setTimeout(()=>{
+							 									if(f){
+							 										uni.navigateBack();
+							 									}else{
+							 										uni.navigateTo({
+							 											url:'../KangfuPingdingListPage/KangfuPingdingListPage',
+							 															animationDuration:300,
+							 															animationType:'slide-in-right'
+							 										})
+							 									}
+							 						 		},1500);
+							 						 	}
+							 						 })
+							 })
 						 }
-					 }).then(data=>{
-						 uni.showToast({
-						 	title:data.message,
-						 	duration:1500,
-						 	success(data) {
-						 		setTimeout(()=>{
-									if(f){
-										uni.navigateBack();
-									}else{
-										uni.navigateTo({
-											url:'../KangfuPingdingListPage/KangfuPingdingListPage',
-															animationDuration:300,
-															animationType:'slide-in-right'
-										})
-									}
-						 		},1500);
-						 	}
-						 })
-					 })
+					
 					 
 					 }
 			 		 

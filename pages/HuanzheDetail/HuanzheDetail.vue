@@ -12,7 +12,7 @@
 		</view>
 		<scroll-view scroll-y="true" @scroll="scroll" :style="[{height:viewHeight + 'px'}]">
 			<view class="huanzheview">
-				<view class="huanzheTopview">
+				<view class="huanzheTopview" @click="edithuanzhe">
 					<image src="../../static/gongzuotai/icon_nv.png"></image>
 					<view class="huanzherightview">
 						<view class="firstView">
@@ -336,6 +336,13 @@
 			this.my = options.my;
 		},
 		methods: {
+				
+			edithuanzhe(){
+				uni.navigateTo({
+					url:'../AddHuanzhe/AddHuanzhe?item='+encodeURIComponent(JSON.stringify(this.info)),
+ 					animationType:'slide-in-right'
+				})
+			},
 			endZhiListTips() {
 				uni.showToast({
 					title: '治疗已结束',
@@ -574,9 +581,9 @@
 				let that = this;
 				let subprojectId = this.info.treatmentList[that.nowIndex__].subproject[this.nowIndex].id;
 				let treatmentId = this.info.treatmentList[that.nowIndex__].id;
-				let tscore = f?this.number:0;
+				let pscore = f?this.number:0;
 				let patientId = this.info.id;
-				let pscore = f?this.info.treatmentList[that.nowIndex__].subproject[this.nowIndex].score:0;
+				let tscore = f?this.info.treatmentList[that.nowIndex__].subproject[this.nowIndex].score:0;
 				console.log({
 						subprojectId,
 						treatmentId,
