@@ -104,7 +104,8 @@
 						pageSize: that.size,
 						userId: getApp().globalData.userId,
 						order: that.timeType == 1 ? 'desc' : 'asc',
-						column: 'createTime'
+						column: 'createTime',
+						status:1
 					},
 					type: 'GET'
 				}, true, true).then(data => {

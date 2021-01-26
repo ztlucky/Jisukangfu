@@ -12,7 +12,7 @@
 						<text class="greenText">{{info.currentTotal?info.currentTotal:0}}</text>
 						<text class="blackText">名，</text>
 						<text class="blackText"> 新增患者</text>
-						<text class="greenText">{{info.nowTotal?info.nowTotal:0}}</text>
+						<text class="greenText">{{info.newTotal?info.newTotal:0}}</text>
 						<text class="blackText">名</text>
 					</view>
 					<view class="tipText">
@@ -235,12 +235,15 @@
 						pageNo: that.index,
 						pageSize: that.size,
 						userId: getApp().globalData.userId,
-						condition: true
+						condition: true,
+						status:0
+						
 					},
 					type: 'GET'
 				}, true, true).then(data => {
 					console.log(data)
 					data.records = data.data.records;
+					
 					if (data.records) {
 						data.records.map((vv, kk) => {
 							if (vv.treatmentList.length >= 1) {
@@ -265,6 +268,7 @@
 					}
 					  that.huanzhelist = that.huanzhelist.concat(data.records);
  					  that.info = data;
+					  console.log(data)
 					that.huanzhetongji = data.illness_total;
 					that.resetData();
 					this.index++;

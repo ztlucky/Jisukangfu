@@ -73,7 +73,7 @@
 					<text class="listrighttitle" @click="toPage('/pages/work/patientsList/patientsList')">查看更多 > </text>
 				</view>
 
-				<block v-for="(item,index) in list" :key="index" >
+				<block v-for="(item,index) in info.data.records" :key="index" >
 					<view class="huanzheview" v-if="item.status != 1" @click="huanzheXiangqing(item.id)">
 						<view class="huanzheTopview">
 							<image :src="item.sex == 1?'../../static/gongzuotai/icon_nan.png':'../../static/gongzuotai/icon_nv.png'"></image>
@@ -169,7 +169,7 @@
 
 				})
 				this.getInfo().then(() => {
-					this.getHuanZheList();
+					//this.getHuanZheList();
 				})
 
 			} else {
@@ -239,7 +239,8 @@
 					url: getApp().$api.work.getInfo,
 					type: 'GET',
 					data: {
-						id: getApp().globalData.userId
+						userId: getApp().globalData.userId,
+						status:0
 					}
 				}, true, true).then(data => {
 					that.info = data;
@@ -381,7 +382,9 @@
 					type: 'GET',
 					data: {
 						pageNo: 1,
-						pageSize: 6
+						pageSize: 6,
+						status:0
+						
 					},
 					userId: getApp().globalData.userId
 				}, true, true).then(data => {
