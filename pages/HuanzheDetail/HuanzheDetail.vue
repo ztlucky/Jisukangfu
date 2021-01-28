@@ -55,7 +55,7 @@
 						<view class="dot">
 
 						</view>
-						<text class="dotTitle">诊断</text>
+						<text class="dotTitle">其他诊断</text>
 					</view>
 					<text class="mubiaodetail">{{info.diagnose?info.diagnose:'无'}}</text>
 				</view>
@@ -64,7 +64,7 @@
 						<view class="dot">
 
 						</view>
-						<text class="dotTitle">诊疗意见</text>
+						<text class="dotTitle">病程记录</text>
 					</view>
 					<text class="mubiaodetail">{{info.medicalOpinion?info.medicalOpinion:'无'}}</text>
 				</view>

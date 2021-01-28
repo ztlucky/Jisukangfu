@@ -37,7 +37,7 @@
 				<view class="itemText">
 				</view>
 				<view class="itemBottom">
-					<view class="" v-if="v.doctorAdviceType == '短嘱'">剩余时间：{{v.days<=0?0:v.days}}天</view>
+					<view class="" v-if="v.doctorAdviceType == '短嘱'">剩余时间：{{v.surplusDays}}天</view>
 					<view class="" v-if="v.doctorAdviceType == '长嘱'">长期</view>
 					<block v-if="my !=1">
 						<view class="" v-if="v.type != 2" @click="endXiangMu(k)">结束</view>
